@@ -5,29 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>radtypo</title>
     <style>
-        :root {
-            --bg-color: #fff;
-            --text-color: #000;
-            --link-color: #0000FF;
-            --secondary-color: #666;
-        }
-
-        [data-theme="dark"] {
-            --bg-color: #1a1a1a;
-            --text-color: #fff;
-            --link-color: #809fff;
-            --secondary-color: #999;
-        }
-
         body {
             font-family: monospace;
             max-width: 800px;
             margin: 40px auto;
             padding: 20px;
             line-height: 1.6;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
+            background-color: #fff;
+            color: #000;
         }
 
         h1 {
@@ -36,7 +21,7 @@
         }
 
         a {
-            color: var(--link-color);
+            color: #0000FF;
             text-decoration: none;
         }
 
@@ -55,37 +40,19 @@
         }
 
         .date {
-            color: var(--text-color);
+            color: #000;
             display: inline-block;
             margin-right: 10px;
         }
 
         .credit {
             margin-top: 40px;
-            color: var(--secondary-color);
-        }
-
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            color: var(--text-color);
-            font-family: monospace;
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        .theme-toggle:hover {
-            text-decoration: underline;
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
-
-    <h1>rad.typo</h1>
+    <h1>radtypo</h1>
 
     <ul>
         <li>songs
@@ -107,27 +74,5 @@
     </ul>
 
     <div class="credit">← inspired by <a href="https://elly.town">elly.town</a></div>
-
-    <script>
-        function toggleTheme() {
-            const body = document.documentElement;
-            const button = document.querySelector('.theme-toggle');
-            const isDark = body.getAttribute('data-theme') === 'dark';
-            
-            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-            button.innerHTML = isDark ? '○ dark mode' : '● light mode';
-            
-            // Save preference
-            localStorage.setItem('theme', isDark ? 'light' : 'dark');
-        }
-
-        // Check for saved theme preference
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            document.querySelector('.theme-toggle').innerHTML = 
-                savedTheme === 'dark' ? '● light mode' : '○ dark mode';
-        }
-    </script>
 </body>
 </html>
