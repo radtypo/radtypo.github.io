@@ -3,25 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>radtypo.town</title>
+    <title>radtypo</title>
     <style>
         body {
             font-family: monospace;
-            max-width: 600px;
+            max-width: 800px;
             margin: 40px auto;
             padding: 20px;
             line-height: 1.6;
-            background-color: #f8f9fa;
-            color: #333;
+            background-color: #fff;
+            color: #000;
         }
 
         h1 {
             font-size: 24px;
             margin-bottom: 30px;
+            font-family: monospace;
         }
 
         a {
-            color: #0066cc;
+            color: #0000FF;
             text-decoration: none;
         }
 
@@ -33,47 +34,50 @@
             margin-bottom: 30px;
         }
 
-        .indent-1 {
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        ul ul {
+            list-style-type: circle;
             margin-left: 20px;
         }
 
-        .indent-2 {
-            margin-left: 40px;
+        .date {
+            color: #000;
+            display: inline-block;
+            margin-right: 10px;
         }
 
-        .tag {
+        .translation {
             color: #666;
-            font-size: 14px;
+            display: inline;
         }
     </style>
 </head>
 <body>
-    <h1>radtypo.town</h1>
+    <h1>radtypo</h1>
 
     <div class="section">
-        (about-me
-        <div class="indent-1">
-            (irc <a href="#">username/handle</a>)
-            <div class="indent-1">(gpg-key <a href="#">key.gpg</a>)</div>
-            <div class="indent-1">(ssh-keys <a href="#">keys.ssh</a>)</div>
-        </div>
-    </div>
-
-    <div class="section">
-        (around-here
-        <div class="indent-1">
-            (my <a href="#">blog</a>)
-            <div class="indent-1">(my <a href="#">projects</a>)</div>
-            <div class="indent-1">(my <a href="#">photos</a>)</div>
-        </div>
-    </div>
-
-    <div class="section">
-        (recent-reading
-        <div class="indent-1">
-            <a href="#">book-title</a>
-            <div class="indent-2">author-name <span class="tag">(tag1 tag2)</span></div>
-        </div>
+        <ul>
+            <li>songs
+                <ul>
+                    <li><span class="date">2022-12-08</span> <a href="#">muriel</a></li>
+                    <li><span class="date">2022-12-08</span> <a href="#">what's not to like</a></li>
+                    <li><span class="date">2021-06-13</span> <a href="#">birthday cake</a></li>
+                    <li><span class="date">2020-10-31</span> <a href="#">hard hitter</a></li>
+                    <li><span class="date">2020-09-18</span> <a href="#">bad fortune</a></li>
+                    <li><span class="date">2020-07-23</span> <a href="#">my happiness is not held by others</a></li>
+                    <li><span class="date">2020-07-21</span> <a href="#">when i haven't even got my own guitar</a></li>
+                </ul>
+            </li>
+            <li>poems
+                <ul>
+                    <li><span class="date">2023-11-09</span> <a href="#">gloine ar an talamh</a> <span class="translation">(glass on the ground)</span></li>
+                </ul>
+            </li>
+        </ul>
     </div>
 </body>
 </html>
