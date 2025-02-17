@@ -6,12 +6,6 @@
     <title>muriel - rad.typo</title>
     <style>
         :root {
-            --spacing-base: 20px;
-            --spacing-small: 10px;
-            --spacing-large: 40px;
-            
-            --font-primary: monospace;
-            
             --bg-color: #fff;
             --text-color: #000;
             --link-color: #0000FF;
@@ -26,10 +20,10 @@
         }
 
         body {
-            font-family: var(--font-primary);
+            font-family: monospace;
             max-width: 800px;
-            margin: var(--spacing-large) auto;
-            padding: var(--spacing-base);
+            margin: 40px auto;
+            padding: 20px;
             line-height: 1.6;
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -38,8 +32,8 @@
 
         h1 {
             font-size: 24px;
-            font-family: var(--font-primary);
-            margin-bottom: var(--spacing-small);
+            font-family: monospace;
+            margin-bottom: 10px;
         }
 
         a {
@@ -53,11 +47,11 @@
 
         .date {
             color: var(--secondary-color);
-            margin-bottom: var(--spacing-small);
+            margin-bottom: 10px;
         }
 
         .back {
-            margin-bottom: var(--spacing-base);
+            margin-bottom: 30px;
             display: block;
         }
 
@@ -66,7 +60,7 @@
         }
 
         .player-container {
-            margin-bottom: var(--spacing-small);
+            margin-bottom: 15px;
         }
 
         iframe {
@@ -78,41 +72,50 @@
 
         .theme-toggle {
             position: fixed;
-            top: var(--spacing-base);
-            right: var(--spacing-base);
+            top: 20px;
+            right: 20px;
             background: none;
             border: none;
             color: var(--text-color);
-            font-family: var(--font-primary);
+            font-family: monospace;
             cursor: pointer;
-            padding: var(--spacing-small);
+            padding: 5px;
         }
 
         .theme-toggle:hover {
             text-decoration: underline;
+        }
+
+        .notes {
+            margin-top: 30px;
+            padding: 10px;
+            border: 1px dashed var(--secondary-color);
+        }
+
+        .notes h2 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+        }
+
+        .notes ul {
+            margin: 0;
+            padding-left: 20px;
         }
     </style>
 </head>
 <body>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
 
-    <a href="/" class="back" alt="Return to homepage">← back</a>
+    <a href="/" class="back">← back</a>
     
     <h1>muriel</h1>
-    <time datetime="2022-12-08" class="date">2022-12-08</time>
+    <div class="date">2022-12-08</div>
 
     <div class="player-container">
-        <iframe 
-            src="https://archive.org/embed/radtypo-muriel" 
-            title="Muriel audio player" 
-            frameborder="0" 
-            webkitallowfullscreen="true" 
-            mozallowfullscreen="true" 
-            allowfullscreen
-        ></iframe>
+        <iframe src="https://archive.org/embed/radtypo-muriel" frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen></iframe>
     </div>
 
-    <div class="content" aria-label="Lyrics of Muriel">You're the cat's meow!
+    <div class="content">You're the cat's meow!
 My prime article
 Muriel - I am sick until I see you
 You sway me as you please
@@ -179,6 +182,15 @@ Aren't you curious
 Muriel
 Don't be so mean
 I know I'll make you happy</div>
+
+    <div class="notes">
+        <h2>Notes</h2>
+        <p>Muriel herself is a fiction, but some of the teenage preoccupations are the writer's own.</p>
+        <ul>
+            <li>Angela by Jarvis Cocker is a great 'woman's name' song. I added ten years to Angela's age to make Muriel.</li>
+            <li>Stephanie Says, Sheila Take A Bow, Loretta's Scars are other good ones - there's quite the list</li>
+        </ul>
+    </div>
 
     <script>
         function toggleTheme() {
