@@ -10,6 +10,7 @@
             --text-color: #000;
             --link-color: #0000FF;
             --secondary-color: #666;
+            --spacing: 20px;
         }
 
         [data-theme="dark"] {
@@ -23,16 +24,45 @@
             font-family: monospace;
             max-width: 800px;
             margin: 40px auto;
-            padding: 20px;
+            padding: var(--spacing);
             line-height: 1.6;
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: background-color 0.3s, color 0.3s;
         }
 
+        .section {
+            margin: var(--spacing) 0;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+        }
+
+        .section-header {
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid transparent;
+        }
+
+        .section-header:hover {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+        }
+
+        .section-content {
+            padding: var(--spacing);
+            display: none;
+        }
+
+        .section-content.open {
+            display: block;
+            border-top: 1px solid var(--secondary-color);
+        }
+
         h1 {
             font-size: 24px;
-            font-family: monospace;
             margin-bottom: 10px;
         }
 
@@ -47,7 +77,7 @@
 
         .date {
             color: var(--secondary-color);
-            margin-bottom: 10px;
+            margin-bottom: var(--spacing);
         }
 
         .back {
@@ -60,59 +90,23 @@
         }
 
         .player-container {
-            margin-bottom: 15px;
+            margin: var(--spacing) 0;
         }
 
         audio {
             width: 100%;
-            margin-bottom: 15px;
         }
 
         .theme-toggle {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: var(--spacing);
+            right: var(--spacing);
             background: none;
             border: none;
             color: var(--text-color);
             font-family: monospace;
             cursor: pointer;
             padding: 5px;
-        }
-
-        .theme-toggle:hover {
-            text-decoration: underline;
-        }
-
-        .metadata-section {
-            margin: 20px 0;
-            border: 1px solid var(--secondary-color);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .metadata-header {
-            padding: 10px;
-            background-color: var(--bg-color);
-            border-bottom: 1px solid var(--secondary-color);
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .metadata-header:hover {
-            background-color: var(--secondary-color);
-            color: var(--bg-color);
-        }
-
-        .metadata-content {
-            padding: 15px;
-            display: none;
-        }
-
-        .metadata-content.open {
-            display: block;
         }
 
         .metadata-content dl {
@@ -124,32 +118,35 @@
 
         .metadata-content dt {
             color: var(--secondary-color);
-            font-weight: normal;
         }
 
         .metadata-content dd {
             margin: 0;
         }
 
-        .metadata-toggle {
+        .copy-button {
+            background: none;
+            border: none;
+            color: var(--text-color);
             font-family: monospace;
+            cursor: pointer;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        .copy-button:hover {
             color: var(--secondary-color);
         }
 
-        .notes {
-            margin-top: 30px;
-            padding: 10px;
-            border: 1px solid var(--secondary-color);
+        .resource-link {
+            display: block;
+            margin: 5px 0;
+            color: var(--link-color);
         }
 
-        .notes h2 {
-            margin: 0 0 10px 0;
-            font-size: 18px;
-        }
-
-        .notes ul {
-            margin: 0;
-            padding-left: 20px;
+        .resource-link:before {
+            content: "• ";
+            color: var(--text-color);
         }
     </style>
 </head>
@@ -168,12 +165,12 @@
         </audio>
     </div>
 
-    <div class="metadata-section">
-        <div class="metadata-header" onclick="toggleMetadata()">
-            <span>Song Information</span>
-            <span class="metadata-toggle">[ + ]</span>
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('credits')">
+            <span>Credits</span>
+            <span class="toggle">[ + ]</span>
         </div>
-        <div class="metadata-content" id="metadata">
+        <div class="section-content" id="credits">
             <dl>
                 <dt>Duration</dt>
                 <dd>3:43</dd>
@@ -200,14 +197,18 @@
                     Engineering: All composers<br>
                     Mixing & Mastering: Caolán Austin
                 </dd>
-                
-                <dt>Release Date</dt>
-                <dd>2020-01-24</dd>
             </dl>
         </div>
     </div>
 
-    <div class="content">I'm happy to go
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('lyrics')">
+            <span>Lyrics</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="lyrics">
+            <button class="copy-button" onclick="copyLyrics()">[ copy lyrics ]</button>
+            <div class="content" id="lyrics-content">I'm happy to go
 Where the algorithm takes us
 And get ticked off
 By vegan-baiting waitress
@@ -238,12 +239,20 @@ Do you think you'll talk me out of this
 Do you think I'll just snap out of it
 (>>>And hold my head up high)
 (I've got a feeling that I just don't belong)</div>
+        </div>
+    </div>
 
-    <div class="notes">
-        <h2>Notes</h2>
-        <ul>
-            <li>Add your notes about the song here</li>
-        </ul>
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('resources')">
+            <span>Resources</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="resources">
+            <a href="#" class="resource-link">chord sheet (PDF)</a>
+            <a href="#" class="resource-link">guitar playthrough (video)</a>
+            <a href="#" class="resource-link">multitrack stems (ZIP)</a>
+            <a href="#" class="resource-link">mix session (ZIP)</a>
+        </div>
     </div>
 
     <script>
@@ -255,20 +264,29 @@ Do you think I'll just snap out of it
             body.setAttribute('data-theme', isDark ? 'light' : 'dark');
             button.innerHTML = isDark ? '○ dark mode' : '● light mode';
             
-            // Save preference
             localStorage.setItem('theme', isDark ? 'light' : 'dark');
         }
 
-        function toggleMetadata() {
-            const metadata = document.getElementById('metadata');
-            const toggle = document.querySelector('.metadata-toggle');
-            const isOpen = metadata.classList.contains('open');
+        function toggleSection(id) {
+            const content = document.getElementById(id);
+            const toggle = content.previousElementSibling.querySelector('.toggle');
+            const isOpen = content.classList.contains('open');
             
-            metadata.classList.toggle('open');
+            content.classList.toggle('open');
             toggle.textContent = isOpen ? '[ + ]' : '[ - ]';
         }
 
-        // Check for saved theme preference when page loads
+        function copyLyrics() {
+            const lyrics = document.getElementById('lyrics-content').innerText;
+            navigator.clipboard.writeText(lyrics).then(() => {
+                const button = document.querySelector('.copy-button');
+                button.textContent = '[ copied! ]';
+                setTimeout(() => {
+                    button.textContent = '[ copy lyrics ]';
+                }, 2000);
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme) {
