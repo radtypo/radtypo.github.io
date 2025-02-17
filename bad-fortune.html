@@ -46,6 +46,12 @@
             border-bottom: 1px solid transparent;
         }
 
+        .section-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         .section-header:hover {
             background-color: var(--secondary-color);
             color: var(--bg-color);
@@ -204,10 +210,12 @@
     <div class="section">
         <div class="section-header" onclick="toggleSection('lyrics')">
             <span>Lyrics</span>
-            <span class="toggle">[ + ]</span>
+            <span class="section-actions">
+                <button class="copy-button" onclick="copyLyrics(); event.stopPropagation()">[ copy lyrics ]</button>
+                <span class="toggle">[ - ]</span>
+            </span>
         </div>
-        <div class="section-content" id="lyrics">
-            <button class="copy-button" onclick="copyLyrics()">[ copy lyrics ]</button>
+        <div class="section-content open" id="lyrics">
             <div class="content" id="lyrics-content">I'm happy to go
 Where the algorithm takes us
 And get ticked off
