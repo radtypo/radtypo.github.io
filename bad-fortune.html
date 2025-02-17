@@ -210,10 +210,7 @@
     <div class="section">
         <div class="section-header" onclick="toggleSection('lyrics')">
             <span>Lyrics</span>
-            <span class="section-actions">
-                <button class="copy-button" onclick="copyLyrics(); event.stopPropagation()">[ copy lyrics ]</button>
-                <span class="toggle">[ - ]</span>
-            </span>
+            <span class="toggle">[ - ]</span>
         </div>
         <div class="section-content open" id="lyrics">
             <div class="content" id="lyrics-content">I'm happy to go
@@ -284,16 +281,7 @@ Do you think I'll just snap out of it
             toggle.textContent = isOpen ? '[ + ]' : '[ - ]';
         }
 
-        function copyLyrics() {
-            const lyrics = document.getElementById('lyrics-content').innerText;
-            navigator.clipboard.writeText(lyrics).then(() => {
-                const button = document.querySelector('.copy-button');
-                button.textContent = '[ copied! ]';
-                setTimeout(() => {
-                    button.textContent = '[ copy lyrics ]';
-                }, 2000);
-            });
-        }
+
 
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme');
