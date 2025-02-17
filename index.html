@@ -46,30 +46,15 @@
             text-decoration: underline;
         }
 
-        .section {
-            margin: var(--base-spacing) 0;
-            border: 1px solid var(--secondary-color);
-            border-radius: 4px;
-        }
-
-        .section-header {
-            padding: 10px;
-            font-weight: normal;
-            border-bottom: 1px solid var(--muted-color);
-        }
-
-        .section-content {
-            padding: var(--base-spacing);
-        }
-
-        .entry-list {
-            list-style: none;
-            padding: 0;
+        nav ul {
+            list-style-type: disc;
+            padding-left: var(--base-spacing);
             margin: 0;
         }
 
-        .entry-list li {
-            padding: 5px 0;
+        nav ul ul {
+            list-style-type: circle;
+            margin-left: var(--base-spacing);
         }
 
         .date {
@@ -82,7 +67,7 @@
         .credit {
             margin-top: calc(var(--base-spacing) * 2);
             color: var(--muted-color);
-            padding: var(--base-spacing);
+            padding-top: var(--base-spacing);
             border-top: 1px solid var(--muted-color);
         }
 
@@ -101,33 +86,32 @@
         .theme-toggle:hover {
             text-decoration: underline;
         }
+
+        nav li {
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
 
     <h1>rad.typo</h1>
-
-    <div class="section">
-        <h2 class="section-header">songs</h2>
-        <div class="section-content">
-            <ul class="entry-list">
-                <li><time datetime="2022-09-10" class="date">2022-09-10</time> <a href="/muriel.html" alt="Muriel song">muriel</a></li>
-                <li><time datetime="2020-01-24" class="date">2020-01-24</time> <a href="bad-fortune.html" alt="Bad Fortune song">bad fortune</a></li>
-                <li><time datetime="2020-01-08" class="date">2020-01-08</time> <a href="/whats-not-to-like.html" alt="What's Not to Like song">what's not to like</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="section">
-        <h2 class="section-header">poems</h2>
-        <div class="section-content">
-            <ul class="entry-list">
-                <li><time datetime="2023-11-09" class="date">2023-11-09</time> <a href="#" alt="Glass on the Ground poem in Irish" lang="ga">gloine ar an talamh</a> (glass on the ground)</li>
-            </ul>
-        </div>
-    </div>
-
+    <nav>
+        <ul>
+            <li>songs
+                <ul>
+                    <li><time datetime="2022-09-10" class="date">2022-09-10</time> <a href="/muriel.html" alt="Muriel song">muriel</a></li>
+                    <li><time datetime="2020-01-24" class="date">2020-01-24</time> <a href="bad-fortune.html" alt="Bad Fortune song">bad fortune</a></li>
+                    <li><time datetime="2020-01-08" class="date">2020-01-08</time> <a href="/whats-not-to-like.html" alt="What's Not to Like song">what's not to like</a></li>
+                </ul>
+            </li>
+            <li>poems
+                <ul>
+                    <li><time datetime="2023-11-09" class="date">2023-11-09</time> <a href="#" alt="Glass on the Ground poem in Irish" lang="ga">gloine ar an talamh</a> (glass on the ground)</li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
     <div class="credit">← inspired by <a href="https://elly.town" alt="Elly's website">elly.town</a></div>
 
     <script>
