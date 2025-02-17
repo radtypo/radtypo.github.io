@@ -3,43 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rad.typo</title>
+    <title>radtypo</title>
     <style>
-        /* Existing styles remain the same */
+        :root {
+            --bg-color: #fff;
+            --text-color: #000;
+            --link-color: #0000FF;
+            --secondary-color: #666;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #fff;
+            --link-color: #809fff;
+            --secondary-color: #999;
+        }
+
+        body {
+            font-family: monospace;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        ul ul {
+            list-style-type: circle;
+            margin-left: 20px;
+        }
+
+        .date {
+            color: var(--text-color);
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .credit {
+            margin-top: 40px;
+            color: var(--secondary-color);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-family: monospace;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .theme-toggle:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
-
-    <div class="help-overlay" id="help">
-        <div class="help-content">
-            <div class="help-title">keyboard shortcuts</div>
-            <div class="shortcut"><span class="key">j</span> <span>next item</span></div>
-            <div class="shortcut"><span class="key">k</span> <span>previous item</span></div>
-            <div class="shortcut"><span class="key">h</span> <span>go home</span></div>
-            <div class="shortcut"><span class="key">?</span> <span>toggle this help</span></div>
-            <div class="shortcut"><span class="key">esc</span> <span>close this help</span></div>
-            <div class="shortcut"><span class="key">secret codes</span> <span>try typing RAD, TYPO, HACK</span></div>
-        </div>
-    </div>
 
     <h1>rad.typo</h1>
 
     <ul>
         <li>songs
             <ul>
-                <li class="nav-item" id="muriel"><span class="date">2022-12-08</span> <a href="/muriel">muriel</a></li>
-                <li class="nav-item" id="whats-not-to-like"><span class="date">2022-12-08</span> <a href="#">what's not to like</a></li>
-                <li class="nav-item" id="birthday-cake"><span class="date">2021-06-13</span> <a href="#">birthday cake</a></li>
-                <li class="nav-item" id="hard-hitter"><span class="date">2020-10-31</span> <a href="#">hard hitter</a></li>
-                <li class="nav-item" id="bad-fortune"><span class="date">2020-09-18</span> <a href="#">bad fortune</a></li>
-                <li class="nav-item" id="my-happiness"><span class="date">2020-07-23</span> <a href="#">my happiness is not held by others</a></li>
-                <li class="nav-item" id="when-i-havent"><span class="date">2020-07-21</span> <a href="#">when i haven't even got my own guitar</a></li>
+                <li><span class="date">2022-12-08</span> <a href="/muriel">muriel</a></li>
+                <li><span class="date">2022-12-08</span> <a href="#">what's not to like</a></li>
+                <li><span class="date">2021-06-13</span> <a href="#">birthday cake</a></li>
+                <li><span class="date">2020-10-31</span> <a href="#">hard hitter</a></li>
+                <li><span class="date">2020-09-18</span> <a href="#">bad fortune</a></li>
+                <li><span class="date">2020-07-23</span> <a href="#">my happiness is not held by others</a></li>
+                <li><span class="date">2020-07-21</span> <a href="#">when i haven't even got my own guitar</a></li>
             </ul>
         </li>
         <li>poems
             <ul>
-                <li class="nav-item" id="gloine"><span class="date">2023-11-09</span> <a href="#">gloine ar an talamh</a> (glass on the ground)</li>
+                <li><span class="date">2023-11-09</span> <a href="#">gloine ar an talamh</a> (glass on the ground)</li>
             </ul>
         </li>
     </ul>
@@ -47,7 +109,6 @@
     <div class="credit">← inspired by <a href="https://elly.town">elly.town</a></div>
 
     <script>
-        // Existing theme toggle and navigation scripts (keep all previous scripts)
         function toggleTheme() {
             const body = document.documentElement;
             const button = document.querySelector('.theme-toggle');
@@ -56,115 +117,17 @@
             body.setAttribute('data-theme', isDark ? 'light' : 'dark');
             button.innerHTML = isDark ? '○ dark mode' : '● light mode';
             
+            // Save preference
             localStorage.setItem('theme', isDark ? 'light' : 'dark');
         }
 
-        // Load saved theme
+        // Check for saved theme preference
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme) {
             document.documentElement.setAttribute('data-theme', savedTheme);
             document.querySelector('.theme-toggle').innerHTML = 
                 savedTheme === 'dark' ? '● light mode' : '○ dark mode';
         }
-
-        // Keyboard navigation
-        const navItems = Array.from(document.querySelectorAll('.nav-item'));
-        let currentIndex = -1;
-
-        function navigateToItem(index) {
-            if (index >= 0 && index < navItems.length) {
-                const link = navItems[index].querySelector('a');
-                if (link) {
-                    window.location.href = link.href;
-                }
-            }
-        }
-
-        function toggleHelp() {
-            const help = document.getElementById('help');
-            help.style.display = help.style.display === 'none' ? 'block' : 'none';
-        }
-
-        document.addEventListener('keydown', (e) => {
-            // Don't trigger if user is typing in an input
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
-            switch(e.key.toLowerCase()) {
-                case 'j':
-                    currentIndex = Math.min(currentIndex + 1, navItems.length - 1);
-                    navigateToItem(currentIndex);
-                    break;
-                case 'k':
-                    currentIndex = Math.max(currentIndex - 1, 0);
-                    navigateToItem(currentIndex);
-                    break;
-                case 'h':
-                    window.location.href = '/';
-                    break;
-                case '?':
-                    toggleHelp();
-                    break;
-                case 'escape':
-                    document.getElementById('help').style.display = 'none';
-                    break;
-            }
-        });
-    </script>
-
-    <script>
-        // Keyboard Cheat Codes
-        document.addEventListener('DOMContentLoaded', () => {
-            let inputSequence = '';
-            const cheatCodes = {
-                'RAD': () => {
-                    // Invert site colors
-                    document.body.classList.toggle('inverted');
-                    console.log('🎨 RAD mode activated!');
-                },
-                'TYPO': () => {
-                    // Glitch text effect
-                    const glitchTargets = ['h1', '.content', 'a', '.date'];
-                    glitchTargets.forEach(selector => {
-                        document.querySelectorAll(selector).forEach(el => {
-                            el.style.transform = 'rotate(2deg) scale(1.05)';
-                            el.style.color = `hsl(${Math.random() * 360}, 50%, 50%)`;
-                        });
-                    });
-                    console.log('✨ TYPO glitch activated!');
-                },
-                'HACK': () => {
-                    // Matrix-style background
-                    document.body.style.background = 'black';
-                    document.body.style.color = 'green';
-                    document.body.style.fontFamily = 'monospace';
-                    console.log('🖥️ HACK mode engaged!');
-                }
-            };
-
-            document.addEventListener('keydown', (e) => {
-                // Ignore keystrokes in input fields
-                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
-                // Append key to sequence, keeping last 4 characters
-                inputSequence = (inputSequence + e.key.toUpperCase()).slice(-4);
-
-                // Check for cheat codes
-                Object.keys(cheatCodes).forEach(code => {
-                    if (inputSequence.endsWith(code)) {
-                        cheatCodes[code]();
-                    }
-                });
-            });
-
-            // Optional: Add some CSS for the inverted mode
-            const style = document.createElement('style');
-            style.textContent = `
-                body.inverted {
-                    filter: invert(1);
-                }
-            `;
-            document.head.appendChild(style);
-        });
     </script>
 </body>
 </html>
