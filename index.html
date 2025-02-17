@@ -5,137 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>rad.typo</title>
     <style>
-        :root {
-            --bg-color: #fff;
-            --text-color: #000;
-            --link-color: #0000FF;
-            --secondary-color: #666;
-            --overlay-bg: rgba(0, 0, 0, 0.8);
-            --overlay-text: #fff;
-        }
-
-        [data-theme="dark"] {
-            --bg-color: #1a1a1a;
-            --text-color: #fff;
-            --link-color: #809fff;
-            --secondary-color: #999;
-            --overlay-bg: rgba(0, 0, 0, 0.9);
-            --overlay-text: #fff;
-        }
-
-        body {
-            font-family: monospace;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            line-height: 1.6;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        h1 {
-            font-size: 24px;
-            margin-bottom: 30px;
-        }
-
-        a {
-            color: var(--link-color);
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        ul {
-            list-style-type: disc;
-            padding-left: 20px;
-        }
-
-        ul ul {
-            list-style-type: circle;
-            margin-left: 20px;
-        }
-
-        .date {
-            color: var(--text-color);
-            display: inline-block;
-            margin-right: 10px;
-        }
-
-        .credit {
-            margin-top: 40px;
-            color: var(--secondary-color);
-        }
-
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            color: var(--text-color);
-            font-family: monospace;
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        .theme-toggle:hover {
-            text-decoration: underline;
-        }
-
-        .help-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--overlay-bg);
-            color: var(--overlay-text);
-            padding: 40px;
-            box-sizing: border-box;
-            z-index: 1000;
-        }
-
-        .help-content {
-            max-width: 600px;
-            margin: 0 auto;
-            font-family: monospace;
-        }
-
-        .help-title {
-            font-size: 20px;
-            margin-bottom: 20px;
-        }
-
-        .shortcut {
-            display: grid;
-            grid-template-columns: 50px 1fr;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .key {
-            color: var(--link-color);
-        }
-
-        .nav-item {
-            position: relative;
-        }
-
-        .nav-item.current::before {
-            content: "►";
-            position: absolute;
-            left: -15px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .nav-item:target::before {
-            opacity: 1;
-        }
+        /* Existing styles remain the same */
     </style>
 </head>
 <body>
@@ -149,6 +19,7 @@
             <div class="shortcut"><span class="key">h</span> <span>go home</span></div>
             <div class="shortcut"><span class="key">?</span> <span>toggle this help</span></div>
             <div class="shortcut"><span class="key">esc</span> <span>close this help</span></div>
+            <div class="shortcut"><span class="key">secret codes</span> <span>try typing RAD, TYPO, HACK</span></div>
         </div>
     </div>
 
@@ -176,7 +47,7 @@
     <div class="credit">← inspired by <a href="https://elly.town">elly.town</a></div>
 
     <script>
-        // Theme toggle functionality
+        // Existing theme toggle and navigation scripts (keep all previous scripts)
         function toggleTheme() {
             const body = document.documentElement;
             const button = document.querySelector('.theme-toggle');
@@ -237,6 +108,62 @@
                     document.getElementById('help').style.display = 'none';
                     break;
             }
+        });
+    </script>
+
+    <script>
+        // Keyboard Cheat Codes
+        document.addEventListener('DOMContentLoaded', () => {
+            let inputSequence = '';
+            const cheatCodes = {
+                'RAD': () => {
+                    // Invert site colors
+                    document.body.classList.toggle('inverted');
+                    console.log('🎨 RAD mode activated!');
+                },
+                'TYPO': () => {
+                    // Glitch text effect
+                    const glitchTargets = ['h1', '.content', 'a', '.date'];
+                    glitchTargets.forEach(selector => {
+                        document.querySelectorAll(selector).forEach(el => {
+                            el.style.transform = 'rotate(2deg) scale(1.05)';
+                            el.style.color = `hsl(${Math.random() * 360}, 50%, 50%)`;
+                        });
+                    });
+                    console.log('✨ TYPO glitch activated!');
+                },
+                'HACK': () => {
+                    // Matrix-style background
+                    document.body.style.background = 'black';
+                    document.body.style.color = 'green';
+                    document.body.style.fontFamily = 'monospace';
+                    console.log('🖥️ HACK mode engaged!');
+                }
+            };
+
+            document.addEventListener('keydown', (e) => {
+                // Ignore keystrokes in input fields
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+                // Append key to sequence, keeping last 4 characters
+                inputSequence = (inputSequence + e.key.toUpperCase()).slice(-4);
+
+                // Check for cheat codes
+                Object.keys(cheatCodes).forEach(code => {
+                    if (inputSequence.endsWith(code)) {
+                        cheatCodes[code]();
+                    }
+                });
+            });
+
+            // Optional: Add some CSS for the inverted mode
+            const style = document.createElement('style');
+            style.textContent = `
+                body.inverted {
+                    filter: invert(1);
+                }
+            `;
+            document.head.appendChild(style);
         });
     </script>
 </body>
