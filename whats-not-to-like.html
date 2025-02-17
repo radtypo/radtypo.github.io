@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rad.typo - what's not to like</title>
+    <style>
+        :root {
+            --bg-color: #fff;
+            --text-color: #000;
+            --link-color: #0000FF;
+            --secondary-color: #666;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #fff;
+            --link-color: #809fff;
+            --secondary-color: #999;
+        }
+
+        body {
+            font-family: monospace;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-family: monospace;
+            margin-bottom: 10px;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .date {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .back {
+            margin-bottom: 30px;
+            display: block;
+        }
+
+        .content {
+            white-space: pre-wrap;
+        }
+
+        .player-container {
+            margin-bottom: 15px;
+        }
+
+        iframe {
+            display: block;
+            width: 100%;
+            height: 60px;
+            border: none;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-family: monospace;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .theme-toggle:hover {
+            text-decoration: underline;
+        }
+
+        .notes {
+            margin-top: 30px;
+            padding: 10px;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .notes h2 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+        }
+
+        .notes ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
+
+    <a href="/" class="back">← back</a>
+    
+    <h1>what's not to like</h1>
+    <div class="date">2022-12-08</div>
+
+    <div class="player-container">
+        <iframe src="https://archive.org/embed/radtypo-whats-not-to-like" frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen></iframe>
+    </div>
+
+    <div class="content">I'm on the rocks
+I'm spitting blood
+I'm working two jobs
+I'm in the business of just getting by
+Not punching out
+Not checking in
+So goddamn lonely
+Can't get to sleep without a bottle of wine
+*What's not to like?*
+*What's not to like? (Hey!)*
+I'm so ashamed
+I stayed away
+I missed his birthday
+I bought the gift but couldn't make it outside
+I kept you out 
+To keep it in
+I'm dying slowly
+Told the truth when there was nowhere to hide
+*What's not to like?*
+*What's not to like? (Hey!)*
+I'm still the same
+Nothing you say
+Will ever change me
+Nothing can change unless I swallow my pride
+I'm zoning out
+It's sinking in
+I've got to choose now
+To learn to swim against the pull of the tide
+*What's not to like?*
+*What's not to like? (Hey!)*</div>
+
+    <div class="notes">
+        <h2>Notes</h2>
+        <ul>
+            <li>Add your notes about the song here</li>
+        </ul>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.documentElement;
+            const button = document.querySelector('.theme-toggle');
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            button.innerHTML = isDark ? '○ dark mode' : '● light mode';
+            
+            // Save preference
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+        }
+
+        // Check for saved theme preference when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                const button = document.querySelector('.theme-toggle');
+                button.innerHTML = savedTheme === 'dark' 
+                    ? '● light mode' 
+                    : '○ dark mode';
+            }
+        });
+    </script>
+</body>
+</html>
