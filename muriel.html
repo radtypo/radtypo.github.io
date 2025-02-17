@@ -21,46 +21,39 @@
             margin-bottom: 10px;
         }
 
-        a {
-            color: #0000FF;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
         .date {
             color: #666;
             margin-bottom: 10px;
-            display: block;
         }
 
         .back {
             margin-bottom: 30px;
             display: block;
+            color: #0000FF;
+            text-decoration: none;
+        }
+
+        .back:hover {
+            text-decoration: underline;
         }
 
         .content {
             white-space: pre-wrap;
-            line-height: 1.8;
-            margin-top: 10px;
         }
 
         .content p {
-            margin-bottom: 20px;
+            margin-bottom: 40px; /* Space between verses */
         }
 
         .player-container {
-            margin: 0;
-            padding: 0;
+            margin-bottom: 40px; /* Space after player */
         }
 
         iframe {
-            border: none;
+            display: block;
             width: 100%;
-            margin: 0;
-            padding: 0;
+            height: 60px;
+            border: none;
         }
     </style>
 </head>
@@ -71,7 +64,7 @@
     <div class="date">2022-12-08</div>
 
     <div class="player-container">
-        <iframe src="https://archive.org/embed/radtypo-muriel" width="500" height="60" frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen></iframe>
+        <iframe src="https://archive.org/embed/radtypo-muriel" frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen></iframe>
     </div>
 
     <div class="content">
