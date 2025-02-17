@@ -6,38 +6,55 @@
     <title>muriel - rad.typo</title>
     <style>
         :root {
-            --bg-color: #fff;
-            --text-color: #000;
-            --link-color: #0000FF;
-            --secondary-color: #666;
-        }
-
-        [data-theme="dark"] {
-            --bg-color: #1a1a1a;
-            --text-color: #fff;
-            --link-color: #809fff;
-            --secondary-color: #999;
+            --spacing-base: 20px;
+            --spacing-small: 10px;
+            --spacing-large: 40px;
+            
+            --font-primary: monospace;
+            
+            --bg-color-light: #fff;
+            --text-color-light: #000;
+            --link-color-light: #0000FF;
+            --secondary-color-light: #666;
+            
+            --bg-color-dark: #1a1a1a;
+            --text-color-dark: #fff;
+            --link-color-dark: #809fff;
+            --secondary-color-dark: #999;
         }
 
         body {
-            font-family: monospace;
+            font-family: var(--font-primary);
             max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
+            margin: var(--spacing-large) auto;
+            padding: var(--spacing-base);
             line-height: 1.6;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
             transition: background-color 0.3s, color 0.3s;
+        }
+
+        body[data-theme="dark"] {
+            background-color: var(--bg-color-dark);
+            color: var(--text-color-dark);
+        }
+
+        body[data-theme="dark"] a {
+            color: var(--link-color-dark);
+        }
+
+        body[data-theme="dark"] .date {
+            color: var(--secondary-color-dark);
         }
 
         h1 {
             font-size: 24px;
-            font-family: monospace;
-            margin-bottom: 10px;
+            font-family: var(--font-primary);
+            margin-bottom: var(--spacing-small);
         }
 
         a {
-            color: var(--link-color);
+            color: var(--link-color-light);
             text-decoration: none;
         }
 
@@ -46,12 +63,12 @@
         }
 
         .date {
-            color: var(--secondary-color);
-            margin-bottom: 10px;
+            color: var(--secondary-color-light);
+            margin-bottom: var(--spacing-small);
         }
 
         .back {
-            margin-bottom: 30px;
+            margin-bottom: var(--spacing-base);
             display: block;
         }
 
@@ -60,7 +77,7 @@
         }
 
         .player-container {
-            margin-bottom: 15px;
+            margin-bottom: var(--spacing-small);
         }
 
         iframe {
@@ -72,14 +89,18 @@
 
         .theme-toggle {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: var(--spacing-base);
+            right: var(--spacing-base);
             background: none;
             border: none;
-            color: var(--text-color);
-            font-family: monospace;
+            color: var(--text-color-light);
+            font-family: var(--font-primary);
             cursor: pointer;
-            padding: 5px;
+            padding: var(--spacing-small);
+        }
+
+        body[data-theme="dark"] .theme-toggle {
+            color: var(--text-color-dark);
         }
 
         .theme-toggle:hover {
@@ -90,16 +111,23 @@
 <body>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
 
-    <a href="/" class="back">← back</a>
+    <a href="/" class="back" alt="Return to homepage">← back</a>
     
     <h1>muriel</h1>
-    <div class="date">2022-12-08</div>
+    <time datetime="2022-12-08" class="date">2022-12-08</time>
 
     <div class="player-container">
-        <iframe src="https://archive.org/embed/radtypo-muriel" frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen></iframe>
+        <iframe 
+            src="https://archive.org/embed/radtypo-muriel" 
+            title="Muriel audio player" 
+            frameborder="0" 
+            webkitallowfullscreen="true" 
+            mozallowfullscreen="true" 
+            allowfullscreen
+        ></iframe>
     </div>
 
-    <div class="content">You're the cat's meow!
+    <div class="content" aria-label="Lyrics of Muriel">You're the cat's meow!
 My prime article
 Muriel - I am sick until I see you
 You sway me as you please
@@ -181,12 +209,16 @@ I know I'll make you happy</div>
         }
 
         // Check for saved theme preference when page loads
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            document.querySelector('.theme-toggle').innerHTML = 
-                savedTheme === 'dark' ? '● light mode' : '○ dark mode';
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                const button = document.querySelector('.theme-toggle');
+                button.innerHTML = savedTheme === 'dark' 
+                    ? '● light mode' 
+                    : '○ dark mode';
+            }
+        });
     </script>
 </body>
 </html>
