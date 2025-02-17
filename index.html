@@ -5,74 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>rad.typo</title>
     <style>
+        :root {
+            --text-color: #000;
+            --link-color: #0000FF;
+            --muted-color: #666;
+            --max-width: 800px;
+            --base-spacing: 20px;
+        }
         body {
             font-family: monospace;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
+            max-width: var(--max-width);
+            margin: calc(var(--base-spacing) * 2) auto;
+            padding: var(--base-spacing);
             line-height: 1.6;
             background-color: #fff;
-            color: #000;
+            color: var(--text-color);
         }
-
         h1 {
             font-size: 24px;
-            margin-bottom: 30px;
+            margin-bottom: calc(var(--base-spacing) * 1.5);
         }
-
         a {
-            color: #0000FF;
+            color: var(--link-color);
             text-decoration: none;
         }
-
         a:hover {
             text-decoration: underline;
         }
-
-        ul {
+        nav ul {
             list-style-type: disc;
-            padding-left: 20px;
+            padding-left: var(--base-spacing);
         }
-
-        ul ul {
+        nav ul ul {
             list-style-type: circle;
-            margin-left: 20px;
+            margin-left: var(--base-spacing);
         }
-
         .date {
-            color: #000;
+            color: var(--text-color);
             display: inline-block;
             margin-right: 10px;
         }
-
         .credit {
-            margin-top: 40px;
-            color: #666;
+            margin-top: calc(var(--base-spacing) * 2);
+            color: var(--muted-color);
         }
     </style>
 </head>
 <body>
     <h1>rad.typo</h1>
-
-    <ul>
-        <li>songs
-            <ul>
-                <li><span class="date">2022-12-08</span> <a href="/muriel">muriel</a></li>
-                <li><span class="date">2022-12-08</span> <a href="#">what's not to like</a></li>
-                <li><span class="date">2021-06-13</span> <a href="#">birthday cake</a></li>
-                <li><span class="date">2020-10-31</span> <a href="#">hard hitter</a></li>
-                <li><span class="date">2020-09-18</span> <a href="#">bad fortune</a></li>
-                <li><span class="date">2020-07-23</span> <a href="#">my happiness is not held by others</a></li>
-                <li><span class="date">2020-07-21</span> <a href="#">when i haven't even got my own guitar</a></li>
-            </ul>
-        </li>
-        <li>poems
-            <ul>
-                <li><span class="date">2023-11-09</span> <a href="#">gloine ar an talamh</a> (glass on the ground)</li>
-            </ul>
-        </li>
-    </ul>
-
-    <div class="credit">← inspired by <a href="https://elly.town">elly.town</a></div>
+    <nav>
+        <ul>
+            <li>songs
+                <ul>
+                    <li><time datetime="2022-12-08" class="date">2022-12-08</time> <a href="/muriel" alt="Muriel song">muriel</a></li>
+                    <li><time datetime="2022-12-08" class="date">2022-12-08</time> <a href="#" alt="What's Not to Like song">what's not to like</a></li>
+                    <li><time datetime="2021-06-13" class="date">2021-06-13</time> <a href="#" alt="Birthday Cake song">birthday cake</a></li>
+                    <li><time datetime="2020-10-31" class="date">2020-10-31</time> <a href="#" alt="Hard Hitter song">hard hitter</a></li>
+                    <li><time datetime="2020-09-18" class="date">2020-09-18</time> <a href="#" alt="Bad Fortune song">bad fortune</a></li>
+                    <li><time datetime="2020-07-23" class="date">2020-07-23</time> <a href="#" alt="My Happiness is Not Held by Others song">my happiness is not held by others</a></li>
+                    <li><time datetime="2020-07-21" class="date">2020-07-21</time> <a href="#" alt="When I Haven't Even Got My Own Guitar song">when i haven't even got my own guitar</a></li>
+                </ul>
+            </li>
+            <li>poems
+                <ul>
+                    <li><time datetime="2023-11-09" class="date">2023-11-09</time> <a href="#" alt="Glass on the Ground poem in Irish" lang="ga">gloine ar an talamh</a> (glass on the ground)</li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <div class="credit">← inspired by <a href="https://elly.town" alt="Elly's website">elly.town</a></div>
 </body>
 </html>
