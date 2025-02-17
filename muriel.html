@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>muriel - rad.typo</title>
+    <title>muriel - radtypo</title>
     <style>
         :root {
             --bg-color: #fff;
             --text-color: #000;
             --link-color: #0000FF;
             --secondary-color: #666;
-            --overlay-bg: rgba(0, 0, 0, 0.8);
-            --overlay-text: #fff;
         }
 
         [data-theme="dark"] {
@@ -19,8 +17,6 @@
             --text-color: #fff;
             --link-color: #809fff;
             --secondary-color: #999;
-            --overlay-bg: rgba(0, 0, 0, 0.9);
-            --overlay-text: #fff;
         }
 
         body {
@@ -89,59 +85,12 @@
         .theme-toggle:hover {
             text-decoration: underline;
         }
-
-        .help-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--overlay-bg);
-            color: var(--overlay-text);
-            padding: 40px;
-            box-sizing: border-box;
-            z-index: 1000;
-        }
-
-        .help-content {
-            max-width: 600px;
-            margin: 0 auto;
-            font-family: monospace;
-        }
-
-        .help-title {
-            font-size: 20px;
-            margin-bottom: 20px;
-        }
-
-        .shortcut {
-            display: grid;
-            grid-template-columns: 50px 1fr;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .key {
-            color: var(--link-color);
-        }
     </style>
 </head>
 <body>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
 
-    <div class="help-overlay" id="help">
-        <div class="help-content">
-            <div class="help-title">keyboard shortcuts</div>
-            <div class="shortcut"><span class="key">j</span> <span>next item</span></div>
-            <div class="shortcut"><span class="key">k</span> <span>previous item</span></div>
-            <div class="shortcut"><span class="key">h</span> <span>go home</span></div>
-            <div class="shortcut"><span class="key">?</span> <span>toggle this help</span></div>
-            <div class="shortcut"><span class="key">esc</span> <span>close this help</span></div>
-        </div>
-    </div>
-
-    <a href="/" class="back">← back to rad.typo</a>
+    <a href="/" class="back">← back</a>
     
     <h1>muriel</h1>
     <div class="date">2022-12-08</div>
@@ -218,7 +167,6 @@ Don't be so mean
 I know I'll make you happy</div>
 
     <script>
-        // Theme toggle functionality
         function toggleTheme() {
             const body = document.documentElement;
             const button = document.querySelector('.theme-toggle');
@@ -227,59 +175,17 @@ I know I'll make you happy</div>
             body.setAttribute('data-theme', isDark ? 'light' : 'dark');
             button.innerHTML = isDark ? '○ dark mode' : '● light mode';
             
+            // Save preference
             localStorage.setItem('theme', isDark ? 'light' : 'dark');
         }
 
-        // Load saved theme
+        // Check for saved theme preference when page loads
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme) {
             document.documentElement.setAttribute('data-theme', savedTheme);
             document.querySelector('.theme-toggle').innerHTML = 
                 savedTheme === 'dark' ? '● light mode' : '○ dark mode';
         }
-
-        // Keyboard navigation
-        const navItems = [
-            { href: '/muriel', title: 'Muriel' },
-            { href: '/', title: 'Home' }
-        ];
-        let currentIndex = 0;
-
-        function navigateToItem(index) {
-            if (index >= 0 && index < navItems.length) {
-                window.location.href = navItems[index].href;
-            }
-        }
-
-        function toggleHelp() {
-            const help = document.getElementById('help');
-            help.style.display = help.style.display === 'none' ? 'block' : 'none';
-        }
-
-        document.addEventListener('keydown', (e) => {
-            // Don't trigger if user is typing in an input
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
-            switch(e.key.toLowerCase()) {
-                case 'j':
-                    currentIndex = Math.min(currentIndex + 1, navItems.length - 1);
-                    navigateToItem(currentIndex);
-                    break;
-                case 'k':
-                    currentIndex = Math.max(currentIndex - 1, 0);
-                    navigateToItem(currentIndex);
-                    break;
-                case 'h':
-                    window.location.href = '/';
-                    break;
-                case '?':
-                    toggleHelp();
-                    break;
-                case 'escape':
-                    document.getElementById('help').style.display = 'none';
-                    break;
-            }
-        });
     </script>
 </body>
 </html>
