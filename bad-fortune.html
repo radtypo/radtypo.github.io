@@ -84,6 +84,58 @@
             text-decoration: underline;
         }
 
+        .metadata-section {
+            margin: 20px 0;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .metadata-header {
+            padding: 10px;
+            background-color: var(--bg-color);
+            border-bottom: 1px solid var(--secondary-color);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .metadata-header:hover {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+        }
+
+        .metadata-content {
+            padding: 15px;
+            display: none;
+        }
+
+        .metadata-content.open {
+            display: block;
+        }
+
+        .metadata-content dl {
+            margin: 0;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 8px 16px;
+        }
+
+        .metadata-content dt {
+            color: var(--secondary-color);
+            font-weight: normal;
+        }
+
+        .metadata-content dd {
+            margin: 0;
+        }
+
+        .metadata-toggle {
+            font-family: monospace;
+            color: var(--secondary-color);
+        }
+
         .notes {
             margin-top: 30px;
             padding: 10px;
@@ -114,6 +166,45 @@
             <source src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
+    </div>
+
+    <div class="metadata-section">
+        <div class="metadata-header" onclick="toggleMetadata()">
+            <span>Song Information</span>
+            <span class="metadata-toggle">[ + ]</span>
+        </div>
+        <div class="metadata-content" id="metadata">
+            <dl>
+                <dt>Duration</dt>
+                <dd>3:43</dd>
+                
+                <dt>Recording Location</dt>
+                <dd>Smalltown America Studio, Derry, Northern Ireland</dd>
+                
+                <dt>Composers</dt>
+                <dd>
+                    Andrew Ferris (33%)<br>
+                    Caolán Austin (33%)<br>
+                    Chris Cassidy (33%)
+                </dd>
+                
+                <dt>Performance</dt>
+                <dd>
+                    Andrew Ferris: Vocals, Guitar, Keyboard<br>
+                    Caolán Austin: Drums, Percussion, Guitar<br>
+                    Chris Cassidy: Bass
+                </dd>
+                
+                <dt>Production</dt>
+                <dd>
+                    Engineering: All composers<br>
+                    Mixing & Mastering: Caolán Austin
+                </dd>
+                
+                <dt>Release Date</dt>
+                <dd>2020-01-24</dd>
+            </dl>
+        </div>
     </div>
 
     <div class="content">I'm happy to go
@@ -166,6 +257,15 @@ Do you think I'll just snap out of it
             
             // Save preference
             localStorage.setItem('theme', isDark ? 'light' : 'dark');
+        }
+
+        function toggleMetadata() {
+            const metadata = document.getElementById('metadata');
+            const toggle = document.querySelector('.metadata-toggle');
+            const isOpen = metadata.classList.contains('open');
+            
+            metadata.classList.toggle('open');
+            toggle.textContent = isOpen ? '[ + ]' : '[ - ]';
         }
 
         // Check for saved theme preference when page loads
