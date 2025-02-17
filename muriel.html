@@ -12,15 +12,17 @@
             
             --font-primary: monospace;
             
-            --bg-color-light: #fff;
-            --text-color-light: #000;
-            --link-color-light: #0000FF;
-            --secondary-color-light: #666;
-            
-            --bg-color-dark: #1a1a1a;
-            --text-color-dark: #fff;
-            --link-color-dark: #809fff;
-            --secondary-color-dark: #999;
+            --bg-color: #fff;
+            --text-color: #000;
+            --link-color: #0000FF;
+            --secondary-color: #666;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #fff;
+            --link-color: #809fff;
+            --secondary-color: #999;
         }
 
         body {
@@ -29,22 +31,9 @@
             margin: var(--spacing-large) auto;
             padding: var(--spacing-base);
             line-height: 1.6;
-            background-color: var(--bg-color-light);
-            color: var(--text-color-light);
+            background-color: var(--bg-color);
+            color: var(--text-color);
             transition: background-color 0.3s, color 0.3s;
-        }
-
-        body[data-theme="dark"] {
-            background-color: var(--bg-color-dark);
-            color: var(--text-color-dark);
-        }
-
-        body[data-theme="dark"] a {
-            color: var(--link-color-dark);
-        }
-
-        body[data-theme="dark"] .date {
-            color: var(--secondary-color-dark);
         }
 
         h1 {
@@ -54,7 +43,7 @@
         }
 
         a {
-            color: var(--link-color-light);
+            color: var(--link-color);
             text-decoration: none;
         }
 
@@ -63,7 +52,7 @@
         }
 
         .date {
-            color: var(--secondary-color-light);
+            color: var(--secondary-color);
             margin-bottom: var(--spacing-small);
         }
 
@@ -93,14 +82,10 @@
             right: var(--spacing-base);
             background: none;
             border: none;
-            color: var(--text-color-light);
+            color: var(--text-color);
             font-family: var(--font-primary);
             cursor: pointer;
             padding: var(--spacing-small);
-        }
-
-        body[data-theme="dark"] .theme-toggle {
-            color: var(--text-color-dark);
         }
 
         .theme-toggle:hover {
