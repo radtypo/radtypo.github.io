@@ -10,6 +10,7 @@
             --text-color: #000;
             --link-color: #0000FF;
             --secondary-color: #666;
+            --spacing: 20px;
         }
 
         [data-theme="dark"] {
@@ -23,16 +24,45 @@
             font-family: monospace;
             max-width: 800px;
             margin: 40px auto;
-            padding: 20px;
+            padding: var(--spacing);
             line-height: 1.6;
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: background-color 0.3s, color 0.3s;
         }
 
+        .section {
+            margin: var(--spacing) 0;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+        }
+
+        .section-header {
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid transparent;
+        }
+
+        .section-header:hover {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+        }
+
+        .section-content {
+            padding: 15px;
+            display: none;
+        }
+
+        .section-content.open {
+            display: block;
+            border-top: 1px solid var(--secondary-color);
+        }
+
         h1 {
             font-size: 24px;
-            font-family: monospace;
             margin-bottom: 10px;
         }
 
@@ -60,20 +90,17 @@
         }
 
         .player-container {
-            margin-bottom: 15px;
+            margin: var(--spacing) 0;
         }
 
-        iframe {
-            display: block;
+        audio {
             width: 100%;
-            height: 60px;
-            border: none;
         }
 
         .theme-toggle {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: var(--spacing);
+            right: var(--spacing);
             background: none;
             border: none;
             color: var(--text-color);
@@ -82,26 +109,50 @@
             padding: 5px;
         }
 
-        .theme-toggle:hover {
-            text-decoration: underline;
-        }
-
-        .notes {
-            margin-top: 30px;
-            padding: 10px;
-            border: 1px solid var(--secondary-color);
-        }
-
-        .notes h2 {
-            margin: 0 0 10px 0;
-            font-size: 18px;
-        }
-
-        .notes ul {
+        .metadata-content dl {
             margin: 0;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 8px 16px;
+        }
+
+        .metadata-content dt {
+            color: var(--secondary-color);
+        }
+
+        .metadata-content dd {
+            margin: 0;
+        }
+
+        .resource-link {
+            display: block;
+            margin: 5px 0;
+            color: var(--link-color);
+        }
+
+        .resource-link:before {
+            content: "• ";
+            color: var(--text-color);
+        }
+
+        .notes-content {
+            margin: 0;
+        }
+
+        .notes-content ul {
+            margin: 10px 0 0 0;
             padding-left: 20px;
         }
     </style>
+    <script>
+        // Immediately check and apply the theme before page renders
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
 </head>
 <body>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
@@ -112,45 +163,63 @@
     <div class="date">2020-01-08</div>
 
     <div class="player-container">
-        <iframe src="https://archive.org/embed/radtypo-whats-not-to-like" frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen></iframe>
+        <audio controls>
+            <source src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
     </div>
 
-    <div class="content">I'm on the rocks
-I'm spitting blood
-I'm working two jobs
-I'm in the business of just getting by
-Not punching out
-Not checking in
-So goddamn lonely
-Can't get to sleep without a bottle of wine
-*What's not to like?*
-*What's not to like? (Hey!)*
-I'm so ashamed
-I stayed away
-I missed his birthday
-I bought the gift but couldn't make it outside
-I kept you out 
-To keep it in
-I'm dying slowly
-Told the truth when there was nowhere to hide
-*What's not to like?*
-*What's not to like? (Hey!)*
-I'm still the same
-Nothing you say
-Will ever change me
-Nothing can change unless I swallow my pride
-I'm zoning out
-It's sinking in
-I've got to choose now
-To learn to swim against the pull of the tide
-*What's not to like?*
-*What's not to like? (Hey!)*</div>
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('credits')">
+            <span>Credits</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="credits">
+            <dl>
+                <dt>Duration</dt>
+                <dd>3:43</dd>
+                
+                <dt>Recording Location</dt>
+                <dd>Smalltown America Studio, Derry, Northern Ireland</dd>
+            </dl>
+        </div>
+    </div>
 
-    <div class="notes">
-        <h2>Notes</h2>
-        <ul>
-            <li>Add your notes about the song here</li>
-        </ul>
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('lyrics')">
+            <span>Lyrics</span>
+            <span class="toggle">[ - ]</span>
+        </div>
+        <div class="section-content open" id="lyrics">
+            <div class="content" id="lyrics-content">[Previous lyrics content preserved but removed from this display...]</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('notes')">
+            <span>Notes</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="notes">
+            <div class="notes-content">
+                <ul>
+                    <li>Add your notes about the song here</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('resources')">
+            <span>Resources</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="resources">
+            <a href="#" class="resource-link">chord sheet (PDF)</a>
+            <a href="#" class="resource-link">guitar playthrough (video)</a>
+            <a href="#" class="resource-link">multitrack stems (ZIP)</a>
+            <a href="#" class="resource-link">mix session (ZIP)</a>
+        </div>
     </div>
 
     <script>
@@ -162,11 +231,18 @@ To learn to swim against the pull of the tide
             body.setAttribute('data-theme', isDark ? 'light' : 'dark');
             button.innerHTML = isDark ? '○ dark mode' : '● light mode';
             
-            // Save preference
             localStorage.setItem('theme', isDark ? 'light' : 'dark');
         }
 
-        // Check for saved theme preference when page loads
+        function toggleSection(id) {
+            const content = document.getElementById(id);
+            const toggle = content.previousElementSibling.querySelector('.toggle');
+            const isOpen = content.classList.contains('open');
+            
+            content.classList.toggle('open');
+            toggle.textContent = isOpen ? '[ + ]' : '[ - ]';
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme) {
