@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rad.typo - radio</title>
+    <style>
+        :root {
+            --bg-color: #fff;
+            --text-color: #000;
+            --link-color: #0000FF;
+            --secondary-color: #666;
+            --spacing: 20px;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #fff;
+            --link-color: #809fff;
+            --secondary-color: #999;
+        }
+
+        body {
+            font-family: monospace;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: var(--spacing);
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .date {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .back {
+            margin-bottom: 30px;
+            display: block;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: var(--spacing);
+            right: var(--spacing);
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-family: monospace;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* Radio Player Styles */
+        .radio-container {
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .now-playing {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--secondary-color);
+        }
+
+        .current-track {
+            font-weight: bold;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .control-btn {
+            background: none;
+            border: 1px solid var(--secondary-color);
+            color: var(--text-color);
+            padding: 5px 10px;
+            margin-right: 10px;
+            cursor: pointer;
+            font-family: monospace;
+        }
+
+        .control-btn:hover {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+        }
+
+        .track-progress {
+            width: 100%;
+            height: 5px;
+            background-color: var(--secondary-color);
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--link-color);
+            width: 0%;
+        }
+
+        .playlist {
+            margin-top: 30px;
+        }
+
+        .playlist-track {
+            padding: 8px 0;
+            border-bottom: 1px dotted var(--secondary-color);
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .playlist-track:hover {
+            background-color: rgba(0,0,0,0.05);
+        }
+
+        [data-theme="dark"] .playlist-track:hover {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .track-playing {
+            font-weight: bold;
+        }
+
+        .track-playing:before {
+            content: "► ";
+        }
+
+        .track-duration {
+            color: var(--secondary-color);
+        }
+
+        /* Visibility support */
+        .visibility-note {
+            margin-top: 30px;
+            padding: 10px;
+            background-color: rgba(0,0,0,0.05);
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        [data-theme="dark"] .visibility-note {
+            background-color: rgba(255,255,255,0.05);
+        }
+    </style>
+    <script>
+        // Immediately check and apply the theme before page renders
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
+
+    <a href="/" class="back">← back</a>
+    
+    <h1>rad.typo radio</h1>
+    <div class="date">continuous playback</div>
+
+    <div class="radio-container">
+        <div class="now-playing">
+            <div>Now playing:</div>
+            <div class="current-track" id="current-track">muriel</div>
+            <div class="track-progress">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="player-controls">
+            <button class="control-btn" id="prev-btn">← prev</button>
+            <button class="control-btn" id="play-btn">▶ play</button>
+            <button class="control-btn" id="next-btn">next →</button>
+        </div>
+
+        <audio id="audio-player"></audio>
+
+        <div class="playlist">
+            <div class="playlist-track track-playing" data-src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" data-name="muriel">
+                <span class="track-name">muriel</span>
+                <span class="track-duration">3:43</span>
+            </div>
+            <div class="playlist-track" data-src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" data-name="bad fortune">
+                <span class="track-name">bad fortune</span>
+                <span class="track-duration">3:43</span>
+            </div>
+            <div class="playlist-track" data-src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" data-name="what's not to like">
+                <span class="track-name">what's not to like</span>
+                <span class="track-duration">3:43</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="visibility-note">
+        Note: The radio player will continue playing even if you switch to another browser tab.
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.documentElement;
+            const button = document.querySelector('.theme-toggle');
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            button.innerHTML = isDark ? '○ dark mode' : '● light mode';
+            
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                const button = document.querySelector('.theme-toggle');
+                button.innerHTML = savedTheme === 'dark' 
+                    ? '● light mode' 
+                    : '○ dark mode';
+            }
+
+            // Radio Player Implementation
+            const audioPlayer = document.getElementById('audio-player');
+            const playBtn = document.getElementById('play-btn');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const progressBar = document.getElementById('progress-bar');
+            const currentTrackDisplay = document.getElementById('current-track');
+            const playlistTracks = document.querySelectorAll('.playlist-track');
+            
+            let currentTrackIndex = 0;
+            let isPlaying = false;
+
+            // Load initial track
+            loadTrack(currentTrackIndex);
+
+            // Play/Pause button
+            playBtn.addEventListener('click', () => {
+                if (isPlaying) {
+                    audioPlayer.pause();
+                    playBtn.textContent = '▶ play';
+                } else {
+                    audioPlayer.play();
+                    playBtn.textContent = '❚❚ pause';
+                }
+                isPlaying = !isPlaying;
+            });
+
+            // Previous track
+            prevBtn.addEventListener('click', () => {
+                currentTrackIndex = (currentTrackIndex - 1 + playlistTracks.length) % playlistTracks.length;
+                loadTrack(currentTrackIndex);
+                if (isPlaying) {
+                    audioPlayer.play();
+                }
+            });
+
+            // Next track
+            nextBtn.addEventListener('click', () => {
+                currentTrackIndex = (currentTrackIndex + 1) % playlistTracks.length;
+                loadTrack(currentTrackIndex);
+                if (isPlaying) {
+                    audioPlayer.play();
+                }
+            });
+
+            // Track ended event
+            audioPlayer.addEventListener('ended', () => {
+                currentTrackIndex = (currentTrackIndex + 1) % playlistTracks.length;
+                loadTrack(currentTrackIndex);
+                audioPlayer.play();
+            });
+
+            // Update progress bar
+            audioPlayer.addEventListener('timeupdate', () => {
+                const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                progressBar.style.width = `${progress}%`;
+            });
+
+            // Click on playlist tracks
+            playlistTracks.forEach((track, index) => {
+                track.addEventListener('click', () => {
+                    currentTrackIndex = index;
+                    loadTrack(currentTrackIndex);
+                    audioPlayer.play();
+                    playBtn.textContent = '❚❚ pause';
+                    isPlaying = true;
+                });
+            });
+
+            // Page visibility support to keep playing when tab is not active
+            document.addEventListener('visibilitychange', () => {
+                // Keep playing when page is not visible
+                if (document.hidden && isPlaying) {
+                    // Do nothing, let it play
+                }
+            });
+
+            // Helper function to load track
+            function loadTrack(index) {
+                // Update audio source
+                const track = playlistTracks[index];
+                audioPlayer.src = track.dataset.src;
+                
+                // Update current track display
+                currentTrackDisplay.textContent = track.dataset.name;
+                
+                // Update playing status in playlist
+                playlistTracks.forEach(t => t.classList.remove('track-playing'));
+                track.classList.add('track-playing');
+                
+                // Reset progress bar
+                progressBar.style.width = '0%';
+            }
+        });
+    </script>
+</body>
+</html>
