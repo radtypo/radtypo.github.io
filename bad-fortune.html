@@ -46,19 +46,13 @@
             border-bottom: 1px solid transparent;
         }
 
-        .section-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
         .section-header:hover {
             background-color: var(--secondary-color);
             color: var(--bg-color);
         }
 
         .section-content {
-            padding: var(--spacing);
+            padding: 15px;
             display: none;
         }
 
@@ -83,7 +77,7 @@
 
         .date {
             color: var(--secondary-color);
-            margin-bottom: var(--spacing);
+            margin-bottom: 10px;
         }
 
         .back {
@@ -130,20 +124,6 @@
             margin: 0;
         }
 
-        .copy-button {
-            background: none;
-            border: none;
-            color: var(--text-color);
-            font-family: monospace;
-            cursor: pointer;
-            padding: 5px;
-            margin-bottom: 10px;
-        }
-
-        .copy-button:hover {
-            color: var(--secondary-color);
-        }
-
         .resource-link {
             display: block;
             margin: 5px 0;
@@ -155,6 +135,15 @@
             color: var(--text-color);
         }
     </style>
+    <script>
+        // Immediately check and apply the theme before page renders
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
 </head>
 <body>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
@@ -280,8 +269,6 @@ Do you think I'll just snap out of it
             content.classList.toggle('open');
             toggle.textContent = isOpen ? '[ + ]' : '[ - ]';
         }
-
-
 
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme');
