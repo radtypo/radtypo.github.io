@@ -186,16 +186,22 @@
 
             // Initialize Audio Context and Beat Detection
             initAudioAnalysis(audioElement) {
-                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const source = this.audioContext.createMediaElementSource(audioElement);
-                
-                this.analyser = this.audioContext.createAnalyser();
-                source.connect(this.analyser);
-                this.analyser.connect(this.audioContext.destination);
+                // Ensure audio context is created only once
+                if (!this.audioContext) {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    
+                    // Create source from audio element
+                    const source = this.audioContext.createMediaElementSource(audioElement);
+                    
+                    // Create analyser
+                    this.analyser = this.audioContext.createAnalyser();
+                    source.connect(this.analyser);
+                    this.analyser.connect(this.audioContext.destination);
 
-                this.analyser.fftSize = 256;
-                this.bufferLength = this.analyser.frequencyBinCount;
-                this.dataArray = new Uint8Array(this.bufferLength);
+                    this.analyser.fftSize = 256;
+                    this.bufferLength = this.analyser.frequencyBinCount;
+                    this.dataArray = new Uint8Array(this.bufferLength);
+                }
             }
 
             // Color Palettes
@@ -210,37 +216,128 @@
             }
 
             // Shape Generators
-            generateGeometricShape(x, y, beatIntensity) {
+            generateShape(x, y, beatIntensity) {
                 const colors = this.getColorPalette();
-                const size = 10 + (beatIntensity * 5);
+                const size = 10 + (beatIntensity * 20);
                 
-                this.ctx.beginPath();
+                this.ctx.save();
                 this.ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                this.ctx.globalAlpha = 0.7;
                 
-                // Random geometric shapes
+                // Enhanced shape generation
+                switch(this.shapeType) {
+                    case 'geometric':
+                        this.generateGeometricShape(x, y, size);
+                        break;
+                    case 'organic':
+                        this.generateOrganicShape(x, y, size);
+                        break;
+                    case 'glitch':
+                        this.generateGlitchShape(x, y, size);
+                        break;
+                    case 'vhs':
+                        this.generateVHSShape(x, y, size);
+                        break;
+                    default:
+                        this.generateGeometricShape(x, y, size);
+                }
+                
+                this.ctx.restore();
+            }
+
+            generateGeometricShape(x, y, size) {
                 const shapeType = Math.floor(Math.random() * 4);
                 switch(shapeType) {
                     case 0: // Rectangle
-                        this.ctx.rect(x, y, size, size);
+                        this.ctx.fillRect(x, y, size, size);
                         break;
                     case 1: // Triangle
+                        this.ctx.beginPath();
                         this.ctx.moveTo(x, y);
                         this.ctx.lineTo(x + size, y);
                         this.ctx.lineTo(x + size/2, y - size);
+                        this.ctx.closePath();
+                        this.ctx.fill();
                         break;
                     case 2: // Circle
+                        this.ctx.beginPath();
                         this.ctx.arc(x, y, size/2, 0, Math.PI * 2);
+                        this.ctx.fill();
                         break;
                     case 3: // Polygon
-                        const sides = Math.floor(Math.random() * 6) + 3;
-                        this.drawPolygon(x, y, size/2, sides);
+                        this.drawPolygon(x, y, size/2, Math.floor(Math.random() * 6) + 3);
                         break;
                 }
+            }
+
+            generateOrganicShape(x, y, size) {
+                this.ctx.beginPath();
+                this.ctx.moveTo(x, y);
                 
+                // Create a more organic, curved shape
+                for (let i = 0; i < 5; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const radius = size * (0.5 + Math.random() * 0.5);
+                    const cpx = x + Math.cos(angle) * radius;
+                    const cpy = y + Math.sin(angle) * radius;
+                    this.ctx.quadraticCurveTo(
+                        x + Math.random() * size, 
+                        y + Math.random() * size, 
+                        cpx, 
+                        cpy
+                    );
+                }
+                
+                this.ctx.closePath();
                 this.ctx.fill();
             }
 
+            generateGlitchShape(x, y, size) {
+                // Offset and duplicate shapes for glitch effect
+                const offsets = [
+                    { x: -5, y: -5, color: 'red' },
+                    { x: 5, y: 5, color: 'blue' }
+                ];
+
+                offsets.forEach(offset => {
+                    this.ctx.save();
+                    this.ctx.fillStyle = offset.color;
+                    this.ctx.globalAlpha = 0.5;
+                    this.ctx.fillRect(
+                        x + offset.x, 
+                        y + offset.y, 
+                        size, 
+                        size
+                    );
+                    this.ctx.restore();
+                });
+
+                // Original shape
+                this.ctx.fillRect(x, y, size, size);
+            }
+
+            generateVHSShape(x, y, size) {
+                // VHS-style distorted rectangles
+                this.ctx.save();
+                this.ctx.translate(x, y);
+                this.ctx.rotate(Math.random() * 0.2 - 0.1);
+                
+                // Horizontal lines for VHS effect
+                for (let i = 0; i < 5; i++) {
+                    this.ctx.globalAlpha = 0.2;
+                    this.ctx.fillRect(
+                        -size/2, 
+                        i * (size/5) - size/2, 
+                        size, 
+                        size/10
+                    );
+                }
+                
+                this.ctx.restore();
+            }
+
             drawPolygon(x, y, radius, sides) {
+                this.ctx.beginPath();
                 const step = (Math.PI * 2) / sides;
                 let rot = 0;
 
@@ -256,14 +353,8 @@
                         y + radius * Math.sin(rot)
                     );
                 }
-            }
-
-            // Glitch Effect
-            applyGlitchEffect() {
-                this.ctx.globalCompositeOperation = 'difference';
-                this.ctx.fillStyle = 'rgba(100, 100, 100, 0.1)';
-                this.ctx.fillRect(0, 0, this.width, this.height);
-                this.ctx.globalCompositeOperation = 'source-over';
+                this.ctx.closePath();
+                this.ctx.fill();
             }
 
             // Render and Animation
@@ -276,21 +367,18 @@
                     this.analyser.getByteFrequencyData(this.dataArray);
 
                     // Use low frequencies for beat detection
-                    const bassLevel = this.dataArray.slice(0, 16).reduce((a, b) => a + b, 0) / 16;
-                    const beatIntensity = bassLevel / 256;
+                    const bassLevels = this.dataArray.slice(0, 16);
+                    const averageBass = bassLevels.reduce((a, b) => a + b, 0) / bassLevels.length;
+                    const beatIntensity = averageBass / 256;
 
                     // Generate shapes based on beat
-                    if (beatIntensity > 0.3) {
-                        for (let i = 0; i < this.intensity; i++) {
+                    if (beatIntensity > 0.2) {
+                        const shapeCount = Math.floor(this.intensity * beatIntensity * 10);
+                        for (let i = 0; i < shapeCount; i++) {
                             const x = Math.random() * this.width;
                             const y = Math.random() * this.height;
-                            this.generateGeometricShape(x, y, beatIntensity);
+                            this.generateShape(x, y, beatIntensity);
                         }
-                    }
-
-                    // Optional glitch effect
-                    if (Math.random() < 0.05) {
-                        this.applyGlitchEffect();
                     }
                 }
             }
@@ -338,45 +426,3 @@
 
             document.getElementById('intensity').addEventListener('input', (e) => {
                 art.updateParameters(
-                    document.getElementById('shape-type').value, 
-                    document.getElementById('color-palette').value,
-                    e.target.value
-                );
-            });
-
-            document.getElementById('regenerate-btn').addEventListener('click', () => {
-                art.updateParameters(
-                    document.getElementById('shape-type').value, 
-                    document.getElementById('color-palette').value,
-                    document.getElementById('intensity').value
-                );
-            });
-
-            // Theme Toggle Logic
-            const toggleTheme = () => {
-                const body = document.documentElement;
-                const button = document.querySelector('.theme-toggle');
-                const isDark = body.getAttribute('data-theme') === 'dark';
-                
-                body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-                button.innerHTML = isDark ? '○ dark mode' : '● light mode';
-                
-                localStorage.setItem('theme', isDark ? 'light' : 'dark');
-            };
-
-            // Apply saved theme
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                document.documentElement.setAttribute('data-theme', savedTheme);
-                const button = document.querySelector('.theme-toggle');
-                button.innerHTML = savedTheme === 'dark' 
-                    ? '● light mode' 
-                    : '○ dark mode';
-            }
-
-            // Theme toggle event
-            document.querySelector('.theme-toggle').addEventListener('click', toggleTheme);
-        });
-    </script>
-</body>
-</html>
