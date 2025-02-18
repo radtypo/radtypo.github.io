@@ -90,6 +90,17 @@
         nav li {
             margin: 5px 0;
         }
+        
+        /* Style for the radio link */
+        .radio-link {
+            display: inline-block;
+            margin-bottom: var(--base-spacing);
+            font-weight: bold;
+        }
+        
+        .radio-link::before {
+            content: "♫ ";
+        }
     </style>
     <script>
         // Immediately check and apply the theme before page renders
@@ -105,6 +116,10 @@
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
 
     <h1>rad.typo</h1>
+    
+    <!-- Radio link featured above main navigation -->
+    <a href="/radio.html" class="radio-link">radio</a>
+    
     <nav>
         <ul>
             <li>songs
