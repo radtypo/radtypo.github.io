@@ -121,8 +121,13 @@
         
         <div class="controls">
             <div class="control-group">
-                <label for="shape-complexity">Shape Complexity</label>
-                <input type="range" id="shape-complexity" min="1" max="10" value="5">
+                <label for="shape-type">Shape Type</label>
+                <select id="shape-type" class="btn">
+                    <option value="geometric">Geometric</option>
+                    <option value="organic">Organic</option>
+                    <option value="glitch">Glitch</option>
+                    <option value="vhs">VHS</option>
+                </select>
             </div>
             
             <div class="control-group">
@@ -130,14 +135,14 @@
                 <select id="color-palette" class="btn">
                     <option value="monochrome">Monochrome</option>
                     <option value="pastel">Pastel</option>
-                    <option value="vibrant">Vibrant</option>
-                    <option value="dark">Dark</option>
+                    <option value="vhs">VHS</option>
+                    <option value="glitch">Glitch</option>
                 </select>
             </div>
             
             <div class="control-group">
-                <label for="motion-speed">Motion Speed</label>
-                <input type="range" id="motion-speed" min="0" max="10" value="5">
+                <label for="intensity">Visualization Intensity</label>
+                <input type="range" id="intensity" min="1" max="10" value="5">
             </div>
             
             <div class="control-group">
@@ -155,50 +160,42 @@
 
     <div class="art-description">
         <h2>About the Generative Art</h2>
-        <p>This piece is an algorithmic visualization of "bad fortune", creating a unique visual interpretation of the song's audio and emotional landscape. Each generated artwork is a one-of-a-kind representation, reflecting the song's complexity and nuance.</p>
-        <p>Interact with the controls to explore different generative possibilities:</p>
-        <ul>
-            <li>Shape Complexity: Adjust the intricacy of the visual patterns</li>
-            <li>Color Palette: Choose how the colors interact and evolve</li>
-            <li>Motion Speed: Control the dynamic movement of the artwork</li>
-        </ul>
+        <p>An algorithmic visualization of "bad fortune", creating a unique audiovisual interpretation that responds to the track's rhythmic landscape.</p>
     </div>
 
     <script>
-        // Theme Toggle Logic
-        function toggleTheme() {
-            const body = document.documentElement;
-            const button = document.querySelector('.theme-toggle');
-            const isDark = body.getAttribute('data-theme') === 'dark';
-            
-            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-            button.innerHTML = isDark ? '○ dark mode' : '● light mode';
-            
-            localStorage.setItem('theme', isDark ? 'light' : 'dark');
-        }
-
-        // Immediately check and apply the theme
-        (function() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            }
-        })();
-
-        // Generative Art Class
-        class GenerativeArt {
+        class GenerativeArtEngine {
             constructor(canvas) {
                 this.canvas = canvas;
                 this.ctx = canvas.getContext('2d');
                 this.width = canvas.width = canvas.offsetWidth;
                 this.height = canvas.height = canvas.offsetHeight;
                 
-                this.shapeComplexity = 5;
-                this.motionSpeed = 5;
+                this.audioContext = null;
+                this.analyser = null;
+                this.dataArray = null;
+                this.bufferLength = 0;
+
+                this.shapeType = 'geometric';
                 this.colorPalette = 'monochrome';
+                this.intensity = 5;
                 
-                this.particles = [];
+                this.entities = [];
                 this.time = 0;
+            }
+
+            // Initialize Audio Context and Beat Detection
+            initAudioAnalysis(audioElement) {
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const source = this.audioContext.createMediaElementSource(audioElement);
+                
+                this.analyser = this.audioContext.createAnalyser();
+                source.connect(this.analyser);
+                this.analyser.connect(this.audioContext.destination);
+
+                this.analyser.fftSize = 256;
+                this.bufferLength = this.analyser.frequencyBinCount;
+                this.dataArray = new Uint8Array(this.bufferLength);
             }
 
             // Color Palettes
@@ -206,105 +203,142 @@
                 const palettes = {
                     monochrome: ['#000', '#333', '#666', '#999', '#ccc'],
                     pastel: ['#FFD1DC', '#FFEBCD', '#E6E6FA', '#98FB98', '#87CEFA'],
-                    vibrant: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FDCB6E', '#6C5CE7'],
-                    dark: ['#1a1a1a', '#2a2a2a', '#3a3a3a', '#4a4a4a', '#5a5a5a']
+                    vhs: ['#FF00FF', '#00FFFF', '#FFFF00', '#FF0000', '#00FF00'],
+                    glitch: ['#0011FF', '#11FF00', '#FF1100', '#FF00FF', '#00FFFF']
                 };
                 return palettes[this.colorPalette];
             }
 
-            // Generate Particles
-            generateParticles() {
-                this.particles = [];
-                const numParticles = 50 * this.shapeComplexity;
+            // Shape Generators
+            generateGeometricShape(x, y, beatIntensity) {
                 const colors = this.getColorPalette();
+                const size = 10 + (beatIntensity * 5);
+                
+                this.ctx.beginPath();
+                this.ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Random geometric shapes
+                const shapeType = Math.floor(Math.random() * 4);
+                switch(shapeType) {
+                    case 0: // Rectangle
+                        this.ctx.rect(x, y, size, size);
+                        break;
+                    case 1: // Triangle
+                        this.ctx.moveTo(x, y);
+                        this.ctx.lineTo(x + size, y);
+                        this.ctx.lineTo(x + size/2, y - size);
+                        break;
+                    case 2: // Circle
+                        this.ctx.arc(x, y, size/2, 0, Math.PI * 2);
+                        break;
+                    case 3: // Polygon
+                        const sides = Math.floor(Math.random() * 6) + 3;
+                        this.drawPolygon(x, y, size/2, sides);
+                        break;
+                }
+                
+                this.ctx.fill();
+            }
 
-                for (let i = 0; i < numParticles; i++) {
-                    this.particles.push({
-                        x: Math.random() * this.width,
-                        y: Math.random() * this.height,
-                        radius: Math.random() * 10 * (this.shapeComplexity / 5),
-                        color: colors[Math.floor(Math.random() * colors.length)],
-                        speed: {
-                            x: (Math.random() - 0.5) * this.motionSpeed,
-                            y: (Math.random() - 0.5) * this.motionSpeed
-                        }
-                    });
+            drawPolygon(x, y, radius, sides) {
+                const step = (Math.PI * 2) / sides;
+                let rot = 0;
+
+                this.ctx.moveTo(
+                    x + radius * Math.cos(rot),
+                    y + radius * Math.sin(rot)
+                );
+
+                for (let i = 1; i < sides; i++) {
+                    rot += step;
+                    this.ctx.lineTo(
+                        x + radius * Math.cos(rot),
+                        y + radius * Math.sin(rot)
+                    );
                 }
             }
 
-            // Update Particle Positions
-            updateParticles() {
-                this.particles.forEach(p => {
-                    p.x += p.speed.x;
-                    p.y += p.speed.y;
-
-                    // Wrap around
-                    if (p.x < 0) p.x = this.width;
-                    if (p.x > this.width) p.x = 0;
-                    if (p.y < 0) p.y = this.height;
-                    if (p.y > this.height) p.y = 0;
-                });
+            // Glitch Effect
+            applyGlitchEffect() {
+                this.ctx.globalCompositeOperation = 'difference';
+                this.ctx.fillStyle = 'rgba(100, 100, 100, 0.1)';
+                this.ctx.fillRect(0, 0, this.width, this.height);
+                this.ctx.globalCompositeOperation = 'source-over';
             }
 
-            // Render Particles
+            // Render and Animation
             render() {
+                // Clear canvas
                 this.ctx.clearRect(0, 0, this.width, this.height);
-                
-                this.particles.forEach(p => {
-                    this.ctx.beginPath();
-                    this.ctx.fillStyle = p.color;
-                    this.ctx.globalAlpha = 0.7;
-                    this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    this.ctx.fill();
-                });
+
+                // Analyze audio
+                if (this.analyser) {
+                    this.analyser.getByteFrequencyData(this.dataArray);
+
+                    // Use low frequencies for beat detection
+                    const bassLevel = this.dataArray.slice(0, 16).reduce((a, b) => a + b, 0) / 16;
+                    const beatIntensity = bassLevel / 256;
+
+                    // Generate shapes based on beat
+                    if (beatIntensity > 0.3) {
+                        for (let i = 0; i < this.intensity; i++) {
+                            const x = Math.random() * this.width;
+                            const y = Math.random() * this.height;
+                            this.generateGeometricShape(x, y, beatIntensity);
+                        }
+                    }
+
+                    // Optional glitch effect
+                    if (Math.random() < 0.05) {
+                        this.applyGlitchEffect();
+                    }
+                }
             }
 
-            // Animate
+            // Animation Loop
             animate() {
-                this.time++;
-                this.updateParticles();
                 this.render();
                 requestAnimationFrame(() => this.animate());
             }
 
             // Update Parameters
-            updateParameters(complexity, palette, speed) {
-                this.shapeComplexity = complexity;
+            updateParameters(shapeType, palette, intensity) {
+                this.shapeType = shapeType;
                 this.colorPalette = palette;
-                this.motionSpeed = speed;
-                this.generateParticles();
+                this.intensity = parseInt(intensity);
             }
         }
 
         // Initialize on DOM Load
         document.addEventListener('DOMContentLoaded', () => {
             const canvas = document.getElementById('generative-canvas');
-            const art = new GenerativeArt(canvas);
+            const audioElement = document.getElementById('track');
+            const art = new GenerativeArtEngine(canvas);
 
-            // Initial Particle Generation
-            art.generateParticles();
+            // Initialize audio analysis
+            art.initAudioAnalysis(audioElement);
             art.animate();
 
             // Control Listeners
-            document.getElementById('shape-complexity').addEventListener('input', (e) => {
+            document.getElementById('shape-type').addEventListener('change', (e) => {
                 art.updateParameters(
                     e.target.value, 
                     document.getElementById('color-palette').value,
-                    document.getElementById('motion-speed').value
+                    document.getElementById('intensity').value
                 );
             });
 
             document.getElementById('color-palette').addEventListener('change', (e) => {
                 art.updateParameters(
-                    document.getElementById('shape-complexity').value, 
+                    document.getElementById('shape-type').value, 
                     e.target.value,
-                    document.getElementById('motion-speed').value
+                    document.getElementById('intensity').value
                 );
             });
 
-            document.getElementById('motion-speed').addEventListener('input', (e) => {
+            document.getElementById('intensity').addEventListener('input', (e) => {
                 art.updateParameters(
-                    document.getElementById('shape-complexity').value, 
+                    document.getElementById('shape-type').value, 
                     document.getElementById('color-palette').value,
                     e.target.value
                 );
@@ -312,11 +346,36 @@
 
             document.getElementById('regenerate-btn').addEventListener('click', () => {
                 art.updateParameters(
-                    document.getElementById('shape-complexity').value, 
+                    document.getElementById('shape-type').value, 
                     document.getElementById('color-palette').value,
-                    document.getElementById('motion-speed').value
+                    document.getElementById('intensity').value
                 );
             });
+
+            // Theme Toggle Logic
+            const toggleTheme = () => {
+                const body = document.documentElement;
+                const button = document.querySelector('.theme-toggle');
+                const isDark = body.getAttribute('data-theme') === 'dark';
+                
+                body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+                button.innerHTML = isDark ? '○ dark mode' : '● light mode';
+                
+                localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            };
+
+            // Apply saved theme
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                const button = document.querySelector('.theme-toggle');
+                button.innerHTML = savedTheme === 'dark' 
+                    ? '● light mode' 
+                    : '○ dark mode';
+            }
+
+            // Theme toggle event
+            document.querySelector('.theme-toggle').addEventListener('click', toggleTheme);
         });
     </script>
 </body>
