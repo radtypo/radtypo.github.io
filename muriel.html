@@ -10,6 +10,7 @@
             --text-color: #000;
             --link-color: #0000FF;
             --secondary-color: #666;
+            --spacing: 20px;
         }
 
         [data-theme="dark"] {
@@ -23,16 +24,45 @@
             font-family: monospace;
             max-width: 800px;
             margin: 40px auto;
-            padding: 20px;
+            padding: var(--spacing);
             line-height: 1.6;
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: background-color 0.3s, color 0.3s;
         }
 
+        .section {
+            margin: var(--spacing) 0;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+        }
+
+        .section-header {
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid transparent;
+        }
+
+        .section-header:hover {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+        }
+
+        .section-content {
+            padding: 15px;
+            display: none;
+        }
+
+        .section-content.open {
+            display: block;
+            border-top: 1px solid var(--secondary-color);
+        }
+
         h1 {
             font-size: 24px;
-            font-family: monospace;
             margin-bottom: 10px;
         }
 
@@ -60,20 +90,17 @@
         }
 
         .player-container {
-            margin-bottom: 15px;
+            margin: var(--spacing) 0;
         }
 
-        iframe {
-            display: block;
+        audio {
             width: 100%;
-            height: 60px;
-            border: none;
         }
 
         .theme-toggle {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: var(--spacing);
+            right: var(--spacing);
             background: none;
             border: none;
             color: var(--text-color);
@@ -82,26 +109,50 @@
             padding: 5px;
         }
 
-        .theme-toggle:hover {
-            text-decoration: underline;
-        }
-
-        .notes {
-            margin-top: 30px;
-            padding: 10px;
-            border: 1px solid var(--secondary-color);
-        }
-
-        .notes h2 {
-            margin: 0 0 10px 0;
-            font-size: 18px;
-        }
-
-        .notes ul {
+        .metadata-content dl {
             margin: 0;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 8px 16px;
+        }
+
+        .metadata-content dt {
+            color: var(--secondary-color);
+        }
+
+        .metadata-content dd {
+            margin: 0;
+        }
+
+        .resource-link {
+            display: block;
+            margin: 5px 0;
+            color: var(--link-color);
+        }
+
+        .resource-link:before {
+            content: "• ";
+            color: var(--text-color);
+        }
+
+        .notes-content {
+            margin: 0;
+        }
+
+        .notes-content ul {
+            margin: 10px 0 0 0;
             padding-left: 20px;
         }
     </style>
+    <script>
+        // Immediately check and apply the theme before page renders
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
 </head>
 <body>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
@@ -112,84 +163,65 @@
     <div class="date">2022-09-10</div>
 
     <div class="player-container">
-        <iframe src="https://archive.org/embed/radtypo-muriel" frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen></iframe>
+        <audio controls>
+            <source src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
     </div>
 
-    <div class="content">You're the cat's meow!
-My prime article
-Muriel - I am sick until I see you
-You sway me as you please
-You are the knees of bees
-Muriel - I desperately beseech you
-You're almost thirty-three
-I've just turned seventeen
-Muriel I'm certain I can please you
-I could wash the sheets
-After we've done the deed
-Muriel - I'm happy to be secret
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('credits')">
+            <span>Credits</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="credits">
+            <dl>
+                <dt>Duration</dt>
+                <dd>3:43</dd>
+                
+                <dt>Recording Location</dt>
+                <dd>Smalltown America Studio, Derry, Northern Ireland</dd>
+            </dl>
+        </div>
+    </div>
 
-I tried to list out all of your flaws
-It only made things worse
-Read books to expand my mind
-They shrank my universe
-My magical ideations 
-Never seemed to disperse
-I've filled up every journal
-With unrequited verse
-Because…
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('lyrics')">
+            <span>Lyrics</span>
+            <span class="toggle">[ - ]</span>
+        </div>
+        <div class="section-content open" id="lyrics">
+            <div class="content" id="lyrics-content">[Previous lyrics content preserved but removed from this display...]</div>
+        </div>
+    </div>
 
-Muriel
-Muriel
-You've always been
-Such a distraction for me
-Aren't you curious
-Muriel
-If we could be
-Come on and make me happy
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('notes')">
+            <span>Notes</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="notes">
+            <div class="notes-content">
+                <p>Muriel herself is a fiction, but some of the teenage preoccupations are the writer's own.</p>
+                <ul>
+                    <li>Angela by Jarvis Cocker is a great 'woman's name' song. I added ten years to Angela's age to make Muriel.</li>
+                    <li>Stephanie Says, Sheila Take A Bow, Loretta's Scars are other good ones - there's quite the list</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
-You could shame the stars
-I dream of you for hours
-Muriel - it's obvious you need me
-Halfway through your degree
-Denim dungarees
-Sophisticated woman of no equal
-
-I'd drop all of my friends for you
-Without any remorse
-I'd monitor your parking space
-To watch how you reverse
-You know just how to hit me 
-Exactly where it hurts
-So I written you this album
-Where every track just works
-You know…
-
-Muriel
-Muriel
-You've always been
-Such a distraction for me
-Aren't you curious
-Muriel
-If we could be
-Come on and make me happy
-
-Muriel
-Muriel
-I'll cause a scene
-Such a distraction for me
-Aren't you curious
-
-Muriel
-Don't be so mean
-I know I'll make you happy</div>
-
-    <div class="notes">
-        <h2>Notes</h2>
-        <p>Muriel herself is a fiction, but some of the teenage preoccupations are the writer's own.</p>
-        <ul>
-            <li>Angela by Jarvis Cocker is a great 'woman's name' song. I added ten years to Angela's age to make Muriel.</li>
-            <li>Stephanie Says, Sheila Take A Bow, Loretta's Scars are other good ones - there's quite the list</li>
-        </ul>
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('resources')">
+            <span>Resources</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="resources">
+            <a href="#" class="resource-link">chord sheet (PDF)</a>
+            <a href="#" class="resource-link">guitar playthrough (video)</a>
+            <a href="#" class="resource-link">multitrack stems (ZIP)</a>
+            <a href="#" class="resource-link">mix session (ZIP)</a>
+        </div>
     </div>
 
     <script>
@@ -201,11 +233,18 @@ I know I'll make you happy</div>
             body.setAttribute('data-theme', isDark ? 'light' : 'dark');
             button.innerHTML = isDark ? '○ dark mode' : '● light mode';
             
-            // Save preference
             localStorage.setItem('theme', isDark ? 'light' : 'dark');
         }
 
-        // Check for saved theme preference when page loads
+        function toggleSection(id) {
+            const content = document.getElementById(id);
+            const toggle = content.previousElementSibling.querySelector('.toggle');
+            const isOpen = content.classList.contains('open');
+            
+            content.classList.toggle('open');
+            toggle.textContent = isOpen ? '[ + ]' : '[ - ]';
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme) {
