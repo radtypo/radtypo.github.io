@@ -242,7 +242,7 @@
                     : '○ dark mode';
             }
 
-            // Radio Player Implementation
+            // Radio Player Implementation using an alternative approach
             const audioPlayer = document.getElementById('audio-player');
             const playBtn = document.getElementById('play-btn');
             const prevBtn = document.getElementById('prev-btn');
@@ -251,92 +251,148 @@
             const currentTrackDisplay = document.getElementById('current-track');
             const playlistTracks = document.querySelectorAll('.playlist-track');
             
+            // Track data with full source elements to better handle GitHub files
+            const tracks = [
+                {
+                    name: "muriel",
+                    element: `<source src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" type="audio/mpeg">`
+                },
+                {
+                    name: "bad fortune",
+                    element: `<source src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" type="audio/mpeg">`
+                },
+                {
+                    name: "what's not to like",
+                    element: `<source src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" type="audio/mpeg">`
+                }
+            ];
+            
             let currentTrackIndex = 0;
             let isPlaying = false;
 
-            // Load initial track
+            // Initial load
             loadTrack(currentTrackIndex);
-            // Preload audio
-            audioPlayer.load();
 
             // Play/Pause button
-            playBtn.addEventListener('click', () => {
-                if (isPlaying) {
-                    audioPlayer.pause();
-                    playBtn.textContent = '▶ play';
-                } else {
-                    audioPlayer.play();
-                    playBtn.textContent = '❚❚ pause';
-                }
-                isPlaying = !isPlaying;
-            });
+            playBtn.addEventListener('click', togglePlay);
 
             // Previous track
             prevBtn.addEventListener('click', () => {
-                currentTrackIndex = (currentTrackIndex - 1 + playlistTracks.length) % playlistTracks.length;
+                currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
                 loadTrack(currentTrackIndex);
                 if (isPlaying) {
-                    audioPlayer.play();
+                    playAudio();
                 }
             });
 
             // Next track
             nextBtn.addEventListener('click', () => {
-                currentTrackIndex = (currentTrackIndex + 1) % playlistTracks.length;
+                currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
                 loadTrack(currentTrackIndex);
                 if (isPlaying) {
-                    audioPlayer.play();
+                    playAudio();
                 }
             });
 
             // Track ended event
             audioPlayer.addEventListener('ended', () => {
-                currentTrackIndex = (currentTrackIndex + 1) % playlistTracks.length;
+                currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
                 loadTrack(currentTrackIndex);
-                audioPlayer.play();
+                playAudio();
             });
 
             // Update progress bar
-            audioPlayer.addEventListener('timeupdate', () => {
-                const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-                progressBar.style.width = `${progress}%`;
-            });
+            audioPlayer.addEventListener('timeupdate', updateProgress);
 
             // Click on playlist tracks
             playlistTracks.forEach((track, index) => {
                 track.addEventListener('click', () => {
                     currentTrackIndex = index;
                     loadTrack(currentTrackIndex);
-                    audioPlayer.play();
-                    playBtn.textContent = '❚❚ pause';
-                    isPlaying = true;
+                    playAudio();
                 });
             });
 
-            // Page visibility support to keep playing when tab is not active
-            document.addEventListener('visibilitychange', () => {
-                // Keep playing when page is not visible
-                if (document.hidden && isPlaying) {
-                    // Do nothing, let it play
-                }
-            });
+            // Page visibility support
+            document.addEventListener('visibilitychange', handleVisibilityChange);
 
-            // Helper function to load track
+            // Helper Functions
             function loadTrack(index) {
-                // Update audio source
-                const track = playlistTracks[index];
-                audioPlayer.src = track.dataset.src;
-                audioPlayer.load(); // Force loading of the new source
+                // Clear and reload the audio element
+                audioPlayer.innerHTML = '';
+                audioPlayer.innerHTML = tracks[index].element;
                 
-                // Update current track display
-                currentTrackDisplay.textContent = track.dataset.name;
+                // Force browser to load the audio
+                audioPlayer.load();
                 
-                // Update playing status in playlist
-                playlistTracks.forEach(t => t.classList.remove('track-playing'));
-                track.classList.add('track-playing');
+                // Update display
+                currentTrackDisplay.textContent = tracks[index].name;
                 
-                // Reset progress bar
+                // Update playlist visual state
+                playlistTracks.forEach((t, i) => {
+                    if (i === index) {
+                        t.classList.add('track-playing');
+                    } else {
+                        t.classList.remove('track-playing');
+                    }
+                });
+                
+                // Reset progress
                 progressBar.style.width = '0%';
+                
+                // Add error handling
+                audioPlayer.onerror = function() {
+                    console.error('Error loading audio:', audioPlayer.error);
+                    alert('Sorry, there was an error loading the audio. Please try again later.');
+                };
+            }
+            
+            function togglePlay() {
+                if (isPlaying) {
+                    audioPlayer.pause();
+                    playBtn.textContent = '▶ play';
+                } else {
+                    playAudio();
+                }
+                isPlaying = !isPlaying;
+            }
+            
+            function playAudio() {
+                // Play with error handling
+                const playPromise = audioPlayer.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        // Playback started successfully
+                        playBtn.textContent = '❚❚ pause';
+                        isPlaying = true;
+                    }).catch(error => {
+                        // Auto-play was prevented or there was an error
+                        console.error('Playback failed:', error);
+                        playBtn.textContent = '▶ play';
+                        isPlaying = false;
+                    });
+                }
+            }
+            
+            function updateProgress() {
+                if (audioPlayer.duration) {
+                    const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                    progressBar.style.width = `${progress}%`;
+                }
+            }
+            
+            function handleVisibilityChange() {
+                if (document.hidden) {
+                    // Tab is hidden, do nothing special
+                } else {
+                    // Tab is visible again, update UI if needed
+                    if (isPlaying) {
+                        playBtn.textContent = '❚❚ pause';
+                    } else {
+                        playBtn.textContent = '▶ play';
+                    }
+                }
             }
         });
     </script>
