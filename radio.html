@@ -256,6 +256,8 @@
 
             // Load initial track
             loadTrack(currentTrackIndex);
+            // Preload audio
+            audioPlayer.load();
 
             // Play/Pause button
             playBtn.addEventListener('click', () => {
@@ -324,6 +326,7 @@
                 // Update audio source
                 const track = playlistTracks[index];
                 audioPlayer.src = track.dataset.src;
+                audioPlayer.load(); // Force loading of the new source
                 
                 // Update current track display
                 currentTrackDisplay.textContent = track.dataset.name;
