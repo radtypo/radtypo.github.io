@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rad.typo - bad fortune (generative art)</title>
+    <title>rad.typo - bad fortune (glitch experience)</title>
     <style>
         :root {
-            --bg-color: #fff;
-            --text-color: #000;
-            --link-color: #0000FF;
-            --secondary-color: #666;
-            --spacing: 20px;
-            --art-bg: #f4f4f4;
-        }
-
-        [data-theme="dark"] {
             --bg-color: #1a1a1a;
             --text-color: #fff;
             --link-color: #809fff;
             --secondary-color: #999;
-            --art-bg: #2a2a2a;
+            --accent-color: #ff00ff;
+            --spacing: 20px;
+            --control-size: 120px;
+            --font-mono: monospace;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #fff;
+            --text-color: #000;
+            --link-color: #0000FF;
+            --secondary-color: #666;
+            --accent-color: #ff00aa;
         }
 
         * {
@@ -29,66 +31,181 @@
         }
 
         body {
-            font-family: monospace;
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: var(--spacing);
-            line-height: 1.6;
+            font-family: var(--font-mono);
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
         }
 
-        .generative-container {
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 20px;
-            margin-bottom: 20px;
+        .back {
+            margin: 20px;
+            display: inline-block;
+            color: var(--link-color);
+            text-decoration: none;
         }
 
-        #generative-canvas {
-            background-color: var(--art-bg);
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             width: 100%;
-            aspect-ratio: 1;
-            border: 1px solid var(--secondary-color);
-        }
-
-        .controls {
-            background-color: var(--art-bg);
-            border: 1px solid var(--secondary-color);
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
         }
 
-        .control-group {
+        h1 {
+            font-size: 24px;
             margin-bottom: 20px;
-        }
-
-        .control-group label {
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .control-group input[type="range"] {
             width: 100%;
+            text-align: center;
+        }
+
+        .date {
+            color: var(--secondary-color);
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .experience-container {
+            display: grid;
+            grid-template-columns: 1fr 180px;
+            gap: 20px;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            background-color: rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+        }
+
+        #artwork-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        #glitch-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        #artwork-image {
+            display: none;
+        }
+        
+        .artwork {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            object-fit: contain;
+            background-image: url('bad-fortune-artwork.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--secondary-color);
+        }
+
+        .dial-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .dial-label {
+            text-transform: uppercase;
+            font-size: 12px;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .dial {
+            width: var(--control-size);
+            height: var(--control-size);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dial-background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--accent-color),
+                var(--link-color),
+                var(--accent-color)
+            );
+            opacity: 0.2;
+        }
+
+        .dial-knob {
+            width: 85%;
+            height: 85%;
+            border-radius: 50%;
+            background-color: var(--bg-color);
+            border: 2px solid var(--secondary-color);
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .dial-indicator {
+            position: absolute;
+            top: 10%;
+            left: calc(50% - 1px);
+            width: 2px;
+            height: 40%;
+            background-color: var(--accent-color);
+            transform-origin: bottom center;
+        }
+
+        .dial-value {
+            position: absolute;
+            font-size: 14px;
+            color: var(--secondary-color);
         }
 
         .audio-player {
             width: 100%;
             margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .btn {
-            background-color: var(--secondary-color);
-            color: var(--bg-color);
-            border: none;
-            padding: 10px 15px;
-            margin: 5px 0;
-            cursor: pointer;
-            font-family: monospace;
-        }
-
-        .btn:hover {
-            opacity: 0.8;
+        .audio-player audio {
+            width: 100%;
+            margin-top: 10px;
         }
 
         .theme-toggle {
@@ -98,331 +215,621 @@
             background: none;
             border: none;
             color: var(--text-color);
-            font-family: monospace;
+            font-family: var(--font-mono);
             cursor: pointer;
             padding: 5px;
         }
 
-        .art-description {
+        .effect-name {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            color: var(--accent-color);
+            z-index: 3;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            mix-blend-mode: difference;
+        }
+
+        .effect-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
             margin-top: 20px;
-            padding: 15px;
-            background-color: var(--art-bg);
+        }
+
+        .effect-btn {
+            background-color: rgba(255, 255, 255, 0.1);
             border: 1px solid var(--secondary-color);
+            color: var(--text-color);
+            padding: 8px 15px;
+            border-radius: 3px;
+            font-family: var(--font-mono);
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .effect-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        .effect-btn.active {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        @media (max-width: 768px) {
+            .experience-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .control-panel {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .dial {
+                width: 90px;
+                height: 90px;
+                --control-size: 90px;
+            }
         }
     </style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
+    <a href="/" class="back">← back</a>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">○ light mode</button>
 
-    <h1>bad fortune - Generative Art Experience</h1>
+    <div class="main-container">
+        <h1>bad fortune (glitch experience)</h1>
+        <div class="date">2020-01-24</div>
 
-    <div class="generative-container">
-        <canvas id="generative-canvas"></canvas>
-        
-        <div class="controls">
-            <div class="control-group">
-                <label for="shape-type">Shape Type</label>
-                <select id="shape-type" class="btn">
-                    <option value="geometric">Geometric</option>
-                    <option value="organic">Organic</option>
-                    <option value="glitch">Glitch</option>
-                    <option value="vhs">VHS</option>
-                </select>
-            </div>
-            
-            <div class="control-group">
-                <label for="color-palette">Color Palette</label>
-                <select id="color-palette" class="btn">
-                    <option value="monochrome">Monochrome</option>
-                    <option value="pastel">Pastel</option>
-                    <option value="vhs">VHS</option>
-                    <option value="glitch">Glitch</option>
-                </select>
-            </div>
-            
-            <div class="control-group">
-                <label for="intensity">Visualization Intensity</label>
-                <input type="range" id="intensity" min="1" max="10" value="5">
-            </div>
-            
-            <div class="control-group">
-                <button id="regenerate-btn" class="btn">Regenerate Art</button>
+        <div class="experience-container">
+            <div class="canvas-container">
+                <div class="artwork"></div>
+                <canvas id="artwork-canvas"></canvas>
+                <canvas id="glitch-canvas"></canvas>
+                <div class="effect-name" id="effect-name">VHS</div>
+                <img id="artwork-image" src="bad-fortune-artwork.jpg" alt="Album artwork">
             </div>
 
-            <div class="audio-player">
-                <audio id="track" controls>
-                    <source src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" type="audio/mpeg">
-                    Your browser does not support the audio element.
-                </audio>
+            <div class="control-panel">
+                <div class="dial-container">
+                    <div class="dial-label">Volume</div>
+                    <div class="dial" id="volume-dial">
+                        <div class="dial-background"></div>
+                        <div class="dial-knob">
+                            <div class="dial-indicator"></div>
+                            <div class="dial-value">75</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dial-container">
+                    <div class="dial-label">Intensity</div>
+                    <div class="dial" id="intensity-dial">
+                        <div class="dial-background"></div>
+                        <div class="dial-knob">
+                            <div class="dial-indicator"></div>
+                            <div class="dial-value">50</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dial-container">
+                    <div class="dial-label">Speed</div>
+                    <div class="dial" id="speed-dial">
+                        <div class="dial-background"></div>
+                        <div class="dial-knob">
+                            <div class="dial-indicator"></div>
+                            <div class="dial-value">50</div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+
+        <div class="effect-buttons">
+            <button class="effect-btn active" data-effect="vhs">VHS</button>
+            <button class="effect-btn" data-effect="glitch">Glitch</button>
+            <button class="effect-btn" data-effect="destroyed">Destroyed</button>
+        </div>
+
+        <div class="audio-player">
+            <audio id="audio-element" controls loop>
+                <source src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
         </div>
     </div>
 
-    <div class="art-description">
-        <h2>About the Generative Art</h2>
-        <p>An algorithmic visualization of "bad fortune", creating a unique audiovisual interpretation that responds to the track's rhythmic landscape.</p>
-    </div>
-
     <script>
-        class GenerativeArtEngine {
-            constructor(canvas) {
-                this.canvas = canvas;
-                this.ctx = canvas.getContext('2d');
-                this.width = canvas.width = canvas.offsetWidth;
-                this.height = canvas.height = canvas.offsetHeight;
-                
-                this.audioContext = null;
-                this.analyser = null;
-                this.dataArray = null;
-                this.bufferLength = 0;
+        // Global variables
+        let controls = {
+            volume: 75,
+            intensity: 50,
+            speed: 50
+        };
 
-                this.shapeType = 'geometric';
-                this.colorPalette = 'monochrome';
-                this.intensity = 5;
+        let currentEffect = 'vhs';
+        let canvasWidth, canvasHeight;
+        let animationFrameId;
+        let audioContext, audioAnalyser, audioDataArray;
+
+        // Canvas elements
+        const artworkCanvas = document.getElementById('artwork-canvas');
+        const glitchCanvas = document.getElementById('glitch-canvas');
+        const artworkCtx = artworkCanvas.getContext('2d');
+        const glitchCtx = glitchCanvas.getContext('2d');
+        const artworkImage = document.getElementById('artwork-image');
+        const effectNameEl = document.getElementById('effect-name');
+        const audioElement = document.getElementById('audio-element');
+
+        // Initialize everything
+        function init() {
+            initCanvases();
+            setupDialControls();
+            setupEffectButtons();
+            createFallbackArtwork();
+            initAudio();
+            startAnimation();
+        }
+
+        // Initialize canvases
+        function initCanvases() {
+            const container = document.querySelector('.canvas-container');
+            canvasWidth = container.offsetWidth;
+            canvasHeight = container.offsetHeight;
+            
+            artworkCanvas.width = canvasWidth;
+            artworkCanvas.height = canvasHeight;
+            glitchCanvas.width = canvasWidth;
+            glitchCanvas.height = canvasHeight;
+        }
+
+        // Initialize audio analyzer
+        function initAudio() {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const source = audioContext.createMediaElementSource(audioElement);
+            audioAnalyser = audioContext.createAnalyser();
+            
+            audioAnalyser.fftSize = 256;
+            audioDataArray = new Uint8Array(audioAnalyser.frequencyBinCount);
+            
+            source.connect(audioAnalyser);
+            audioAnalyser.connect(audioContext.destination);
+            
+            // Setup audio playback rate control
+            audioElement.preservesPitch = false;
+        }
+
+        // Setup dial controls
+        function setupDialControls() {
+            setupDial('volume-dial', 'volume');
+            setupDial('intensity-dial', 'intensity');
+            setupDial('speed-dial', 'speed');
+        }
+
+        // Setup a single dial control
+        function setupDial(dialId, controlName) {
+            const dial = document.getElementById(dialId);
+            const knob = dial.querySelector('.dial-knob');
+            const indicator = dial.querySelector('.dial-indicator');
+            const valueDisplay = dial.querySelector('.dial-value');
+            
+            let isDragging = false;
+            let startAngle, startValue;
+            
+            // Set initial rotation
+            updateDialRotation(indicator, valueDisplay, controls[controlName]);
+            
+            // Mouse events
+            knob.addEventListener('mousedown', startDrag);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', stopDrag);
+            
+            // Touch events
+            knob.addEventListener('touchstart', startDrag);
+            document.addEventListener('touchmove', drag);
+            document.addEventListener('touchend', stopDrag);
+            
+            function startDrag(e) {
+                e.preventDefault();
+                isDragging = true;
                 
-                this.entities = [];
-                this.time = 0;
+                const dialRect = dial.getBoundingClientRect();
+                const dialCenterX = dialRect.left + dialRect.width / 2;
+                const dialCenterY = dialRect.top + dialRect.height / 2;
+                
+                const clientX = e.clientX || e.touches[0].clientX;
+                const clientY = e.clientY || e.touches[0].clientY;
+                
+                startAngle = Math.atan2(clientY - dialCenterY, clientX - dialCenterX);
+                startValue = controls[controlName];
+                
+                knob.style.cursor = 'grabbing';
             }
-
-            // Initialize Audio Context and Beat Detection
-            initAudioAnalysis(audioElement) {
-                // Ensure audio context is created only once
-                if (!this.audioContext) {
-                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            function drag(e) {
+                if (!isDragging) return;
+                
+                const dialRect = dial.getBoundingClientRect();
+                const dialCenterX = dialRect.left + dialRect.width / 2;
+                const dialCenterY = dialRect.top + dialRect.height / 2;
+                
+                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+                
+                if (!clientX || !clientY) return;
+                
+                const currentAngle = Math.atan2(clientY - dialCenterY, clientX - dialCenterX);
+                let angleDiff = currentAngle - startAngle;
+                
+                // Convert to degrees and normalize
+                angleDiff = angleDiff * (180 / Math.PI);
+                
+                // Calculate new value (0-100)
+                let newValue = startValue + (angleDiff / 3.6);
+                newValue = Math.max(0, Math.min(100, newValue));
+                
+                // Update control value
+                controls[controlName] = Math.round(newValue);
+                updateDialRotation(indicator, valueDisplay, controls[controlName]);
+                
+                // Update audio playback rate if speed control
+                if (controlName === 'speed' && audioElement) {
+                    audioElement.playbackRate = controls.speed / 50;
+                }
+            }
+            
+            function stopDrag() {
+                if (!isDragging) return;
+                isDragging = false;
+                knob.style.cursor = 'pointer';
+            }
+        }
+        
+        // Update dial rotation
+        function updateDialRotation(indicator, valueDisplay, value) {
+            // Calculate rotation angle (0-100 -> 0-270 degrees)
+            const rotation = (value * 2.7) - 135;
+            indicator.style.transform = `rotate(${rotation}deg)`;
+            valueDisplay.textContent = value;
+        }
+        
+        // Setup effect buttons
+        function setupEffectButtons() {
+            const effectButtons = document.querySelectorAll('.effect-btn');
+            
+            effectButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    effectButtons.forEach(b => b.classList.remove('active'));
                     
-                    // Create source from audio element
-                    const source = this.audioContext.createMediaElementSource(audioElement);
+                    // Add active class to clicked button
+                    btn.classList.add('active');
                     
-                    // Create analyser
-                    this.analyser = this.audioContext.createAnalyser();
-                    source.connect(this.analyser);
-                    this.analyser.connect(this.audioContext.destination);
-
-                    this.analyser.fftSize = 256;
-                    this.bufferLength = this.analyser.frequencyBinCount;
-                    this.dataArray = new Uint8Array(this.bufferLength);
-                }
-            }
-
-            // Color Palettes
-            getColorPalette() {
-                const palettes = {
-                    monochrome: ['#000', '#333', '#666', '#999', '#ccc'],
-                    pastel: ['#FFD1DC', '#FFEBCD', '#E6E6FA', '#98FB98', '#87CEFA'],
-                    vhs: ['#FF00FF', '#00FFFF', '#FFFF00', '#FF0000', '#00FF00'],
-                    glitch: ['#0011FF', '#11FF00', '#FF1100', '#FF00FF', '#00FFFF']
-                };
-                return palettes[this.colorPalette];
-            }
-
-            // Shape Generators
-            generateShape(x, y, beatIntensity) {
-                const colors = this.getColorPalette();
-                const size = 10 + (beatIntensity * 20);
-                
-                this.ctx.save();
-                this.ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
-                this.ctx.globalAlpha = 0.7;
-                
-                // Enhanced shape generation
-                switch(this.shapeType) {
-                    case 'geometric':
-                        this.generateGeometricShape(x, y, size);
-                        break;
-                    case 'organic':
-                        this.generateOrganicShape(x, y, size);
-                        break;
-                    case 'glitch':
-                        this.generateGlitchShape(x, y, size);
-                        break;
-                    case 'vhs':
-                        this.generateVHSShape(x, y, size);
-                        break;
-                    default:
-                        this.generateGeometricShape(x, y, size);
-                }
-                
-                this.ctx.restore();
-            }
-
-            generateGeometricShape(x, y, size) {
-                const shapeType = Math.floor(Math.random() * 4);
-                switch(shapeType) {
-                    case 0: // Rectangle
-                        this.ctx.fillRect(x, y, size, size);
-                        break;
-                    case 1: // Triangle
-                        this.ctx.beginPath();
-                        this.ctx.moveTo(x, y);
-                        this.ctx.lineTo(x + size, y);
-                        this.ctx.lineTo(x + size/2, y - size);
-                        this.ctx.closePath();
-                        this.ctx.fill();
-                        break;
-                    case 2: // Circle
-                        this.ctx.beginPath();
-                        this.ctx.arc(x, y, size/2, 0, Math.PI * 2);
-                        this.ctx.fill();
-                        break;
-                    case 3: // Polygon
-                        this.drawPolygon(x, y, size/2, Math.floor(Math.random() * 6) + 3);
-                        break;
-                }
-            }
-
-            generateOrganicShape(x, y, size) {
-                this.ctx.beginPath();
-                this.ctx.moveTo(x, y);
-                
-                // Create a more organic, curved shape
-                for (let i = 0; i < 5; i++) {
-                    const angle = Math.random() * Math.PI * 2;
-                    const radius = size * (0.5 + Math.random() * 0.5);
-                    const cpx = x + Math.cos(angle) * radius;
-                    const cpy = y + Math.sin(angle) * radius;
-                    this.ctx.quadraticCurveTo(
-                        x + Math.random() * size, 
-                        y + Math.random() * size, 
-                        cpx, 
-                        cpy
-                    );
-                }
-                
-                this.ctx.closePath();
-                this.ctx.fill();
-            }
-
-            generateGlitchShape(x, y, size) {
-                // Offset and duplicate shapes for glitch effect
-                const offsets = [
-                    { x: -5, y: -5, color: 'red' },
-                    { x: 5, y: 5, color: 'blue' }
-                ];
-
-                offsets.forEach(offset => {
-                    this.ctx.save();
-                    this.ctx.fillStyle = offset.color;
-                    this.ctx.globalAlpha = 0.5;
-                    this.ctx.fillRect(
-                        x + offset.x, 
-                        y + offset.y, 
-                        size, 
-                        size
-                    );
-                    this.ctx.restore();
+                    // Set current effect
+                    currentEffect = btn.dataset.effect;
+                    effectNameEl.textContent = currentEffect.toUpperCase();
                 });
+            });
+        }
 
-                // Original shape
-                this.ctx.fillRect(x, y, size, size);
-            }
-
-            generateVHSShape(x, y, size) {
-                // VHS-style distorted rectangles
-                this.ctx.save();
-                this.ctx.translate(x, y);
-                this.ctx.rotate(Math.random() * 0.2 - 0.1);
+        // Create artwork from image
+        function createFallbackArtwork() {
+            if (artworkImage.complete) {
+                artworkCtx.drawImage(artworkImage, 0, 0, canvasWidth, canvasHeight);
+            } else {
+                artworkImage.onload = () => {
+                    artworkCtx.drawImage(artworkImage, 0, 0, canvasWidth, canvasHeight);
+                };
                 
-                // Horizontal lines for VHS effect
-                for (let i = 0; i < 5; i++) {
-                    this.ctx.globalAlpha = 0.2;
-                    this.ctx.fillRect(
-                        -size/2, 
-                        i * (size/5) - size/2, 
-                        size, 
-                        size/10
-                    );
+                // Fallback if image fails to load
+                artworkImage.onerror = () => {
+                    // Create a gradient background
+                    const gradient = artworkCtx.createLinearGradient(0, 0, canvasWidth, canvasHeight);
+                    gradient.addColorStop(0, '#ff00ff');
+                    gradient.addColorStop(0.5, '#00ffff');
+                    gradient.addColorStop(1, '#ff00ff');
+                    
+                    artworkCtx.fillStyle = gradient;
+                    artworkCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+                    
+                    // Add text
+                    artworkCtx.fillStyle = '#000';
+                    artworkCtx.font = '48px monospace';
+                    artworkCtx.textAlign = 'center';
+                    artworkCtx.fillText('bad fortune', canvasWidth/2, canvasHeight/2);
+                };
+            }
+        }
+
+        // Start animation loop
+        function startAnimation() {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+            animationFrameId = requestAnimationFrame(animateFrame);
+        }
+
+        // Animation frame
+        function animateFrame(timestamp) {
+            applyEffects(timestamp);
+            animationFrameId = requestAnimationFrame(animateFrame);
+        }
+
+        // Apply visual effects
+        function applyEffects(timestamp) {
+            // Get audio data if available
+            let audioLevel = 0;
+            if (audioAnalyser) {
+                audioAnalyser.getByteFrequencyData(audioDataArray);
+                const sum = Array.from(audioDataArray).reduce((total, val) => total + val, 0);
+                audioLevel = (sum / audioDataArray.length) / 255 * (controls.volume / 100);
+            }
+            
+            // Clear the glitch canvas
+            glitchCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+            glitchCtx.drawImage(artworkCanvas, 0, 0);
+            
+            const intensity = controls.intensity / 100;
+            const speedFactor = controls.speed / 50;
+            
+            // Update audio playback rate
+            audioElement.playbackRate = speedFactor;
+            
+            // Apply effect based on selection
+            switch(currentEffect) {
+                case 'vhs':
+                    applyVHSEffect(intensity, audioLevel, speedFactor, timestamp);
+                    break;
+                case 'glitch':
+                    applyDigitalGlitchEffect(intensity, audioLevel, speedFactor, timestamp);
+                    break;
+                case 'destroyed':
+                    applyDestroyedEffect(intensity, audioLevel, speedFactor, timestamp);
+                    break;
+            }
+        }
+
+        // VHS effect with scanlines and tracking errors
+        function applyVHSEffect(intensity, audioLevel, speed, timestamp) {
+            const imageData = glitchCtx.getImageData(0, 0, canvasWidth, canvasHeight);
+            const data = imageData.data;
+            
+            // Scanlines
+            for (let y = 0; y < canvasHeight; y++) {
+                if (y % 2 === 0 && Math.random() < intensity * 0.5) {
+                    for (let x = 0; x < canvasWidth; x++) {
+                        const i = (y * canvasWidth + x) * 4;
+                        data[i] = data[i] * 0.9;     // R
+                        data[i + 1] = data[i + 1] * 0.9; // G
+                        data[i + 2] = data[i + 2] * 0.9; // B
+                    }
                 }
+            }
+            
+            // Horizontal displacement
+            const displacementCount = Math.floor(intensity * 5 + audioLevel * 10);
+            for (let i = 0; i < displacementCount; i++) {
+                const y = Math.floor(Math.random() * canvasHeight);
+                const height = Math.floor(Math.random() * 10) + 1;
+                const offset = Math.floor(Math.sin(timestamp * 0.001 * speed) * 20 * intensity);
                 
-                this.ctx.restore();
-            }
-
-            drawPolygon(x, y, radius, sides) {
-                this.ctx.beginPath();
-                const step = (Math.PI * 2) / sides;
-                let rot = 0;
-
-                this.ctx.moveTo(
-                    x + radius * Math.cos(rot),
-                    y + radius * Math.sin(rot)
-                );
-
-                for (let i = 1; i < sides; i++) {
-                    rot += step;
-                    this.ctx.lineTo(
-                        x + radius * Math.cos(rot),
-                        y + radius * Math.sin(rot)
-                    );
-                }
-                this.ctx.closePath();
-                this.ctx.fill();
-            }
-
-            // Render and Animation
-            render() {
-                // Clear canvas
-                this.ctx.clearRect(0, 0, this.width, this.height);
-
-                // Analyze audio
-                if (this.analyser) {
-                    this.analyser.getByteFrequencyData(this.dataArray);
-
-                    // Use low frequencies for beat detection
-                    const bassLevels = this.dataArray.slice(0, 16);
-                    const averageBass = bassLevels.reduce((a, b) => a + b, 0) / bassLevels.length;
-                    const beatIntensity = averageBass / 256;
-
-                    // Generate shapes based on beat
-                    if (beatIntensity > 0.2) {
-                        const shapeCount = Math.floor(this.intensity * beatIntensity * 10);
-                        for (let i = 0; i < shapeCount; i++) {
-                            const x = Math.random() * this.width;
-                            const y = Math.random() * this.height;
-                            this.generateShape(x, y, beatIntensity);
+                for (let h = 0; h < height; h++) {
+                    if (y + h < canvasHeight) {
+                        for (let x = 0; x < canvasWidth; x++) {
+                            const sourceX = (x + offset) % canvasWidth;
+                            const sourceI = ((y + h) * canvasWidth + sourceX) * 4;
+                            const targetI = ((y + h) * canvasWidth + x) * 4;
+                            data[targetI] = data[sourceI];
+                            data[targetI + 1] = data[sourceI + 1];
+                            data[targetI + 2] = data[sourceI + 2];
                         }
                     }
                 }
             }
-
-            // Animation Loop
-            animate() {
-                this.render();
-                requestAnimationFrame(() => this.animate());
+            
+            // Color bleeding on intense beats
+            if (audioLevel > 0.7 && intensity > 0.5) {
+                const rgbOffset = Math.floor(intensity * 10);
+                
+                for (let y = 0; y < canvasHeight; y++) {
+                    for (let x = 0; x < canvasWidth; x++) {
+                        if (x + rgbOffset < canvasWidth && x - rgbOffset >= 0) {
+                            const i = (y * canvasWidth + x) * 4;
+                            const rOffset = (y * canvasWidth + (x + rgbOffset)) * 4;
+                            const bOffset = (y * canvasWidth + (x - rgbOffset)) * 4;
+                            
+                            data[i] = data[rOffset];     // R
+                            data[i + 2] = data[bOffset + 2]; // B
+                        }
+                    }
+                }
             }
+            
+            glitchCtx.putImageData(imageData, 0, 0);
+        }
 
-            // Update Parameters
-            updateParameters(shapeType, palette, intensity) {
-                this.shapeType = shapeType;
-                this.colorPalette = palette;
-                this.intensity = parseInt(intensity);
+        // Digital glitch effect
+        function applyDigitalGlitchEffect(intensity, audioLevel, speed, timestamp) {
+            const imageData = glitchCtx.getImageData(0, 0, canvasWidth, canvasHeight);
+            const data = imageData.data;
+            
+            // Block glitches
+            const blockCount = Math.floor(intensity * 5 + audioLevel * 8);
+            for (let i = 0; i < blockCount; i++) {
+                const x = Math.floor(Math.random() * canvasWidth);
+                const y = Math.floor(Math.random() * canvasHeight);
+                const width = Math.floor(Math.random() * 80) + 10;
+                const height = Math.floor(Math.random() * 30) + 5;
+                const offsetX = Math.floor((Math.random() - 0.5) * 80 * intensity);
+                
+                // Copy block with offset
+                for (let h = 0; h < height; h++) {
+                    for (let w = 0; w < width; w++) {
+                        if (x + w < canvasWidth && y + h < canvasHeight &&
+                            x + w + offsetX < canvasWidth && x + w + offsetX >= 0) {
+                            
+                            const sourceI = ((y + h) * canvasWidth + (x + w)) * 4;
+                            const targetI = ((y + h) * canvasWidth + (x + w + offsetX)) * 4;
+                            
+                            data[targetI] = data[sourceI];
+                            data[targetI + 1] = data[sourceI + 1];
+                            data[targetI + 2] = data[sourceI + 2];
+                        }
+                    }
+                }
+            }
+            
+            // RGB shift based on audio
+            if (audioLevel > 0.4 || intensity > 0.6) {
+                const rgbOffset = Math.floor(intensity * 15);
+                const tempData = new Uint8ClampedArray(data);
+                
+                for (let y = 0; y < canvasHeight; y += 2) {
+                    for (let x = 0; x < canvasWidth; x++) {
+                        const i = (y * canvasWidth + x) * 4;
+                        
+                        // Offset red channel
+                        if (x + rgbOffset < canvasWidth) {
+                            const rOffset = (y * canvasWidth + (x + rgbOffset)) * 4;
+                            data[i] = tempData[rOffset];
+                        }
+                        
+                        // Offset blue channel
+                        if (x - rgbOffset >= 0) {
+                            const bOffset = (y * canvasWidth + (x - rgbOffset)) * 4 + 2;
+                            data[i + 2] = tempData[bOffset];
+                        }
+                    }
+                }
+            }
+            
+            glitchCtx.putImageData(imageData, 0, 0);
+            
+            // Random noise blocks
+            if (Math.random() < intensity * 0.3 + audioLevel * 0.7) {
+                const noiseBlocks = Math.floor(intensity * 3 + audioLevel * 4);
+                
+                for (let i = 0; i < noiseBlocks; i++) {
+                    const blockWidth = Math.floor(Math.random() * 100) + 50;
+                    const blockHeight = Math.floor(Math.random() * 30) + 10;
+                    const blockX = Math.floor(Math.random() * (canvasWidth - blockWidth));
+                    const blockY = Math.floor(Math.random() * (canvasHeight - blockHeight));
+                    
+                    // Generate noise pattern
+                    glitchCtx.fillStyle = Math.random() > 0.5 ? '#fff' : '#000';
+                    glitchCtx.globalAlpha = Math.random() * 0.7 + 0.3;
+                    glitchCtx.fillRect(blockX, blockY, blockWidth, blockHeight);
+                    glitchCtx.globalAlpha = 1.0;
+                }
             }
         }
 
-        // Initialize on DOM Load
-        document.addEventListener('DOMContentLoaded', () => {
-            const canvas = document.getElementById('generative-canvas');
-            const audioElement = document.getElementById('track');
-            const art = new GenerativeArtEngine(canvas);
-
-            // Initialize audio analysis
-            art.initAudioAnalysis(audioElement);
-            art.animate();
-
-            // Control Listeners
-            document.getElementById('shape-type').addEventListener('change', (e) => {
-                art.updateParameters(
-                    e.target.value, 
-                    document.getElementById('color-palette').value,
-                    document.getElementById('intensity').value
+        // Destroyed/extreme effect
+        function applyDestroyedEffect(intensity, audioLevel, speed, timestamp) {
+            // Start with the digital glitch as a base
+            applyDigitalGlitchEffect(intensity, audioLevel, speed, timestamp);
+            
+            // Add more destruction
+            const imageData = glitchCtx.getImageData(0, 0, canvasWidth, canvasHeight);
+            const data = imageData.data;
+            
+            // Extreme color shifting
+            for (let y = 0; y < canvasHeight; y++) {
+                for (let x = 0; x < canvasWidth; x++) {
+                    const i = (y * canvasWidth + x) * 4;
+                    
+                    // Invert colors randomly based on intensity
+                    if (Math.random() < intensity * 0.3) {
+                        data[i] = 255 - data[i];
+                        data[i + 1] = 255 - data[i + 1];
+                        data[i + 2] = 255 - data[i + 2];
+                    }
+                    
+                    // Apply extreme contrast
+                    for (let c = 0; c < 3; c++) {
+                        data[i + c] = data[i + c] > 128 ? 255 : 0;
+                    }
+                }
+            }
+            
+            glitchCtx.putImageData(imageData, 0, 0);
+            
+            // Apply tearing effect
+            const tearCount = Math.floor(intensity * 8 + audioLevel * 10);
+            for (let i = 0; i < tearCount; i++) {
+                const y = Math.floor(Math.random() * canvasHeight);
+                const height = Math.floor(Math.random() * 20) + 5;
+                const shift = Math.floor((Math.random() - 0.5) * canvasWidth * intensity * 2);
+                
+                // Get image data for the tear
+                const tearData = glitchCtx.getImageData(0, y, canvasWidth, height);
+                
+                // Clear the tear area
+                glitchCtx.clearRect(0, y, canvasWidth, height);
+                
+                // Draw it back with shift
+                glitchCtx.putImageData(
+                    tearData, 
+                    shift, 
+                    y, 
+                    Math.max(0, -shift), 0, 
+                    Math.min(canvasWidth, canvasWidth - shift), 
+                    height
                 );
-            });
-
-            document.getElementById('color-palette').addEventListener('change', (e) => {
-                art.updateParameters(
-                    document.getElementById('shape-type').value, 
-                    e.target.value,
-                    document.getElementById('intensity').value
+            }
+            
+            // Add color burns
+            const burnCount = Math.floor(intensity * 5);
+            for (let i = 0; i < burnCount; i++) {
+                const size = Math.floor(Math.random() * 150) + 50;
+                const x = Math.floor(Math.random() * canvasWidth);
+                const y = Math.floor(Math.random() * canvasHeight);
+                
+                const burnGradient = glitchCtx.createRadialGradient(
+                    x, y, 0,
+                    x, y, size
                 );
-            });
+                
+                const burnColor = Math.random() > 0.5 ? 
+                    `rgba(255, 0, 255, ${intensity * 0.8})` : 
+                    `rgba(0, 255, 255, ${intensity * 0.8})`;
+                    
+                burnGradient.addColorStop(0, burnColor);
+                burnGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                
+                glitchCtx.fillStyle = burnGradient;
+                glitchCtx.globalCompositeOperation = 'overlay';
+                glitchCtx.fillRect(x - size, y - size, size * 2, size * 2);
+                glitchCtx.globalCompositeOperation = 'source-over';
+            }
+            
+            // Audio reactive flash
+            if (audioLevel > 0.8) {
+                glitchCtx.fillStyle = `rgba(255, 255, 255, ${audioLevel * 0.5})`;
+                glitchCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+            }
+        }
 
-            document.getElementById('intensity').addEventListener('input', (e) => {
-                art.updateParameters(
+        // Toggle theme
+        function toggleTheme() {
+            const body = document.documentElement;
+            const button = document.querySelector('.theme-toggle');
+            const isDark = body.getAttribute('data-theme') === 'light';
+            
+            body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            button.innerHTML = isDark ? '○ light mode' : '● dark mode';
+        }
+
+        // Initialize everything when page loads
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
