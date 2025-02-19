@@ -134,6 +134,64 @@
             content: "• ";
             color: var(--text-color);
         }
+        
+        /* Artwork styles */
+        .artwork-container {
+            margin: var(--spacing) 0 calc(var(--spacing) * 1.5) 0;
+            text-align: center;
+        }
+        
+        .song-artwork {
+            max-width: 100%;
+            max-height: 500px;
+            border: 1px solid var(--secondary-color);
+            display: block;
+            margin: 0 auto;
+            border-radius: 4px;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        
+        .song-artwork:hover {
+            transform: scale(1.01);
+        }
+        
+        /* Modal for enlarged artwork */
+        .artwork-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90vh;
+        }
+        
+        .modal-image {
+            max-width: 100%;
+            max-height: 90vh;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
     </style>
     <script>
         // Immediately check and apply the theme before page renders
@@ -152,6 +210,14 @@
     
     <h1>bad fortune</h1>
     <div class="date">2020-01-24</div>
+    
+    <!-- Artwork Container (new) -->
+    <div class="artwork-container">
+        <img src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg"
+             alt="Bad Fortune artwork - Pink squirrel painting"
+             class="song-artwork"
+             onclick="openArtworkModal()">
+    </div>
 
     <div class="player-container">
         <audio controls>
@@ -191,6 +257,12 @@
                 <dd>
                     Engineering: All composers<br>
                     Mixing & Mastering: Caolán Austin
+                </dd>
+                
+                <dt>Artwork</dt>
+                <dd>
+                    "We'll be lucky if I don't bust out crying" (2020)<br>
+                    Acrylic on canvas
                 </dd>
             </dl>
         </div>
@@ -243,10 +315,21 @@ Do you think I'll just snap out of it
         </div>
         <div class="section-content" id="resources">
             <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" download class="resource-link">mp3 download</a>
+            <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg" download class="resource-link">artwork download</a>
             <a href="#" class="resource-link">chord sheet (PDF)</a>
             <a href="#" class="resource-link">guitar playthrough (video)</a>
             <a href="#" class="resource-link">multitrack stems (ZIP)</a>
             <a href="#" class="resource-link">mix session (ZIP)</a>
+        </div>
+    </div>
+    
+    <!-- Artwork Modal (new) -->
+    <div id="artwork-modal" class="artwork-modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeArtworkModal()">&times;</span>
+            <img src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg" 
+                 alt="Bad Fortune artwork - full size" 
+                 class="modal-image">
         </div>
     </div>
 
@@ -270,6 +353,16 @@ Do you think I'll just snap out of it
             content.classList.toggle('open');
             toggle.textContent = isOpen ? '[ + ]' : '[ - ]';
         }
+        
+        function openArtworkModal() {
+            document.getElementById('artwork-modal').style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling while modal is open
+        }
+        
+        function closeArtworkModal() {
+            document.getElementById('artwork-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme');
@@ -280,6 +373,14 @@ Do you think I'll just snap out of it
                     ? '● light mode' 
                     : '○ dark mode';
             }
+            
+            // Close modal when clicking outside the image
+            const modal = document.getElementById('artwork-modal');
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeArtworkModal();
+                }
+            });
         });
     </script>
 </body>
