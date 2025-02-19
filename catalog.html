@@ -105,7 +105,7 @@
             color: var(--secondary-color);
         }
 
-        /* Catalog Styles */
+        /* Catalog Styles with Artwork */
         #catalog {
             display: none;
         }
@@ -113,19 +113,30 @@
         .catalog-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            gap: 30px;
             margin-top: 30px;
         }
 
         .catalog-item {
             border: 1px solid var(--border-color);
-            padding: 15px;
             border-radius: 4px;
             transition: transform 0.2s;
+            overflow: hidden;
         }
 
         .catalog-item:hover {
             transform: translateY(-5px);
+        }
+        
+        .artwork {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .song-info {
+            padding: 15px;
         }
 
         .song-title {
@@ -173,6 +184,12 @@
             margin-top: 5px;
         }
 
+        .stats {
+            margin-top: 5px;
+            font-size: 0.8em;
+            color: var(--secondary-color);
+        }
+        
         .bulk-section {
             margin-top: 40px;
             padding: 20px;
@@ -188,6 +205,7 @@
             border: none;
             margin-top: 10px;
             font-family: monospace;
+            margin-right: 10px;
         }
 
         .bulk-btn:hover {
@@ -195,10 +213,31 @@
             text-decoration: none;
         }
         
-        .stats {
-            margin-top: 5px;
-            font-size: 0.8em;
-            color: var(--secondary-color);
+        .artwork-preview {
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .artwork-preview::after {
+            content: "↗";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .artwork-preview:hover::after {
+            opacity: 1;
         }
     </style>
     <script>
@@ -229,85 +268,102 @@
 
     <!-- Catalog Content (Hidden until passphrase entered) -->
     <div id="catalog">
-        <p>Welcome to the complete rad.typo catalog. All tracks and resources are available for download below.</p>
+        <p>Welcome to the complete rad.typo catalog. All tracks, artwork, and resources are available for download below.</p>
         
         <div class="catalog-grid">
-            <!-- Muriel -->
+            <!-- Bad Fortune with real artwork -->
             <div class="catalog-item">
-                <div class="song-title">muriel</div>
-                <div class="song-date">2022-09-10</div>
-                <div>Duration: 3:43</div>
-                
-                <div class="download-links">
-                    <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" download class="download-btn">MP3</a>
-                    <a href="#" class="download-btn">WAV</a>
-                    <a href="#" class="download-btn">FLAC</a>
+                <div class="artwork-preview" onclick="openModal('artwork-1')">
+                    <img src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg" class="artwork" alt="We'll be lucky if I don't bust out crying - Pink artwork with squirrel" />
                 </div>
-                
-                <div class="resources">
-                    Resources:
-                    <ul>
-                        <li><a href="#">Chord sheet (PDF)</a></li>
-                        <li><a href="#">Guitar playthrough (video)</a></li>
-                        <li><a href="#">Multitrack stems (ZIP)</a></li>
-                    </ul>
-                </div>
-                <div class="stats">
-                    Recording: Smalltown America Studio<br>
-                    Size: 8.7MB (MP3) / 41.2MB (WAV)
+                <div class="song-info">
+                    <div class="song-title">bad fortune</div>
+                    <div class="song-date">2020-01-24</div>
+                    <div>Duration: 3:43</div>
+                    
+                    <div class="download-links">
+                        <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" download class="download-btn">MP3</a>
+                        <a href="#" class="download-btn">WAV</a>
+                        <a href="#" class="download-btn">FLAC</a>
+                    </div>
+                    
+                    <div class="resources">
+                        Resources:
+                        <ul>
+                            <li><a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg" download>Artwork (JPG)</a></li>
+                            <li><a href="#">Chord sheet (PDF)</a></li>
+                            <li><a href="#">Guitar playthrough (video)</a></li>
+                            <li><a href="#">Multitrack stems (ZIP)</a></li>
+                        </ul>
+                    </div>
+                    <div class="stats">
+                        Recording: Smalltown America Studio<br>
+                        Size: 8.7MB (MP3) / 41.2MB (WAV)
+                    </div>
                 </div>
             </div>
             
-            <!-- Bad Fortune -->
+            <!-- Muriel -->
             <div class="catalog-item">
-                <div class="song-title">bad fortune</div>
-                <div class="song-date">2020-01-24</div>
-                <div>Duration: 3:43</div>
-                
-                <div class="download-links">
-                    <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" download class="download-btn">MP3</a>
-                    <a href="#" class="download-btn">WAV</a>
-                    <a href="#" class="download-btn">FLAC</a>
+                <div class="artwork-preview">
+                    <img src="/api/placeholder/400/400" class="artwork" alt="Placeholder artwork for Muriel" />
                 </div>
-                
-                <div class="resources">
-                    Resources:
-                    <ul>
-                        <li><a href="#">Chord sheet (PDF)</a></li>
-                        <li><a href="#">Guitar playthrough (video)</a></li>
-                        <li><a href="#">Multitrack stems (ZIP)</a></li>
-                        <li><a href="#">Mix session (ZIP)</a></li>
-                    </ul>
-                </div>
-                <div class="stats">
-                    Recording: Smalltown America Studio<br>
-                    Size: 8.7MB (MP3) / 41.2MB (WAV)
+                <div class="song-info">
+                    <div class="song-title">muriel</div>
+                    <div class="song-date">2022-09-10</div>
+                    <div>Duration: 3:43</div>
+                    
+                    <div class="download-links">
+                        <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" download class="download-btn">MP3</a>
+                        <a href="#" class="download-btn">WAV</a>
+                        <a href="#" class="download-btn">FLAC</a>
+                    </div>
+                    
+                    <div class="resources">
+                        Resources:
+                        <ul>
+                            <li><a href="#">Artwork (Coming soon)</a></li>
+                            <li><a href="#">Chord sheet (PDF)</a></li>
+                            <li><a href="#">Guitar playthrough (video)</a></li>
+                            <li><a href="#">Multitrack stems (ZIP)</a></li>
+                        </ul>
+                    </div>
+                    <div class="stats">
+                        Recording: Smalltown America Studio<br>
+                        Size: 8.7MB (MP3) / 41.2MB (WAV)
+                    </div>
                 </div>
             </div>
             
             <!-- What's Not To Like -->
             <div class="catalog-item">
-                <div class="song-title">what's not to like</div>
-                <div class="song-date">2020-01-08</div>
-                <div>Duration: 3:43</div>
-                
-                <div class="download-links">
-                    <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" download class="download-btn">MP3</a>
-                    <a href="#" class="download-btn">WAV</a>
-                    <a href="#" class="download-btn">FLAC</a>
+                <div class="artwork-preview">
+                    <img src="/api/placeholder/400/400" class="artwork" alt="Placeholder artwork for What's Not To Like" />
                 </div>
-                
-                <div class="resources">
-                    Resources:
-                    <ul>
-                        <li><a href="#">Chord sheet (PDF)</a></li>
-                        <li><a href="#">Guitar playthrough (video)</a></li>
-                        <li><a href="#">Multitrack stems (ZIP)</a></li>
-                    </ul>
-                </div>
-                <div class="stats">
-                    Recording: Smalltown America Studio<br>
-                    Size: 8.7MB (MP3) / 41.2MB (WAV)
+                <div class="song-info">
+                    <div class="song-title">what's not to like</div>
+                    <div class="song-date">2020-01-08</div>
+                    <div>Duration: 3:43</div>
+                    
+                    <div class="download-links">
+                        <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" download class="download-btn">MP3</a>
+                        <a href="#" class="download-btn">WAV</a>
+                        <a href="#" class="download-btn">FLAC</a>
+                    </div>
+                    
+                    <div class="resources">
+                        Resources:
+                        <ul>
+                            <li><a href="#">Artwork (Coming soon)</a></li>
+                            <li><a href="#">Chord sheet (PDF)</a></li>
+                            <li><a href="#">Guitar playthrough (video)</a></li>
+                            <li><a href="#">Multitrack stems (ZIP)</a></li>
+                        </ul>
+                    </div>
+                    <div class="stats">
+                        Recording: Smalltown America Studio<br>
+                        Size: 8.7MB (MP3) / 41.2MB (WAV)
+                    </div>
                 </div>
             </div>
         </div>
@@ -318,8 +374,17 @@
             <p>Download everything at once:</p>
             <a href="#" class="bulk-btn">All MP3s (26.1MB)</a>
             <a href="#" class="bulk-btn">All WAVs (123.6MB)</a>
+            <a href="#" class="bulk-btn">All Artwork (15.8MB)</a>
             <a href="#" class="bulk-btn">All Resources (215MB)</a>
             <p class="stats">Last updated: 2023-11-09</p>
+        </div>
+    </div>
+
+    <!-- Simple Modal for Artwork Preview -->
+    <div id="artwork-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
+        <div style="position: relative; max-width: 90%; max-height: 90%;">
+            <img id="modal-image" src="" style="max-width: 100%; max-height: 90vh; display: block; margin: 0 auto;">
+            <div style="position: absolute; top: 20px; right: 20px; color: white; font-size: 30px; cursor: pointer;" onclick="closeModal()">×</div>
         </div>
     </div>
 
@@ -333,6 +398,27 @@
             button.innerHTML = isDark ? '○ dark mode' : '● light mode';
             
             localStorage.setItem('theme', isDark ? 'light' : 'dark');
+        }
+
+        // For artwork modal
+        function openModal(artworkId) {
+            const modal = document.getElementById('artwork-modal');
+            const modalImg = document.getElementById('modal-image');
+            
+            // Use actual artwork URL
+            if (artworkId === 'artwork-1') {
+                modalImg.src = 'https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg';
+            }
+            
+            modal.style.display = 'flex';
+            
+            // Prevent scrolling while modal is open
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal() {
+            document.getElementById('artwork-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -385,6 +471,14 @@
                     }, 1000);
                 }
             }
+            
+            // Close modal when clicking outside the image
+            const modal = document.getElementById('artwork-modal');
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
         });
     </script>
 </body>
