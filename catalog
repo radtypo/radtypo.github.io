@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rad.typo - catalog</title>
+    <style>
+        :root {
+            --bg-color: #fff;
+            --text-color: #000;
+            --link-color: #0000FF;
+            --secondary-color: #666;
+            --spacing: 20px;
+            --border-color: #ccc;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #fff;
+            --link-color: #809fff;
+            --secondary-color: #999;
+            --border-color: #444;
+        }
+
+        body {
+            font-family: monospace;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: var(--spacing);
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .back {
+            margin-bottom: 30px;
+            display: block;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: var(--spacing);
+            right: var(--spacing);
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-family: monospace;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* Access Gate Styles */
+        #access-gate {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 50vh;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #passphrase-input {
+            font-family: monospace;
+            padding: 8px;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 300px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        #submit-btn {
+            font-family: monospace;
+            padding: 8px 16px;
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+            border: none;
+            cursor: pointer;
+        }
+
+        #submit-btn:hover {
+            opacity: 0.9;
+        }
+
+        .hint {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: var(--secondary-color);
+        }
+
+        /* Catalog Styles */
+        #catalog {
+            display: none;
+        }
+
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .catalog-item {
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 4px;
+            transition: transform 0.2s;
+        }
+
+        .catalog-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .song-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .song-date {
+            color: var(--secondary-color);
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .download-links {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: var(--bg-color);
+            color: var(--link-color);
+            border: 1px solid var(--link-color);
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        .download-btn:hover {
+            background-color: var(--link-color);
+            color: var(--bg-color);
+            text-decoration: none;
+        }
+
+        .resources {
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .resources ul {
+            padding-left: 20px;
+            margin-top: 5px;
+        }
+
+        .bulk-section {
+            margin-top: 40px;
+            padding: 20px;
+            border: 1px dashed var(--border-color);
+            text-align: center;
+        }
+
+        .bulk-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--link-color);
+            color: var(--bg-color);
+            border: none;
+            margin-top: 10px;
+            font-family: monospace;
+        }
+
+        .bulk-btn:hover {
+            opacity: 0.9;
+            text-decoration: none;
+        }
+        
+        .stats {
+            margin-top: 5px;
+            font-size: 0.8em;
+            color: var(--secondary-color);
+        }
+    </style>
+    <script>
+        // Immediately check and apply the theme before page renders
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
+
+    <a href="/" class="back">← back</a>
+    
+    <h1>rad.typo catalog</h1>
+
+    <!-- Access Gate -->
+    <div id="access-gate">
+        <p>This page contains download links for all rad.typo releases and resources.</p>
+        <p>Enter the passphrase to access the catalog:</p>
+        <input type="text" id="passphrase-input" placeholder="passphrase" spellcheck="false">
+        <button id="submit-btn">Enter</button>
+        <div class="hint">Hint: It's hidden in the lyrics to "what's not to like"</div>
+    </div>
+
+    <!-- Catalog Content (Hidden until passphrase entered) -->
+    <div id="catalog">
+        <p>Welcome to the complete rad.typo catalog. All tracks and resources are available for download below.</p>
+        
+        <div class="catalog-grid">
+            <!-- Muriel -->
+            <div class="catalog-item">
+                <div class="song-title">muriel</div>
+                <div class="song-date">2022-09-10</div>
+                <div>Duration: 3:43</div>
+                
+                <div class="download-links">
+                    <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" download class="download-btn">MP3</a>
+                    <a href="#" class="download-btn">WAV</a>
+                    <a href="#" class="download-btn">FLAC</a>
+                </div>
+                
+                <div class="resources">
+                    Resources:
+                    <ul>
+                        <li><a href="#">Chord sheet (PDF)</a></li>
+                        <li><a href="#">Guitar playthrough (video)</a></li>
+                        <li><a href="#">Multitrack stems (ZIP)</a></li>
+                    </ul>
+                </div>
+                <div class="stats">
+                    Recording: Smalltown America Studio<br>
+                    Size: 8.7MB (MP3) / 41.2MB (WAV)
+                </div>
+            </div>
+            
+            <!-- Bad Fortune -->
+            <div class="catalog-item">
+                <div class="song-title">bad fortune</div>
+                <div class="song-date">2020-01-24</div>
+                <div>Duration: 3:43</div>
+                
+                <div class="download-links">
+                    <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" download class="download-btn">MP3</a>
+                    <a href="#" class="download-btn">WAV</a>
+                    <a href="#" class="download-btn">FLAC</a>
+                </div>
+                
+                <div class="resources">
+                    Resources:
+                    <ul>
+                        <li><a href="#">Chord sheet (PDF)</a></li>
+                        <li><a href="#">Guitar playthrough (video)</a></li>
+                        <li><a href="#">Multitrack stems (ZIP)</a></li>
+                        <li><a href="#">Mix session (ZIP)</a></li>
+                    </ul>
+                </div>
+                <div class="stats">
+                    Recording: Smalltown America Studio<br>
+                    Size: 8.7MB (MP3) / 41.2MB (WAV)
+                </div>
+            </div>
+            
+            <!-- What's Not To Like -->
+            <div class="catalog-item">
+                <div class="song-title">what's not to like</div>
+                <div class="song-date">2020-01-08</div>
+                <div>Duration: 3:43</div>
+                
+                <div class="download-links">
+                    <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" download class="download-btn">MP3</a>
+                    <a href="#" class="download-btn">WAV</a>
+                    <a href="#" class="download-btn">FLAC</a>
+                </div>
+                
+                <div class="resources">
+                    Resources:
+                    <ul>
+                        <li><a href="#">Chord sheet (PDF)</a></li>
+                        <li><a href="#">Guitar playthrough (video)</a></li>
+                        <li><a href="#">Multitrack stems (ZIP)</a></li>
+                    </ul>
+                </div>
+                <div class="stats">
+                    Recording: Smalltown America Studio<br>
+                    Size: 8.7MB (MP3) / 41.2MB (WAV)
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bulk Download Section -->
+        <div class="bulk-section">
+            <h2>Bulk Downloads</h2>
+            <p>Download everything at once:</p>
+            <a href="#" class="bulk-btn">All MP3s (26.1MB)</a>
+            <a href="#" class="bulk-btn">All WAVs (123.6MB)</a>
+            <a href="#" class="bulk-btn">All Resources (215MB)</a>
+            <p class="stats">Last updated: 2023-11-09</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.documentElement;
+            const button = document.querySelector('.theme-toggle');
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            button.innerHTML = isDark ? '○ dark mode' : '● light mode';
+            
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                const button = document.querySelector('.theme-toggle');
+                button.innerHTML = savedTheme === 'dark' 
+                    ? '● light mode' 
+                    : '○ dark mode';
+            }
+            
+            // Access Gate Functionality
+            const accessGate = document.getElementById('access-gate');
+            const catalog = document.getElementById('catalog');
+            const passphraseInput = document.getElementById('passphrase-input');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            // Check if already authenticated
+            if (localStorage.getItem('catalogAccess') === 'granted') {
+                accessGate.style.display = 'none';
+                catalog.style.display = 'block';
+            }
+            
+            // The passphrase check
+            submitBtn.addEventListener('click', checkPassphrase);
+            passphraseInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkPassphrase();
+                }
+            });
+            
+            function checkPassphrase() {
+                // The "who cares at all?" line from "what's not to like" lyrics
+                const input = passphraseInput.value.toLowerCase().trim();
+                if (input === 'who cares at all' || input === 'whocaresat all' || input === 'who cares') {
+                    // Grant access
+                    localStorage.setItem('catalogAccess', 'granted');
+                    accessGate.style.display = 'none';
+                    catalog.style.display = 'block';
+                } else {
+                    passphraseInput.value = '';
+                    passphraseInput.placeholder = 'incorrect passphrase, try again';
+                    passphraseInput.focus();
+                    
+                    // Briefly show the input in red
+                    passphraseInput.style.borderColor = 'red';
+                    setTimeout(() => {
+                        passphraseInput.style.borderColor = '';
+                    }, 1000);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
