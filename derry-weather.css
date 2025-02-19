@@ -1,0 +1,68 @@
+/* 
+ * derry-weather.css
+ * Minimal styling for the Derry weather display
+ */
+
+.location-info {
+  margin: 10px 0 20px 0;
+  font-family: monospace;
+  color: var(--secondary-color);
+  font-size: 0.9em;
+  border-left: 3px solid var(--secondary-color);
+  padding-left: 10px;
+  transition: border-color 0.3s ease;
+}
+
+#derry-weather {
+  display: inline-block;
+  padding: 3px 0;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+  cursor: default;
+}
+
+/* Subtle hover effect */
+.location-info:hover {
+  border-left-color: var(--link-color);
+}
+
+/* Animation for loading state */
+@keyframes loading-dots {
+  0%, 20% {
+    content: ".";
+  }
+  40% {
+    content: "..";
+  }
+  60% {
+    content: "...";
+  }
+  80%, 100% {
+    content: "";
+  }
+}
+
+#derry-weather.loading:after {
+  content: "";
+  animation: loading-dots 2s steps(5, end) infinite;
+}
+
+/* Print style - make weather less prominent */
+@media print {
+  .location-info {
+    font-size: 0.7em;
+    opacity: 0.7;
+    border-left: none;
+  }
+}
+
+/* When API fails */
+#derry-weather.error {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+/* Dark theme enhancement */
+[data-theme="dark"] .location-info {
+  opacity: 0.9;
+}
