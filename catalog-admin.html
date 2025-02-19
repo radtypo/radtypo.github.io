@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rad.typo catalog admin</title>
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --text-color: #fff;
+            --link-color: #809fff;
+            --secondary-color: #999;
+            --accent-color: #666;
+            --input-bg: #2a2a2a;
+            --success-color: #4CAF50;
+            --warning-color: #FFC107;
+            --error-color: #F44336;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #fff;
+            --text-color: #000;
+            --link-color: #0000FF;
+            --secondary-color: #666;
+            --accent-color: #ccc;
+            --input-bg: #f5f5f5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1, h2 {
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--accent-color);
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        /* Layout */
+        .admin-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .admin-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid var(--accent-color);
+            font-family: monospace;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-family: monospace;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .button-primary {
+            background-color: var(--link-color);
+            color: white;
+        }
+
+        .button-warning {
+            background-color: var(--warning-color);
+            color: black;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        /* Checkbox and Radio Groups */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        /* Tags Input */
+        .tag-input-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 8px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--accent-color);
+            min-height: 40px;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--accent-color);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .tag-remove {
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .tag-input {
+            flex: 1;
+            min-width: 100px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-family: monospace;
+            outline: none;
+            padding: 5px;
+        }
+
+        /* Resources section */
+        .resources-container {
+            border: 1px solid var(--accent-color);
+            padding: 15px;
+            margin-bottom: 15px;
+            min-height: 50px;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--accent-color);
+        }
+
+        .resource-remove {
+            margin-left: auto;
+            cursor: pointer;
+            color: var(--error-color);
+        }
+
+        /* Preview section */
+        pre {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 14px;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+        }
+
+        /* Saved notification */
+        .saved-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--success-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .saved-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Catalog list */
+        .catalog-list {
+            margin-bottom: 30px;
+            border: 1px solid var(--accent-color);
+        }
+
+        .catalog-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--accent-color);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        #error-message {
+            color: var(--error-color);
+            margin: 10px 0;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">○ light mode</button>
+
+    <div class="container">
+        <a href="/" class="back-link">← back to site</a>
+        
+        <h1>rad.typo catalog admin</h1>
+        <p>Manage your song catalog with this simple admin interface.</p>
+        
+        <div id="error-message"></div>
+        
+        <div class="admin-layout">
+            <div class="form-section">
+                <h2>Add/Edit Song</h2>
+                
+                <div class="form-group">
+                    <label for="song-title">Title: *</label>
+                    <input type="text" id="song-title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="song-year">Year: *</label>
+                    <input type="number" id="song-year" min="2000" max="2099" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="song-date">Release Date:</label>
+                    <input type="date" id="song-date">
+                </div>
+                
+                <div class="form-group">
+                    <label>Status:</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="radio" name="status" value="Vibes" checked> Vibes
+                        </label>
+                        <label>
+                            <input type="radio" name="status" value="No Vibes"> No Vibes
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Available Formats:</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" class="format-checkbox" value="MP3"> MP3
+                        </label>
+                        <label>
+                            <input type="checkbox" class="format-checkbox" value="WAV"> WAV
+                        </label>
+                        <label>
+                            <input type="checkbox" class="format-checkbox" value="FLAC"> FLAC
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Tags:</label>
+                    <div class="tag-input-container" id="tags-container">
+                        <input type="text" class="tag-input" id="tag-input" placeholder="Add tags... (press Enter)">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Resources:</label>
+                    <div class="resources-container" id="resources-container">
+                        <!-- Resource items will be added here -->
+                    </div>
+                    <div class="resource-form">
+                        <div class="form-group">
+                            <label for="resource-type">Resource Type:</label>
+                            <select id="resource-type">
+                                <option value="Artwork">Artwork</option>
+                                <option value="Chord sheet">Chord sheet</option>
+                                <option value="Guitar playthrough">Guitar playthrough</option>
+                                <option value="Multitrack stems">Multitrack stems</option>
+                                <option value="Mix session">Mix session</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="resource-format">Format:</label>
+                            <select id="resource-format">
+                                <option value="JPG">JPG</option>
+                                <option value="PDF">PDF</option>
+                                <option value="video">Video</option>
+                                <option value="ZIP">ZIP</option>
+                                <option value="Coming soon">Coming soon</option>
+                            </select>
+                        </div>
+                        <button id="add-resource-btn">Add Resource</button>
+                    </div>
+                </div>
+                
+                <div class="button-row">
+                    <button id="reset-form-btn" class="button-warning">Reset Form</button>
+                    <button id="save-entry-btn" class="button-primary">Save Entry</button>
+                </div>
+            </div>
+            
+            <div class="preview-section">
+                <h2>Entry Preview</h2>
+                <pre id="entry-preview">// Entry preview will appear here</pre>
+                
+                <h2>Complete Catalog</h2>
+                <div class="button-row">
+                    <button id="copy-json-btn">Copy Complete JSON</button>
+                    <button id="download-json-btn">Download JSON File</button>
+                </div>
+                <pre id="catalog-output">// Complete catalog will appear here</pre>
+            </div>
+        </div>
+        
+        <h2>Catalog Entries</h2>
+        <div id="catalog-list" class="catalog-list">
+            <!-- Entries will be loaded here -->
+            <div class="catalog-item">
+                <span>No entries yet. Add your first song above!</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="saved-notification" id="saved-notification">
+        Changes saved successfully!
+    </div>
+
+    <script>
+        // Global state
+        let catalog = { songs: [] };
+        let currentEditIndex = -1; // -1 means creating new entry
+        
+        // Initialize app
+        function init() {
+            // Load saved catalog from localStorage or create empty one
+            loadCatalog();
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Render catalog entries
+            renderCatalogList();
+            
+            // Update catalog output
+            updateCatalogOutput();
+        }
+        
+        // Load catalog from localStorage
+        function loadCatalog() {
+            const savedCatalog = localStorage.getItem('rad_typo_catalog');
+            if (savedCatalog) {
+                try {
+                    catalog = JSON.parse(savedCatalog);
+                    console.log('Loaded catalog from localStorage:', catalog);
+                } catch (error) {
+                    console.error('Error parsing saved catalog:', error);
+                    catalog = { songs: [] };
+                }
+            } else {
+                catalog = { songs: [] };
+            }
+        }
+        
+        // Save catalog to localStorage
+        function saveCatalog() {
+            localStorage.setItem('rad_typo_catalog', JSON.stringify(catalog));
+            console.log('Saved catalog to localStorage');
+            showSavedNotification();
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Save entry button
+            document.getElementById('save-entry-btn').addEventListener('click', saveEntry);
+            
+            // Reset form button
+            document.getElementById('reset-form-btn').addEventListener('click', resetForm);
+            
+            // Copy JSON button
+            document.getElementById('copy-json-btn').addEventListener('click', copyJsonToClipboard);
+            
+            // Download JSON button
+            document.getElementById('download-json-btn').addEventListener('click', downloadJsonFile);
+            
+            // Add resource button
+            document.getElementById('add-resource-btn').addEventListener('click', addResource);
+            
+            // Tag input setup
+            const tagInput = document.getElementById('tag-input');
+            tagInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && this.value.trim() !== '') {
+                    e.preventDefault();
+                    addTag(this.value.trim());
+                    this.value = '';
+                    updateEntryPreview();
+                }
+            });
+            
+            // Form change events for preview updates
+            const formElements = document.querySelectorAll('input, select, textarea');
+            formElements.forEach(el => {
+                el.addEventListener('input', updateEntryPreview);
+                el.addEventListener('change', updateEntryPreview);
+            });
+        }
+        
+        // Save current entry
+        function saveEntry() {
+            // Get form values
+            const title = document.getElementById('song-title').value.trim();
+            const year = parseInt(document.getElementById('song-year').value);
+            const date = document.getElementById('song-date').value;
+            
+            // Validation
+            if (!title) {
+                showError('Title is required');
+                return;
+            }
+            
+            if (!year || year < 2000 || year > 2099) {
+                showError('Valid year is required (2000-2099)');
+                return;
+            }
+            
+            // Get status
+            const statusRadio = document.querySelector('input[name="status"]:checked');
+            const status = statusRadio ? statusRadio.value : 'Vibes';
+            
+            // Get formats
+            const formatCheckboxes = document.querySelectorAll('.format-checkbox:checked');
+            const formats = Array.from(formatCheckboxes).map(cb => cb.value);
+            
+            // Get tags
+            const tagElements = document.querySelectorAll('.tag');
+            const tags = Array.from(tagElements).map(tag => tag.dataset.value);
+            
+            // Get resources
+            const resourceElements = document.querySelectorAll('.resource-item');
+            const resources = Array.from(resourceElements).map(item => {
+                const type = item.dataset.type;
+                const format = item.dataset.format;
+                return `${type} (${format})`;
+            });
+            
+            // Create song object
+            const song = {
+                title,
+                year,
+                date: date || formatDateString(new Date()),
+                status,
+                formats,
+                resources,
+                tags
+            };
+            
+            // Add or update in catalog
+            if (currentEditIndex >= 0 && currentEditIndex < catalog.songs.length) {
+                // Update existing entry
+                catalog.songs[currentEditIndex] = song;
+            } else {
+                // Add new entry
+                catalog.songs.push(song);
+            }
+            
+            // Save to localStorage
+            saveCatalog();
+            
+            // Update UI
+            renderCatalogList();
+            updateCatalogOutput();
+            resetForm();
+        }
+        
+        // Reset form
+        function resetForm() {
+            document.getElementById('song-title').value = '';
+            document.getElementById('song-year').value = '';
+            document.getElementById('song-date').value = '';
+            document.querySelectorAll('.format-checkbox').forEach(cb => cb.checked = false);
+            document.querySelectorAll('input[name="status"]')[0].checked = true;
+            
+            // Clear tags
+            const tagsContainer = document.getElementById('tags-container');
+            Array.from(tagsContainer.querySelectorAll('.tag')).forEach(tag => tag.remove());
+            
+            // Clear resources
+            document.getElementById('resources-container').innerHTML = '';
+            
+            // Reset current edit index
+            currentEditIndex = -1;
+            
+            // Update preview
+            updateEntryPreview();
+            
+            // Clear error message
+            hideError();
+        }
+        
+        // Add a tag
+        function addTag(tagText) {
+            if (!tagText) return;
+            
+            const tagsContainer = document.getElementById('tags-container');
+            const tagInput = document.getElementById('tag-input');
+            
+            // Create tag element
+            const tag = document.createElement('span');
+            tag.className = 'tag';
+            tag.dataset.value = tagText;
+            tag.innerHTML = `
+                ${tagText}
+                <span class="tag-remove">×</span>
+            `;
+            
+            // Add remove functionality
+            tag.querySelector('.tag-remove').addEventListener('click', function() {
+                tag.remove();
+                updateEntryPreview();
+            });
+            
+            // Insert before the input
+            tagsContainer.insertBefore(tag, tagInput);
+        }
+        
+        // Add a resource
+        function addResource() {
+            const type = document.getElementById('resource-type').value;
+            const format = document.getElementById('resource-format').value;
+            
+            if (!type || !format) return;
+            
+            const resourcesContainer = document.getElementById('resources-container');
+            
+            // Create resource item
+            const item = document.createElement('div');
+            item.className = 'resource-item';
+            item.dataset.type = type;
+            item.dataset.format = format;
+            item.innerHTML = `
+                <span>${type} (${format})</span>
+                <span class="resource-remove">×</span>
+            `;
+            
+            // Add remove functionality
+            item.querySelector('.resource-remove').addEventListener('click', function() {
+                item.remove();
+                updateEntryPreview();
+            });
+            
+            resourcesContainer.appendChild(item);
+            updateEntryPreview();
+        }
+        
+        // Format date string (Month DD, YYYY)
+        function formatDateString(date) {
+            if (typeof date === 'string') {
+                date = new Date(date);
+            }
+            
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+        
+        // Update entry preview
+        function updateEntryPreview() {
+            // Get current form values
+            const title = document.getElementById('song-title').value.trim();
+            const year = parseInt(document.getElementById('song-year').value) || new Date().getFullYear();
+            const date = document.getElementById('song-date').value;
+            
+            // Get status
+            const statusRadio = document.querySelector('input[name="status"]:checked');
+            const status = statusRadio ? statusRadio.value : 'Vibes';
+            
+            // Get formats
+            const formatCheckboxes = document.querySelectorAll('.format-checkbox:checked');
+            const formats = Array.from(formatCheckboxes).map(cb => cb.value);
+            
+            // Get tags
+            const tagElements = document.querySelectorAll('.tag');
+            const tags = Array.from(tagElements).map(tag => tag.dataset.value);
+            
+            // Get resources
+            const resourceElements = document.querySelectorAll('.resource-item');
+            const resources = Array.from(resourceElements).map(item => {
+                const type = item.dataset.type;
+                const format = item.dataset.format;
+                return `${type} (${format})`;
+            });
+            
+            // Create preview object
+            const previewObj = {
+                title: title || "[Title Required]",
+                year,
+                date: date ? formatDateString(date) : formatDateString(new Date()),
+                status,
+                formats,
+                resources,
+                tags
+            };
+            
+            // Update preview
+            document.getElementById('entry-preview').textContent = JSON.stringify(previewObj, null, 2);
+        }
+        
+        // Update catalog output
+        function updateCatalogOutput() {
+            document.getElementById('catalog-output').textContent = JSON.stringify(catalog, null, 2);
+        }
+        
+        // Render catalog list
+        function renderCatalogList() {
+            const catalogList = document.getElementById('catalog-list');
+            catalogList.innerHTML = '';
+            
+            if (catalog.songs.length === 0) {
+                const emptyItem = document.createElement('div');
+                emptyItem.className = 'catalog-item';
+                emptyItem.innerHTML = '<span>No songs in catalog. Add your first entry!</span>';
+                catalogList.appendChild(emptyItem);
+                return;
+            }
+            
+            // Sort songs by year (newest first) and then by title
+            const sortedSongs = [...catalog.songs].sort((a, b) => {
+                if (b.year !== a.year) return b.year - a.year;
+                return a.title.localeCompare(b.title);
+            });
+            
+            sortedSongs.forEach((song, index) => {
+                const item = document.createElement('div');
+                item.className = 'catalog-item';
+                
+                const mainInfo = document.createElement('span');
+                mainInfo.innerHTML = `<strong>${song.title}</strong> (${song.year}) - ${song.status}`;
+                
+                const actions = document.createElement('div');
+                
+                // Edit button
+                const editBtn = document.createElement('button');
+                editBtn.textContent = 'Edit';
+                editBtn.addEventListener('click', () => editSong(index));
+                
+                // Delete button
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.addEventListener('click', () => deleteSong(index));
+                
+                actions.appendChild(editBtn);
+                actions.appendChild(deleteBtn);
+                
+                item.appendChild(mainInfo);
+                item.appendChild(actions);
+                catalogList.appendChild(item);
+            });
+        }
+        
+        // Edit a song
+        function editSong(index) {
+            const song = catalog.songs[index];
+            if (!song) return;
+            
+            // Set current edit index
+            currentEditIndex = index;
+            
+            // Fill form with song data
+            document.getElementById('song-title').value = song.title;
+            document.getElementById('song-year').value = song.year;
+            
+            // Try to convert date string to date input format
+            if (song.date) {
+                try {
+                    const dateObj = new Date(song.date);
+                    const formattedDate = dateObj.toISOString().split('T')[0];
+                    document.getElementById('song-date').value = formattedDate;
+                } catch (e) {
+                    document.getElementById('song-date').value = '';
+                }
+            }
+            
+            // Set status
+            document.querySelectorAll('input[name="status"]').forEach(radio => {
+                radio.checked = radio.value === song.status;
+            });
+            
+            // Set formats
+            document.querySelectorAll('.format-checkbox').forEach(checkbox => {
+                checkbox.checked = song.formats.includes(checkbox.value);
+            });
+            
+            // Set tags
+            const tagsContainer = document.getElementById('tags-container');
+            // First clear existing tags
+            Array.from(tagsContainer.querySelectorAll('.tag')).forEach(tag => tag.remove());
+            // Then add song tags
+            if (song.tags && Array.isArray(song.tags)) {
+                song.tags.forEach(tag => addTag(tag));
+            }
+            
+            // Set resources
+            const resourcesContainer = document.getElementById('resources-container');
+            resourcesContainer.innerHTML = ''; // Clear existing resources
+            
+            if (song.resources && Array.isArray(song.resources)) {
+                song.resources.forEach(resource => {
+                    // Parse resource string like "Artwork (JPG)"
+                    const match = resource.match(/(.*) \((.*)\)/);
+                    if (match) {
+                        const type = match[1];
+                        const format = match[2];
+                        
+                        const item = document.createElement('div');
+                        item.className = 'resource-item';
+                        item.dataset.type = type;
+                        item.dataset.format = format;
+                        item.innerHTML = `
+                            <span>${resource}</span>
+                            <span class="resource-remove">×</span>
+                        `;
+                        
+                        item.querySelector('.resource-remove').addEventListener('click', function() {
+                            item.remove();
+                            updateEntryPreview();
+                        });
+                        
+                        resourcesContainer.appendChild(item);
+                    }
+                });
+            }
+            
+            // Update preview
+            updateEntryPreview();
+            
+            // Scroll to form
+            document.querySelector('.form-section').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+        
+        // Delete a song
+        function deleteSong(index) {
+            if (!confirm('Are you sure you want to delete this song?')) {
+                return;
+            }
+            
+            catalog.songs.splice(index, 1);
+            saveCatalog();
+            renderCatalogList();
+            updateCatalogOutput();
+        }
+        
+        // Copy JSON to clipboard
+        function copyJsonToClipboard() {
+            const jsonText = JSON.stringify(catalog, null, 2);
+            navigator.clipboard.writeText(jsonText)
+                .then(() => {
+                    alert('Catalog JSON copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Failed to copy: ', err);
+                    // Fallback
+                    const textarea = document.createElement('textarea');
+                    textarea.value = jsonText;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    alert('Catalog JSON copied to clipboard!');
+                });
+        }
+        
+        // Download JSON file
+        function downloadJsonFile() {
+            const jsonText = JSON.stringify(catalog, null, 2);
+            const blob = new Blob([jsonText], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'rad_typo_catalog.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Show error message
+        function showError(message) {
+            const errorEl = document.getElementById('error-message');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+        
+        // Hide error message
+        function hideError() {
+            document.getElementById('error-message').style.display = 'none';
+        }
+        
+        // Show saved notification
+        function showSavedNotification() {
+            const notification = document.getElementById('saved-notification');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Toggle theme
+        function toggleTheme() {
+            const body = document.documentElement;
+            const button = document.querySelector('.theme-toggle');
+            const isDark = body.getAttribute('data-theme') === 'light';
+            
+            body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            button.innerHTML = isDark ? '○ light mode' : '● dark mode';
+        }
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
