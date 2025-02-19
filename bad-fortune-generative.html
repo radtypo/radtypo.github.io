@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rad.typo - bad fortune (glitch experience)</title>
+    <title>rad.typo tv</title>
     <style>
         :root {
             --bg-color: #1a1a1a;
@@ -12,7 +12,7 @@
             --secondary-color: #999;
             --accent-color: #ff00ff;
             --spacing: 20px;
-            --control-size: 120px;
+            --control-size: 90px;
             --font-mono: monospace;
         }
 
@@ -50,38 +50,104 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            max-width: 1200px;
+            max-width: 900px;
             margin: 0 auto;
             padding: 20px;
         }
 
         h1 {
             font-size: 24px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             width: 100%;
             text-align: center;
         }
 
         .date {
             color: var(--secondary-color);
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             font-size: 14px;
+            text-align: center;
         }
 
-        .experience-container {
-            display: grid;
-            grid-template-columns: 1fr 180px;
-            gap: 20px;
-            width: 100%;
-            margin-bottom: 40px;
-        }
-
-        .canvas-container {
+        .tv-container {
             position: relative;
             width: 100%;
-            aspect-ratio: 1;
-            background-color: rgba(0, 0, 0, 0.8);
+            max-width: 900px;
+            background-color: #000;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
             overflow: hidden;
+        }
+
+        .tv-inner {
+            position: relative;
+            background-color: #000;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+            gap: 15px;
+            border-radius: 5px;
+        }
+
+        .tv-screen {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            border-radius: 30px;
+            box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.1);
+        }
+
+        .tv-screen::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(0, 0, 0, 0.1) 50%
+            );
+            background-size: 100% 4px;
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0.2;
+        }
+
+        .tv-screen::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(
+                circle at center,
+                transparent 60%,
+                rgba(0, 0, 0, 0.7) 100%
+            );
+            z-index: 11;
+            pointer-events: none;
+            opacity: 0.8;
+            border-radius: 30px;
+        }
+
+        .tv-reflection {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.2) 0%,
+                transparent 40%
+            );
+            z-index: 12;
+            pointer-events: none;
+            border-radius: 30px;
         }
 
         #artwork-canvas {
@@ -102,31 +168,77 @@
             z-index: 2;
         }
 
-        #artwork-image {
-            display: none;
-        }
-        
-        .artwork {
+        .glitch-overlay {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            object-fit: contain;
-            background-image: url('bad-fortune-artwork.jpg');
-            background-size: cover;
-            background-position: center;
+            right: 0;
+            bottom: 0;
+            z-index: 5;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.05;
+        }
+
+        #artwork-image {
+            display: none;
         }
 
         .control-panel {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 30px;
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.3);
+            justify-content: space-between;
+            gap: 15px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.6);
             border: 1px solid var(--secondary-color);
+            border-radius: 5px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .control-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--secondary-color);
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--secondary-color);
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+        }
+
+        .effect-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .effect-btn {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--secondary-color);
+            color: var(--text-color);
+            padding: 5px;
+            border-radius: 3px;
+            font-family: var(--font-mono);
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .effect-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        .effect-btn.active {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
         }
 
         .dial-container {
@@ -134,12 +246,13 @@
             flex-direction: column;
             align-items: center;
             position: relative;
+            margin-bottom: 10px;
         }
 
         .dial-label {
             text-transform: uppercase;
-            font-size: 12px;
-            margin-bottom: 10px;
+            font-size: 11px;
+            margin-bottom: 5px;
             letter-spacing: 1px;
         }
 
@@ -206,6 +319,8 @@
         .audio-player audio {
             width: 100%;
             margin-top: 10px;
+            filter: grayscale(1);
+            opacity: 0.8;
         }
 
         .theme-toggle {
@@ -222,48 +337,44 @@
 
         .effect-name {
             position: absolute;
-            bottom: 10px;
+            top: 10px;
             left: 10px;
             font-family: var(--font-mono);
             font-size: 14px;
             color: var(--accent-color);
-            z-index: 3;
+            z-index: 9;
             text-transform: uppercase;
             letter-spacing: 2px;
             mix-blend-mode: difference;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 3px 8px;
+            border-radius: 3px;
         }
 
-        .effect-buttons {
+        .tv-controls {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 30px;
             margin-top: 20px;
         }
 
-        .effect-btn {
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--secondary-color);
-            color: var(--text-color);
-            padding: 8px 15px;
-            border-radius: 3px;
-            font-family: var(--font-mono);
+        .tv-button {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(to bottom, #444, #222);
+            border: 2px solid #111;
             cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
 
-        .effect-btn:hover {
-            background-color: var(--accent-color);
-            color: var(--bg-color);
-        }
-
-        .effect-btn.active {
-            background-color: var(--accent-color);
-            color: var(--bg-color);
+        .tv-button:active {
+            transform: translateY(2px);
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
         }
 
         @media (max-width: 768px) {
-            .experience-container {
+            .tv-inner {
                 grid-template-columns: 1fr;
             }
             
@@ -272,10 +383,18 @@
                 grid-template-columns: repeat(3, 1fr);
             }
             
-            .dial {
-                width: 90px;
-                height: 90px;
-                --control-size: 90px;
+            .control-group {
+                grid-column: span 3;
+            }
+            
+            .effect-buttons {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .effect-btn {
+                flex: 1;
+                min-width: 80px;
             }
         }
     </style>
@@ -285,58 +404,73 @@
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">○ light mode</button>
 
     <div class="main-container">
-        <h1>bad fortune (glitch experience)</h1>
+        <h1>rad.typo tv</h1>
         <div class="date">2020-01-24</div>
 
-        <div class="experience-container">
-            <div class="canvas-container">
-                <div class="artwork"></div>
-                <canvas id="artwork-canvas"></canvas>
-                <canvas id="glitch-canvas"></canvas>
-                <div class="effect-name" id="effect-name">VHS</div>
-                <img id="artwork-image" src="bad-fortune-artwork.jpg" alt="Album artwork">
+        <div class="tv-container">
+            <div class="tv-inner">
+                <div class="tv-screen">
+                    <canvas id="artwork-canvas"></canvas>
+                    <canvas id="glitch-canvas"></canvas>
+                    <div class="glitch-overlay"></div>
+                    <div class="tv-reflection"></div>
+                    <div class="effect-name" id="effect-name">VHS</div>
+                    <img id="artwork-image" src="bad-fortune-artwork.jpg" alt="Album artwork">
+                </div>
+
+                <div class="control-panel">
+                    <div class="control-group">
+                        <div class="control-title">Signal</div>
+                        <div class="effect-buttons">
+                            <button class="effect-btn active" data-effect="vhs">VHS</button>
+                            <button class="effect-btn" data-effect="glitch">Glitch</button>
+                            <button class="effect-btn" data-effect="destroyed">Destroyed</button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-title">Controls</div>
+                        <div class="dial-container">
+                            <div class="dial-label">Volume</div>
+                            <div class="dial" id="volume-dial">
+                                <div class="dial-background"></div>
+                                <div class="dial-knob">
+                                    <div class="dial-indicator"></div>
+                                    <div class="dial-value">75</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dial-container">
+                            <div class="dial-label">Intensity</div>
+                            <div class="dial" id="intensity-dial">
+                                <div class="dial-background"></div>
+                                <div class="dial-knob">
+                                    <div class="dial-indicator"></div>
+                                    <div class="dial-value">50</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dial-container">
+                            <div class="dial-label">Speed</div>
+                            <div class="dial" id="speed-dial">
+                                <div class="dial-background"></div>
+                                <div class="dial-knob">
+                                    <div class="dial-indicator"></div>
+                                    <div class="dial-value">50</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div class="control-panel">
-                <div class="dial-container">
-                    <div class="dial-label">Volume</div>
-                    <div class="dial" id="volume-dial">
-                        <div class="dial-background"></div>
-                        <div class="dial-knob">
-                            <div class="dial-indicator"></div>
-                            <div class="dial-value">75</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="dial-container">
-                    <div class="dial-label">Intensity</div>
-                    <div class="dial" id="intensity-dial">
-                        <div class="dial-background"></div>
-                        <div class="dial-knob">
-                            <div class="dial-indicator"></div>
-                            <div class="dial-value">50</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="dial-container">
-                    <div class="dial-label">Speed</div>
-                    <div class="dial" id="speed-dial">
-                        <div class="dial-background"></div>
-                        <div class="dial-knob">
-                            <div class="dial-indicator"></div>
-                            <div class="dial-value">50</div>
-                        </div>
-                    </div>
-                </div>
+            
+            <div class="tv-controls">
+                <button class="tv-button"></button>
+                <button class="tv-button"></button>
+                <button class="tv-button"></button>
             </div>
-        </div>
-
-        <div class="effect-buttons">
-            <button class="effect-btn active" data-effect="vhs">VHS</button>
-            <button class="effect-btn" data-effect="glitch">Glitch</button>
-            <button class="effect-btn" data-effect="destroyed">Destroyed</button>
         </div>
 
         <div class="audio-player">
@@ -374,14 +508,15 @@
             initCanvases();
             setupDialControls();
             setupEffectButtons();
-            createFallbackArtwork();
+            loadArtwork();
             initAudio();
             startAnimation();
+            setupTVButtons();
         }
 
         // Initialize canvases
         function initCanvases() {
-            const container = document.querySelector('.canvas-container');
+            const container = document.querySelector('.tv-screen');
             canvasWidth = container.offsetWidth;
             canvasHeight = container.offsetHeight;
             
@@ -389,6 +524,37 @@
             artworkCanvas.height = canvasHeight;
             glitchCanvas.width = canvasWidth;
             glitchCanvas.height = canvasHeight;
+        }
+
+        // Load artwork
+        function loadArtwork() {
+            if (artworkImage.complete) {
+                artworkCtx.drawImage(artworkImage, 0, 0, canvasWidth, canvasHeight);
+            } else {
+                artworkImage.onload = () => {
+                    artworkCtx.drawImage(artworkImage, 0, 0, canvasWidth, canvasHeight);
+                };
+                
+                artworkImage.onerror = createFallbackArtwork;
+            }
+        }
+
+        // Fallback artwork if image fails to load
+        function createFallbackArtwork() {
+            // Create a gradient background
+            const gradient = artworkCtx.createLinearGradient(0, 0, canvasWidth, canvasHeight);
+            gradient.addColorStop(0, '#ff00ff');
+            gradient.addColorStop(0.5, '#00ffff');
+            gradient.addColorStop(1, '#ff00ff');
+            
+            artworkCtx.fillStyle = gradient;
+            artworkCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+            
+            // Add text
+            artworkCtx.fillStyle = '#000';
+            artworkCtx.font = '48px monospace';
+            artworkCtx.textAlign = 'center';
+            artworkCtx.fillText('bad fortune', canvasWidth/2, canvasHeight/2);
         }
 
         // Initialize audio analyzer
@@ -520,33 +686,53 @@
             });
         }
 
-        // Create artwork from image
-        function createFallbackArtwork() {
-            if (artworkImage.complete) {
-                artworkCtx.drawImage(artworkImage, 0, 0, canvasWidth, canvasHeight);
-            } else {
-                artworkImage.onload = () => {
-                    artworkCtx.drawImage(artworkImage, 0, 0, canvasWidth, canvasHeight);
-                };
-                
-                // Fallback if image fails to load
-                artworkImage.onerror = () => {
-                    // Create a gradient background
-                    const gradient = artworkCtx.createLinearGradient(0, 0, canvasWidth, canvasHeight);
-                    gradient.addColorStop(0, '#ff00ff');
-                    gradient.addColorStop(0.5, '#00ffff');
-                    gradient.addColorStop(1, '#ff00ff');
+        // Setup TV buttons for random effects
+        function setupTVButtons() {
+            const tvButtons = document.querySelectorAll('.tv-button');
+            const effectButtons = document.querySelectorAll('.effect-btn');
+            
+            tvButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Random static noise effect when button pressed
+                    createTVNoise();
                     
-                    artworkCtx.fillStyle = gradient;
-                    artworkCtx.fillRect(0, 0, canvasWidth, canvasHeight);
-                    
-                    // Add text
-                    artworkCtx.fillStyle = '#000';
-                    artworkCtx.font = '48px monospace';
-                    artworkCtx.textAlign = 'center';
-                    artworkCtx.fillText('bad fortune', canvasWidth/2, canvasHeight/2);
-                };
+                    // Random effect after static
+                    setTimeout(() => {
+                        const randomEffect = Math.floor(Math.random() * effectButtons.length);
+                        effectButtons[randomEffect].click();
+                        
+                        // Random values for controls
+                        controls.intensity = Math.floor(Math.random() * 70) + 30;
+                        controls.speed = Math.floor(Math.random() * 70) + 30;
+                        
+                        // Update dial displays
+                        const intensityIndicator = document.querySelector('#intensity-dial .dial-indicator');
+                        const intensityValue = document.querySelector('#intensity-dial .dial-value');
+                        const speedIndicator = document.querySelector('#speed-dial .dial-indicator');
+                        const speedValue = document.querySelector('#speed-dial .dial-value');
+                        
+                        updateDialRotation(intensityIndicator, intensityValue, controls.intensity);
+                        updateDialRotation(speedIndicator, speedValue, controls.speed);
+                    }, 500);
+                });
+            });
+        }
+
+        // Create TV static noise effect
+        function createTVNoise() {
+            const imageData = glitchCtx.createImageData(canvasWidth, canvasHeight);
+            const data = imageData.data;
+            
+            // Generate static noise
+            for (let i = 0; i < data.length; i += 4) {
+                const value = Math.random() * 255;
+                data[i] = value;     // R
+                data[i + 1] = value; // G
+                data[i + 2] = value; // B
+                data[i + 3] = 255;   // A
             }
+            
+            glitchCtx.putImageData(imageData, 0, 0);
         }
 
         // Start animation loop
@@ -649,6 +835,24 @@
                             data[i] = data[rOffset];     // R
                             data[i + 2] = data[bOffset + 2]; // B
                         }
+                    }
+                }
+            }
+            
+            // Occasional vertical hold issues
+            if (Math.random() < intensity * 0.05 + audioLevel * 0.1) {
+                const shift = Math.floor(Math.random() * 20 * intensity);
+                const tempData = new Uint8ClampedArray(data);
+                
+                for (let y = 0; y < canvasHeight - shift; y++) {
+                    for (let x = 0; x < canvasWidth; x++) {
+                        const targetI = (y * canvasWidth + x) * 4;
+                        const sourceI = ((y + shift) * canvasWidth + x) * 4;
+                        
+                        data[targetI] = tempData[sourceI];
+                        data[targetI + 1] = tempData[sourceI + 1];
+                        data[targetI + 2] = tempData[sourceI + 2];
+                        data[targetI + 3] = tempData[sourceI + 3];
                     }
                 }
             }
@@ -830,6 +1034,3 @@
 
         // Initialize everything when page loads
         window.addEventListener('load', init);
-    </script>
-</body>
-</html>
