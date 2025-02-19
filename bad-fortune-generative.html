@@ -12,7 +12,6 @@
             --secondary-color: #999;
             --accent-color: #ff00ff;
             --spacing: 20px;
-            --control-size: 90px;
             --font-mono: monospace;
         }
 
@@ -35,7 +34,6 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: background-color 0.3s, color 0.3s;
-            overflow-x: hidden;
         }
 
         .back {
@@ -50,7 +48,7 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -70,33 +68,22 @@
         }
 
         .tv-container {
-            position: relative;
-            width: 100%;
-            max-width: 900px;
-            background-color: #000;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-            overflow: hidden;
-        }
-
-        .tv-inner {
-            position: relative;
-            background-color: #000;
-            overflow: hidden;
             display: grid;
-            grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+            grid-template-columns: 2fr 1fr;
             gap: 15px;
-            border-radius: 5px;
+            width: 100%;
+            margin-bottom: 20px;
         }
 
         .tv-screen {
             position: relative;
             width: 100%;
             aspect-ratio: 4/3;
+            background-color: #000;
             overflow: hidden;
-            border-radius: 30px;
-            box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.1);
+            border: 10px solid #333;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
 
         .tv-screen::before {
@@ -113,49 +100,16 @@
             background-size: 100% 4px;
             z-index: 10;
             pointer-events: none;
-            opacity: 0.2;
+            opacity: 0.15;
         }
 
-        .tv-screen::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(
-                circle at center,
-                transparent 60%,
-                rgba(0, 0, 0, 0.7) 100%
-            );
-            z-index: 11;
-            pointer-events: none;
-            opacity: 0.8;
-            border-radius: 30px;
-        }
-
-        .tv-reflection {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.2) 0%,
-                transparent 40%
-            );
-            z-index: 12;
-            pointer-events: none;
-            border-radius: 30px;
-        }
-
-        #artwork-canvas {
+        #artwork-image {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            object-fit: cover;
             z-index: 1;
         }
 
@@ -166,173 +120,6 @@
             width: 100%;
             height: 100%;
             z-index: 2;
-        }
-
-        .glitch-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 5;
-            mix-blend-mode: overlay;
-            pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            opacity: 0.05;
-        }
-
-        #artwork-image {
-            display: none;
-        }
-
-        .control-panel {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 15px;
-            padding: 15px;
-            background-color: rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--secondary-color);
-            border-radius: 5px;
-        }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .control-title {
-            font-size: 12px;
-            text-transform: uppercase;
-            color: var(--secondary-color);
-            letter-spacing: 1px;
-            border-bottom: 1px solid var(--secondary-color);
-            padding-bottom: 5px;
-            margin-bottom: 5px;
-        }
-
-        .effect-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .effect-btn {
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--secondary-color);
-            color: var(--text-color);
-            padding: 5px;
-            border-radius: 3px;
-            font-family: var(--font-mono);
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.2s;
-            text-align: left;
-        }
-
-        .effect-btn:hover {
-            background-color: var(--accent-color);
-            color: var(--bg-color);
-        }
-
-        .effect-btn.active {
-            background-color: var(--accent-color);
-            color: var(--bg-color);
-        }
-
-        .dial-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            margin-bottom: 10px;
-        }
-
-        .dial-label {
-            text-transform: uppercase;
-            font-size: 11px;
-            margin-bottom: 5px;
-            letter-spacing: 1px;
-        }
-
-        .dial {
-            width: var(--control-size);
-            height: var(--control-size);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .dial-background {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: conic-gradient(
-                var(--accent-color),
-                var(--link-color),
-                var(--accent-color)
-            );
-            opacity: 0.2;
-        }
-
-        .dial-knob {
-            width: 85%;
-            height: 85%;
-            border-radius: 50%;
-            background-color: var(--bg-color);
-            border: 2px solid var(--secondary-color);
-            position: relative;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
-        }
-
-        .dial-indicator {
-            position: absolute;
-            top: 10%;
-            left: calc(50% - 1px);
-            width: 2px;
-            height: 40%;
-            background-color: var(--accent-color);
-            transform-origin: bottom center;
-        }
-
-        .dial-value {
-            position: absolute;
-            font-size: 14px;
-            color: var(--secondary-color);
-        }
-
-        .audio-player {
-            width: 100%;
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .audio-player audio {
-            width: 100%;
-            margin-top: 10px;
-            filter: grayscale(1);
-            opacity: 0.8;
-        }
-
-        .theme-toggle {
-            position: fixed;
-            top: var(--spacing);
-            right: var(--spacing);
-            background: none;
-            border: none;
-            color: var(--text-color);
-            font-family: var(--font-mono);
-            cursor: pointer;
-            padding: 5px;
         }
 
         .effect-name {
@@ -351,50 +138,97 @@
             border-radius: 3px;
         }
 
-        .tv-controls {
+        .control-panel {
             display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 20px;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--secondary-color);
         }
 
-        .tv-button {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: linear-gradient(to bottom, #444, #222);
-            border: 2px solid #111;
+        .effect-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .control-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--secondary-color);
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--secondary-color);
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .effect-btn {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--secondary-color);
+            color: var(--text-color);
+            padding: 8px;
+            margin-bottom: 5px;
+            border-radius: 3px;
+            font-family: var(--font-mono);
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 14px;
+            transition: all 0.2s;
+            text-align: center;
         }
 
-        .tv-button:active {
-            transform: translateY(2px);
-            box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        .effect-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
         }
 
-        @media (max-width: 768px) {
-            .tv-inner {
+        .effect-btn.active {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        .transport-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+        }
+
+        .transport-btn {
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--secondary-color);
+            color: var(--text-color);
+            padding: 10px 15px;
+            border-radius: 3px;
+            font-family: var(--font-mono);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .transport-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: var(--spacing);
+            right: var(--spacing);
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-family: var(--font-mono);
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        @media (max-width: 600px) {
+            .tv-container {
                 grid-template-columns: 1fr;
             }
             
-            .control-panel {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .control-group {
-                grid-column: span 3;
-            }
-            
-            .effect-buttons {
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-            
-            .effect-btn {
-                flex: 1;
-                min-width: 80px;
+            .transport-controls {
+                margin-top: 15px;
             }
         }
     </style>
@@ -408,153 +242,68 @@
         <div class="date">2020-01-24</div>
 
         <div class="tv-container">
-            <div class="tv-inner">
-                <div class="tv-screen">
-                    <canvas id="artwork-canvas"></canvas>
-                    <canvas id="glitch-canvas"></canvas>
-                    <div class="glitch-overlay"></div>
-                    <div class="tv-reflection"></div>
-                    <div class="effect-name" id="effect-name">VHS</div>
-                    <img id="artwork-image" src="bad-fortune-artwork.jpg" alt="Album artwork">
-                </div>
+            <div class="tv-screen">
+                <img id="artwork-image" src="bad-fortune-artwork.jpg" alt="Album artwork">
+                <canvas id="glitch-canvas"></canvas>
+                <div class="effect-name" id="effect-name">VHS</div>
+            </div>
 
-                <div class="control-panel">
-                    <div class="control-group">
-                        <div class="control-title">Signal</div>
-                        <div class="effect-buttons">
-                            <button class="effect-btn active" data-effect="vhs">VHS</button>
-                            <button class="effect-btn" data-effect="glitch">Glitch</button>
-                            <button class="effect-btn" data-effect="destroyed">Destroyed</button>
-                        </div>
-                    </div>
-
-                    <div class="control-group">
-                        <div class="control-title">Controls</div>
-                        <div class="dial-container">
-                            <div class="dial-label">Volume</div>
-                            <div class="dial" id="volume-dial">
-                                <div class="dial-background"></div>
-                                <div class="dial-knob">
-                                    <div class="dial-indicator"></div>
-                                    <div class="dial-value">75</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="dial-container">
-                            <div class="dial-label">Intensity</div>
-                            <div class="dial" id="intensity-dial">
-                                <div class="dial-background"></div>
-                                <div class="dial-knob">
-                                    <div class="dial-indicator"></div>
-                                    <div class="dial-value">50</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="dial-container">
-                            <div class="dial-label">Speed</div>
-                            <div class="dial" id="speed-dial">
-                                <div class="dial-background"></div>
-                                <div class="dial-knob">
-                                    <div class="dial-indicator"></div>
-                                    <div class="dial-value">50</div>
-                                </div>
-                            </div>
-                        </div>
+            <div class="control-panel">
+                <div>
+                    <div class="control-title">Effects</div>
+                    <div class="effect-buttons">
+                        <button class="effect-btn active" data-effect="vhs">VHS</button>
+                        <button class="effect-btn" data-effect="glitch">Glitch</button>
+                        <button class="effect-btn" data-effect="destroyed">Destroyed</button>
                     </div>
                 </div>
-            </div>
-            
-            <div class="tv-controls">
-                <button class="tv-button"></button>
-                <button class="tv-button"></button>
-                <button class="tv-button"></button>
-            </div>
-        </div>
 
-        <div class="audio-player">
-            <audio id="audio-element" controls loop>
-                <source src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio>
+                <div class="transport-controls">
+                    <button class="transport-btn" id="play-btn">▶ Play</button>
+                    <button class="transport-btn" id="stop-btn">◼ Stop</button>
+                </div>
+            </div>
         </div>
     </div>
 
+    <audio id="audio-element" loop>
+        <source src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
     <script>
         // Global variables
-        let controls = {
-            volume: 75,
-            intensity: 50,
-            speed: 50
-        };
-
         let currentEffect = 'vhs';
         let canvasWidth, canvasHeight;
         let animationFrameId;
         let audioContext, audioAnalyser, audioDataArray;
 
-        // Canvas elements
-        const artworkCanvas = document.getElementById('artwork-canvas');
+        // Elements
         const glitchCanvas = document.getElementById('glitch-canvas');
-        const artworkCtx = artworkCanvas.getContext('2d');
         const glitchCtx = glitchCanvas.getContext('2d');
         const artworkImage = document.getElementById('artwork-image');
         const effectNameEl = document.getElementById('effect-name');
         const audioElement = document.getElementById('audio-element');
+        const playBtn = document.getElementById('play-btn');
+        const stopBtn = document.getElementById('stop-btn');
 
         // Initialize everything
         function init() {
-            initCanvases();
-            setupDialControls();
+            initCanvas();
             setupEffectButtons();
-            loadArtwork();
+            setupTransportControls();
             initAudio();
             startAnimation();
-            setupTVButtons();
         }
 
-        // Initialize canvases
-        function initCanvases() {
-            const container = document.querySelector('.tv-screen');
-            canvasWidth = container.offsetWidth;
-            canvasHeight = container.offsetHeight;
+        // Initialize canvas
+        function initCanvas() {
+            const screen = document.querySelector('.tv-screen');
+            canvasWidth = screen.offsetWidth;
+            canvasHeight = screen.offsetHeight;
             
-            artworkCanvas.width = canvasWidth;
-            artworkCanvas.height = canvasHeight;
             glitchCanvas.width = canvasWidth;
             glitchCanvas.height = canvasHeight;
-        }
-
-        // Load artwork
-        function loadArtwork() {
-            if (artworkImage.complete) {
-                artworkCtx.drawImage(artworkImage, 0, 0, canvasWidth, canvasHeight);
-            } else {
-                artworkImage.onload = () => {
-                    artworkCtx.drawImage(artworkImage, 0, 0, canvasWidth, canvasHeight);
-                };
-                
-                artworkImage.onerror = createFallbackArtwork;
-            }
-        }
-
-        // Fallback artwork if image fails to load
-        function createFallbackArtwork() {
-            // Create a gradient background
-            const gradient = artworkCtx.createLinearGradient(0, 0, canvasWidth, canvasHeight);
-            gradient.addColorStop(0, '#ff00ff');
-            gradient.addColorStop(0.5, '#00ffff');
-            gradient.addColorStop(1, '#ff00ff');
-            
-            artworkCtx.fillStyle = gradient;
-            artworkCtx.fillRect(0, 0, canvasWidth, canvasHeight);
-            
-            // Add text
-            artworkCtx.fillStyle = '#000';
-            artworkCtx.font = '48px monospace';
-            artworkCtx.textAlign = 'center';
-            artworkCtx.fillText('bad fortune', canvasWidth/2, canvasHeight/2);
         }
 
         // Initialize audio analyzer
@@ -563,110 +312,13 @@
             const source = audioContext.createMediaElementSource(audioElement);
             audioAnalyser = audioContext.createAnalyser();
             
-            audioAnalyser.fftSize = 256;
+            audioAnalyser.fftSize = 128;
             audioDataArray = new Uint8Array(audioAnalyser.frequencyBinCount);
             
             source.connect(audioAnalyser);
             audioAnalyser.connect(audioContext.destination);
-            
-            // Setup audio playback rate control
-            audioElement.preservesPitch = false;
         }
 
-        // Setup dial controls
-        function setupDialControls() {
-            setupDial('volume-dial', 'volume');
-            setupDial('intensity-dial', 'intensity');
-            setupDial('speed-dial', 'speed');
-        }
-
-        // Setup a single dial control
-        function setupDial(dialId, controlName) {
-            const dial = document.getElementById(dialId);
-            const knob = dial.querySelector('.dial-knob');
-            const indicator = dial.querySelector('.dial-indicator');
-            const valueDisplay = dial.querySelector('.dial-value');
-            
-            let isDragging = false;
-            let startAngle, startValue;
-            
-            // Set initial rotation
-            updateDialRotation(indicator, valueDisplay, controls[controlName]);
-            
-            // Mouse events
-            knob.addEventListener('mousedown', startDrag);
-            document.addEventListener('mousemove', drag);
-            document.addEventListener('mouseup', stopDrag);
-            
-            // Touch events
-            knob.addEventListener('touchstart', startDrag);
-            document.addEventListener('touchmove', drag);
-            document.addEventListener('touchend', stopDrag);
-            
-            function startDrag(e) {
-                e.preventDefault();
-                isDragging = true;
-                
-                const dialRect = dial.getBoundingClientRect();
-                const dialCenterX = dialRect.left + dialRect.width / 2;
-                const dialCenterY = dialRect.top + dialRect.height / 2;
-                
-                const clientX = e.clientX || e.touches[0].clientX;
-                const clientY = e.clientY || e.touches[0].clientY;
-                
-                startAngle = Math.atan2(clientY - dialCenterY, clientX - dialCenterX);
-                startValue = controls[controlName];
-                
-                knob.style.cursor = 'grabbing';
-            }
-            
-            function drag(e) {
-                if (!isDragging) return;
-                
-                const dialRect = dial.getBoundingClientRect();
-                const dialCenterX = dialRect.left + dialRect.width / 2;
-                const dialCenterY = dialRect.top + dialRect.height / 2;
-                
-                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-                
-                if (!clientX || !clientY) return;
-                
-                const currentAngle = Math.atan2(clientY - dialCenterY, clientX - dialCenterX);
-                let angleDiff = currentAngle - startAngle;
-                
-                // Convert to degrees and normalize
-                angleDiff = angleDiff * (180 / Math.PI);
-                
-                // Calculate new value (0-100)
-                let newValue = startValue + (angleDiff / 3.6);
-                newValue = Math.max(0, Math.min(100, newValue));
-                
-                // Update control value
-                controls[controlName] = Math.round(newValue);
-                updateDialRotation(indicator, valueDisplay, controls[controlName]);
-                
-                // Update audio playback rate if speed control
-                if (controlName === 'speed' && audioElement) {
-                    audioElement.playbackRate = controls.speed / 50;
-                }
-            }
-            
-            function stopDrag() {
-                if (!isDragging) return;
-                isDragging = false;
-                knob.style.cursor = 'pointer';
-            }
-        }
-        
-        // Update dial rotation
-        function updateDialRotation(indicator, valueDisplay, value) {
-            // Calculate rotation angle (0-100 -> 0-270 degrees)
-            const rotation = (value * 2.7) - 135;
-            indicator.style.transform = `rotate(${rotation}deg)`;
-            valueDisplay.textContent = value;
-        }
-        
         // Setup effect buttons
         function setupEffectButtons() {
             const effectButtons = document.querySelectorAll('.effect-btn');
@@ -686,53 +338,28 @@
             });
         }
 
-        // Setup TV buttons for random effects
-        function setupTVButtons() {
-            const tvButtons = document.querySelectorAll('.tv-button');
-            const effectButtons = document.querySelectorAll('.effect-btn');
-            
-            tvButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    // Random static noise effect when button pressed
-                    createTVNoise();
-                    
-                    // Random effect after static
-                    setTimeout(() => {
-                        const randomEffect = Math.floor(Math.random() * effectButtons.length);
-                        effectButtons[randomEffect].click();
-                        
-                        // Random values for controls
-                        controls.intensity = Math.floor(Math.random() * 70) + 30;
-                        controls.speed = Math.floor(Math.random() * 70) + 30;
-                        
-                        // Update dial displays
-                        const intensityIndicator = document.querySelector('#intensity-dial .dial-indicator');
-                        const intensityValue = document.querySelector('#intensity-dial .dial-value');
-                        const speedIndicator = document.querySelector('#speed-dial .dial-indicator');
-                        const speedValue = document.querySelector('#speed-dial .dial-value');
-                        
-                        updateDialRotation(intensityIndicator, intensityValue, controls.intensity);
-                        updateDialRotation(speedIndicator, speedValue, controls.speed);
-                    }, 500);
-                });
+        // Setup transport controls
+        function setupTransportControls() {
+            playBtn.addEventListener('click', () => {
+                audioElement.play();
+                playBtn.textContent = "❚❚ Pause";
+                playBtn.onclick = () => {
+                    audioElement.pause();
+                    playBtn.textContent = "▶ Play";
+                    playBtn.onclick = () => {
+                        audioElement.play();
+                        playBtn.textContent = "❚❚ Pause";
+                        setupTransportControls();
+                    };
+                };
             });
-        }
-
-        // Create TV static noise effect
-        function createTVNoise() {
-            const imageData = glitchCtx.createImageData(canvasWidth, canvasHeight);
-            const data = imageData.data;
             
-            // Generate static noise
-            for (let i = 0; i < data.length; i += 4) {
-                const value = Math.random() * 255;
-                data[i] = value;     // R
-                data[i + 1] = value; // G
-                data[i + 2] = value; // B
-                data[i + 3] = 255;   // A
-            }
-            
-            glitchCtx.putImageData(imageData, 0, 0);
+            stopBtn.addEventListener('click', () => {
+                audioElement.pause();
+                audioElement.currentTime = 0;
+                playBtn.textContent = "▶ Play";
+                setupTransportControls();
+            });
         }
 
         // Start animation loop
@@ -753,38 +380,38 @@
         function applyEffects(timestamp) {
             // Get audio data if available
             let audioLevel = 0;
-            if (audioAnalyser) {
+            if (audioAnalyser && !audioElement.paused) {
                 audioAnalyser.getByteFrequencyData(audioDataArray);
                 const sum = Array.from(audioDataArray).reduce((total, val) => total + val, 0);
-                audioLevel = (sum / audioDataArray.length) / 255 * (controls.volume / 100);
+                audioLevel = (sum / audioDataArray.length) / 255;
             }
             
             // Clear the glitch canvas
             glitchCtx.clearRect(0, 0, canvasWidth, canvasHeight);
-            glitchCtx.drawImage(artworkCanvas, 0, 0);
             
-            const intensity = controls.intensity / 100;
-            const speedFactor = controls.speed / 50;
-            
-            // Update audio playback rate
-            audioElement.playbackRate = speedFactor;
+            // Draw the original image first
+            if (artworkImage.complete) {
+                glitchCtx.drawImage(artworkImage, 0, 0, canvasWidth, canvasHeight);
+            }
             
             // Apply effect based on selection
+            const intensity = 0.7;
+            
             switch(currentEffect) {
                 case 'vhs':
-                    applyVHSEffect(intensity, audioLevel, speedFactor, timestamp);
+                    applyVHSEffect(intensity, audioLevel, timestamp);
                     break;
                 case 'glitch':
-                    applyDigitalGlitchEffect(intensity, audioLevel, speedFactor, timestamp);
+                    applyDigitalGlitchEffect(intensity, audioLevel, timestamp);
                     break;
                 case 'destroyed':
-                    applyDestroyedEffect(intensity, audioLevel, speedFactor, timestamp);
+                    applyDestroyedEffect(intensity, audioLevel, timestamp);
                     break;
             }
         }
 
-        // VHS effect with scanlines and tracking errors
-        function applyVHSEffect(intensity, audioLevel, speed, timestamp) {
+        // VHS effect
+        function applyVHSEffect(intensity, audioLevel, timestamp) {
             const imageData = glitchCtx.getImageData(0, 0, canvasWidth, canvasHeight);
             const data = imageData.data;
             
@@ -800,12 +427,12 @@
                 }
             }
             
-            // Horizontal displacement
-            const displacementCount = Math.floor(intensity * 5 + audioLevel * 10);
+            // Horizontal noise bars
+            const displacementCount = Math.floor(intensity * 3 + audioLevel * 5);
             for (let i = 0; i < displacementCount; i++) {
                 const y = Math.floor(Math.random() * canvasHeight);
-                const height = Math.floor(Math.random() * 10) + 1;
-                const offset = Math.floor(Math.sin(timestamp * 0.001 * speed) * 20 * intensity);
+                const height = Math.floor(Math.random() * 5) + 1;
+                const offset = Math.floor(Math.sin(timestamp * 0.001) * 10 * intensity);
                 
                 for (let h = 0; h < height; h++) {
                     if (y + h < canvasHeight) {
@@ -821,58 +448,22 @@
                 }
             }
             
-            // Color bleeding on intense beats
-            if (audioLevel > 0.7 && intensity > 0.5) {
-                const rgbOffset = Math.floor(intensity * 10);
-                
-                for (let y = 0; y < canvasHeight; y++) {
-                    for (let x = 0; x < canvasWidth; x++) {
-                        if (x + rgbOffset < canvasWidth && x - rgbOffset >= 0) {
-                            const i = (y * canvasWidth + x) * 4;
-                            const rOffset = (y * canvasWidth + (x + rgbOffset)) * 4;
-                            const bOffset = (y * canvasWidth + (x - rgbOffset)) * 4;
-                            
-                            data[i] = data[rOffset];     // R
-                            data[i + 2] = data[bOffset + 2]; // B
-                        }
-                    }
-                }
-            }
-            
-            // Occasional vertical hold issues
-            if (Math.random() < intensity * 0.05 + audioLevel * 0.1) {
-                const shift = Math.floor(Math.random() * 20 * intensity);
-                const tempData = new Uint8ClampedArray(data);
-                
-                for (let y = 0; y < canvasHeight - shift; y++) {
-                    for (let x = 0; x < canvasWidth; x++) {
-                        const targetI = (y * canvasWidth + x) * 4;
-                        const sourceI = ((y + shift) * canvasWidth + x) * 4;
-                        
-                        data[targetI] = tempData[sourceI];
-                        data[targetI + 1] = tempData[sourceI + 1];
-                        data[targetI + 2] = tempData[sourceI + 2];
-                        data[targetI + 3] = tempData[sourceI + 3];
-                    }
-                }
-            }
-            
             glitchCtx.putImageData(imageData, 0, 0);
         }
 
         // Digital glitch effect
-        function applyDigitalGlitchEffect(intensity, audioLevel, speed, timestamp) {
+        function applyDigitalGlitchEffect(intensity, audioLevel, timestamp) {
             const imageData = glitchCtx.getImageData(0, 0, canvasWidth, canvasHeight);
             const data = imageData.data;
             
             // Block glitches
-            const blockCount = Math.floor(intensity * 5 + audioLevel * 8);
+            const blockCount = Math.floor(intensity * 3 + audioLevel * 4);
             for (let i = 0; i < blockCount; i++) {
                 const x = Math.floor(Math.random() * canvasWidth);
                 const y = Math.floor(Math.random() * canvasHeight);
-                const width = Math.floor(Math.random() * 80) + 10;
-                const height = Math.floor(Math.random() * 30) + 5;
-                const offsetX = Math.floor((Math.random() - 0.5) * 80 * intensity);
+                const width = Math.floor(Math.random() * 60) + 10;
+                const height = Math.floor(Math.random() * 20) + 5;
+                const offsetX = Math.floor((Math.random() - 0.5) * 40 * intensity);
                 
                 // Copy block with offset
                 for (let h = 0; h < height; h++) {
@@ -891,9 +482,9 @@
                 }
             }
             
-            // RGB shift based on audio
-            if (audioLevel > 0.4 || intensity > 0.6) {
-                const rgbOffset = Math.floor(intensity * 15);
+            // RGB shift on loud parts
+            if (audioLevel > 0.6 || Math.random() < 0.1) {
+                const rgbOffset = Math.floor(intensity * 10);
                 const tempData = new Uint8ClampedArray(data);
                 
                 for (let y = 0; y < canvasHeight; y += 2) {
@@ -916,48 +507,19 @@
             }
             
             glitchCtx.putImageData(imageData, 0, 0);
-            
-            // Random noise blocks
-            if (Math.random() < intensity * 0.3 + audioLevel * 0.7) {
-                const noiseBlocks = Math.floor(intensity * 3 + audioLevel * 4);
-                
-                for (let i = 0; i < noiseBlocks; i++) {
-                    const blockWidth = Math.floor(Math.random() * 100) + 50;
-                    const blockHeight = Math.floor(Math.random() * 30) + 10;
-                    const blockX = Math.floor(Math.random() * (canvasWidth - blockWidth));
-                    const blockY = Math.floor(Math.random() * (canvasHeight - blockHeight));
-                    
-                    // Generate noise pattern
-                    glitchCtx.fillStyle = Math.random() > 0.5 ? '#fff' : '#000';
-                    glitchCtx.globalAlpha = Math.random() * 0.7 + 0.3;
-                    glitchCtx.fillRect(blockX, blockY, blockWidth, blockHeight);
-                    glitchCtx.globalAlpha = 1.0;
-                }
-            }
         }
 
-        // Destroyed/extreme effect
-        function applyDestroyedEffect(intensity, audioLevel, speed, timestamp) {
-            // Start with the digital glitch as a base
-            applyDigitalGlitchEffect(intensity, audioLevel, speed, timestamp);
+        // Destroyed effect
+        function applyDestroyedEffect(intensity, audioLevel, timestamp) {
+            // Apply glitch effect first
+            applyDigitalGlitchEffect(intensity, audioLevel, timestamp);
             
-            // Add more destruction
             const imageData = glitchCtx.getImageData(0, 0, canvasWidth, canvasHeight);
             const data = imageData.data;
             
-            // Extreme color shifting
-            for (let y = 0; y < canvasHeight; y++) {
-                for (let x = 0; x < canvasWidth; x++) {
-                    const i = (y * canvasWidth + x) * 4;
-                    
-                    // Invert colors randomly based on intensity
-                    if (Math.random() < intensity * 0.3) {
-                        data[i] = 255 - data[i];
-                        data[i + 1] = 255 - data[i + 1];
-                        data[i + 2] = 255 - data[i + 2];
-                    }
-                    
-                    // Apply extreme contrast
+            // Extreme contrast
+            for (let i = 0; i < data.length; i += 4) {
+                if (Math.random() < 0.5) {
                     for (let c = 0; c < 3; c++) {
                         data[i + c] = data[i + c] > 128 ? 255 : 0;
                     }
@@ -967,11 +529,11 @@
             glitchCtx.putImageData(imageData, 0, 0);
             
             // Apply tearing effect
-            const tearCount = Math.floor(intensity * 8 + audioLevel * 10);
+            const tearCount = Math.floor(intensity * 5 + audioLevel * 8);
             for (let i = 0; i < tearCount; i++) {
                 const y = Math.floor(Math.random() * canvasHeight);
-                const height = Math.floor(Math.random() * 20) + 5;
-                const shift = Math.floor((Math.random() - 0.5) * canvasWidth * intensity * 2);
+                const height = Math.floor(Math.random() * 10) + 5;
+                const shift = Math.floor((Math.random() - 0.5) * canvasWidth * intensity);
                 
                 // Get image data for the tear
                 const tearData = glitchCtx.getImageData(0, y, canvasWidth, height);
@@ -988,31 +550,6 @@
                     Math.min(canvasWidth, canvasWidth - shift), 
                     height
                 );
-            }
-            
-            // Add color burns
-            const burnCount = Math.floor(intensity * 5);
-            for (let i = 0; i < burnCount; i++) {
-                const size = Math.floor(Math.random() * 150) + 50;
-                const x = Math.floor(Math.random() * canvasWidth);
-                const y = Math.floor(Math.random() * canvasHeight);
-                
-                const burnGradient = glitchCtx.createRadialGradient(
-                    x, y, 0,
-                    x, y, size
-                );
-                
-                const burnColor = Math.random() > 0.5 ? 
-                    `rgba(255, 0, 255, ${intensity * 0.8})` : 
-                    `rgba(0, 255, 255, ${intensity * 0.8})`;
-                    
-                burnGradient.addColorStop(0, burnColor);
-                burnGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-                
-                glitchCtx.fillStyle = burnGradient;
-                glitchCtx.globalCompositeOperation = 'overlay';
-                glitchCtx.fillRect(x - size, y - size, size * 2, size * 2);
-                glitchCtx.globalCompositeOperation = 'source-over';
             }
             
             // Audio reactive flash
@@ -1032,5 +569,9 @@
             button.innerHTML = isDark ? '○ light mode' : '● dark mode';
         }
 
-        // Initialize everything when page loads
+        // Initialize when page loads
         window.addEventListener('load', init);
+        window.addEventListener('resize', initCanvas);
+    </script>
+</body>
+</html>
