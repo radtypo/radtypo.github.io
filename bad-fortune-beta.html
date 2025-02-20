@@ -138,20 +138,22 @@
 
     <script>
         // Ensure toggle function is defined globally
-        function toggleSection(id) {
-            console.log('Toggling section:', id); // Debug log
-            const content = document.getElementById(id);
-            const toggle = content.previousElementSibling.querySelector('.toggle');
-            const isOpen = content.classList.contains('open');
-            
-            content.classList.toggle('open');
-            toggle.textContent = isOpen ? '[ + ]' : '[ - ]';
-        }
+       function toggleSection(id) {
+    // Show alert when function is called
+    alert('Toggling section: ' + id);
+    
+    const content = document.getElementById(id);
+    const toggle = content.previousElementSibling.querySelector('.toggle');
+    const isOpen = content.classList.contains('open');
+    
+    content.classList.toggle('open');
+    toggle.textContent = isOpen ? '[ + ]' : '[ - ]';
+}
 
         // Add event listener to check if script is running
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('Page loaded, scripts running');
-        });
+    alert('Page loaded successfully');
+});
     </script>
 </body>
 </html>
