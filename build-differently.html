@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rad.typo - build.differently</title>
+    <style>
+        body {
+            font-family: monospace;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        h1, h2 {
+            margin-bottom: 20px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        
+        blockquote {
+            margin: 20px 0;
+            padding-left: 20px;
+            border-left: 3px solid #ccc;
+            font-style: italic;
+            color: #666;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">← back to site</a>
+
+    <h1>build.differently</h1>
+    
+    <h2>Guiding Principles</h2>
+    <p>This site operates under strict DIY principles: independence, minimal technology, and respect for our listeners. We view digital technology as a tool for connection, not extraction. We reject the surveillance-based model of the modern web and instead build with the following values:</p>
+    
+    <ol>
+        <li><strong>Independence</strong>: Zero reliance on commercial platforms or services</li>
+        <li><strong>Minimalism</strong>: Functional design with as little code as possible</li>
+        <li><strong>Longevity</strong>: Built to last decades, not update cycles</li>
+        <li><strong>Transparency</strong>: All processes and decisions are visible</li>
+        <li><strong>User Respect</strong>: No tracking, no data harvesting, no manipulation</li>
+    </ol>
+    
+    <h2>Technical Implementation</h2>
+
+    <h3>Core Architecture</h3>
+    <ul>
+        <li>Raw HTML/CSS with minimal JavaScript</li>
+        <li>No build systems, frameworks, or dependencies</li>
+        <li>Static site deployment via GitHub Pages</li>
+        <li>Manual deployments with version control</li>
+        <li>Browser-native audio playback (no streaming services)</li>
+    </ul>
+    
+    <h3>File Storage &amp; Distribution</h3>
+    <ul>
+        <li><strong>GitHub Releases</strong>: Primary storage for all media files under 100MB
+            <ul>
+                <li>Repository: <code>radtypo/radtypo.github.io</code></li>
+                <li>Consistent release tag format: <code>v1.0.0-song-name</code></li>
+                <li>Direct download URLs from GitHub's CDN</li>
+            </ul>
+        </li>
+        <li><strong>Ko-fi</strong>: Optional platform for premium content (stems, sessions)
+            <ul>
+                <li>Used only for larger files that exceed GitHub limits</li>
+                <li>Transparent pricing with 100% to artists</li>
+            </ul>
+        </li>
+    </ul>
+    
+    <h3>Browser Technologies</h3>
+    <ul>
+        <li>localStorage for preferences and play data</li>
+        <li>Service Workers for offline functionality</li>
+        <li>Native Web Audio API for the player</li>
+        <li>CSS Variables for theming without JavaScript dependencies</li>
+        <li><code>preload</code> and <code>srcset</code> for responsive resource loading</li>
+    </ul>
+
+    <h3>Ethical Analytics</h3>
+    <ul>
+        <li>All interaction data stored locally on user's device</li>
+        <li>Play counts and favorites never leave your browser</li>
+        <li>Optional, transparent stats sharing controlled by you</li>
+        <li>Aggregated, anonymous listening data displayed publicly</li>
+        <li>Zero third-party analytics or tracking scripts</li>
+    </ul>
+
+    <h3>Listener Connection</h3>
+    <ul>
+        <li>Minimalist newsletter signup (locally stored addresses)</li>
+        <li>Manual email distribution (BCC for privacy)</li>
+        <li>"Library card" model for personal collection building</li>
+        <li>Periodic setlist voting for upcoming shows</li>
+        <li>All communication explicitly opt-in with clear purpose</li>
+    </ul>
+
+    <h2>Performance Optimization</h2>
+    
+    <h3>Resource Management</h3>
+    <pre><code>&lt;!-- Preloading critical resources --&gt;
+&lt;link rel="preload" href="catalog.json" as="fetch" crossorigin&gt;  
+&lt;link rel="preload" href="player.js" as="script"&gt;
+&lt;link rel="preload" href="main-font.woff2" as="font" crossorigin&gt;</code></pre>
+
+    <h3>Offline Support</h3>
+    <p>Our Service Worker enables:</p>
+    <ul>
+        <li>Offline access to viewed songs</li>
+        <li>Cached catalog data</li>
+        <li>Audio persistence between sessions</li> 
+        <li>Background audio playback</li>
+    </ul>
+
+    <h3>Image Delivery</h3>
+    <ul>
+        <li>Progressive loading for artwork</li>
+        <li>Responsive image sizing based on display</li>
+        <li>Placeholder system during initial load</li>
+        <li>Local caching for faster repeat views</li>
+    </ul>
+    
+    <h2>Environmental Considerations</h2>
+    <p>The website is designed for minimal environmental impact:</p>
+    <ul>
+        <li>Low-bandwidth content delivery</li>
+        <li>Efficient caching to reduce redundant transfers</li>
+        <li>Text-focused design reduces power consumption</li>
+        <li>Dark mode as default to reduce screen energy usage</li>
+        <li>No auto-playing media or unnecessary animations</li>
+    </ul>
+    
+    <h2>Accessibility Commitment</h2>
+    <p>Accessibility is core, not supplemental:</p>
+    <ul>
+        <li>Semantic HTML throughout</li>
+        <li>Keyboard navigation for all functions</li>
+        <li>Screen reader compatibility</li>
+        <li>Sufficient contrast in all color modes</li> 
+        <li>Text resizing without breaking layouts</li>
+        <li>No reliance on color for critical information</li>
+    </ul>
+
+    <h2>Data Liberation</h2>
+    <p>Your data remains yours:</p>
+    <ul>
+        <li>One-click export of your favorites and play history</li>
+        <li>Portable formats (JSON) for your listening data</li>
+        <li>No accounts or authentication requirements</li>
+        <li>All site content available for offline archiving</li>  
+    </ul>
+    
+    <h2>Preservation Strategy</h2>
+    <p>The site is designed for archival permanence:</p>
+    <ul>
+        <li>Static files preserve functionality indefinitely</li>
+        <li>No API dependencies that could disappear</li>
+        <li>Open documentation of all technical decisions</li>
+        <li>Low-tech backup system (annual snapshots)</li>
+        <li>Content addressable structure for future migration</li>
+    </ul>
+    
+    <hr>
+    
+    <blockquote>
+        <p><em>This site was inspired by https://elly.town and https://solar.lowtechmagazine.com/. We acknowledge our artistic influences: Sister Corita Kent, Matthew Wong, Ilse Bing, PJ Harvey, and Fugazi.</em></p>
+
+        <p><em>The web doesn't have to be a surveillance machine. We can build differently.</em></p>
+    </blockquote>
+</body>
+</html>
