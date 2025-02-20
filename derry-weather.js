@@ -7,7 +7,7 @@ const derryWeather = {
   // Config options
   config: {
     refreshInterval: 10800000, // 3 hours in milliseconds
-    apiKey: 'YOUR_API_KEY',    // Replace with your actual API key
+    apiKey: '71a06e0de306469e84500416252002',    // Replace with your actual API key
     location: 'Derry,Northern Ireland',
     container: 'derry-weather',
     showDate: true,
