@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>rad.typo</title>
+    <link rel="stylesheet" href="derry-weather.css">
     <style>
         :root {
             --bg-color: #fff;
             --text-color: #000;
             --link-color: #0000FF;
             --muted-color: #666;
+            --secondary-color: #666;
             --max-width: 800px;
             --base-spacing: 20px;
         }
@@ -19,6 +21,7 @@
             --text-color: #fff;
             --link-color: #809fff;
             --muted-color: #999;
+            --secondary-color: #999;
         }
 
         body {
@@ -117,6 +120,10 @@
 
     <h1>rad.typo</h1>
     
+    <div class="location-info">
+      <span id="derry-weather" class="loading">Derry: loading...</span>
+    </div>
+    
     <!-- Radio link featured above main navigation -->
     <a href="/radio.html" class="radio-link">radio</a>
     
@@ -161,5 +168,6 @@
             }
         });
     </script>
+    <script src="derry-weather.js"></script>
 </body>
 </html>
