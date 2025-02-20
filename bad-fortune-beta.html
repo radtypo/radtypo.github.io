@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rad.typo - bad fortune (beta)</title>
+    <title>rad.typo - bad fortune (debug)</title>
     <style>
         :root {
             --bg-color: #fff;
@@ -11,7 +11,6 @@
             --link-color: #0000FF;
             --secondary-color: #666;
             --spacing: 20px;
-            --accent-color: #ff69b4;
         }
 
         [data-theme="dark"] {
@@ -19,10 +18,8 @@
             --text-color: #fff;
             --link-color: #809fff;
             --secondary-color: #999;
-            --accent-color: #ff69b4;
         }
 
-        /* Base styles from your original */
         body {
             font-family: monospace;
             max-width: 800px;
@@ -34,7 +31,6 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* Your existing section styles */
         .section {
             margin: var(--spacing) 0;
             border: 1px solid var(--secondary-color);
@@ -65,221 +61,97 @@
             border-top: 1px solid var(--secondary-color);
         }
 
-        /* New styles for resources section */
+        /* Basic styles preserved */
+        h1 { font-size: 24px; margin-bottom: 10px; }
+        .date { color: var(--secondary-color); margin-bottom: 10px; }
+        .back { margin-bottom: 30px; display: block; }
+        
+        /* Essential artwork styles */
+        .artwork-container {
+            margin: var(--spacing) 0;
+            text-align: center;
+        }
+        
+        .song-artwork {
+            max-width: 100%;
+            max-height: 500px;
+            border: 1px solid var(--secondary-color);
+            display: block;
+            margin: 0 auto;
+            border-radius: 4px;
+        }
+
+        /* Resource styling */
         .resource-group {
             margin: 15px 0;
             padding: 10px;
             border-left: 2px solid var(--secondary-color);
         }
 
-        .resource-group h3 {
-            margin: 0 0 10px 0;
-            font-size: 1em;
+        .resource-link {
+            display: block;
+            margin: 5px 0;
+            color: var(--link-color);
+            text-decoration: none;
         }
 
-        .payment-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 10px 0;
-        }
-
-        .payment-btn {
-            padding: 8px 12px;
-            border: 1px solid var(--secondary-color);
-            border-radius: 4px;
-            background: none;
+        .resource-link:before {
+            content: "• ";
             color: var(--text-color);
-            font-family: monospace;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .payment-btn:hover {
-            background-color: var(--secondary-color);
-            color: var(--bg-color);
-        }
-
-        .payment-btn.free {
-            border-color: var(--accent-color);
-            color: var(--accent-color);
-        }
-
-        .payment-btn.free:hover {
-            background-color: var(--accent-color);
-            color: var(--bg-color);
-        }
-
-        .download-note {
-            font-size: 0.9em;
-            color: var(--secondary-color);
-            margin-top: 10px;
-        }
-
-        /* Preserve your existing styles */
-        h1, .date, .back, audio, .theme-toggle {
-            /* Keep existing styles */
-        }
-
-        /* Dialog styles for download options */
-        .download-dialog {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--bg-color);
-            padding: 20px;
-            border: 1px solid var(--secondary-color);
-            border-radius: 4px;
-            max-width: 400px;
-            width: 90%;
-            z-index: 1000;
-        }
-
-        .dialog-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-
-        .dialog-header {
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--secondary-color);
-        }
-
-        .dialog-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            border: none;
-            background: none;
-            color: var(--text-color);
-            cursor: pointer;
-            font-size: 18px;
         }
     </style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
-
     <a href="/" class="back">← back</a>
     
     <h1>bad fortune</h1>
     <div class="date">2020-01-24</div>
 
-    <div class="player-container">
-        <audio controls>
+    <!-- Artwork -->
+    <div class="artwork-container">
+        <img src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg"
+             alt="Bad Fortune artwork"
+             class="song-artwork">
+    </div>
+
+    <!-- Audio -->
+    <div style="margin: var(--spacing) 0;">
+        <audio controls style="width: 100%;">
             <source src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
         </audio>
     </div>
 
-    <!-- Keep your existing sections for Credits and Lyrics -->
-
+    <!-- Resources -->
     <div class="section">
         <div class="section-header" onclick="toggleSection('resources')">
             <span>Resources</span>
             <span class="toggle">[ + ]</span>
         </div>
         <div class="section-content" id="resources">
-            <!-- Free Resources -->
             <div class="resource-group">
-                <h3>Standard Resources</h3>
+                <h3>Free Downloads</h3>
                 <a href="#" class="resource-link">MP3 Download</a>
                 <a href="#" class="resource-link">Artwork (JPG)</a>
-                <a href="#" class="resource-link">Chord Sheet (PDF)</a>
             </div>
-
-            <!-- Stems and Project Files -->
-            <div class="resource-group">
-                <h3>Stems & Project Files</h3>
-                <p>Choose how you'd like to access these files:</p>
-                <div class="payment-options">
-                    <button class="payment-btn" onclick="showPaymentDialog('5')">$5 Basic</button>
-                    <button class="payment-btn" onclick="showPaymentDialog('10')">$10 Standard</button>
-                    <button class="payment-btn" onclick="showPaymentDialog('15')">$15 Supporter</button>
-                    <button class="payment-btn free" onclick="showFreeDialog()">Need them free?</button>
-                </div>
-                <div class="download-note">
-                    Includes full stems, project files, and session notes.
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Payment Dialog -->
-    <div class="dialog-overlay" id="dialogOverlay"></div>
-    <div class="download-dialog" id="paymentDialog">
-        <button class="dialog-close" onclick="closeDialog()">×</button>
-        <div class="dialog-header">
-            <h3>Support rad.typo</h3>
-        </div>
-        <p>You'll be directed to Ko-fi to complete your contribution.</p>
-        <p>After payment, you'll receive immediate access to:</p>
-        <ul>
-            <li>Individual track stems (WAV)</li>
-            <li>Complete project file</li>
-            <li>Session notes and documentation</li>
-        </ul>
-        <div class="payment-options">
-            <button class="payment-btn" onclick="proceedToKofi()">Proceed to Ko-fi</button>
-            <button class="payment-btn" onclick="closeDialog()">Cancel</button>
-        </div>
-    </div>
-
-    <!-- Free Access Dialog -->
-    <div class="download-dialog" id="freeDialog">
-        <button class="dialog-close" onclick="closeDialog()">×</button>
-        <div class="dialog-header">
-            <h3>Download Files</h3>
-        </div>
-        <p>These files are freely available to anyone who needs them. No questions asked.</p>
-        <p>If you use them to make something, we'd love to hear it!</p>
-        <div class="payment-options">
-            <button class="payment-btn" onclick="downloadFree()">Download Files</button>
-            <button class="payment-btn" onclick="closeDialog()">Cancel</button>
         </div>
     </div>
 
     <script>
-        // Your existing theme and section toggle functions here
-
-        // Dialog functions
-        function showPaymentDialog(amount) {
-            document.getElementById('dialogOverlay').style.display = 'block';
-            document.getElementById('paymentDialog').style.display = 'block';
+        // Ensure toggle function is defined globally
+        function toggleSection(id) {
+            console.log('Toggling section:', id); // Debug log
+            const content = document.getElementById(id);
+            const toggle = content.previousElementSibling.querySelector('.toggle');
+            const isOpen = content.classList.contains('open');
+            
+            content.classList.toggle('open');
+            toggle.textContent = isOpen ? '[ + ]' : '[ - ]';
         }
 
-        function showFreeDialog() {
-            document.getElementById('dialogOverlay').style.display = 'block';
-            document.getElementById('freeDialog').style.display = 'block';
-        }
-
-        function closeDialog() {
-            document.getElementById('dialogOverlay').style.display = 'none';
-            document.getElementById('paymentDialog').style.display = 'none';
-            document.getElementById('freeDialog').style.display = 'none';
-        }
-
-        function proceedToKofi() {
-            // Replace with actual Ko-fi link
-            window.location.href = "https://ko-fi.com/your-profile";
-        }
-
-        function downloadFree() {
-            // Replace with actual download link
-            window.location.href = "https://github.com/your-repo/stems-download";
-        }
-
-        // Close dialogs when clicking overlay
-        document.getElementById('dialogOverlay').addEventListener('click', closeDialog);
+        // Add event listener to check if script is running
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Page loaded, scripts running');
+        });
     </script>
 </body>
 </html>
