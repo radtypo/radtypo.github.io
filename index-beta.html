@@ -49,18 +49,14 @@
             text-decoration: underline;
         }
 
-        nav > ul {
-            list-style-type: none;
-            padding-left: 0;
+        nav ul {
+            list-style-type: disc;
+            padding-left: var(--base-spacing);
             margin: 0;
         }
 
-        nav > ul > li {
-            margin: var(--base-spacing) 0;
-        }
-
         nav ul ul {
-            list-style-type: disc;
+            list-style-type: circle;
             margin-left: var(--base-spacing);
         }
 
@@ -76,6 +72,9 @@
             color: var(--muted-color);
             padding-top: var(--base-spacing);
             border-top: 1px solid var(--muted-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .theme-toggle {
@@ -97,23 +96,22 @@
         nav li {
             margin: 5px 0;
         }
-
+        
         /* Style for the radio link */
         .radio-link {
+            display: inline-block;
             margin-bottom: var(--base-spacing);
             font-weight: bold;
-            margin-left: var(--base-spacing);
+        }
+        
+        .radio-link::before {
+            content: "♫ ";
         }
 
         /* Style for the catalog link */
         .catalog-link {
-            margin-left: var(--base-spacing);
-        }
-
-        /* Style for the build.differently link */  
-        .build-link {
-            margin-top: calc(var(--base-spacing) * 2);
             display: inline-block;
+            margin-top: var(--base-spacing);
         }
     </style>
     <script>
@@ -130,21 +128,22 @@
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
 
     <h1>rad.typo</h1>
-
+    
     <div class="location-info">
       <span id="derry-weather" class="loading">Derry: loading...</span>
     </div>
-
+    
+    <!-- Radio link featured above main navigation -->
+    <a href="/radio.html" class="radio-link">radio</a>
+    
     <nav>
         <ul>
-            <li>
-                songs <a href="/radio.html" class="radio-link">♫ radio</a>
+            <li>songs
                 <ul>
                     <li><time datetime="2022-09-10" class="date">2022-09-10</time> <a href="/muriel.html" alt="Muriel song">muriel</a></li>
                     <li><time datetime="2020-01-24" class="date">2020-01-24</time> <a href="bad-fortune.html" alt="Bad Fortune song">bad fortune</a></li>
                     <li><time datetime="2020-01-08" class="date">2020-01-08</time> <a href="/whats-not-to-like.html" alt="What's Not to Like song">what's not to like</a></li>
                 </ul>
-                <a href="/catalog.html" class="catalog-link">full catalog →</a>
             </li>
             <li>poems
                 <ul>
@@ -152,11 +151,13 @@
                 </ul>
             </li>
         </ul>
+        <a href="/catalog.html" class="catalog-link">full catalog →</a>
     </nav>
 
-    <a href="/build-differently.html" class="build-link">build.differently</a>
-
-    <div class="credit">← inspired by <a href="https://elly.town" alt="Elly's website">elly.town</a></div>
+    <div class="credit">
+        <span>← inspired by <a href="https://elly.town" alt="Elly's website">elly.town</a></span>
+        <a href="/build-differently.html">build.differently</a>
+    </div>
 
     <script>
         function toggleTheme() {
