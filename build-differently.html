@@ -5,184 +5,355 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>rad.typo - build.differently</title>
     <style>
+        :root {
+            --bg-color: #fff;
+            --text-color: #000;
+            --link-color: #0000FF;
+            --secondary-color: #666;
+            --paper-bg-color: #f5f5f5;
+            --paper-text-color: #333333;
+            --paper-link-color: #2b5fb5;
+            --spacing: 20px;
+            --code-bg: #f5f5f5;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #fff;
+            --link-color: #809fff;
+            --secondary-color: #999;
+            --code-bg: #2a2a2a;
+        }
+
+        [data-theme="paper"] {
+            --bg-color: var(--paper-bg-color);
+            --text-color: var(--paper-text-color);
+            --link-color: var(--paper-link-color);
+            --secondary-color: #666666;
+            --code-bg: #ffffff;
+        }
+
         body {
             font-family: monospace;
             max-width: 800px;
             margin: 40px auto;
-            padding: 20px;
+            padding: var(--spacing);
             line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
         }
-        
-        h1, h2 {
-            margin-bottom: 20px;
+
+        h1, h2, h3 {
+            margin-top: 2em;
+            margin-bottom: 1em;
         }
-        
-        p {
-            margin-bottom: 15px;
+
+        h1 {
+            font-size: 24px;
+            margin-top: 0;
         }
-        
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .back {
+            margin-bottom: 30px;
+            display: block;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: var(--spacing);
+            right: var(--spacing);
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-family: monospace;
+            cursor: pointer;
+            padding: 5px;
+        }
+
         code {
-            background-color: #f0f0f0;
+            background-color: var(--code-bg);
             padding: 2px 4px;
-            border-radius: 4px;
+            border-radius: 3px;
+            font-family: monospace;
         }
-        
+
+        pre {
+            background-color: var(--code-bg);
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1em 0;
+        }
+
         blockquote {
             margin: 20px 0;
             padding-left: 20px;
-            border-left: 3px solid #ccc;
+            border-left: 3px solid var(--secondary-color);
             font-style: italic;
-            color: #666;
+            color: var(--secondary-color);
         }
-        
-        .back-link {
-            display: inline-block;
-            margin-bottom: 30px;
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 1em 0;
+        }
+
+        .color-item {
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .color-sample {
+            height: 60px;
+            width: 100%;
+        }
+
+        .color-info {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .principle {
+            border-left: 3px solid var(--link-color);
+            padding-left: 15px;
+            margin: 20px 0;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid var(--secondary-color);
+            margin: 40px 0;
         }
     </style>
 </head>
 <body>
-    <a href="/" class="back-link">← back to site</a>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme mode">○ dark mode</button>
 
+    <a href="/" class="back">← back</a>
+    
     <h1>build.differently</h1>
-    
-    <h2>Guiding Principles</h2>
-    <p>This site operates under strict DIY principles: independence, minimal technology, and respect for our listeners. We view digital technology as a tool for connection, not extraction. We reject the surveillance-based model of the modern web and instead build with the following values:</p>
-    
-    <ol>
-        <li><strong>Independence</strong>: Zero reliance on commercial platforms or services</li>
-        <li><strong>Minimalism</strong>: Functional design with as little code as possible</li>
-        <li><strong>Longevity</strong>: Built to last decades, not update cycles</li>
-        <li><strong>Transparency</strong>: All processes and decisions are visible</li>
-        <li><strong>User Respect</strong>: No tracking, no data harvesting, no manipulation</li>
-    </ol>
-    
-    <h2>Technical Implementation</h2>
 
-    <h3>Core Architecture</h3>
+    <blockquote>
+        The web doesn't have to be a surveillance machine. This is how we build differently.
+    </blockquote>
+
+    <h2>Principles</h2>
+    <div class="principle">
+        <strong>Independence</strong>
+        <p>Zero reliance on commercial platforms or services. We own our distribution.</p>
+    </div>
+    <div class="principle">
+        <strong>Minimalism</strong>
+        <p>Functional design with as little code as possible. Every byte has purpose.</p>
+    </div>
+    <div class="principle">
+        <strong>Longevity</strong>
+        <p>Built to last decades, not update cycles. Future-proof by design.</p>
+    </div>
+    <div class="principle">
+        <strong>Transparency</strong>
+        <p>All processes and decisions are visible. No black boxes.</p>
+    </div>
+    <div class="principle">
+        <strong>User Respect</strong>
+        <p>No tracking, no data harvesting, no manipulation. You own your data.</p>
+    </div>
+
+    <h2>Colors & Themes</h2>
+    <p>Three modes, all designed for readability and low power consumption:</p>
+    
+    <h3>Light</h3>
+    <div class="color-grid">
+        <div class="color-item">
+            <div class="color-sample" style="background-color: #fff"></div>
+            <div class="color-info">
+                <div class="color-name">Background</div>
+                <div class="color-value">#ffffff</div>
+            </div>
+        </div>
+        <div class="color-item">
+            <div class="color-sample" style="background-color: #000"></div>
+            <div class="color-info">
+                <div class="color-name">Text</div>
+                <div class="color-value">#000000</div>
+            </div>
+        </div>
+        <div class="color-item">
+            <div class="color-sample" style="background-color: #0000FF"></div>
+            <div class="color-info">
+                <div class="color-name">Links</div>
+                <div class="color-value">#0000FF</div>
+            </div>
+        </div>
+    </div>
+
+    <h3>Dark</h3>
+    <div class="color-grid">
+        <div class="color-item">
+            <div class="color-sample" style="background-color: #1a1a1a"></div>
+            <div class="color-info">
+                <div class="color-name">Background</div>
+                <div class="color-value">#1a1a1a</div>
+            </div>
+        </div>
+        <div class="color-item">
+            <div class="color-sample" style="background-color: #fff"></div>
+            <div class="color-info">
+                <div class="color-name">Text</div>
+                <div class="color-value">#ffffff</div>
+            </div>
+        </div>
+        <div class="color-item">
+            <div class="color-sample" style="background-color: #809fff"></div>
+            <div class="color-info">
+                <div class="color-name">Links</div>
+                <div class="color-value">#809fff</div>
+            </div>
+        </div>
+    </div>
+
+    <h3>Paper</h3>
+    <div class="color-grid">
+        <div class="color-item">
+            <div class="color-sample" style="background-color: #f5f5f5"></div>
+            <div class="color-info">
+                <div class="color-name">Background</div>
+                <div class="color-value">#f5f5f5</div>
+            </div>
+        </div>
+        <div class="color-item">
+            <div class="color-sample" style="background-color: #333333"></div>
+            <div class="color-info">
+                <div class="color-name">Text</div>
+                <div class="color-value">#333333</div>
+            </div>
+        </div>
+        <div class="color-item">
+            <div class="color-sample" style="background-color: #2b5fb5"></div>
+            <div class="color-info">
+                <div class="color-name">Links</div>
+                <div class="color-value">#2b5fb5</div>
+            </div>
+        </div>
+    </div>
+
+    <h2>Building Blocks</h2>
+    
+    <h3>Core Structure</h3>
+    <pre>
+radtypo.github.io/
+├── index.html           # Homepage
+├── build.differently    # This document
+├── radio.html          # Continuous player
+└── songs/              # Individual releases
+    ├── bad-fortune.html
+    ├── muriel.html
+    └── whats-not-to-like.html</pre>
+
+    <h3>Release Format</h3>
+    <p>All releases follow: <code>v1.0.0-song-name</code></p>
+    <pre>
+releases/v1.0.0-song-name/
+├── song-name.mp3           # Main audio
+├── song-name-cover-800.jpg # Standard art
+├── song-name-cover-400.jpg # Thumbnail
+└── song-name-chords.pdf    # Sheet music</pre>
+
+    <h2>Technology</h2>
+    
+    <h3>Core Stack</h3>
     <ul>
         <li>Raw HTML/CSS with minimal JavaScript</li>
-        <li>No build systems, frameworks, or dependencies</li>
-        <li>Static site deployment via GitHub Pages</li>
-        <li>Manual deployments with version control</li>
-        <li>Browser-native audio playback (no streaming services)</li>
-    </ul>
-    
-    <h3>File Storage &amp; Distribution</h3>
-    <ul>
-        <li><strong>GitHub Releases</strong>: Primary storage for all media files under 100MB
-            <ul>
-                <li>Repository: <code>radtypo/radtypo.github.io</code></li>
-                <li>Consistent release tag format: <code>v1.0.0-song-name</code></li>
-                <li>Direct download URLs from GitHub's CDN</li>
-            </ul>
-        </li>
-        <li><strong>Ko-fi</strong>: Optional platform for premium content (stems, sessions)
-            <ul>
-                <li>Used only for larger files that exceed GitHub limits</li>
-                <li>Transparent pricing with 100% to artists</li>
-            </ul>
-        </li>
-    </ul>
-    
-    <h3>Browser Technologies</h3>
-    <ul>
-        <li>localStorage for preferences and play data</li>
-        <li>Service Workers for offline functionality</li>
-        <li>Native Web Audio API for the player</li>
-        <li>CSS Variables for theming without JavaScript dependencies</li>
-        <li><code>preload</code> and <code>srcset</code> for responsive resource loading</li>
+        <li>No frameworks, build systems, or dependencies</li>
+        <li>Browser-native audio playback</li>
+        <li>Local storage for preferences</li>
+        <li>Service workers for offline support</li>
     </ul>
 
-    <h3>Ethical Analytics</h3>
+    <h3>Storage</h3>
     <ul>
-        <li>All interaction data stored locally on user's device</li>
-        <li>Play counts and favorites never leave your browser</li>
-        <li>Optional, transparent stats sharing controlled by you</li>
-        <li>Aggregated, anonymous listening data displayed publicly</li>
-        <li>Zero third-party analytics or tracking scripts</li>
+        <li><strong>GitHub Releases:</strong> All media under 100MB</li>
+        <li><strong>Ko-fi:</strong> Optional platform for larger files</li>
+        <li>Everything directly downloadable</li>
+        <li>No streaming services or CDNs</li>
     </ul>
 
-    <h3>Listener Connection</h3>
+    <h2>Preservation</h2>
+    
+    <h3>Data Liberation</h3>
     <ul>
-        <li>Minimalist newsletter signup (locally stored addresses)</li>
-        <li>Manual email distribution (BCC for privacy)</li>
-        <li>"Library card" model for personal collection building</li>
-        <li>Periodic setlist voting for upcoming shows</li>
-        <li>All communication explicitly opt-in with clear purpose</li>
+        <li>All data stored locally on your device</li>
+        <li>One-click export of your collection</li>
+        <li>No accounts or authentication</li>
+        <li>Complete offline availability</li>
     </ul>
 
-    <h2>Performance Optimization</h2>
-    
-    <h3>Resource Management</h3>
-    <pre><code>&lt;!-- Preloading critical resources --&gt;
-&lt;link rel="preload" href="catalog.json" as="fetch" crossorigin&gt;  
-&lt;link rel="preload" href="player.js" as="script"&gt;
-&lt;link rel="preload" href="main-font.woff2" as="font" crossorigin&gt;</code></pre>
-
-    <h3>Offline Support</h3>
-    <p>Our Service Worker enables:</p>
+    <h3>Future-Proofing</h3>
     <ul>
-        <li>Offline access to viewed songs</li>
-        <li>Cached catalog data</li>
-        <li>Audio persistence between sessions</li> 
-        <li>Background audio playback</li>
+        <li>Static files preserve functionality</li>
+        <li>No API dependencies</li>
+        <li>Annual static snapshots</li>
+        <li>Content-addressable structure</li>
     </ul>
 
-    <h3>Image Delivery</h3>
-    <ul>
-        <li>Progressive loading for artwork</li>
-        <li>Responsive image sizing based on display</li>
-        <li>Placeholder system during initial load</li>
-        <li>Local caching for faster repeat views</li>
-    </ul>
-    
-    <h2>Environmental Considerations</h2>
-    <p>The website is designed for minimal environmental impact:</p>
-    <ul>
-        <li>Low-bandwidth content delivery</li>
-        <li>Efficient caching to reduce redundant transfers</li>
-        <li>Text-focused design reduces power consumption</li>
-        <li>Dark mode as default to reduce screen energy usage</li>
-        <li>No auto-playing media or unnecessary animations</li>
-    </ul>
-    
-    <h2>Accessibility Commitment</h2>
-    <p>Accessibility is core, not supplemental:</p>
-    <ul>
-        <li>Semantic HTML throughout</li>
-        <li>Keyboard navigation for all functions</li>
-        <li>Screen reader compatibility</li>
-        <li>Sufficient contrast in all color modes</li> 
-        <li>Text resizing without breaking layouts</li>
-        <li>No reliance on color for critical information</li>
-    </ul>
-
-    <h2>Data Liberation</h2>
-    <p>Your data remains yours:</p>
-    <ul>
-        <li>One-click export of your favorites and play history</li>
-        <li>Portable formats (JSON) for your listening data</li>
-        <li>No accounts or authentication requirements</li>
-        <li>All site content available for offline archiving</li>  
-    </ul>
-    
-    <h2>Preservation Strategy</h2>
-    <p>The site is designed for archival permanence:</p>
-    <ul>
-        <li>Static files preserve functionality indefinitely</li>
-        <li>No API dependencies that could disappear</li>
-        <li>Open documentation of all technical decisions</li>
-        <li>Low-tech backup system (annual snapshots)</li>
-        <li>Content addressable structure for future migration</li>
-    </ul>
-    
     <hr>
-    
-    <blockquote>
-        <p><em>This site was inspired by https://elly.town and https://solar.lowtechmagazine.com/. We acknowledge our artistic influences: Sister Corita Kent, Matthew Wong, Ilse Bing, PJ Harvey, and Fugazi.</em></p>
 
-        <p><em>The web doesn't have to be a surveillance machine. We can build differently.</em></p>
+    <blockquote>
+        Inspired by <a href="https://elly.town">elly.town</a> and <a href="https://solar.lowtechmagazine.com">solar.lowtechmagazine.com</a>
     </blockquote>
+
+    <script>
+        function toggleTheme() {
+            const body = document.documentElement;
+            const button = document.querySelector('.theme-toggle');
+            const currentTheme = body.getAttribute('data-theme') || 'light';
+            
+            let newTheme;
+            if (currentTheme === 'light') {
+                newTheme = 'dark';
+                button.innerHTML = '● paper mode';
+            } else if (currentTheme === 'dark') {
+                newTheme = 'paper';
+                button.innerHTML = '□ light mode';
+            } else {
+                newTheme = 'light';
+                button.innerHTML = '○ dark mode';
+            }
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                const button = document.querySelector('.theme-toggle');
+                switch(savedTheme) {
+                    case 'dark':
+                        button.innerHTML = '● paper mode';
+                        break;
+                    case 'paper':
+                        button.innerHTML = '□ light mode';
+                        break;
+                    default:
+                        button.innerHTML = '○ dark mode';
+                }
+            }
+        });
+    </script>
 </body>
 </html>
