@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rad.typo - origin moments</title>
+    <style>
+        :root {
+            --bg-color: #fff;
+            --text-color: #000;
+            --link-color: #0000FF;
+            --secondary-color: #666;
+            --spacing: 20px;
+            --border-color: #ccc;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #fff;
+            --link-color: #809fff;
+            --secondary-color: #999;
+            --border-color: #444;
+        }
+
+        body {
+            font-family: monospace;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: var(--spacing);
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .section {
+            margin: var(--spacing) 0;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+        }
+
+        .section-header {
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid transparent;
+        }
+
+        .section-header:hover {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+        }
+
+        .section-content {
+            padding: 15px;
+            display: none;
+        }
+
+        .section-content.open {
+            display: block;
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .back {
+            margin-bottom: 30px;
+            display: block;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: var(--spacing);
+            right: var(--spacing);
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-family: monospace;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        pre {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .note {
+            background-color: rgba(0,0,0,0.05);
+            border-left: 4px solid var(--secondary-color);
+            padding: 10px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
+
+    <a href="/" class="back">← back</a>
+    
+    <h1>origin moments</h1>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('manifesto')">
+            <span>Manifesto</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="manifesto">
+            <p>rad.typo is an ongoing exploration of creative documentation – a living archive that captures not just the art, but the entire ecosystem of its creation.</p>
+            
+            <p>We believe every moment of artistic creation is a complex intersection of:</p>
+            <ul>
+                <li>Geographic context</li>
+                <li>Celestial conditions</li>
+                <li>Environmental data</li>
+                <li>Cultural and seasonal rhythms</li>
+            </ul>
+
+            <div class="note">
+                <strong>Our Principle:</strong> Let the making be enough. Document the process with the same intentionality as the art itself.
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('technical')">
+            <span>Technical Approach</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="technical">
+            <h2>Metadata Architecture</h2>
+            <pre>{
+  "songs": [
+    {
+      "creationContext": {
+        "coordinates": {
+          "latitude": 54.9966,
+          "longitude": -7.3086,
+          "elevation": 10,
+          "cityRegion": "Derry, County Londonderry"
+        },
+        "celestialConditions": {
+          "moonPhase": "Waning Crescent",
+          "moonIllumination": 22.7,
+          "siderealTime": "14:37:22"
+        },
+        "environmentalData": {
+          "temperature": 7.3,
+          "humidity": 82,
+          "windSpeed": 12,
+          "precipitationStatus": "Light Rain"
+        },
+        "celticSeason": {
+          "name": "Imbolc",
+          "significancePoetic": "Emergence, potential, early signs of life",
+          "dateRange": "February 1 - February 3"
+        }
+      }
+    }
+  ]
+}</pre>
+
+            <div class="note">
+                <strong>Infrastructure:</strong> Minimal, transparent, community-owned. No corporate intermediaries.
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('philosophy')">
+            <span>Philosophical Context</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="philosophy">
+            <p>Inspired by:</p>
+            <ul>
+                <li>The radical documentation of performance art</li>
+                <li>DIY music's uncompromising spirit</li>
+                <li>Celtic cyclical understanding of time</li>
+                <li>Ecological interconnectedness</li>
+            </ul>
+
+            <p>We're not creating a discography. We're mapping a living, breathing creative ecosystem.</p>
+
+            <div class="note">
+                <strong>Vision:</strong> Art as a holistic practice. Documentation as creation. The process is the product.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.documentElement;
+            const button = document.querySelector('.theme-toggle');
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            button.innerHTML = isDark ? '○ dark mode' : '● light mode';
+            
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+        }
+
+        function toggleSection(id) {
+            const content = document.getElementById(id);
+            const toggle = content.previousElementSibling.querySelector('.toggle');
+            const isOpen = content.classList.contains('open');
+            
+            content.classList.toggle('open');
+            toggle.textContent = isOpen ? '[ + ]' : '[ - ]';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                const button = document.querySelector('.theme-toggle');
+                button.innerHTML = savedTheme === 'dark' 
+                    ? '● light mode' 
+                    : '○ dark mode';
+            }
+        });
+    </script>
+</body>
+</html>
