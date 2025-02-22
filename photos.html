@@ -45,31 +45,19 @@
             margin-bottom: 30px;
         }
 
-        h1, h2 {
+        h1 {
             font-size: 24px;
             margin-bottom: 40px;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--secondary-color);
         }
 
-        .series-section {
-            margin-bottom: 80px;
-        }
-
-        .series-title {
-            color: var(--secondary-color);
-            margin-bottom: 30px;
-            font-size: 0.9em;
-        }
-
         .photo-entry {
-            margin-bottom: 80px;
-            cursor: pointer;
+            margin-bottom: 60px;
         }
 
         .photo-container {
             position: relative;
-            width: 100%;
             margin-bottom: 20px;
             border: 1px solid var(--secondary-color);
         }
@@ -78,61 +66,29 @@
             width: 100%;
             height: auto;
             display: block;
+            vertical-align: bottom;
         }
 
         .metadata {
-            font-size: 0.9em;
-            color: var(--secondary-color);
+            padding-top: 15px;
+            border-top: 1px solid var(--secondary-color);
             margin-top: 15px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .photo-entry:hover .metadata {
-            opacity: 1;
-        }
-
-        .expanded-view {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-color);
-            z-index: 1000;
-            padding: 40px;
-            box-sizing: border-box;
-            overflow-y: auto;
-            display: none;
-        }
-
-        .expanded-view.active {
-            display: block;
-        }
-
-        .expanded-photo {
-            max-width: 100%;
-            max-height: 80vh;
-            margin: 0 auto;
-            display: block;
-        }
-
-        .expanded-metadata {
-            max-width: 600px;
-            margin: 20px auto;
             color: var(--secondary-color);
         }
 
-        .close-button {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
+        .filename {
             color: var(--text-color);
-            font-family: monospace;
-            cursor: pointer;
-            font-size: 24px;
+        }
+
+        .portrait-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .portrait-item {
+            margin-bottom: 0;
         }
 
         .theme-toggle {
@@ -148,8 +104,8 @@
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 10px;
+            .portrait-group {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -161,83 +117,48 @@
 
         <h1>photos</h1>
 
-        <div class="series-section">
-            <div class="series-title">Light Studies</div>
-            
-            <div class="photo-entry" onclick="expandPhoto(this)">
+        <!-- Portrait Group Example -->
+        <div class="portrait-group">
+            <div class="photo-entry portrait-item">
                 <div class="photo-container">
-                    <img src="/photos/tunnel-shadows.jpg" alt="Underground tunnel with shadows" class="photo">
+                    <img src="/photos/black-wall-progress.jpg" alt="Wall painting process" class="photo">
                 </div>
                 <div class="metadata">
-                    <strong>tunnel-shadows.jpg</strong><br>
-                    2024-02-22<br><br>
-                    Underground passage study. Natural light infiltrating constructed space.
+                    <div class="filename">black-wall-progress.jpg</div>
+                    2024-02-22<br>
+                    Room transformation. Void creation process.
                 </div>
             </div>
 
-            <div class="photo-entry" onclick="expandPhoto(this)">
-                <div class="photo-container">
-                    <img src="/photos/reaching.JPG" alt="Hand reaching in light" class="photo">
-                </div>
-                <div class="metadata">
-                    <strong>reaching.JPG</strong><br>
-                    2024-02-22<br><br>
-                    Gesture documentation. Light capture experiment.
-                </div>
-            </div>
-        </div>
-
-        <!-- Continue with other series -->
-        <div class="series-section">
-            <div class="series-title">Process Documentation</div>
-            
-            <div class="photo-entry" onclick="expandPhoto(this)">
+            <div class="photo-entry portrait-item">
                 <div class="photo-container">
                     <img src="/photos/fuck-twa.jpg" alt="Anti-commercial text piece" class="photo">
                 </div>
                 <div class="metadata">
-                    <strong>fuck-twa.jpg</strong><br>
-                    2024-02-22<br><br>
+                    <div class="filename">fuck-twa.jpg</div>
+                    2024-02-22<br>
                     Process documentation. Anti-commercial mark-making.
                 </div>
             </div>
-
-            <!-- Add other photos in this series -->
         </div>
 
-        <!-- Continue with all photos grouped by series -->
-    </div>
+        <!-- Landscape Example -->
+        <div class="photo-entry">
+            <div class="photo-container">
+                <img src="/photos/reaching.JPG" alt="Hand reaching in light" class="photo">
+            </div>
+            <div class="metadata">
+                <div class="filename">reaching.JPG</div>
+                2024-02-22<br>
+                Gesture documentation. Light capture experiment.
+            </div>
+        </div>
 
-    <!-- Expanded View Template -->
-    <div class="expanded-view">
-        <button class="close-button" onclick="closeExpanded()">×</button>
-        <img class="expanded-photo">
-        <div class="expanded-metadata"></div>
+        <!-- Add remaining photos, grouping portraits and keeping landscapes full-width -->
+
     </div>
 
     <script>
-        function expandPhoto(element) {
-            const expandedView = document.querySelector('.expanded-view');
-            const expandedPhoto = expandedView.querySelector('.expanded-photo');
-            const expandedMetadata = expandedView.querySelector('.expanded-metadata');
-            
-            const photo = element.querySelector('.photo');
-            const metadata = element.querySelector('.metadata');
-            
-            expandedPhoto.src = photo.src;
-            expandedPhoto.alt = photo.alt;
-            expandedMetadata.innerHTML = metadata.innerHTML;
-            
-            expandedView.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeExpanded() {
-            const expandedView = document.querySelector('.expanded-view');
-            expandedView.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
         function toggleTheme() {
             const body = document.documentElement;
             const button = document.querySelector('.theme-toggle');
@@ -258,13 +179,6 @@
                     ? '● light mode' 
                     : '○ dark mode';
             }
-
-            // Close expanded view on escape key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeExpanded();
-                }
-            });
         });
     </script>
 </body>
