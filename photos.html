@@ -52,14 +52,20 @@
             border-bottom: 1px solid var(--secondary-color);
         }
 
+        .portrait-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
         .photo-entry {
             margin-bottom: 60px;
         }
 
         .photo-container {
-            position: relative;
-            margin-bottom: 20px;
             border: 1px solid var(--secondary-color);
+            margin-bottom: 20px;
         }
 
         .photo {
@@ -72,23 +78,30 @@
         .metadata {
             padding-top: 15px;
             border-top: 1px solid var(--secondary-color);
-            margin-top: 15px;
             color: var(--secondary-color);
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px 20px;
         }
 
-        .filename {
+        .metadata dt {
             color: var(--text-color);
         }
 
-        .portrait-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 60px;
+        .metadata dd {
+            margin: 0;
         }
 
-        .portrait-item {
-            margin-bottom: 0;
+        .color-palette {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .color-swatch {
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--secondary-color);
         }
 
         .theme-toggle {
@@ -107,6 +120,9 @@
             .portrait-group {
                 grid-template-columns: 1fr;
             }
+            .metadata {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -117,28 +133,66 @@
 
         <h1>photos</h1>
 
-        <!-- Portrait Group Example -->
+        <!-- Portrait Group -->
         <div class="portrait-group">
-            <div class="photo-entry portrait-item">
+            <div class="photo-entry">
                 <div class="photo-container">
                     <img src="/photos/black-wall-progress.jpg" alt="Wall painting process" class="photo">
                 </div>
-                <div class="metadata">
-                    <div class="filename">black-wall-progress.jpg</div>
-                    2024-02-22<br>
-                    Room transformation. Void creation process.
-                </div>
+                <dl class="metadata">
+                    <dt>File</dt>
+                    <dd>black-wall-progress.jpg</dd>
+                    <dt>Date</dt>
+                    <dd>2024-02-22 15:32</dd>
+                    <dt>Location</dt>
+                    <dd>Studio Space</dd>
+                    <dt>Weather</dt>
+                    <dd>Partly Cloudy, 12°C</dd>
+                    <dt>Light</dt>
+                    <dd>Indoor, Artificial, 240 lux</dd>
+                    <dt>Colors</dt>
+                    <dd>
+                        <div class="color-palette">
+                            <div class="color-swatch" style="background: #1a1a1a"></div>
+                            <div class="color-swatch" style="background: #3c4b5c"></div>
+                            <div class="color-swatch" style="background: #f5f5f5"></div>
+                        </div>
+                    </dd>
+                    <dt>Theme</dt>
+                    <dd>Process Documentation</dd>
+                    <dt>Notes</dt>
+                    <dd>Room transformation. Void creation process.</dd>
+                </dl>
             </div>
 
-            <div class="photo-entry portrait-item">
+            <div class="photo-entry">
                 <div class="photo-container">
                     <img src="/photos/fuck-twa.jpg" alt="Anti-commercial text piece" class="photo">
                 </div>
-                <div class="metadata">
-                    <div class="filename">fuck-twa.jpg</div>
-                    2024-02-22<br>
-                    Process documentation. Anti-commercial mark-making.
-                </div>
+                <dl class="metadata">
+                    <dt>File</dt>
+                    <dd>fuck-twa.jpg</dd>
+                    <dt>Date</dt>
+                    <dd>2024-02-22 15:45</dd>
+                    <dt>Location</dt>
+                    <dd>Studio Space</dd>
+                    <dt>Weather</dt>
+                    <dd>Partly Cloudy, 12°C</dd>
+                    <dt>Light</dt>
+                    <dd>Indoor, Artificial, 220 lux</dd>
+                    <dt>Colors</dt>
+                    <dd>
+                        <div class="color-palette">
+                            <div class="color-swatch" style="background: #1a1a1a"></div>
+                            <div class="color-swatch" style="background: #f5f5f5"></div>
+                            <div class="color-swatch" style="background: #3a3a3a"></div>
+                        </div>
+                    </dd>
+                    <dt>Theme</dt>
+                    <dd>Process Documentation</dd>
+                    <dt>Notes</dt>
+                    <dd>Process documentation. Anti-commercial mark-making.</dd>
+                </dl>
             </div>
         </div>
 
@@ -147,14 +201,33 @@
             <div class="photo-container">
                 <img src="/photos/reaching.JPG" alt="Hand reaching in light" class="photo">
             </div>
-            <div class="metadata">
-                <div class="filename">reaching.JPG</div>
-                2024-02-22<br>
-                Gesture documentation. Light capture experiment.
-            </div>
+            <dl class="metadata">
+                <dt>File</dt>
+                <dd>reaching.JPG</dd>
+                <dt>Date</dt>
+                <dd>2024-02-22 19:15</dd>
+                <dt>Location</dt>
+                <dd>Home Studio</dd>
+                <dt>Weather</dt>
+                <dd>Night, Clear, 8°C</dd>
+                <dt>Light</dt>
+                <dd>Indoor, Mixed, 180 lux</dd>
+                <dt>Colors</dt>
+                <dd>
+                    <div class="color-palette">
+                        <div class="color-swatch" style="background: #2b2b1f"></div>
+                        <div class="color-swatch" style="background: #4a4a3a"></div>
+                        <div class="color-swatch" style="background: #7a7a6a"></div>
+                    </div>
+                </dd>
+                <dt>Theme</dt>
+                <dd>Light Studies</dd>
+                <dt>Notes</dt>
+                <dd>Gesture documentation. Light capture experiment.</dd>
+            </dl>
         </div>
 
-        <!-- Add remaining photos, grouping portraits and keeping landscapes full-width -->
+        <!-- Continue with remaining photos... -->
 
     </div>
 
