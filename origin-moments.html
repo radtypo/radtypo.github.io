@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rad.typo - origin moments</title>
+    <title>rad.typo - origin.moments</title>
     <style>
         :root {
             --bg-color: #fff;
@@ -68,11 +68,6 @@
             margin-bottom: 10px;
         }
 
-        h2 {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-
         a {
             color: var(--link-color);
             text-decoration: none;
@@ -106,6 +101,7 @@
             overflow-x: auto;
             white-space: pre-wrap;
             word-wrap: break-word;
+            font-size: 0.9em;
         }
 
         .note {
@@ -113,6 +109,7 @@
             border-left: 4px solid var(--secondary-color);
             padding: 10px;
             margin: 15px 0;
+            font-style: italic;
         }
     </style>
 </head>
@@ -121,92 +118,74 @@
 
     <a href="/" class="back">← back</a>
     
-    <h1>origin moments</h1>
+    <h1>origin.moments</h1>
 
     <div class="section">
-        <div class="section-header" onclick="toggleSection('manifesto')">
-            <span>Manifesto</span>
+        <div class="section-header" onclick="toggleSection('context')">
+            <span>context</span>
             <span class="toggle">[ + ]</span>
         </div>
-        <div class="section-content" id="manifesto">
-            <p>rad.typo is an ongoing exploration of creative documentation – a living archive that captures not just the art, but the entire ecosystem of its creation.</p>
+        <div class="section-content" id="context">
+            <p>Each moment of creation is a landscape. Not just sound, but the entire ecosystem that birthed it.</p>
             
-            <p>We believe every moment of artistic creation is a complex intersection of:</p>
-            <ul>
-                <li>Geographic context</li>
-                <li>Celestial conditions</li>
-                <li>Environmental data</li>
-                <li>Cultural and seasonal rhythms</li>
-            </ul>
-
             <div class="note">
-                <strong>Our Principle:</strong> Let the making be enough. Document the process with the same intentionality as the art itself.
+                Derry. Waning crescent. Seven degrees. A room. A feeling.
             </div>
         </div>
     </div>
 
     <div class="section">
-        <div class="section-header" onclick="toggleSection('technical')">
-            <span>Technical Approach</span>
+        <div class="section-header" onclick="toggleSection('documentation')">
+            <span>documentation</span>
             <span class="toggle">[ + ]</span>
         </div>
-        <div class="section-content" id="technical">
-            <h2>Metadata Architecture</h2>
+        <div class="section-content" id="documentation">
             <pre>{
-  "songs": [
-    {
-      "creationContext": {
-        "coordinates": {
-          "latitude": 54.9966,
-          "longitude": -7.3086,
-          "elevation": 10,
-          "cityRegion": "Derry, County Londonderry"
-        },
-        "celestialConditions": {
-          "moonPhase": "Waning Crescent",
-          "moonIllumination": 22.7,
-          "siderealTime": "14:37:22"
-        },
-        "environmentalData": {
-          "temperature": 7.3,
-          "humidity": 82,
-          "windSpeed": 12,
-          "precipitationStatus": "Light Rain"
-        },
-        "celticSeason": {
-          "name": "Imbolc",
-          "significancePoetic": "Emergence, potential, early signs of life",
-          "dateRange": "February 1 - February 3"
-        }
-      }
+  "origin": {
+    "geography": {
+      "latitude": 54.9966,
+      "longitude": -7.3086,
+      "elevation": 10,
+      "place": "Derry"
+    },
+    "celestial": {
+      "moon": "Waning Crescent",
+      "illumination": 22.7%
+    },
+    "environmental": {
+      "temperature": 7.3,
+      "humidity": 82,
+      "wind": 12
+    },
+    "season": {
+      "name": "Imbolc",
+      "significance": "emergence"
     }
-  ]
+  }
 }</pre>
 
             <div class="note">
-                <strong>Infrastructure:</strong> Minimal, transparent, community-owned. No corporate intermediaries.
+                Attributes as poetry. Data as memory.
             </div>
         </div>
     </div>
 
     <div class="section">
-        <div class="section-header" onclick="toggleSection('philosophy')">
-            <span>Philosophical Context</span>
+        <div class="section-header" onclick="toggleSection('practice')">
+            <span>practice</span>
             <span class="toggle">[ + ]</span>
         </div>
-        <div class="section-content" id="philosophy">
-            <p>Inspired by:</p>
+        <div class="section-content" id="practice">
+            <p>How to recreate this moment:</p>
             <ul>
-                <li>The radical documentation of performance art</li>
-                <li>DIY music's uncompromising spirit</li>
-                <li>Celtic cyclical understanding of time</li>
-                <li>Ecological interconnectedness</li>
+                <li>Listen to the room</li>
+                <li>Notice the light</li>
+                <li>Feel the temperature</li>
+                <li>Observe without judgment</li>
             </ul>
 
-            <p>We're not creating a discography. We're mapping a living, breathing creative ecosystem.</p>
-
             <div class="note">
-                <strong>Vision:</strong> Art as a holistic practice. Documentation as creation. The process is the product.
+                The making is the thing. Everything else is just echoes.
             </div>
         </div>
     </div>
