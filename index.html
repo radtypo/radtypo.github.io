@@ -4,20 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>rad.typo</title>
-    <script>
-        // Simple authentication
-        (function() {
-            if (!sessionStorage.getItem('authenticated')) {
-                const password = prompt('Enter site password:');
-                if (password === 'rad.typo.dev') {
-                    sessionStorage.setItem('authenticated', 'true');
-                } else {
-                    document.body.innerHTML = '';
-                    throw new Error('Access denied');
-                }
-            }
-        })();
-    </script>
     <link rel="stylesheet" href="derry-weather.css">
     <style>
         :root {
@@ -28,9 +14,9 @@
             --secondary-color: #666;
             --max-width: 800px;
             --base-spacing: 20px;
-            --paper-bg-color: #f5f5f5;
+            --paper-bg-color: #f2f2e9;
             --paper-text-color: #333333;
-            --paper-link-color: #2b5fb5;
+            --paper-link-color: #1a1a1a;
             --paper-muted-color: #666666;
             --paper-secondary-color: #666666;
         }
