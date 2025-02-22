@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rad.typo - hexhouse</title>
+    <style>
+        :root {
+            --bg-color: #fff;
+            --text-color: #000;
+            --link-color: #0000FF;
+            --secondary-color: #666;
+            --spacing: 20px;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #fff;
+            --link-color: #809fff;
+            --secondary-color: #999;
+        }
+
+        body {
+            font-family: monospace;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: var(--spacing);
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .section {
+            margin: var(--spacing) 0;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+        }
+
+        .section-header {
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid transparent;
+        }
+
+        .section-header:hover {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+        }
+
+        .section-content {
+            padding: 15px;
+            display: none;
+        }
+
+        .section-content.open {
+            display: block;
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .date {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .back {
+            margin-bottom: 30px;
+            display: block;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: var(--spacing);
+            right: var(--spacing);
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-family: monospace;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* Photo-specific styles */
+        .photo-container {
+            position: relative;
+            margin-bottom: var(--spacing);
+            border: 1px solid var(--secondary-color);
+            overflow: hidden;
+        }
+
+        .photo-container img {
+            width: 100%;
+            display: block;
+        }
+
+        .photo-meta {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px;
+            font-size: 12px;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+
+        .photo-container:hover .photo-meta {
+            transform: translateY(0);
+        }
+
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 8px 16px;
+            margin: 0;
+        }
+
+        .metadata-grid dt {
+            color: var(--secondary-color);
+        }
+
+        .metadata-grid dd {
+            margin: 0;
+        }
+
+        .sun-diagram {
+            width: 100%;
+            height: 200px;
+            margin: 20px 0;
+            position: relative;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .sun-position {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #FFD700;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .horizon-line {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--secondary-color);
+        }
+
+        .compass-directions {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            color: var(--secondary-color);
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
+
+    <a href="/" class="back">← back</a>
+    
+    <h1>hexhouse</h1>
+    <div class="date">2015-07-24 14:52:28</div>
+
+    <div class="photo-container">
+        <img src="/api/placeholder/800/600" alt="Hexhouse in Iceland">
+        <div class="photo-meta">
+            ƒ/2.2 • 1/338s • ISO 32 • 4.2mm
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('technical')">
+            <span>Technical Info</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="technical">
+            <dl class="metadata-grid">
+                <dt>Dimensions</dt>
+                <dd>3264 × 2448 (8MP)</dd>
+                
+                <dt>File Size</dt>
+                <dd>710 kB</dd>
+                
+                <dt>Color Space</dt>
+                <dd>sRGB</dd>
+                
+                <dt>Format</dt>
+                <dd>JPEG (Baseline)</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('light')">
+            <span>Light & Time</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="light">
+            <dl class="metadata-grid">
+                <dt>Location</dt>
+                <dd>Reykjavík, Iceland</dd>
+                
+                <dt>Local Time</dt>
+                <dd>14:52 (GMT)</dd>
+                
+                <dt>Day Length</dt>
+                <dd>19 hours 14 minutes</dd>
+                
+                <dt>Light Value</dt>
+                <dd>12.3 (Bright sunlight)</dd>
+            </dl>
+
+            <div class="sun-diagram">
+                <div class="sun-position" style="left: 75%; top: 30%;"></div>
+                <div class="horizon-line"></div>
+                <div class="compass-directions">
+                    <span>E</span>
+                    <span>SE</span>
+                    <span>S</span>
+                    <span>SW</span>
+                    <span>W</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('celestial')">
+            <span>Celestial Data</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="celestial">
+            <dl class="metadata-grid">
+                <dt>Sun Direction</dt>
+                <dd>181.6° (Due South)</dd>
+                
+                <dt>Sun Position</dt>
+                <dd>3 hours before golden hour</dd>
+                
+                <dt>Moon Phase</dt>
+                <dd>Waxing Gibbous</dd>
+                
+                <dt>Season</dt>
+                <dd>Mid-summer (extended daylight)</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('context')">
+            <span>Archive Context</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="context">
+            <dl class="metadata-grid">
+                <dt>Series</dt>
+                <dd>Iceland 2015</dd>
+                
+                <dt>Added</dt>
+                <dd>2025-02-22</dd>
+                
+                <dt>Camera Direction</dt>
+                <dd>Facing due south at hexagonal structure</dd>
+                
+                <dt>Light Character</dt>
+                <dd>Hard directional sunlight, minimal clouds</dd>
+            </dl>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.documentElement;
+            const button = document.querySelector('.theme-toggle');
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            button.innerHTML = isDark ? '○ dark mode' : '● light mode';
+            
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+        }
+
+        function toggleSection(id) {
+            const content = document.getElementById(id);
+            const toggle = content.previousElementSibling.querySelector('.toggle');
+            const isOpen = content.classList.contains('open');
+            
+            content.classList.toggle('open');
+            toggle.textContent = isOpen ? '[ + ]' : '[ - ]';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                const button = document.querySelector('.theme-toggle');
+                button.innerHTML = savedTheme === 'dark' 
+                    ? '● light mode' 
+                    : '○ dark mode';
+            }
+
+            // Open technical section by default
+            toggleSection('technical');
+        });
+    </script>
+</body>
+</html>
