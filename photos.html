@@ -11,7 +11,6 @@
             --link-color: #0000FF;
             --secondary-color: #666;
             --spacing: 20px;
-            --grid-width: 900px;
         }
 
         [data-theme="dark"] {
@@ -23,7 +22,7 @@
 
         body {
             font-family: monospace;
-            max-width: var(--grid-width);
+            max-width: 800px;
             margin: 40px auto;
             padding: var(--spacing);
             line-height: 1.6;
@@ -39,64 +38,39 @@
             text-decoration: none;
         }
 
-        .back:hover {
-            text-decoration: underline;
-        }
-
         h1 {
             font-size: 24px;
-            margin-bottom: var(--spacing);
-        }
-
-        .photo-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: calc(var(--spacing) * 3);
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--secondary-color);
         }
 
         .photo-entry {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: var(--spacing);
-            border-top: 1px solid var(--secondary-color);
-            padding-top: var(--spacing);
-        }
-
-        .photo-container {
-            position: relative;
+            margin: 40px 0;
+            padding-bottom: 40px;
+            border-bottom: 1px solid var(--secondary-color);
         }
 
         .photo {
             width: 100%;
             height: auto;
-            display: block;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        .photo:hover {
-            opacity: 0.9;
+            margin: 20px 0;
         }
 
         .metadata {
-            font-size: 0.9em;
             color: var(--secondary-color);
         }
 
-        .metadata dl {
-            margin: 0;
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 8px 16px;
-        }
-
         .metadata dt {
+            float: left;
+            clear: left;
+            width: 100px;
             color: var(--text-color);
         }
 
         .metadata dd {
-            margin: 0;
-            color: var(--secondary-color);
+            margin-left: 120px;
+            margin-bottom: 10px;
         }
 
         .theme-toggle {
@@ -110,39 +84,6 @@
             cursor: pointer;
             padding: 5px;
         }
-
-        .photo-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            cursor: pointer;
-        }
-
-        .modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            max-width: 90%;
-            max-height: 90vh;
-        }
-
-        .modal-image {
-            max-width: 100%;
-            max-height: 90vh;
-            display: block;
-        }
-
-        @media (max-width: 768px) {
-            .photo-entry {
-                grid-template-columns: 1fr;
-            }
-        }
     </style>
 </head>
 <body>
@@ -151,65 +92,31 @@
 
     <h1>photos</h1>
 
-    <div class="photo-grid">
-        <article class="photo-entry">
-            <div class="photo-container">
-                <img src="photos/tunnel-shadows.jpg" alt="Underground tunnel with shadows and vegetation" class="photo" onclick="openModal(this.src)">
-            </div>
-            <div class="metadata">
-                <dl>
-                    <dt>Name</dt>
-                    <dd>tunnel-shadows</dd>
-                    <dt>Date</dt>
-                    <dd>2024-02-22</dd>
-                    <dt>Notes</dt>
-                    <dd>Underground passage study. Natural light infiltrating constructed space.</dd>
-                </dl>
-            </div>
-        </article>
+    <article class="photo-entry">
+        <img src="/photos/tunnel-shadows.jpg" alt="Underground tunnel with shadows and vegetation" class="photo">
+        <dl class="metadata">
+            <dt>Name</dt>
+            <dd>tunnel-shadows</dd>
+            <dt>Date</dt>
+            <dd>2024-02-22</dd>
+            <dt>Notes</dt>
+            <dd>Underground passage study. Natural light infiltrating constructed space.</dd>
+        </dl>
+    </article>
 
-        <article class="photo-entry">
-            <div class="photo-container">
-                <img src="photos/archive-stacks.jpg" alt="Weathered photo albums stacked" class="photo" onclick="openModal(this.src)">
-            </div>
-            <div class="metadata">
-                <dl>
-                    <dt>Name</dt>
-                    <dd>archive-stacks</dd>
-                    <dt>Date</dt>
-                    <dd>2024-02-22</dd>
-                    <dt>Notes</dt>
-                    <dd>Physical memory containers. Documentation of documentation.</dd>
-                </dl>
-            </div>
-        </article>
+    <article class="photo-entry">
+        <img src="/photos/archive-stacks.jpg" alt="Weathered photo albums stacked" class="photo">
+        <dl class="metadata">
+            <dt>Name</dt>
+            <dd>archive-stacks</dd>
+            <dt>Date</dt>
+            <dd>2024-02-22</dd>
+            <dt>Notes</dt>
+            <dd>Physical memory containers. Documentation of documentation.</dd>
+        </dl>
+    </article>
 
-        <article class="photo-entry">
-            <div class="photo-container">
-                <img src="photos/fuck-twa.jpg" alt="Room painting in progress" class="photo" onclick="openModal(this.src)">
-            </div>
-            <div class="metadata">
-                <dl>
-                    <dt>Name</dt>
-                    <dd>fuck-twa</dd>
-                    <dt>Date</dt>
-                    <dd>2024-02-22</dd>
-                    <dt>Notes</dt>
-                    <dd>Process documentation. Anti-commercial mark-making.</dd>
-                </dl>
-            </div>
-        </article>
-
-        <!-- Continue similar blocks for other photos -->
-
-    </div>
-
-    <!-- Modal for enlarged photos -->
-    <div class="photo-modal" id="photo-modal" onclick="closeModal()">
-        <div class="modal-content">
-            <img id="modal-image" src="" alt="Enlarged photo" class="modal-image">
-        </div>
-    </div>
+    <!-- Continue for other images -->
 
     <script>
         function toggleTheme() {
@@ -223,19 +130,6 @@
             localStorage.setItem('theme', isDark ? 'light' : 'dark');
         }
 
-        function openModal(imageSrc) {
-            const modal = document.getElementById('photo-modal');
-            const modalImg = document.getElementById('modal-image');
-            modal.style.display = 'block';
-            modalImg.src = imageSrc;
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            document.getElementById('photo-modal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme) {
@@ -245,13 +139,6 @@
                     ? '● light mode' 
                     : '○ dark mode';
             }
-
-            // Close modal on escape key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeModal();
-                }
-            });
         });
     </script>
 </body>
