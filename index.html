@@ -14,11 +14,6 @@
             --secondary-color: #666;
             --max-width: 800px;
             --base-spacing: 20px;
-            --paper-bg-color: #f2f2e9;
-            --paper-text-color: #333333;
-            --paper-link-color: #1a1a1a;
-            --paper-muted-color: #666666;
-            --paper-secondary-color: #666666;
         }
 
         [data-theme="dark"] {
@@ -27,14 +22,6 @@
             --link-color: #809fff;
             --muted-color: #999;
             --secondary-color: #999;
-        }
-
-        [data-theme="paper"] {
-            --bg-color: var(--paper-bg-color);
-            --text-color: var(--paper-text-color);
-            --link-color: var(--paper-link-color);
-            --muted-color: var(--paper-muted-color);
-            --secondary-color: var(--paper-secondary-color);
         }
 
         body {
@@ -122,14 +109,14 @@
         // Immediately check and apply the theme before page renders
         (function() {
             const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                document.documentElement.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
             }
         })();
     </script>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme mode">○ dark mode</button>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
 
     <h1>rad.typo</h1>
     
@@ -162,23 +149,12 @@
         function toggleTheme() {
             const body = document.documentElement;
             const button = document.querySelector('.theme-toggle');
-            const currentTheme = body.getAttribute('data-theme') || 'light';
+            const isDark = body.getAttribute('data-theme') === 'dark';
             
-            // Cycle through themes: light -> dark -> paper -> light
-            let newTheme;
-            if (currentTheme === 'light') {
-                newTheme = 'dark';
-                button.innerHTML = '● paper mode';
-            } else if (currentTheme === 'dark') {
-                newTheme = 'paper';
-                button.innerHTML = '□ light mode';
-            } else {
-                newTheme = 'light';
-                button.innerHTML = '○ dark mode';
-            }
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            button.innerHTML = isDark ? '○ dark mode' : '● light mode';
             
-            body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -186,16 +162,9 @@
             if (savedTheme) {
                 document.documentElement.setAttribute('data-theme', savedTheme);
                 const button = document.querySelector('.theme-toggle');
-                switch(savedTheme) {
-                    case 'dark':
-                        button.innerHTML = '● paper mode';
-                        break;
-                    case 'paper':
-                        button.innerHTML = '□ light mode';
-                        break;
-                    default:
-                        button.innerHTML = '○ dark mode';
-                }
+                button.innerHTML = savedTheme === 'dark' 
+                    ? '● light mode' 
+                    : '○ dark mode';
             }
         });
     </script>
