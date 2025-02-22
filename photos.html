@@ -11,7 +11,6 @@
             --link-color: #0000FF;
             --secondary-color: #666;
             --spacing: 20px;
-            --max-width: 800px;
         }
 
         [data-theme="dark"] {
@@ -23,13 +22,17 @@
 
         body {
             font-family: monospace;
-            max-width: var(--max-width);
-            margin: calc(var(--spacing) * 2) auto;
-            padding: var(--spacing);
+            margin: 0;
+            padding: 20px;
             line-height: 1.6;
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         a {
@@ -37,16 +40,72 @@
             text-decoration: none;
         }
 
+        .back {
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+
         h1 {
             font-size: 24px;
-            margin-bottom: var(--spacing);
-            padding-bottom: var(--spacing);
+            margin-bottom: 40px;
+            padding-bottom: 10px;
             border-bottom: 1px solid var(--secondary-color);
         }
 
-        .back {
-            display: inline-block;
-            margin-bottom: var(--spacing);
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .photo-entry {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .photo-container {
+            aspect-ratio: 1;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: opacity 0.2s;
+        }
+
+        .photo:hover {
+            opacity: 0.9;
+        }
+
+        .metadata {
+            font-size: 0.9em;
+            color: var(--secondary-color);
+            margin-top: 10px;
+        }
+
+        .metadata-hover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            opacity: 0;
+            transition: opacity 0.3s;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: auto;
+        }
+
+        .photo-container:hover .metadata-hover {
+            opacity: 0.95;
         }
 
         .theme-toggle {
@@ -61,236 +120,165 @@
             padding: 5px;
         }
 
-        .photo-entry {
-            margin: calc(var(--spacing) * 2) 0;
-            padding-bottom: calc(var(--spacing) * 2);
-            border-bottom: 1px solid var(--secondary-color);
-        }
-
-        .photo {
-            width: 100%;
-            height: auto;
-            margin: var(--spacing) 0;
-            border: 1px solid var(--secondary-color);
-        }
-
-        .metadata {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 8px 16px;
-            margin: var(--spacing) 0;
-        }
-
-        .metadata dt {
-            color: var(--text-color);
-            font-weight: normal;
-        }
-
-        .metadata dd {
-            margin: 0;
-            color: var(--secondary-color);
-        }
-
-        .series {
-            color: var(--secondary-color);
-            font-size: 0.9em;
-            margin-top: var(--spacing);
-            padding-top: var(--spacing);
-            border-top: 1px dotted var(--secondary-color);
-        }
-
-        @media (max-width: 600px) {
-            .metadata {
-                grid-template-columns: 1fr;
-                gap: 4px;
-            }
-            
-            .metadata dt {
-                color: var(--secondary-color);
+        @media (max-width: 768px) {
+            .photo-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
-    <a href="/" class="back">← back</a>
+    <div class="container">
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
+        <a href="/" class="back">← back</a>
 
-    <h1>photos</h1>
+        <h1>photos</h1>
 
-    <div class="photo-entry">
-        <img src="/photos/tunnel-shadows.jpg" alt="Underground tunnel with shadows and vegetation" class="photo">
-        <dl class="metadata">
-            <dt>Name</dt>
-            <dd>tunnel-shadows.jpg</dd>
-            <dt>Date</dt>
-            <dd>2024-02-22</dd>
-            <dt>Location</dt>
-            <dd>Derry, Northern Ireland</dd>
-            <dt>Series</dt>
-            <dd>Light Studies</dd>
-            <dt>Notes</dt>
-            <dd>Underground passage study. Natural light infiltrating constructed space.</dd>
-        </dl>
-    </div>
+        <div class="photo-grid">
+            <div class="photo-entry">
+                <div class="photo-container">
+                    <img src="/photos/tunnel-shadows.jpg" alt="Underground tunnel with shadows" class="photo">
+                    <div class="metadata-hover">
+                        <div class="metadata">
+                            <strong>tunnel-shadows.jpg</strong><br>
+                            2024-02-22<br><br>
+                            Underground passage study. Natural light infiltrating constructed space.
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="photo-entry">
-        <img src="/photos/archive-stacks.jpg" alt="Stack of weathered photo albums" class="photo">
-        <dl class="metadata">
-            <dt>Name</dt>
-            <dd>archive-stacks.jpg</dd>
-            <dt>Date</dt>
-            <dd>2024-02-22</dd>
-            <dt>Location</dt>
-            <dd>SMA Studios Archive</dd>
-            <dt>Series</dt>
-            <dd>Memory Containers</dd>
-            <dt>Notes</dt>
-            <dd>Physical memory containers. Documentation of documentation.</dd>
-        </dl>
-    </div>
+            <div class="photo-entry">
+                <div class="photo-container">
+                    <img src="/photos/archive-stacks.jpg" alt="Stacked photo albums" class="photo">
+                    <div class="metadata-hover">
+                        <div class="metadata">
+                            <strong>archive-stacks.jpg</strong><br>
+                            2024-02-22<br><br>
+                            Physical memory containers. Documentation of documentation.
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="photo-entry">
-        <img src="/photos/fuck-twa.jpg" alt="Room painting in progress, text on wall" class="photo">
-        <dl class="metadata">
-            <dt>Name</dt>
-            <dd>fuck-twa.jpg</dd>
-            <dt>Date</dt>
-            <dd>2024-02-22</dd>
-            <dt>Location</dt>
-            <dd>Private Space</dd>
-            <dt>Series</dt>
-            <dd>Wall Writing</dd>
-            <dt>Notes</dt>
-            <dd>Process documentation. Anti-commercial mark-making.</dd>
-        </dl>
-    </div>
+            <div class="photo-entry">
+                <div class="photo-container">
+                    <img src="/photos/fuck-twa.jpg" alt="Anti-commercial text piece" class="photo">
+                    <div class="metadata-hover">
+                        <div class="metadata">
+                            <strong>fuck-twa.jpg</strong><br>
+                            2024-02-22<br><br>
+                            Process documentation. Anti-commercial mark-making.
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="photo-entry">
-        <img src="/photos/baby-meets-cat.JPG" alt="Baby watching cat through window" class="photo">
-        <dl class="metadata">
-            <dt>Name</dt>
-            <dd>baby-meets-cat.JPG</dd>
-            <dt>Date</dt>
-            <dd>2024-02-22</dd>
-            <dt>Location</dt>
-            <dd>Home</dd>
-            <dt>Series</dt>
-            <dd>First Encounters</dd>
-            <dt>Notes</dt>
-            <dd>Glass-mediated connection study. Early observation patterns.</dd>
-        </dl>
-    </div>
+            <div class="photo-entry">
+                <div class="photo-container">
+                    <img src="/photos/baby-meets-cat.JPG" alt="Baby and cat interaction" class="photo">
+                    <div class="metadata-hover">
+                        <div class="metadata">
+                            <strong>baby-meets-cat.JPG</strong><br>
+                            2024-02-22<br><br>
+                            Glass-mediated connection study. Early observation patterns.
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="photo-entry">
-        <img src="/photos/black-wall-progress.jpg" alt="Person painting wall black" class="photo">
-        <dl class="metadata">
-            <dt>Name</dt>
-            <dd>black-wall-progress.jpg</dd>
-            <dt>Date</dt>
-            <dd>2024-02-22</dd>
-            <dt>Location</dt>
-            <dd>Studio Space</dd>
-            <dt>Series</dt>
-            <dd>Process Documentation</dd>
-            <dt>Notes</dt>
-            <dd>Room transformation. Void creation process.</dd>
-        </dl>
-    </div>
+            <div class="photo-entry">
+                <div class="photo-container">
+                    <img src="/photos/black-wall-progress.jpg" alt="Wall painting process" class="photo">
+                    <div class="metadata-hover">
+                        <div class="metadata">
+                            <strong>black-wall-progress.jpg</strong><br>
+                            2024-02-22<br><br>
+                            Room transformation. Void creation process.
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="photo-entry">
-        <img src="/photos/dune-walker.jpg" alt="Person walking along beach dunes" class="photo">
-        <dl class="metadata">
-            <dt>Name</dt>
-            <dd>dune-walker.jpg</dd>
-            <dt>Date</dt>
-            <dd>2024-02-22</dd>
-            <dt>Location</dt>
-            <dd>Coastal Path</dd>
-            <dt>Series</dt>
-            <dd>Shore Lines</dd>
-            <dt>Notes</dt>
-            <dd>Human scale against natural formations. Edge walking.</dd>
-        </dl>
-    </div>
+            <div class="photo-entry">
+                <div class="photo-container">
+                    <img src="/photos/dune-walker.jpg" alt="Figure on beach dunes" class="photo">
+                    <div class="metadata-hover">
+                        <div class="metadata">
+                            <strong>dune-walker.jpg</strong><br>
+                            2024-02-22<br><br>
+                            Human scale against natural formations. Edge walking.
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="photo-entry">
-        <img src="/photos/mermaid-scribbles.HEIC" alt="Sketch of mermaid on waves" class="photo">
-        <dl class="metadata">
-            <dt>Name</dt>
-            <dd>mermaid-scribbles.HEIC</dd>
-            <dt>Date</dt>
-            <dd>2024-02-22</dd>
-            <dt>Location</dt>
-            <dd>Notebook</dd>
-            <dt>Series</dt>
-            <dd>Quick Studies</dd>
-            <dt>Notes</dt>
-            <dd>Margin drawings. Mythological intersections.</dd>
-        </dl>
-    </div>
+            <div class="photo-entry">
+                <div class="photo-container">
+                    <img src="/photos/mermaid-scribbles.HEIC" alt="Mermaid sketch" class="photo">
+                    <div class="metadata-hover">
+                        <div class="metadata">
+                            <strong>mermaid-scribbles.HEIC</strong><br>
+                            2024-02-22<br><br>
+                            Margin drawings. Mythological intersections.
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="photo-entry">
-        <img src="/photos/pine-beach.HEIC" alt="Pine trees on beach" class="photo">
-        <dl class="metadata">
-            <dt>Name</dt>
-            <dd>pine-beach.HEIC</dd>
-            <dt>Date</dt>
-            <dd>2024-02-22</dd>
-            <dt>Location</dt>
-            <dd>Mediterranean Coast</dd>
-            <dt>Series</dt>
-            <dd>Shore Lines</dd>
-            <dt>Notes</dt>
-            <dd>Tree line meets tide line. Natural boundaries study.</dd>
-        </dl>
-    </div>
+            <div class="photo-entry">
+                <div class="photo-container">
+                    <img src="/photos/pine-beach.HEIC" alt="Pine trees on beach" class="photo">
+                    <div class="metadata-hover">
+                        <div class="metadata">
+                            <strong>pine-beach.HEIC</strong><br>
+                            2024-02-22<br><br>
+                            Tree line meets tide line. Natural boundaries study.
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="photo-entry">
-        <img src="/photos/reaching.JPG" alt="Hand reaching in dimmed light" class="photo">
-        <dl class="metadata">
-            <dt>Name</dt>
-            <dd>reaching.JPG</dd>
-            <dt>Date</dt>
-            <dd>2024-02-22</dd>
-            <dt>Location</dt>
-            <dd>Studio Space</dd>
-            <dt>Series</dt>
-            <dd>Light Studies</dd>
-            <dt>Notes</dt>
-            <dd>Gesture documentation. Light capture experiment.</dd>
-        </dl>
-    </div>
+            <div class="photo-entry">
+                <div class="photo-container">
+                    <img src="/photos/reaching.JPG" alt="Hand reaching in light" class="photo">
+                    <div class="metadata-hover">
+                        <div class="metadata">
+                            <strong>reaching.JPG</strong><br>
+                            2024-02-22<br><br>
+                            Gesture documentation. Light capture experiment.
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="photo-entry">
-        <img src="/photos/river-rails.JPG" alt="River view through railings" class="photo">
-        <dl class="metadata">
-            <dt>Name</dt>
-            <dd>river-rails.JPG</dd>
-            <dt>Date</dt>
-            <dd>2024-02-22</dd>
-            <dt>Location</dt>
-            <dd>Peace Bridge</dd>
-            <dt>Series</dt>
-            <dd>River Lines</dd>
-            <dt>Notes</dt>
-            <dd>Infrastructure shadows. Water light patterns.</dd>
-        </dl>
-    </div>
+            <div class="photo-entry">
+                <div class="photo-container">
+                    <img src="/photos/river-rails.JPG" alt="River view through rails" class="photo">
+                    <div class="metadata-hover">
+                        <div class="metadata">
+                            <strong>river-rails.JPG</strong><br>
+                            2024-02-22<br><br>
+                            Infrastructure shadows. Water light patterns.
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="photo-entry">
-        <img src="/photos/yellow-frame.JPG" alt="Yellow picture frame on black surface" class="photo">
-        <dl class="metadata">
-            <dt>Name</dt>
-            <dd>yellow-frame.JPG</dd>
-            <dt>Date</dt>
-            <dd>2024-02-22</dd>
-            <dt>Location</dt>
-            <dd>Studio Space</dd>
-            <dt>Series</dt>
-            <dd>Frame Studies</dd>
-            <dt>Notes</dt>
-            <dd>Color against void. Containment structures.</dd>
-        </dl>
+            <div class="photo-entry">
+                <div class="photo-container">
+                    <img src="/photos/yellow-frame.JPG" alt="Yellow frame on black" class="photo">
+                    <div class="metadata-hover">
+                        <div class="metadata">
+                            <strong>yellow-frame.JPG</strong><br>
+                            2024-02-22<br><br>
+                            Color against void. Containment structures.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
