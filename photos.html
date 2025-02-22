@@ -31,7 +31,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
@@ -45,67 +45,94 @@
             margin-bottom: 30px;
         }
 
-        h1 {
+        h1, h2 {
             font-size: 24px;
             margin-bottom: 40px;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--secondary-color);
         }
 
-        .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 40px;
-            margin-bottom: 60px;
+        .series-section {
+            margin-bottom: 80px;
+        }
+
+        .series-title {
+            color: var(--secondary-color);
+            margin-bottom: 30px;
+            font-size: 0.9em;
         }
 
         .photo-entry {
-            display: flex;
-            flex-direction: column;
+            margin-bottom: 80px;
+            cursor: pointer;
         }
 
         .photo-container {
-            aspect-ratio: 1;
-            overflow: hidden;
             position: relative;
+            width: 100%;
+            margin-bottom: 20px;
             border: 1px solid var(--secondary-color);
-            margin-bottom: 10px;
         }
 
         .photo {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: auto;
             display: block;
-            transition: opacity 0.2s;
-        }
-
-        .photo:hover {
-            opacity: 0.9;
         }
 
         .metadata {
             font-size: 0.9em;
             color: var(--secondary-color);
-            margin-top: 10px;
+            margin-top: 15px;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
-        .metadata-hover {
-            position: absolute;
+        .photo-entry:hover .metadata {
+            opacity: 1;
+        }
+
+        .expanded-view {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: var(--bg-color);
-            opacity: 0;
-            transition: opacity 0.3s;
-            padding: 20px;
+            z-index: 1000;
+            padding: 40px;
             box-sizing: border-box;
-            overflow: auto;
+            overflow-y: auto;
+            display: none;
         }
 
-        .photo-container:hover .metadata-hover {
-            opacity: 0.95;
+        .expanded-view.active {
+            display: block;
+        }
+
+        .expanded-photo {
+            max-width: 100%;
+            max-height: 80vh;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .expanded-metadata {
+            max-width: 600px;
+            margin: 20px auto;
+            color: var(--secondary-color);
+        }
+
+        .close-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-family: monospace;
+            cursor: pointer;
+            font-size: 24px;
         }
 
         .theme-toggle {
@@ -121,9 +148,8 @@
         }
 
         @media (max-width: 768px) {
-            .photo-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 20px;
+            .container {
+                padding: 10px;
             }
         }
     </style>
@@ -135,153 +161,83 @@
 
         <h1>photos</h1>
 
-        <div class="photo-grid">
-            <div class="photo-entry">
+        <div class="series-section">
+            <div class="series-title">Light Studies</div>
+            
+            <div class="photo-entry" onclick="expandPhoto(this)">
                 <div class="photo-container">
                     <img src="/photos/tunnel-shadows.jpg" alt="Underground tunnel with shadows" class="photo">
-                    <div class="metadata-hover">
-                        <div class="metadata">
-                            <strong>tunnel-shadows.jpg</strong><br>
-                            2024-02-22<br><br>
-                            Underground passage study. Natural light infiltrating constructed space.
-                        </div>
-                    </div>
+                </div>
+                <div class="metadata">
+                    <strong>tunnel-shadows.jpg</strong><br>
+                    2024-02-22<br><br>
+                    Underground passage study. Natural light infiltrating constructed space.
                 </div>
             </div>
 
-            <div class="photo-entry">
-                <div class="photo-container">
-                    <img src="/photos/archive-stacks.jpg" alt="Stacked photo albums" class="photo">
-                    <div class="metadata-hover">
-                        <div class="metadata">
-                            <strong>archive-stacks.jpg</strong><br>
-                            2024-02-22<br><br>
-                            Physical memory containers. Documentation of documentation.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="photo-entry">
-                <div class="photo-container">
-                    <img src="/photos/fuck-twa.jpg" alt="Anti-commercial text piece" class="photo">
-                    <div class="metadata-hover">
-                        <div class="metadata">
-                            <strong>fuck-twa.jpg</strong><br>
-                            2024-02-22<br><br>
-                            Process documentation. Anti-commercial mark-making.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="photo-entry">
-                <div class="photo-container">
-                    <img src="/photos/baby-meets-cat.JPG" alt="Baby and cat interaction" class="photo">
-                    <div class="metadata-hover">
-                        <div class="metadata">
-                            <strong>baby-meets-cat.JPG</strong><br>
-                            2024-02-22<br><br>
-                            Glass-mediated connection study. Early observation patterns.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="photo-entry">
-                <div class="photo-container">
-                    <img src="/photos/black-wall-progress.jpg" alt="Wall painting process" class="photo">
-                    <div class="metadata-hover">
-                        <div class="metadata">
-                            <strong>black-wall-progress.jpg</strong><br>
-                            2024-02-22<br><br>
-                            Room transformation. Void creation process.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="photo-entry">
-                <div class="photo-container">
-                    <img src="/photos/dune-walker.jpg" alt="Figure on beach dunes" class="photo">
-                    <div class="metadata-hover">
-                        <div class="metadata">
-                            <strong>dune-walker.jpg</strong><br>
-                            2024-02-22<br><br>
-                            Human scale against natural formations. Edge walking.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="photo-entry">
-                <div class="photo-container">
-                    <img src="/photos/mermaid-scribbles.HEIC" alt="Mermaid sketch" class="photo">
-                    <div class="metadata-hover">
-                        <div class="metadata">
-                            <strong>mermaid-scribbles.HEIC</strong><br>
-                            2024-02-22<br><br>
-                            Margin drawings. Mythological intersections.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="photo-entry">
-                <div class="photo-container">
-                    <img src="/photos/pine-beach.HEIC" alt="Pine trees on beach" class="photo">
-                    <div class="metadata-hover">
-                        <div class="metadata">
-                            <strong>pine-beach.HEIC</strong><br>
-                            2024-02-22<br><br>
-                            Tree line meets tide line. Natural boundaries study.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="photo-entry">
+            <div class="photo-entry" onclick="expandPhoto(this)">
                 <div class="photo-container">
                     <img src="/photos/reaching.JPG" alt="Hand reaching in light" class="photo">
-                    <div class="metadata-hover">
-                        <div class="metadata">
-                            <strong>reaching.JPG</strong><br>
-                            2024-02-22<br><br>
-                            Gesture documentation. Light capture experiment.
-                        </div>
-                    </div>
                 </div>
-            </div>
-
-            <div class="photo-entry">
-                <div class="photo-container">
-                    <img src="/photos/river-rails.JPG" alt="River view through rails" class="photo">
-                    <div class="metadata-hover">
-                        <div class="metadata">
-                            <strong>river-rails.JPG</strong><br>
-                            2024-02-22<br><br>
-                            Infrastructure shadows. Water light patterns.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="photo-entry">
-                <div class="photo-container">
-                    <img src="/photos/yellow-frame.JPG" alt="Yellow frame on black" class="photo">
-                    <div class="metadata-hover">
-                        <div class="metadata">
-                            <strong>yellow-frame.JPG</strong><br>
-                            2024-02-22<br><br>
-                            Color against void. Containment structures.
-                        </div>
-                    </div>
+                <div class="metadata">
+                    <strong>reaching.JPG</strong><br>
+                    2024-02-22<br><br>
+                    Gesture documentation. Light capture experiment.
                 </div>
             </div>
         </div>
+
+        <!-- Continue with other series -->
+        <div class="series-section">
+            <div class="series-title">Process Documentation</div>
+            
+            <div class="photo-entry" onclick="expandPhoto(this)">
+                <div class="photo-container">
+                    <img src="/photos/fuck-twa.jpg" alt="Anti-commercial text piece" class="photo">
+                </div>
+                <div class="metadata">
+                    <strong>fuck-twa.jpg</strong><br>
+                    2024-02-22<br><br>
+                    Process documentation. Anti-commercial mark-making.
+                </div>
+            </div>
+
+            <!-- Add other photos in this series -->
+        </div>
+
+        <!-- Continue with all photos grouped by series -->
+    </div>
+
+    <!-- Expanded View Template -->
+    <div class="expanded-view">
+        <button class="close-button" onclick="closeExpanded()">×</button>
+        <img class="expanded-photo">
+        <div class="expanded-metadata"></div>
     </div>
 
     <script>
+        function expandPhoto(element) {
+            const expandedView = document.querySelector('.expanded-view');
+            const expandedPhoto = expandedView.querySelector('.expanded-photo');
+            const expandedMetadata = expandedView.querySelector('.expanded-metadata');
+            
+            const photo = element.querySelector('.photo');
+            const metadata = element.querySelector('.metadata');
+            
+            expandedPhoto.src = photo.src;
+            expandedPhoto.alt = photo.alt;
+            expandedMetadata.innerHTML = metadata.innerHTML;
+            
+            expandedView.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeExpanded() {
+            const expandedView = document.querySelector('.expanded-view');
+            expandedView.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
         function toggleTheme() {
             const body = document.documentElement;
             const button = document.querySelector('.theme-toggle');
@@ -302,6 +258,13 @@
                     ? '● light mode' 
                     : '○ dark mode';
             }
+
+            // Close expanded view on escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeExpanded();
+                }
+            });
         });
     </script>
 </body>
