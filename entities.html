@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FigJam Entity Map</title>
+    <title>FigJam Entity Map Wireframe</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -12,7 +12,7 @@
         }
         .diagram-container {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             position: relative;
             background-color: white;
@@ -25,21 +25,18 @@
             border-radius: 8px;
             margin: 5px;
             position: relative;
-            transition: all 0.3s;
-        }
-        .entity:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 2px solid #888;
+            background-color: #f8f8f8;
         }
         .entity h3 {
             margin-top: 0;
             display: flex;
             align-items: center;
             gap: 8px;
+            color: #333;
         }
         .workspace {
-            background-color: #E3F2FD;
-            border: 2px solid #2196F3;
+            border-style: solid;
             padding: 20px;
             margin-bottom: 30px;
         }
@@ -48,196 +45,83 @@
             justify-content: space-between;
             margin-bottom: 30px;
         }
-        .studies {
-            background-color: #E8F5E9;
-            border: 2px solid #4CAF50;
-            width: 30%;
-        }
-        .collections {
-            background-color: #E3F2FD;
-            border: 2px solid #2196F3;
-            width: 30%;
-        }
-        .reports {
-            background-color: #E3F2FD;
-            border: 2px solid #2196F3;
+        .studies, .collections, .reports {
             width: 30%;
         }
         .tier-2 {
             display: flex;
             justify-content: space-between;
-            margin-left: 8%;
             margin-bottom: 30px;
         }
         .research-activities, .sessions, .evidence {
-            background-color: #E8F5E9;
-            border: 2px solid #4CAF50;
-            width: 28%;
+            width: 30%;
         }
         .tier-3 {
             display: flex;
             justify-content: space-between;
-            margin-left: 16%;
             margin-bottom: 30px;
         }
         .transcripts, .annotations, .clips-reels {
-            background-color: #FFF9C4;
-            border: 2px solid #FFC107;
-            width: 28%;
+            width: 30%;
         }
         .tags {
-            background-color: #FFF9C4;
-            border: 2px solid #FFC107;
-            position: absolute;
-            width: 15%;
-            left: 50%;
-            transform: translateX(-50%);
-            top: 75%;
+            width: 30%;
+            margin: 0 auto;
         }
+        ul {
+            margin-bottom: 0;
+            padding-left: 20px;
+            list-style-type: none;
+        }
+        li {
+            font-size: 0.9em;
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+        p {
+            font-size: 0.9em;
+            margin: 5px 0;
+        }
+        /* Wireframe arrow styling */
         .arrow {
             position: absolute;
+            border-top: 2px solid #888;
+            width: 30px;
+            height: 20px;
+        }
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -5px;
             width: 0;
             height: 0;
             border-left: 8px solid transparent;
             border-right: 8px solid transparent;
-            border-top: 12px solid #333;
-        }
-        .arrow-down {
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        .arrow-up {
-            left: 50%;
-            transform: translateX(-50%) rotate(180deg);
-        }
-        .arrow-left {
-            transform: rotate(90deg);
-        }
-        .arrow-right {
+            border-top: 8px solid #888;
             transform: rotate(-90deg);
         }
-        .arrow-label {
+        /* Simple connector lines */
+        .connector {
             position: absolute;
-            font-size: 0.8em;
-            color: #555;
-            width: 150px;
+            border-left: 2px dashed #888;
+        }
+        .connector-horizontal {
+            position: absolute;
+            border-top: 2px dashed #888;
+        }
+        
+        /* Title */
+        .diagram-title {
             text-align: center;
-        }
-        ul {
-            margin-bottom: 0;
-        }
-        .controls {
             margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-        .control-btn {
-            background-color: #2196F3;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .control-btn:hover {
-            background-color: #0b7dda;
-        }
-        .svg-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 2;
-        }
-        svg {
-            width: 100%;
-            height: 100%;
-        }
-        .path {
-            fill: none;
-            stroke: #555;
-            stroke-width: 2;
-            marker-end: url(#arrowhead);
+            color: #333;
         }
     </style>
 </head>
 <body>
-    <div class="controls">
-        <button class="control-btn" id="expand-all">Expand All</button>
-        <button class="control-btn" id="collapse-all">Collapse All</button>
-    </div>
-    
-    <div class="diagram-container" id="diagram">
-        <!-- SVG for arrows -->
-        <svg class="svg-container">
-            <defs>
-                <marker id="arrowhead" markerWidth="10" markerHeight="7" 
-                refX="9" refY="3.5" orient="auto">
-                    <polygon points="0 0, 10 3.5, 0 7" fill="#555"/>
-                </marker>
-            </defs>
-            
-            <!-- Workspace to Studies -->
-            <path class="path" d="M600,70 L300,120" />
-            
-            <!-- Workspace to Collections -->
-            <path class="path" d="M600,70 L600,120" />
-            
-            <!-- Workspace to Reports -->
-            <path class="path" d="M600,70 L900,120" />
-            
-            <!-- Studies to Research Activities -->
-            <path class="path" d="M300,170 L200,230" />
-            
-            <!-- Studies to Sessions -->
-            <path class="path" d="M300,170 L400,230" />
-            
-            <!-- Studies to Evidence -->
-            <path class="path" d="M300,170 L600,230" />
-            
-            <!-- Sessions to Transcripts -->
-            <path class="path" d="M400,280 L200,340" />
-            
-            <!-- Sessions to Annotations -->
-            <path class="path" d="M400,280 L400,340" />
-            
-            <!-- Sessions to Clips & Reels -->
-            <path class="path" d="M400,280 L600,340" />
-            
-            <!-- Transcripts to Annotations (cross-link) -->
-            <path class="path" d="M250,340 L350,340" />
-            
-            <!-- Annotations to Transcripts (cross-link) -->
-            <path class="path" d="M350,360 L250,360" />
-            
-            <!-- Research Activities to Evidence -->
-            <path class="path" d="M200,280 C200,330 500,300 600,280" />
-            
-            <!-- Evidence to Reports -->
-            <path class="path" d="M600,280 C700,300 800,200 900,170" />
-            
-            <!-- Clips & Reels to Tags -->
-            <path class="path" d="M600,390 L500,440" />
-            
-            <!-- Tags to Annotations -->
-            <path class="path" d="M500,440 L400,390" />
-            
-            <!-- Tags to Transcripts -->
-            <path class="path" d="M500,440 L200,390" />
-            
-            <!-- Clips & Reels to Reports -->
-            <path class="path" d="M600,390 C700,420 800,300 900,170" />
-            
-            <!-- Reports to Collections -->
-            <path class="path" d="M900,150 C800,100 700,100 600,150" />
-            
-            <!-- Studies to Collections -->
-            <path class="path" d="M300,150 C400,100 500,100 600,150" />
-        </svg>
+    <div class="diagram-container">
+        <h2 class="diagram-title">FigJam Entity Map - Wireframe</h2>
         
         <!-- Workspace (Root Entity) -->
         <div class="entity workspace">
@@ -257,9 +141,9 @@
                         <div class="entity research-activities">
                             <h3>Research Activities 🔬</h3>
                             <ul>
-                                <li>Video Analysis → Produces Clips ✂️</li>
-                                <li>Survey Coding → Produces Coded Responses 📊</li>
-                                <li>Participant Interviews → Produces Transcripts 📝</li>
+                                <li>➤ Video Analysis → Clips</li>
+                                <li>➤ Survey Coding → Responses</li>
+                                <li>➤ Interviews → Transcripts</li>
                             </ul>
                         </div>
                         
@@ -273,33 +157,30 @@
                                 <!-- Transcripts -->
                                 <div class="entity transcripts">
                                     <h3>Transcripts 📝</h3>
-                                    <p>Written record of sessions</p>
                                 </div>
                                 
                                 <!-- Annotations -->
                                 <div class="entity annotations">
                                     <h3>Annotations 🗒️</h3>
-                                    <p>Notes and insights on sessions</p>
                                 </div>
                                 
                                 <!-- Clips & Reels -->
                                 <div class="entity clips-reels">
                                     <h3>Clips ✂️ & Reels 🎬</h3>
-                                    <p>Selected segments from sessions</p>
                                 </div>
                             </div>
                             
                             <!-- Tags -->
                             <div class="entity tags">
                                 <h3>Tags 🔖</h3>
-                                <p>Apply to Annotations, Clips, Transcripts</p>
+                                <p>Applied to content</p>
                             </div>
                         </div>
                         
                         <!-- Evidence -->
                         <div class="entity evidence">
                             <h3>Evidence 📂</h3>
-                            <p>Data generated from research</p>
+                            <p>Data from research</p>
                         </div>
                     </div>
                 </div>
@@ -307,72 +188,50 @@
                 <!-- Collections -->
                 <div class="entity collections">
                     <h3>Collections 🏷️</h3>
-                    <p>Groups related Studies and Reports</p>
-                    <p>Collections aggregate research insights</p>
+                    <ul>
+                        <li>➤ Groups related Studies</li>
+                        <li>➤ Groups related Reports</li>
+                        <li>➤ Aggregates insights</li>
+                    </ul>
                 </div>
                 
                 <!-- Reports -->
                 <div class="entity reports">
                     <h3>Reports 📑</h3>
                     <ul>
-                        <li>Summarizes Sessions, Clips, Tags, and Evidence</li>
+                        <li>➤ Summarizes Sessions</li>
+                        <li>➤ Summarizes Clips & Tags</li>
+                        <li>➤ Summarizes Evidence</li>
                     </ul>
-                    <p>Reports contribute to structured synthesis</p>
                 </div>
             </div>
         </div>
+        
+        <!-- Simple connectors to show relationships -->
+        <div style="text-align: center; margin-top: 20px; padding: 10px; background-color: #eee; border-radius: 4px;">
+            <p style="margin: 0; font-size: 0.8em; color: #666;">
+                Relationships: 
+                <span style="margin: 0 10px;">→ Workspace → Studies → Sessions → Transcripts/Annotations/Clips</span>
+                <span style="margin: 0 10px;">→ Research Activities → Evidence → Reports</span>
+                <span style="margin: 0 10px;">→ Tags ↔ Annotations/Clips/Transcripts</span>
+                <span style="margin: 0 10px;">→ Reports/Studies → Collections</span>
+            </p>
+        </div>
+        
+        <!-- Final layout representation -->
+        <div style="margin-top: 30px; border: 1px solid #ccc; padding: 10px; background-color: #f9f9f9; border-radius: 4px;">
+            <pre style="margin: 0; font-family: monospace; font-size: 0.9em; white-space: pre-wrap;">
+[ Workspace (🏢) ]
+   ├── [ Studies (📁) ]
+   │      ├── [ Research Activities (🔬) ] --> Generates Evidence (📂)
+   │      ├── [ Sessions (🎥) ] --> Produces Transcripts (📝), Annotations (🗒️), Clips (✂️)
+   │      │         ├── Tags (🔖) apply to Annotations, Clips, Transcripts
+   │      └── [ Evidence (📂) ] --> Used in Reports
+   │
+   ├── [ Collections (🏷️) ] <-- Groups Studies, Reports
+   └── [ Reports (📑) ] <-- Summarizes Insights, Tags, Evidence
+            </pre>
+        </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const expandAllBtn = document.getElementById('expand-all');
-            const collapseAllBtn = document.getElementById('collapse-all');
-            
-            // Add interactivity
-            expandAllBtn.addEventListener('click', function() {
-                const entities = document.querySelectorAll('.entity');
-                entities.forEach(entity => {
-                    entity.style.display = 'block';
-                });
-            });
-            
-            collapseAllBtn.addEventListener('click', function() {
-                const tier2 = document.querySelectorAll('.tier-2');
-                const tier3 = document.querySelectorAll('.tier-3');
-                const tags = document.querySelectorAll('.tags');
-                
-                tier2.forEach(tier => {
-                    tier.style.display = 'none';
-                });
-                
-                tier3.forEach(tier => {
-                    tier.style.display = 'none';
-                });
-                
-                tags.forEach(tag => {
-                    tag.style.display = 'none';
-                });
-            });
-            
-            // Make entities clickable for expand/collapse
-            const clickableEntities = document.querySelectorAll('.studies, .collections, .reports, .sessions, .research-activities, .evidence');
-            
-            clickableEntities.forEach(entity => {
-                entity.addEventListener('click', function(e) {
-                    if (e.target === entity || e.target.parentNode === entity) {
-                        const childEntities = entity.querySelectorAll('.tier-2, .tier-3, .tags');
-                        childEntities.forEach(child => {
-                            if (child.style.display === 'none') {
-                                child.style.display = 'flex';
-                            } else {
-                                child.style.display = 'none';
-                            }
-                        });
-                    }
-                    e.stopPropagation();
-                });
-            });
-        });
-    </script>
 </body>
 </html>
