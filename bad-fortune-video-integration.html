@@ -217,6 +217,19 @@
         
         .video-container img.placeholder {
             object-fit: cover;
+            opacity: 0.8; /* Slightly dim the thumbnail to make play button more visible */
+        }
+        
+        .video-size-indicator {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(0,0,0,0.7);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            z-index: 2;
         }
         
         .play-button {
@@ -311,12 +324,12 @@
         </div>
         <div class="section-content" id="videos">
             <div class="video-selector">
-                <button onclick="selectVideo('acoustic')" class="active">Acoustic</button>
-                <button onclick="selectVideo('studio')">Studio</button>
+                <button onclick="selectVideo('acoustic')" class="active">Acoustic (583 MB)</button>
+                <button onclick="selectVideo('studio')">Studio (145 MB)</button>
             </div>
             
             <div class="video-container" id="video-container">
-                <!-- Placeholder image -->
+                <!-- Placeholder image with play button overlay -->
                 <img src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg" 
                      alt="Video thumbnail" 
                      class="placeholder" 
@@ -440,15 +453,19 @@ Do you think I'll just snap out of it
         let videoLoaded = false;
         let videoElement = null;
         
-        // Video sources configuration
+                    // Video sources configuration
         const videoSources = {
             acoustic: {
                 src: 'https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune-video/bad-fortune-acoustic.mp4',
-                download: 'https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune-video/bad-fortune-acoustic.mp4'
+                download: 'https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune-video/bad-fortune-acoustic.mp4',
+                size: '583 MB',
+                thumbnail: 'https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg' // Fallback thumbnail
             },
             studio: {
                 src: 'https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune-video/bad-fortune-studio.mp4',
-                download: 'https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune-video/bad-fortune-studio.mp4'
+                download: 'https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune-video/bad-fortune-studio.mp4',
+                size: '145 MB',
+                thumbnail: 'https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg' // Fallback thumbnail
             }
         };
         
@@ -473,11 +490,12 @@ Do you think I'll just snap out of it
             } else {
                 // Reset to placeholder state if video not loaded
                 document.getElementById('video-container').innerHTML = `
-                    <img src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg" 
-                        alt="Video thumbnail" 
+                    <img src="${videoSources[type].thumbnail}" 
+                        alt="${type} video thumbnail" 
                         class="placeholder" 
                         id="video-placeholder">
                     <div class="play-button" id="play-button"></div>
+                    <div class="video-size-indicator">${videoSources[type].size}</div>
                 `;
                 document.getElementById('play-button').addEventListener('click', loadVideo);
             }
@@ -491,14 +509,15 @@ Do you think I'll just snap out of it
             // Pause audio if playing
             audioPlayer.pause();
             
-            // Show loading state
-            container.innerHTML = '<div class="loading">Loading video...</div>';
+            // Show loading state with size indicator
+            container.innerHTML = `<div class="loading">Loading video (${videoSources[currentVideo].size})...</div>`;
             
             // Create video element
             videoElement = document.createElement('video');
             videoElement.controls = true;
             videoElement.preload = 'auto';
             videoElement.src = videoSources[currentVideo].src;
+            videoElement.poster = videoSources[currentVideo].thumbnail;
             
             // Set event listeners
             videoElement.addEventListener('canplay', () => {
@@ -511,16 +530,29 @@ Do you think I'll just snap out of it
             videoElement.addEventListener('error', () => {
                 container.innerHTML = `
                     <div class="loading">Error loading video. <a href="${videoSources[currentVideo].download}">Download instead</a></div>
-                    <img src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg" 
+                    <img src="${videoSources[currentVideo].thumbnail}" 
                         alt="Video thumbnail" 
                         class="placeholder">
                     <div class="play-button" id="play-button"></div>
+                    <div class="video-size-indicator">${videoSources[currentVideo].size}</div>
                 `;
                 document.getElementById('play-button').addEventListener('click', loadVideo);
             });
             
             // Start loading
             videoElement.load();
+            
+            // Add a timeout to handle very slow connections
+            setTimeout(() => {
+                if (!videoLoaded) {
+                    container.innerHTML = `
+                        <div class="loading">Video is taking a while to load (${videoSources[currentVideo].size}). 
+                            <a href="${videoSources[currentVideo].download}">Download instead</a> or 
+                            <a href="#" onclick="loadVideo(); return false;">try again</a>
+                        </div>
+                    `;
+                }
+            }, 20000); // 20 seconds timeout
         }
 
         function toggleTheme() {
