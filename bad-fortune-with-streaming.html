@@ -136,6 +136,63 @@
         }
         
         /* Artwork styles */
+
+<!-- Artwork Container as a section -->
+<div class="section artwork-section">
+    <div class="section-header" onclick="toggleSection('artwork')">
+        <span>Artwork</span>
+        <span class="toggle">[ - ]</span>
+    </div>
+    <div class="section-content open" id="artwork">
+        <div class="artwork-container">
+            <img src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg"
+                 alt="Bad Fortune artwork - Pink squirrel painting"
+                 class="song-artwork"
+                 onclick="openArtworkModal()">
+        </div>
+    </div>
+</div>
+
+<!-- Add these CSS styles -->
+<style>
+    .artwork-section {
+        margin-bottom: var(--spacing);
+    }
+    
+    /* Style specifically for artwork section to distinguish it */
+    .artwork-section .section-header {
+        background-color: rgba(var(--secondary-color-rgb), 0.1);
+    }
+    
+    /* Adjust artwork container margins when in a section */
+    .section-content .artwork-container {
+        margin: calc(var(--spacing) / 2) 0;
+    }
+    
+    /* Define RGB version of secondary color for transparency */
+    :root {
+        --secondary-color-rgb: 102, 102, 102;
+    }
+    
+    [data-theme="dark"] {
+        --secondary-color-rgb: 153, 153, 153;
+    }
+</style>
+
+<!-- Update JavaScript to set artwork open by default -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Existing theme code here...
+        
+        // Make sure artwork is open by default
+        const artworkSection = document.getElementById('artwork');
+        if (artworkSection) {
+            artworkSection.classList.add('open');
+            artworkSection.previousElementSibling.querySelector('.toggle').textContent = '[ - ]';
+        }
+    });
+</script>
+        
         .artwork-container {
             margin: var(--spacing) 0 calc(var(--spacing) * 1.5) 0;
             text-align: center;
