@@ -169,6 +169,162 @@
             font-weight: bold;
             cursor: pointer;
         }
+
+        /* Video styles */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            background-color: #000;
+            margin: var(--spacing) 0;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+        }
+        
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .video-container img.placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+        
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background-color: rgba(0,0,0,0.7);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .play-button::after {
+            content: "";
+            width: 0;
+            height: 0;
+            border-top: 12px solid transparent;
+            border-left: 20px solid white;
+            border-bottom: 12px solid transparent;
+            margin-left: 5px;
+        }
+        
+        .video-selector {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .video-selector-buttons {
+            display: flex;
+        }
+        
+        .video-selector button {
+            background: none;
+            border: 1px solid var(--secondary-color);
+            color: var(--text-color);
+            font-family: monospace;
+            padding: 5px 10px;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+        
+        .video-selector button.active {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+        }
+        
+        .video-info {
+            color: var(--secondary-color);
+            font-size: 0.9em;
+            align-self: center;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--secondary-color);
+        }
+        
+        .download-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--secondary-color);
+        }
+        
+        .download-section h3 {
+            margin-top: 0;
+            font-size: 1em;
+            color: var(--secondary-color);
+        }
+        
+        .download-link {
+            display: inline-block;
+            margin: 5px 10px 5px 0;
+            padding: 5px 10px;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+            color: var(--link-color);
+            text-decoration: none;
+        }
+        
+        .download-link:hover {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+        }
+        
+        .quality-note {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: var(--secondary-color);
+            padding: 10px;
+            border: 1px dashed var(--secondary-color);
+            border-radius: 4px;
+        }
+
+        /* Metadata styles */
+        .metadata-content dl {
+            margin: 0;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 8px 16px;
+        }
+
+        .metadata-content dt {
+            color: var(--secondary-color);
+        }
+
+        .metadata-content dd {
+            margin: 0;
+        }
+
+        /* Resources styles */
+        .resource-link {
+            display: block;
+            margin: 5px 0;
+            color: var(--link-color);
+        }
+
+        .resource-link:before {
+            content: "• ";
+            color: var(--text-color);
+        }
     </style>
     <script>
         // Immediately check and apply the theme before page renders
@@ -210,6 +366,143 @@
             Your browser does not support the audio element.
         </audio>
     </div>
+
+    <!-- Video Section -->
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('videos')">
+            <span>Videos</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="videos">
+            <div class="video-selector">
+                <div class="video-selector-buttons">
+                    <button onclick="selectVideo('acoustic')" class="active">Acoustic</button>
+                    <button onclick="selectVideo('studio')">Studio</button>
+                </div>
+                <div class="video-info" id="video-info">Web optimized (30MB)</div>
+            </div>
+            
+            <div class="video-container" id="video-container">
+                <!-- Placeholder image with play button overlay -->
+                <img src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg" 
+                     alt="Video thumbnail" 
+                     class="placeholder" 
+                     id="video-placeholder">
+                <div class="play-button" id="play-button"></div>
+            </div>
+            
+            <div class="download-section">
+                <h3>Download Full Quality</h3>
+                <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune-video/bad-fortune-acoustic.mp4" download class="download-link">Acoustic (583 MB)</a>
+                <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune-video/bad-fortune-studio.mp4" download class="download-link">Studio (145 MB)</a>
+                
+                <div class="quality-note">
+                    Note: The streaming video above is a web-optimized version. For the highest quality experience, please download the full-quality files.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Credits Section -->
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('credits')">
+            <span>Credits</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="credits">
+            <dl>
+                <dt>Duration</dt>
+                <dd>3:43</dd>
+                
+                <dt>Recording Location</dt>
+                <dd>Smalltown America Studio, Derry, Northern Ireland</dd>
+                
+                <dt>Composers</dt>
+                <dd>
+                    Andrew Ferris (33%)<br>
+                    Caolán Austin (33%)<br>
+                    Chris Cassidy (33%)
+                </dd>
+                
+                <dt>Performance</dt>
+                <dd>
+                    Andrew Ferris: Vocals, Guitar, Keyboard<br>
+                    Caolán Austin: Drums, Percussion, Guitar<br>
+                    Chris Cassidy: Bass
+                </dd>
+                
+                <dt>Production</dt>
+                <dd>
+                    Engineering: All composers<br>
+                    Mixing & Mastering: Caolán Austin
+                </dd>
+                
+                <dt>Artwork</dt>
+                <dd>
+                    "We'll be lucky if I don't bust out crying" (2020)<br>
+                    Acrylic on canvas
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Lyrics Section -->
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('lyrics')">
+            <span>Lyrics</span>
+            <span class="toggle">[ - ]</span>
+        </div>
+        <div class="section-content open" id="lyrics">
+            <div class="content">I'm happy to go
+Where the algorithm takes us
+And get ticked off
+By vegan-baiting waitress
+(>>>You can't have that)
+I'll pick my bad fortune
+Right from off of the ground
+(>>>It's worse than that)
+Without you I'm no prospect
+But I'm lonely when I'm with you
+Do you think you'll talk me out of this
+(>>>And hold my head up high)
+Do you think I'll just snap out of it
+(>>>And hold my head up high)
+Now what comes next 
+On the kitchen disco playlist?
+(>>>I'll dance to that)
+The hours drip 
+And the coffee makes us weightless
+(>>>Weightless)
+Who's wrong, who's right?
+Who cares at all?
+Who's gonna be the last one standing
+In life's laundromat
+This is the sticky floor
+Spinning and twirling to a cycle's final roar
+Do you think you'll talk me out of this
+(>>>And hold my head up high)
+Do you think I'll just snap out of it
+(>>>And hold my head up high)
+(I've got a feeling that I just don't belong)</div>
+        </div>
+    </div>
+
+    <!-- Resources Section -->
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('resources')">
+            <span>Resources</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="resources">
+            <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" download class="resource-link">mp3 download</a>
+            <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg" download class="resource-link">artwork download</a>
+            <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune-video/bad-fortune-acoustic.mp4" download class="resource-link">acoustic video (full quality - 583 MB)</a>
+            <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune-video/bad-fortune-studio.mp4" download class="resource-link">studio video (full quality - 145 MB)</a>
+            <a href="#" class="resource-link">chord sheet (PDF)</a>
+            <a href="#" class="resource-link">multitrack stems (ZIP)</a>
+            <a href="#" class="resource-link">mix session (ZIP)</a>
+        </div>
+    </div>
     
     <!-- Artwork Modal -->
     <div id="artwork-modal" class="artwork-modal">
@@ -222,6 +515,113 @@
     </div>
 
     <script>
+        // Video configuration
+        const videoSources = {
+            acoustic: {
+                web: {
+                    src: 'https://f003.backblazeb2.com/file/rad-typo-video/bad-fortune-acoustic-web.mp4',
+                    size: '66 MB'
+                },
+                full: {
+                    src: 'https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune-video/bad-fortune-acoustic.mp4',
+                    size: '583 MB'
+                }
+            },
+            studio: {
+                web: {
+                    src: 'https://f003.backblazeb2.com/file/rad-typo-video/bad-fortune-studio-web.mp4',
+                    size: '59.7 MB'
+                },
+                full: {
+                    src: 'https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune-video/bad-fortune-studio.mp4',
+                    size: '145 MB'
+                }
+            }
+        };
+        
+        // State tracking
+        let currentVideo = 'acoustic';
+        let videoLoaded = false;
+        let videoElement = null;
+        
+        // Function to select video type (acoustic or studio)
+        function selectVideo(type) {
+            if (type === currentVideo && videoLoaded) return;
+            
+            // Update button states
+            document.querySelectorAll('.video-selector-buttons button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.video-selector-buttons button:nth-child(${type === 'acoustic' ? 1 : 2})`).classList.add('active');
+            
+            // Update current video
+            currentVideo = type;
+            
+            // Update info text
+            document.getElementById('video-info').textContent = `Web optimized (${videoSources[currentVideo].web.size})`;
+            
+            // If video is already loaded, replace it
+            if (videoLoaded) {
+                videoElement.src = videoSources[currentVideo].web.src;
+                videoElement.load();
+                videoElement.play();
+            } else {
+                // Reset to placeholder state if video not loaded
+                document.getElementById('video-container').innerHTML = `
+                    <img src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg" 
+                        alt="Video thumbnail" 
+                        class="placeholder" 
+                        id="video-placeholder">
+                    <div class="play-button" id="play-button"></div>
+                `;
+                document.getElementById('play-button').addEventListener('click', loadVideo);
+            }
+        }
+        
+        // Function to load and play the video
+        function loadVideo() {
+            const container = document.getElementById('video-container');
+            const audioPlayer = document.querySelector('audio');
+            
+            // Pause audio if playing
+            audioPlayer.pause();
+            
+            // Show loading state
+            container.innerHTML = '<div class="loading">Loading web-optimized video...</div>';
+            
+            // Create video element
+            videoElement = document.createElement('video');
+            videoElement.controls = true;
+            videoElement.preload = 'auto';
+            videoElement.src = videoSources[currentVideo].web.src;
+            
+            // Set event listeners
+            videoElement.addEventListener('canplay', () => {
+                container.innerHTML = '';
+                container.appendChild(videoElement);
+                videoElement.play();
+                videoLoaded = true;
+            });
+            
+            videoElement.addEventListener('error', () => {
+                container.innerHTML = `
+                    <div class="loading">
+                        Error loading video or optimized version not found. 
+                        <a href="${videoSources[currentVideo].full.src}">Download full quality version</a> or 
+                        <a href="#" onclick="loadVideo(); return false;">try again</a>
+                    </div>
+                    <img src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg" 
+                        alt="Video thumbnail" 
+                        class="placeholder">
+                    <div class="play-button" id="play-button"></div>
+                `;
+                document.getElementById('play-button').addEventListener('click', loadVideo);
+            });
+            
+            // Start loading
+            videoElement.load();
+        }
+
         function toggleTheme() {
             const body = document.documentElement;
             const button = document.querySelector('.theme-toggle');
@@ -269,6 +669,9 @@
                     closeArtworkModal();
                 }
             });
+            
+            // Add click handler to play button
+            document.getElementById('play-button').addEventListener('click', loadVideo);
         });
     </script>
 </body>
