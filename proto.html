@@ -46,6 +46,7 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid transparent;
+            margin-bottom: 0;
         }
 
         .section-header:hover {
@@ -56,6 +57,7 @@
         .section-content {
             padding: 15px;
             display: none;
+            margin-top: 0;
         }
 
         .section-content.open {
@@ -92,7 +94,9 @@
         }
 
         .player-container {
-            margin: var(--spacing) 0;
+            margin: 0;
+            z-index: 10;
+            position: relative;
         }
 
         audio {
@@ -111,7 +115,6 @@
             padding: 5px;
         }
 
-        /* New media interaction styles */
         .media-paused {
             opacity: 0.5;
             transition: opacity 0.3s ease;
@@ -174,6 +177,23 @@
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
+        }
+
+        /* Resources formatting */
+        #resources {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .resource-link {
+            display: block;
+            margin: 5px 0;
+            color: var(--link-color);
+        }
+
+        .resource-link:before {
+            content: "• ";
+            color: var(--text-color);
         }
 
         /* Video styles */
@@ -477,191 +497,4 @@
             const modal = document.getElementById('artwork-modal');
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
-                    closeArtworkModal();
-                }
-            });
-            
-            // Add click handler to play button
-            document.getElementById('play-button').addEventListener('click', loadVideo);
-        });
-    </script>
-</head>
-<body>
-    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
-
-    <a href="/" class="back">← back</a>
-    
-    <h1>bad fortune</h1>
-    <div class="date">2020-01-24</div>
-    
-    <!-- Artwork Section (Collapsible, Open by Default) -->
-    <div class="section artwork-section">
-        <div class="section-header" onclick="toggleSection('artwork'>">
-            <span>Artwork</span>
-            <span class="toggle">[ - ]</span>
-        </div>
-        <div class="section-content open" id="artwork">
-            <div class="artwork-container">
-                <img src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg"
-                     alt="Bad Fortune artwork - Pink squirrel painting"
-                     class="song-artwork"
-                     onclick="openArtworkModal()">
-            </div>
-        </div>
-    </div>
-
-    <div class="player-container">
-        <audio controls>
-            <source src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
-
-    <!-- Video Section -->
-    <div class="section">
-        <div class="section-header" onclick="toggleSection('videos')">
-            <span>Videos</span>
-            <span class="toggle">[ + ]</span>
-        </div>
-        <div class="section-content" id="videos">
-            <div class="video-selector">
-                <div class="video-selector-buttons">
-                    <button onclick="selectVideo('acoustic')" class="active">Acoustic</button>
-                    <button onclick="selectVideo('studio')">Studio</button>
-                </div>
-                <div class="video-info" id="video-info">Web optimized (30MB)</div>
-            </div>
-            
-            <div class="video-container" id="video-container">
-                <!-- Placeholder image with play button overlay -->
-                <img src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg" 
-                     alt="Video thumbnail" 
-                     class="placeholder" 
-                     id="video-placeholder">
-                <div class="play-button" id="play-button"></div>
-            </div>
-            
-            <div class="download-section">
-                <h3>Download Full Quality</h3>
-                <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune-video/bad-fortune-acoustic.mp4" download class="download-link">Acoustic (583 MB)</a>
-                <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune-video/bad-fortune-studio.mp4" download class="download-link">Studio (145 MB)</a>
-                
-                <div class="quality-note">
-                    Note: The streaming video above is a web-optimized version. For the highest quality experience, please download the full-quality files.
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Credits Section -->
-    <div class="section">
-        <div class="section-header" onclick="toggleSection('credits')">
-            <span>Credits</span>
-            <span class="toggle">[ + ]</span>
-        </div>
-        <div class="section-content" id="credits">
-            <dl>
-                <dt>Duration</dt>
-                <dd>3:43</dd>
-                
-                <dt>Recording Location</dt>
-                <dd>Smalltown America Studio, Derry, Northern Ireland</dd>
-                
-                <dt>Composers</dt>
-                <dd>
-                    Andrew Ferris (33%)<br>
-                    Caolán Austin (33%)<br>
-                    Chris Cassidy (33%)
-                </dd>
-                
-                <dt>Performance</dt>
-                <dd>
-                    Andrew Ferris: Vocals, Guitar, Keyboard<br>
-                    Caolán Austin: Drums, Percussion, Guitar<br>
-                    Chris Cassidy: Bass
-                </dd>
-                
-                <dt>Production</dt>
-                <dd>
-                    Engineering: All composers<br>
-                    Mixing & Mastering: Caolán Austin
-                </dd>
-                
-                <dt>Artwork</dt>
-                <dd>
-                    "We'll be lucky if I don't bust out crying" (2020)<br>
-                    Acrylic on canvas
-                </dd>
-            </dl>
-        </div>
-    </div>
-
-    <!-- Lyrics Section -->
-    <div class="section">
-        <div class="section-header" onclick="toggleSection('lyrics')">
-            <span>Lyrics</span>
-            <span class="toggle">[ - ]</span>
-        </div>
-        <div class="section-content open" id="lyrics">
-            <div class="content">I'm happy to go
-Where the algorithm takes us
-And get ticked off
-By vegan-baiting waitress
-(>>>You can't have that)
-I'll pick my bad fortune
-Right from off of the ground
-(>>>It's worse than that)
-Without you I'm no prospect
-But I'm lonely when I'm with you
-Do you think you'll talk me out of this
-(>>>And hold my head up high)
-Do you think I'll just snap out of it
-(>>>And hold my head up high)
-Now what comes next 
-On the kitchen disco playlist?
-(>>>I'll dance to that)
-The hours drip 
-And the coffee makes us weightless
-(>>>Weightless)
-Who's wrong, who's right?
-Who cares at all?
-Who's gonna be the last one standing
-In life's laundromat
-This is the sticky floor
-Spinning and twirling to a cycle's final roar
-Do you think you'll talk me out of this
-(>>>And hold my head up high)
-Do you think I'll just snap out of it
-(>>>And hold my head up high)
-(I've got a feeling that I just don't belong)</div>
-        </div>
-    </div>
-
-    <!-- Resources Section -->
-    <div class="section">
-        <div class="section-header" onclick="toggleSection('resources')">
-            <span>Resources</span>
-            <span class="toggle">[ + ]</span>
-        </div>
-        <div class="section-content" id="resources">
-            <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" download class="resource-link">mp3 download</a>
-            <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg" download class="resource-link">artwork download</a>
-            <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune-video/bad-fortune-acoustic.mp4" download class="resource-link">acoustic video (full quality - 583 MB)</a>
-            <a href="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune-video/bad-fortune-studio.mp4" download class="resource-link">studio video (full quality - 145 MB)</a>
-            <a href="#" class="resource-link">chord sheet (PDF)</a>
-            <a href="#" class="resource-link">multitrack stems (ZIP)</a>
-            <a href="#" class="resource-link">mix session (ZIP)</a>
-        </div>
-    </div>
-    
-    <!-- Artwork Modal -->
-    <div id="artwork-modal" class="artwork-modal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeArtworkModal()">&times;</span>
-            <img src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg" 
-                 alt="Bad Fortune artwork - full size" 
-                 class="modal-image">
-        </div>
-    </div>
-</body>
-</html>
+                    closeArtwork
