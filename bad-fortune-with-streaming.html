@@ -111,22 +111,6 @@
             padding: 5px;
         }
 
-        /* Media Fading Styles */
-        .media-fading audio,
-        .media-fading video {
-            transition: opacity 0.5s ease-in-out;
-        }
-
-        .media-fading .media-paused {
-            opacity: 0.3;
-        }
-
-        .media-fading .media-hidden {
-            opacity: 0;
-            height: 0;
-            overflow: hidden;
-        }
-
         .artwork-section .section-header {
             background-color: rgba(var(--secondary-color-rgb), 0.1);
         }
@@ -342,6 +326,15 @@
             color: var(--text-color);
         }
     </style>
+    <script>
+        // Immediately check and apply the theme before page renders
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
 </head>
 <body>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
@@ -546,105 +539,12 @@ Do you think I'll just snap out of it
             }
         };
         
-        // Media Interaction Manager
-        class MediaInteractionManager {
-            constructor() {
-                this.audioPlayer = null;
-                this.videoPlayer = null;
-                this.videoContainer = null;
-                this.body = null;
-            }
-
-            init() {
-                this.body = document.body;
-                this.audioPlayer = document.querySelector('audio');
-                this.videoContainer = document.getElementById('video-container');
-
-                // Ensure body has media interaction class
-                this.body.classList.add('media-fading');
-
-                // Setup event listeners
-                this.setupAudioListeners();
-            }
-
-            setupAudioListeners() {
-                if (!this.audioPlayer) return;
-
-                this.audioPlayer.addEventListener('play', () => {
-                    this.pauseVideo();
-                });
-            }
-
-            setupVideoListeners(videoElement) {
-                if (!videoElement) return;
-
-                videoElement.addEventListener('play', () => {
-                    this.pauseAudio();
-                });
-            }
-
-            pauseAudio() {
-                if (!this.audioPlayer || this.audioPlayer.paused) return;
-
-                this.audioPlayer.pause();
-                this.audioPlayer.classList.add('media-paused');
-                
-                // Slight delay to allow for visual feedback
-                setTimeout(() => {
-                    this.audioPlayer.classList.remove('media-paused');
-                }, 500);
-            }
-
-            pauseVideo() {
-                // Find current video player in container
-                const currentVideoPlayer = this.videoContainer.querySelector('video');
-                
-                if (!currentVideoPlayer || currentVideoPlayer.paused) return;
-
-                currentVideoPlayer.pause();
-                currentVideoPlayer.classList.add('media-paused');
-                
-                // Slight delay to allow for visual feedback
-                setTimeout(() => {
-                    currentVideoPlayer.classList.remove('media-paused');
-                }, 500);
-            }
-
-            // Enhanced video loading with interaction management
-            loadVideo(videoSrc) {
-                // Pause any existing media
-                this.pauseAudio();
-
-                // Create new video element
-                const videoElement = document.createElement('video');
-                videoElement.controls = true;
-                videoElement.preload = 'auto';
-                videoElement.src = videoSrc;
-
-                // Setup interaction listeners
-                this.setupVideoListeners(videoElement);
-
-                // Replace video container contents
-                this.videoContainer.innerHTML = '';
-                this.videoContainer.appendChild(videoElement);
-
-                // Attempt to play
-                videoElement.play().catch(error => {
-                    console.error('Video play failed:', error);
-                    this.videoContainer.innerHTML = `
-                        <div class="loading">
-                            Error loading video. 
-                            <a href="${videoSrc}" download>Download video</a>
-                        </div>
-                    `;
-                });
-            }
-        }
-
-        // Global instance for access
-        let mediaManager;
-
-        // Existing video selection logic
+        // State tracking
+        let currentVideo = 'acoustic';
+        let videoLoaded = false;
+        let videoElement = null;
+        
+        // Function to select video type (acoustic or studio)
         function selectVideo(type) {
             if (type === currentVideo && videoLoaded) return;
             
@@ -660,17 +560,68 @@ Do you think I'll just snap out of it
             // Update info text
             document.getElementById('video-info').textContent = `Web optimized (${videoSources[currentVideo].web.size})`;
             
-            // Use media manager to load video
-            mediaManager.loadVideo(videoSources[currentVideo].web.src);
+            // If video is already loaded, replace it
+            if (videoLoaded) {
+                videoElement.src = videoSources[currentVideo].web.src;
+                videoElement.load();
+                videoElement.play();
+            } else {
+                // Reset to placeholder state if video not loaded
+                document.getElementById('video-container').innerHTML = `
+                    <img src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg" 
+                        alt="Video thumbnail" 
+                        class="placeholder" 
+                        id="video-placeholder">
+                    <div class="play-button" id="play-button"></div>
+                `;
+                document.getElementById('play-button').addEventListener('click', loadVideo);
+            }
         }
-
-        // Modify loadVideo to use media manager
+        
+        // Function to load and play the video
         function loadVideo() {
-            // Use media manager to load current video
-            mediaManager.loadVideo(videoSources[currentVideo].web.src);
+            const container = document.getElementById('video-container');
+            const audioPlayer = document.querySelector('audio');
+            
+            // Pause audio if playing
+            audioPlayer.pause();
+            
+            // Show loading state
+            container.innerHTML = '<div class="loading">Loading web-optimized video...</div>';
+            
+            // Create video element
+            videoElement = document.createElement('video');
+            videoElement.controls = true;
+            videoElement.preload = 'auto';
+            videoElement.src = videoSources[currentVideo].web.src;
+            
+            // Set event listeners
+            videoElement.addEventListener('canplay', () => {
+                container.innerHTML = '';
+                container.appendChild(videoElement);
+                videoElement.play();
+                videoLoaded = true;
+            });
+            
+            videoElement.addEventListener('error', () => {
+                container.innerHTML = `
+                    <div class="loading">
+                        Error loading video or optimized version not found. 
+                        <a href="${videoSources[currentVideo].full.src}">Download full quality version</a> or 
+                        <a href="#" onclick="loadVideo(); return false;">try again</a>
+                    </div>
+                    <img src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune-artwork.jpg" 
+                        alt="Video thumbnail" 
+                        class="placeholder">
+                    <div class="play-button" id="play-button"></div>
+                `;
+                document.getElementById('play-button').addEventListener('click', loadVideo);
+            });
+            
+            // Start loading
+            videoElement.load();
         }
 
-        // Theme toggle function
         function toggleTheme() {
             const body = document.documentElement;
             const button = document.querySelector('.theme-toggle');
@@ -682,7 +633,6 @@ Do you think I'll just snap out of it
             localStorage.setItem('theme', isDark ? 'light' : 'dark');
         }
 
-        // Section toggle function
         function toggleSection(id) {
             const content = document.getElementById(id);
             const toggle = content.previousElementSibling.querySelector('.toggle');
@@ -692,7 +642,6 @@ Do you think I'll just snap out of it
             toggle.textContent = isOpen ? '[ + ]' : '[ - ]';
         }
         
-        // Artwork modal functions
         function openArtworkModal() {
             document.getElementById('artwork-modal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
@@ -703,13 +652,7 @@ Do you think I'll just snap out of it
             document.body.style.overflow = 'auto';
         }
 
-        // Initialize everything when DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize media interaction manager
-            mediaManager = new MediaInteractionManager();
-            mediaManager.init();
-
-            // Theme persistence
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme) {
                 document.documentElement.setAttribute('data-theme', savedTheme);
