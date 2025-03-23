@@ -859,55 +859,13 @@
     let currentSongIndex = -1;
     let isEditing = false;
     
-    // Initialize the app
+    // Initialize the app when the DOM is fully loaded
     document.addEventListener('DOMContentLoaded', init);
     
-    // Theme toggle
-    themeToggle.addEventListener('click', toggleTheme);
-    
-    // Button event listeners
-    addSongBtn.addEventListener('click', showAddSongForm);
-    cancelBtn.addEventListener('click', hideEditor);
-    saveBtn.addEventListener('click', saveSong);
-    exportBtn.addEventListener('click', exportSongs);
-    importBtn.addEventListener('click', () => {
-      // Trigger file input for importing
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = '.json';
-      input.onchange = handleImport;
-      input.click();
-    });
-    
-    // Modal event listeners
-    closeModal.addEventListener('click', hideModal);
-    modalOkBtn.addEventListener('click', hideModal);
-    
-    // Media checkbox event listeners
-    hasMP3.addEventListener('change', toggleMediaFields);
-    hasWAV.addEventListener('change', toggleMediaFields);
-    hasStems.addEventListener('change', toggleMediaFields);
-    hasArtwork.addEventListener('change', toggleMediaFields);
-    hasVideoAcoustic.addEventListener('change', toggleMediaFields);
-    hasVideoStudio.addEventListener('change', toggleMediaFields);
-    hasChords.addEventListener('change', toggleMediaFields);
-    
-    // Tab switching
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        // Remove active class from all tabs and contents
-        tabs.forEach(t => t.classList.remove('active'));
-        tabContents.forEach(c => c.classList.remove('active'));
-        
-        // Add active class to clicked tab and corresponding content
-        tab.classList.add('active');
-        const tabId = tab.getAttribute('data-tab');
-        document.getElementById(tabId).classList.add('active');
-      });
-    });
-    
-    // Initialize the app
+    // Initialize the application
     function init() {
+      console.log("Admin tool initialized"); // Debugging
+      
       // Check for dark mode preference
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme === 'dark') {
@@ -919,7 +877,13 @@
       loadSongs();
       
       // Set today's date for last_updated field
-      document.getElementById('last_updated').valueAsDate = new Date();
+      const dateInput = document.getElementById('last_updated');
+      if (dateInput) {
+        dateInput.valueAsDate = new Date();
+      }
+      
+      // Add event listeners
+      addEventListeners();
     }
     
     // Toggle dark/light theme
@@ -967,7 +931,7 @@
       
       // Sort songs by date (newest first)
       const sortedSongs = [...songs].sort((a, b) => {
-        return new Date(b.date) - new Date(a.date);
+        return new Date(b.date || '2000-01-01') - new Date(a.date || '2000-01-01');
       });
       
       // Create song items
@@ -976,13 +940,13 @@
         songItem.className = 'song-item';
         
         // Create status badge
-        const statusClass = `status-${song.status.toLowerCase().replace(/\s+/g, '-')}`;
+        const statusClass = `status-${(song.status || 'released').toLowerCase().replace(/\s+/g, '-')}`;
         
         songItem.innerHTML = `
           <div>
             <input type="checkbox" id="song-${index}">
-            <span class="song-title">${song.title} (${song.date.slice(0, 10)})</span>
-            <span class="status ${statusClass}">${song.status}</span>
+            <span class="song-title">${song.title || 'Untitled'} (${song.date ? song.date.slice(0, 10) : 'No date'})</span>
+            <span class="status ${statusClass}">${song.status || 'released'}</span>
           </div>
           <button class="edit-btn" data-index="${index}">Edit</button>
         `;
@@ -1001,6 +965,7 @@
     
     // Show the form for adding a new song
     function showAddSongForm() {
+      console.log("Adding new song"); // Debugging
       isEditing = false;
       currentSongIndex = -1;
       
@@ -1015,118 +980,13 @@
       document.getElementById('title').focus();
     }
     
-    // Load song data into the form for editing
-    function editSong(index) {
-      isEditing = true;
-      currentSongIndex = index;
-      const song = songs[index];
-      
-      // Populate basic info
-      document.getElementById('title').value = song.title || '';
-      document.getElementById('slug').value = song.slug || '';
-      document.getElementById('date').value = song.date || '';
-      document.getElementById('year').value = song.year || '';
-      document.getElementById('duration').value = song.duration || '';
-      document.getElementById('status').value = song.status || 'released';
-      
-      // Populate media availability
-      document.getElementById('has_mp3').checked = song.has_mp3 === 'Yes';
-      document.getElementById('has_wav').checked = song.has_wav === 'Yes';
-      document.getElementById('has_stems').checked = song.has_stems === 'Yes';
-      document.getElementById('has_artwork').checked = song.has_artwork === 'Yes';
-      document.getElementById('has_video_acoustic').checked = song.has_video_acoustic === 'Yes';
-      document.getElementById('has_video_studio').checked = song.has_video_studio === 'Yes';
-      document.getElementById('has_chords').checked = song.has_chords === 'Yes';
-      
-      // Populate media details
-      if (song.has_mp3 === 'Yes') {
-        document.getElementById('mp3_url').value = song.mp3_url || '';
-        document.getElementById('mp3_size').value = song.mp3_size || '';
-        mp3Fields.style.display = 'block';
-      }
-      
-      if (song.has_wav === 'Yes') {
-        document.getElementById('wav_url').value = song.wav_url || '';
-        document.getElementById('wav_size').value = song.wav_size || '';
-        wavFields.style.display = 'block';
-      }
-      
-      if (song.has_stems === 'Yes') {
-        document.getElementById('stems_url').value = song.stems_url || '';
-        document.getElementById('stems_size').value = song.stems_size || '';
-        stemsFields.style.display = 'block';
-      }
-      
-      if (song.has_artwork === 'Yes') {
-        document.getElementById('artwork_url').value = song.artwork_url || '';
-        document.getElementById('artwork_title').value = song.artwork_title || '';
-        document.getElementById('artwork_year').value = song.artwork_year || '';
-        document.getElementById('artwork_medium').value = song.artwork_medium || '';
-        document.getElementById('artwork_alt_text').value = song.artwork_alt_text || '';
-        artworkFields.style.display = 'block';
-      }
-      
-      // Populate credits
-      document.getElementById('composers').value = song.composers || '';
-      document.getElementById('performers').value = song.performers || '';
-      document.getElementById('engineering').value = song.engineering || '';
-      document.getElementById('mixing').value = song.mixing || '';
-      document.getElementById('mastering').value = song.mastering || '';
-      document.getElementById('recording_location').value = song.recording_location || '';
-      
-      // Populate context
-      document.getElementById('tags').value = song.tags || '';
-      document.getElementById('featured').value = song.featured || 'No';
-      document.getElementById('collection').value = song.collection || '';
-      document.getElementById('series').value = song.series || '';
-      
-      // Populate origin
-      document.getElementById('location').value = song.location || '';
-      document.getElementById('latitude').value = song.latitude || '';
-      document.getElementById('longitude').value = song.longitude || '';
-      document.getElementById('date_recorded').value = song.date_recorded || '';
-      document.getElementById('time_recorded').value = song.time_recorded || '';
-      document.getElementById('season').value = song.season || '';
-      document.getElementById('moon_phase').value = song.moon_phase || '';
-      document.getElementById('temperature').value = song.temperature || '';
-      document.getElementById('weather_conditions').value = song.weather_conditions || '';
-      
-      // Populate content
-      document.getElementById('lyrics').value = song.lyrics || '';
-      document.getElementById('public_notes').value = song.public_notes || '';
-      document.getElementById('personal_notes').value = song.personal_notes || '';
-      document.getElementById('instrumentation').value = song.instrumentation || '';
-      document.getElementById('key').value = song.key || '';
-      document.getElementById('bpm').value = song.bpm || '';
-      document.getElementById('chord_progression').value = song.chord_progression || '';
-      
-      // Populate archival
-      document.getElementById('story_behind').value = song.story_behind || '';
-      document.getElementById('inspiration').value = song.inspiration || '';
-      document.getElementById('development_history').value = song.development_history || '';
-      document.getElementById('alternative_titles').value = song.alternative_titles || '';
-      document.getElementById('demo_versions').value = song.demo_versions || '';
-      document.getElementById('future_release_notes').value = song.future_release_notes || '';
-      
-      // Populate technical
-      document.getElementById('recording_method').value = song.recording_method || '';
-      document.getElementById('equipment_used').value = song.equipment_used || '';
-      document.getElementById('samples_used').value = song.samples_used || '';
-      document.getElementById('creation_status').value = song.creation_status || 'Complete';
-      document.getElementById('last_updated').value = song.last_updated || new Date().toISOString().split('T')[0];
-      
-      // Show editor
-      songEditor.style.display = 'block';
-      songList.style.display = 'none';
-    }
-    
     // Reset the form fields
     function resetForm() {
       // Reset all input fields
       document.querySelectorAll('input, textarea, select').forEach(field => {
         if (field.type === 'checkbox') {
           field.checked = false;
-        } else {
+        } else if (field.type !== 'button') {
           field.value = '';
         }
       });
@@ -1356,10 +1216,517 @@
       modal.style.display = 'none';
     }
     
-    // Convert songs to Markdown files
-    function generateMarkdownFiles() {
-      // This would be where you'd implement the logic to
-      // convert the song data to markdown files with YAML frontmatter
-      // For this demo, we'll just show a message
-      showMessage('Generate Files', 'This feature would create Markdown files for each song with proper YAML frontmatter.');
+    // Generate markdown content for a song
+    function generateMarkdown(song) {
+      // Create YAML frontmatter
+      let markdown = '---\n';
+      
+      // Basic info
+      markdown += `title: ${song.title}\n`;
+      markdown += `slug: ${song.slug}\n`;
+      markdown += `date: ${song.date}\n`;
+      markdown += `year: ${song.year}\n`;
+      markdown += `duration: ${song.duration}\n`;
+      markdown += `status: ${song.status}\n\n`;
+      
+      // Media availability
+      markdown += '# Media Details\n';
+      markdown += 'media:\n';
+      
+      // MP3
+      if (song.has_mp3 === 'Yes' && song.mp3_url) {
+        markdown += '  - type: mp3\n';
+        markdown += `    url: ${song.mp3_url}\n`;
+        if (song.mp3_size) markdown += `    size: ${song.mp3_size}\n`;
+      }
+      
+      // WAV
+      if (song.has_wav === 'Yes' && song.wav_url) {
+        markdown += '  - type: wav\n';
+        markdown += `    url: ${song.wav_url}\n`;
+        if (song.wav_size) markdown += `    size: ${song.wav_size}\n`;
+      }
+      
+      // Stems
+      if (song.has_stems === 'Yes' && song.stems_url) {
+        markdown += '  - type: stems\n';
+        markdown += `    url: ${song.stems_url}\n`;
+        if (song.stems_size) markdown += `    size: ${song.stems_size}\n`;
+      }
+      
+      // Artwork
+      if (song.has_artwork === 'Yes' && song.artwork_url) {
+        markdown += '  - type: artwork\n';
+        markdown += `    url: ${song.artwork_url}\n`;
+        if (song.artwork_alt_text) markdown += `    alt: "${song.artwork_alt_text}"\n`;
+        if (song.artwork_title) markdown += `    title: "${song.artwork_title}"\n`;
+        if (song.artwork_year) markdown += `    year: ${song.artwork_year}\n`;
+        if (song.artwork_medium) markdown += `    medium: "${song.artwork_medium}"\n`;
+      }
+      
+      // Add other media types here
+      
+      markdown += '\n';
+      
+      // Credits
+      if (song.composers || song.performers || song.engineering || song.mixing || song.mastering || song.recording_location) {
+        markdown += '# Credits\n';
+        markdown += 'credits:\n';
+        
+        if (song.composers) {
+          markdown += '  composers:\n';
+          song.composers.split('\n').forEach(composer => {
+            if (composer.trim()) markdown += `    - ${composer.trim()}\n`;
+          });
+        }
+        
+        if (song.performers) {
+          markdown += '  performers:\n';
+          song.performers.split('\n').forEach(performer => {
+            if (performer.trim()) markdown += `    - ${performer.trim()}\n`;
+          });
+        }
+        
+        if (song.engineering) markdown += `  engineering: ${song.engineering}\n`;
+        if (song.mixing) markdown += `  mixing: ${song.mixing}\n`;
+        if (song.mastering) markdown += `  mastering: ${song.mastering}\n`;
+        
+        if (song.recording_location) {
+          markdown += `recording_location: ${song.recording_location}\n`;
+        }
+        
+        markdown += '\n';
+      }
+      
+      // Context & Categorization
+      if (song.tags || song.featured || song.collection || song.series) {
+        markdown += '# Context & Categorization\n';
+        
+        if (song.tags) {
+          const tagArray = song.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+          if (tagArray.length > 0) {
+            markdown += 'tags:\n';
+            tagArray.forEach(tag => {
+              markdown += `  - ${tag}\n`;
+            });
+          }
+        }
+        
+        if (song.featured === 'Yes') markdown += 'featured: true\n';
+        if (song.collection) markdown += `collection: ${song.collection}\n`;
+        if (song.series) markdown += `series: ${song.series}\n`;
+        
+        markdown += '\n';
+      }
+      
+      // Origin Context
+      if (song.location || song.latitude || song.longitude || song.date_recorded || 
+          song.time_recorded || song.season || song.moon_phase || song.temperature || 
+          song.weather_conditions) {
+        
+        markdown += '# Origin Context\n';
+        markdown += 'origin:\n';
+        
+        if (song.location) markdown += `  location: "${song.location}"\n`;
+        
+        if (song.latitude || song.longitude) {
+          markdown += '  coordinates:\n';
+          if (song.latitude) markdown += `    latitude: ${song.latitude}\n`;
+          if (song.longitude) markdown += `    longitude: ${song.longitude}\n`;
+        }
+        
+        if (song.season || song.moon_phase) {
+          markdown += '  celestial:\n';
+          if (song.season) markdown += `    season: "${song.season}"\n`;
+          if (song.moon_phase) markdown += `    moonPhase: "${song.moon_phase}"\n`;
+        }
+        
+        if (song.temperature || song.weather_conditions) {
+          markdown += '  environmental:\n';
+          if (song.temperature) markdown += `    temperature: ${song.temperature}\n`;
+          if (song.weather_conditions) markdown += `    conditions: "${song.weather_conditions}"\n`;
+        }
+        
+        markdown += '\n';
+      }
+      
+      // Technical content
+      if (song.instrumentation || song.key || song.bpm || song.chord_progression) {
+        if (song.instrumentation) markdown += `instrumentation: ${song.instrumentation}\n`;
+        if (song.key) markdown += `key: ${song.key}\n`;
+        if (song.bpm) markdown += `bpm: ${song.bpm}\n`;
+        if (song.chord_progression) markdown += `chord_progression: ${song.chord_progression}\n`;
+        markdown += '\n';
+      }
+      
+      // Notes
+      if (song.public_notes) {
+        markdown += `notes: ${song.public_notes}\n`;
+      }
+      
+      // End frontmatter
+      markdown += '---\n\n';
+      
+      // Add lyrics as main content
+      if (song.lyrics) {
+        markdown += song.lyrics;
+      }
+      
+      return markdown;
+    }
+    
+    // Export a single song as markdown file
+    function exportMarkdown(song) {
+      const markdown = generateMarkdown(song);
+      
+      // Create a blob and trigger download
+      const blob = new Blob([markdown], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${song.slug}.md`;
+      
+      document.body.appendChild(a);
+      a.click();
+      
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+    
+    // Add button to export all songs as markdown files
+    function addExportMarkdownButton() {
+      const actionsDiv = document.querySelector('.actions div:first-child');
+      
+      // Create button if it doesn't exist
+      if (!document.getElementById('export-markdown-btn')) {
+        const exportMarkdownBtn = document.createElement('button');
+        exportMarkdownBtn.id = 'export-markdown-btn';
+        exportMarkdownBtn.textContent = 'Export Markdown';
+        exportMarkdownBtn.addEventListener('click', exportAllMarkdown);
+        
+        actionsDiv.appendChild(exportMarkdownBtn);
+      }
+    }
+    
+    // Export all songs as markdown files (zipped)
+    function exportAllMarkdown() {
+      if (songs.length === 0) {
+        showMessage('Export', 'No songs to export.');
+        return;
+      }
+      
+      showMessage('Export', 'This would export all songs as individual markdown files. For now, please use the Edit button on each song and copy the markdown content.');
+    }
+    
+    // Add generate markdown button to song editor
+    function addGenerateMarkdownButton() {
+      const buttonGroup = document.querySelector('.button-group');
+      
+      // Create button if it doesn't exist
+      if (!document.getElementById('generate-markdown-btn')) {
+        const generateMarkdownBtn = document.createElement('button');
+        generateMarkdownBtn.id = 'generate-markdown-btn';
+        generateMarkdownBtn.type = 'button';
+        generateMarkdownBtn.textContent = 'Generate Markdown';
+        
+        generateMarkdownBtn.addEventListener('click', function() {
+          // Collect all form data to create a temporary song object
+          const tempSong = {
+            // Basic Info
+            title: document.getElementById('title').value.trim(),
+            slug: document.getElementById('slug').value.trim(),
+            date: document.getElementById('date').value,
+            year: document.getElementById('year').value,
+            duration: document.getElementById('duration').value.trim(),
+            status: document.getElementById('status').value,
+            
+            // Media Availability
+            has_mp3: hasMP3.checked ? 'Yes' : 'No',
+            has_wav: hasWAV.checked ? 'Yes' : 'No',
+            has_stems: hasStems.checked ? 'Yes' : 'No',
+            has_artwork: hasArtwork.checked ? 'Yes' : 'No',
+            has_video_acoustic: hasVideoAcoustic.checked ? 'Yes' : 'No',
+            has_video_studio: hasVideoStudio.checked ? 'Yes' : 'No',
+            has_chords: hasChords.checked ? 'Yes' : 'No',
+            
+            // Media Details
+            mp3_url: document.getElementById('mp3_url').value,
+            mp3_size: document.getElementById('mp3_size').value,
+            wav_url: document.getElementById('wav_url').value,
+            wav_size: document.getElementById('wav_size').value,
+            stems_url: document.getElementById('stems_url').value,
+            stems_size: document.getElementById('stems_size').value,
+            artwork_url: document.getElementById('artwork_url').value,
+            artwork_title: document.getElementById('artwork_title').value,
+            artwork_year: document.getElementById('artwork_year').value,
+            artwork_medium: document.getElementById('artwork_medium').value,
+            artwork_alt_text: document.getElementById('artwork_alt_text').value,
+            
+            // Credits
+            composers: document.getElementById('composers').value,
+            performers: document.getElementById('performers').value,
+            engineering: document.getElementById('engineering').value,
+            mixing: document.getElementById('mixing').value,
+            mastering: document.getElementById('mastering').value,
+            recording_location: document.getElementById('recording_location').value,
+            
+            // Context
+            tags: document.getElementById('tags').value,
+            featured: document.getElementById('featured').value,
+            collection: document.getElementById('collection').value,
+            series: document.getElementById('series').value,
+            
+            // Origin
+            location: document.getElementById('location').value,
+            latitude: document.getElementById('latitude').value,
+            longitude: document.getElementById('longitude').value,
+            date_recorded: document.getElementById('date_recorded').value,
+            time_recorded: document.getElementById('time_recorded').value,
+            season: document.getElementById('season').value,
+            moon_phase: document.getElementById('moon_phase').value,
+            temperature: document.getElementById('temperature').value,
+            weather_conditions: document.getElementById('weather_conditions').value,
+            
+            // Content
+            lyrics: document.getElementById('lyrics').value,
+            public_notes: document.getElementById('public_notes').value,
+            personal_notes: document.getElementById('personal_notes').value,
+            instrumentation: document.getElementById('instrumentation').value,
+            key: document.getElementById('key').value,
+            bpm: document.getElementById('bpm').value,
+            chord_progression: document.getElementById('chord_progression').value,
+          };
+          
+          // Generate and display markdown
+          const markdown = generateMarkdown(tempSong);
+          
+          // Create modal to show markdown
+          const markdownModal = document.createElement('div');
+          markdownModal.className = 'modal';
+          markdownModal.style.display = 'flex';
+          
+          markdownModal.innerHTML = `
+            <div class="modal-content" style="width: 90%; max-width: 800px; height: 80vh;">
+              <div class="modal-header">
+                <h2>Markdown for ${tempSong.title}</h2>
+                <span class="close">&times;</span>
+              </div>
+              <div style="margin-bottom: 15px;">
+                <p>Copy this markdown to create your song file (${tempSong.slug}.md):</p>
+              </div>
+              <div style="height: calc(100% - 150px); overflow: auto;">
+                <pre style="white-space: pre-wrap; border: 1px solid var(--border-color); padding: 10px; background-color: var(--header-color);">${markdown}</pre>
+              </div>
+              <div class="button-group">
+                <button id="copy-markdown-btn">Copy to Clipboard</button>
+                <button id="download-markdown-btn">Download as File</button>
+                <button id="close-markdown-modal-btn">Close</button>
+              </div>
+            </div>
+          `;
+          
+          document.body.appendChild(markdownModal);
+          
+          // Close button
+          const closeBtn = markdownModal.querySelector('.close');
+          closeBtn.addEventListener('click', () => {
+            document.body.removeChild(markdownModal);
+          });
+          
+          // Copy to clipboard button
+          const copyBtn = markdownModal.querySelector('#copy-markdown-btn');
+          copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(markdown)
+              .then(() => {
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                  copyBtn.textContent = 'Copy to Clipboard';
+                }, 2000);
+              })
+              .catch(err => {
+                console.error('Failed to copy: ', err);
+              });
+          });
+          
+          // Download button
+          const downloadBtn = markdownModal.querySelector('#download-markdown-btn');
+          downloadBtn.addEventListener('click', () => {
+            exportMarkdown(tempSong);
+          });
+          
+          // Close modal button
+          const closeModalBtn = markdownModal.querySelector('#close-markdown-modal-btn');
+          closeModalBtn.addEventListener('click', () => {
+            document.body.removeChild(markdownModal);
+          });
+        });
+        
+        buttonGroup.insertBefore(generateMarkdownBtn, buttonGroup.firstChild);
+      }
+    }
+    
+    // Initialize markdown features
+    function initMarkdownFeatures() {
+      addExportMarkdownButton();
+      addGenerateMarkdownButton();
+    }
+    
+    // Add event listeners function should call this
+    initMarkdownFeatures();
+    
+    // Load song data into the form for editing
+    function editSong(index) {
+      console.log("Editing song at index:", index); // Debugging
+      isEditing = true;
+      currentSongIndex = index;
+      const song = songs[index];
+      
+      if (!song) {
+        showMessage('Error', 'Song not found');
+        return;
+      }
+      
+      // Populate basic info
+      document.getElementById('title').value = song.title || '';
+      document.getElementById('slug').value = song.slug || '';
+      document.getElementById('date').value = song.date || '';
+      document.getElementById('year').value = song.year || '';
+      document.getElementById('duration').value = song.duration || '';
+      document.getElementById('status').value = song.status || 'released';
+      
+      // Populate media availability
+      document.getElementById('has_mp3').checked = song.has_mp3 === 'Yes';
+      document.getElementById('has_wav').checked = song.has_wav === 'Yes';
+      document.getElementById('has_stems').checked = song.has_stems === 'Yes';
+      document.getElementById('has_artwork').checked = song.has_artwork === 'Yes';
+      document.getElementById('has_video_acoustic').checked = song.has_video_acoustic === 'Yes';
+      document.getElementById('has_video_studio').checked = song.has_video_studio === 'Yes';
+      document.getElementById('has_chords').checked = song.has_chords === 'Yes';
+      
+      // Toggle media fields visibility based on checkboxes
+      toggleMediaFields();
+      
+      // Populate media details
+      if (song.has_mp3 === 'Yes') {
+        document.getElementById('mp3_url').value = song.mp3_url || '';
+        document.getElementById('mp3_size').value = song.mp3_size || '';
+      }
+      
+      if (song.has_wav === 'Yes') {
+        document.getElementById('wav_url').value = song.wav_url || '';
+        document.getElementById('wav_size').value = song.wav_size || '';
+      }
+      
+      if (song.has_stems === 'Yes') {
+        document.getElementById('stems_url').value = song.stems_url || '';
+        document.getElementById('stems_size').value = song.stems_size || '';
+      }
+      
+      if (song.has_artwork === 'Yes') {
+        document.getElementById('artwork_url').value = song.artwork_url || '';
+        document.getElementById('artwork_title').value = song.artwork_title || '';
+        document.getElementById('artwork_year').value = song.artwork_year || '';
+        document.getElementById('artwork_medium').value = song.artwork_medium || '';
+        document.getElementById('artwork_alt_text').value = song.artwork_alt_text || '';
+      }
+      
+      // Populate credits
+      document.getElementById('composers').value = song.composers || '';
+      document.getElementById('performers').value = song.performers || '';
+      document.getElementById('engineering').value = song.engineering || '';
+      document.getElementById('mixing').value = song.mixing || '';
+      document.getElementById('mastering').value = song.mastering || '';
+      document.getElementById('recording_location').value = song.recording_location || '';
+      
+      // Populate context
+      document.getElementById('tags').value = song.tags || '';
+      document.getElementById('featured').value = song.featured || 'No';
+      document.getElementById('collection').value = song.collection || '';
+      document.getElementById('series').value = song.series || '';
+      
+      // Populate origin
+      document.getElementById('location').value = song.location || '';
+      document.getElementById('latitude').value = song.latitude || '';
+      document.getElementById('longitude').value = song.longitude || '';
+      document.getElementById('date_recorded').value = song.date_recorded || '';
+      document.getElementById('time_recorded').value = song.time_recorded || '';
+      document.getElementById('season').value = song.season || '';
+      document.getElementById('moon_phase').value = song.moon_phase || '';
+      document.getElementById('temperature').value = song.temperature || '';
+      document.getElementById('weather_conditions').value = song.weather_conditions || '';
+      
+      // Populate content
+      document.getElementById('lyrics').value = song.lyrics || '';
+      document.getElementById('public_notes').value = song.public_notes || '';
+      document.getElementById('personal_notes').value = song.personal_notes || '';
+      document.getElementById('instrumentation').value = song.instrumentation || '';
+      document.getElementById('key').value = song.key || '';
+      document.getElementById('bpm').value = song.bpm || '';
+      document.getElementById('chord_progression').value = song.chord_progression || '';
+      
+      // Populate archival
+      document.getElementById('story_behind').value = song.story_behind || '';
+      document.getElementById('inspiration').value = song.inspiration || '';
+      document.getElementById('development_history').value = song.development_history || '';
+      document.getElementById('alternative_titles').value = song.alternative_titles || '';
+      document.getElementById('demo_versions').value = song.demo_versions || '';
+      document.getElementById('future_release_notes').value = song.future_release_notes || '';
+      
+      // Populate technical
+      document.getElementById('recording_method').value = song.recording_method || '';
+      document.getElementById('equipment_used').value = song.equipment_used || '';
+      document.getElementById('samples_used').value = song.samples_used || '';
+      document.getElementById('creation_status').value = song.creation_status || 'Complete';
+      document.getElementById('last_updated').value = song.last_updated || new Date().toISOString().split('T')[0];
+      
+      // Show editor
+      songEditor.style.display = 'block';
+      songList.style.display = 'none';
+    }
+    
+    // Add all event listeners
+    function addEventListeners() {
+      // Theme toggle
+      themeToggle.addEventListener('click', toggleTheme);
+      
+      // Button event listeners
+      addSongBtn.addEventListener('click', showAddSongForm);
+      cancelBtn.addEventListener('click', hideEditor);
+      saveBtn.addEventListener('click', saveSong);
+      exportBtn.addEventListener('click', exportSongs);
+      importBtn.addEventListener('click', function() {
+        // Trigger file input for importing
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = handleImport;
+        input.click();
+      });
+      
+      // Modal event listeners
+      closeModal.addEventListener('click', hideModal);
+      modalOkBtn.addEventListener('click', hideModal);
+      
+      // Media checkbox event listeners
+      hasMP3.addEventListener('change', toggleMediaFields);
+      hasWAV.addEventListener('change', toggleMediaFields);
+      hasStems.addEventListener('change', toggleMediaFields);
+      hasArtwork.addEventListener('change', toggleMediaFields);
+      hasVideoAcoustic.addEventListener('change', toggleMediaFields);
+      hasVideoStudio.addEventListener('change', toggleMediaFields);
+      hasChords.addEventListener('change', toggleMediaFields);
+      
+      // Tab switching
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          // Remove active class from all tabs and contents
+          tabs.forEach(t => t.classList.remove('active'));
+          tabContents.forEach(c => c.classList.remove('active'));
+          
+          // Add active class to clicked tab and corresponding content
+          tab.classList.add('active');
+          const tabId = tab.getAttribute('data-tab');
+          document.getElementById(tabId).classList.add('active');
+        });
+      });
     }
