@@ -4,40 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>rad.typo</title>
-    <link rel="stylesheet" href="derry-weather.css">
     <style>
         :root {
             --bg-color: #fff;
             --text-color: #000;
             --link-color: #0000FF;
-            --muted-color: #666;
             --secondary-color: #666;
-            --max-width: 800px;
-            --base-spacing: 20px;
-        }
-
-        [data-theme="dark"] {
-            --bg-color: #1a1a1a;
-            --text-color: #fff;
-            --link-color: #809fff;
-            --muted-color: #999;
-            --secondary-color: #999;
+            --code-bg: #f5f5f5;
         }
 
         body {
             font-family: monospace;
-            max-width: var(--max-width);
-            margin: calc(var(--base-spacing) * 2) auto;
-            padding: var(--base-spacing);
+            max-width: 800px;
+            margin: 48px auto;
+            padding: 24px;
             line-height: 1.6;
             background-color: var(--bg-color);
             color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
         }
 
         h1 {
             font-size: 24px;
-            margin-bottom: calc(var(--base-spacing) * 1.5);
+            margin: 0 0 24px 0;
+        }
+
+        h2 {
+            font-size: 16px;
+            margin: 0 0 15px 0;
         }
 
         a {
@@ -49,125 +42,375 @@
             text-decoration: underline;
         }
 
-        nav ul {
-            list-style-type: disc;
-            padding-left: var(--base-spacing);
-            margin: 0;
+        .header {
+            margin-bottom: 30px;
         }
 
-        nav ul ul {
-            list-style-type: circle;
-            margin-left: var(--base-spacing);
+        .status {
+            color: var(--secondary-color);
+            font-size: 14px;
+            margin-bottom: 20px;
         }
 
-        .date {
-            color: var(--text-color);
-            display: inline-block;
-            margin-right: 10px;
+        .breathing-dots::after {
+            content: '';
+            animation: breathe 4s infinite;
+        }
+
+        @keyframes breathe {
+            0% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+            100% { content: ''; }
+        }
+
+        .nav {
+            font-size: 14px;
+        }
+
+        .nav a {
+            font-size: 16px;
+        }
+
+        .section {
+            margin: 40px 0;
+        }
+
+        .item-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--code-bg);
+        }
+
+        .item:hover {
+            background-color: var(--code-bg);
+            margin: 0 -10px;
+            padding: 8px 10px;
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            gap: 15px;
+        }
+
+        .item-date {
+            color: var(--secondary-color);
+            font-size: 13px;
+            min-width: 80px;
+            flex-shrink: 0;
+        }
+
+        .item-title {
+            flex-grow: 1;
+        }
+
+        .album-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--code-bg);
+        }
+
+        .album-item:hover {
+            background-color: var(--code-bg);
+            margin: 0 -10px;
+            padding: 12px 10px;
+        }
+
+        .album-info {
+            flex-grow: 1;
+        }
+
+        .album-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .binary-indicator {
             font-family: monospace;
+            font-size: 14px;
+            margin-right: 15px;
+            letter-spacing: 1px;
         }
 
-        .credit {
-            margin-top: calc(var(--base-spacing) * 2);
-            color: var(--muted-color);
-            padding-top: var(--base-spacing);
-            border-top: 1px solid var(--muted-color);
+        .album-details {
+            color: var(--secondary-color);
+            font-size: 12px;
         }
 
-        .theme-toggle {
-            position: fixed;
-            top: var(--base-spacing);
-            right: var(--base-spacing);
-            background: none;
-            border: none;
-            color: var(--text-color);
-            font-family: monospace;
-            cursor: pointer;
-            padding: 5px;
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--secondary-color);
+            font-size: 14px;
+            color: var(--secondary-color);
         }
 
-        .theme-toggle:hover {
-            text-decoration: underline;
+        .footer a {
+            color: var(--secondary-color);
         }
 
-        nav li {
-            margin: 5px 0;
-        }
-        
-        /* Style for the radio link */
-        .radio-link {
-            display: inline-block;
-            margin-bottom: var(--base-spacing);
-            font-weight: bold;
-        }
-        
-        .radio-link::before {
-            content: "♫ ";
+        @media (max-width: 600px) {
+            body { 
+                margin: 20px auto;
+                padding: 15px;
+            }
+            
+            .item, .album-item { 
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+                padding: 12px 0;
+            }
+            
+            .item:hover, .album-item:hover {
+                padding: 12px 10px;
+            }
+            
+            .item-info {
+                flex-direction: row;
+                gap: 15px;
+                width: 100%;
+            }
         }
     </style>
-    <script>
-        // Immediately check and apply the theme before page renders
-        (function() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            }
-        })();
-    </script>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
+    <header class="header">
+        <h1>rad.typo</h1>
+        <div class="status">derry: 15°C ⛅ | battery: 67% ⚡ | 54°C<span class="breathing-dots"></span></div>
+        <nav class="nav">
+            <a href="radio.html">radio →</a>
+        </nav>
+    </header>
 
-    <h1>rad.typo</h1>
-    
-    <div class="location-info">
-      <span id="derry-weather" class="loading">Derry: loading...</span>
-    </div>
-    
-    <!-- Radio link featured above main navigation -->
-    <a href="/radio.html" class="radio-link">radio</a>
-    
-    <nav>
-        <ul>
-            <li>songs
-                <ul>
-                    <li><time datetime="2022-09-10" class="date">2022-09-10</time> <a href="/muriel.html" alt="Muriel song">muriel</a></li>
-                    <li><time datetime="2020-01-24" class="date">2020-01-24</time> <a href="bad-fortune.html" alt="Bad Fortune song">bad fortune</a></li>
-                    <li><time datetime="2020-01-08" class="date">2020-01-08</time> <a href="/whats-not-to-like.html" alt="What's Not to Like song">what's not to like</a></li>
-                </ul>
+    <section class="section">
+        <h2>songs</h2>
+        <ul class="item-list">
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2024-05-07</span>
+                    <span class="item-title"><a href="songs/the-one-we-didnt-get-to-record-with-steve-albini.html">the one we didn't get to record with steve albini</a></span>
+                </div>
             </li>
-            <li>poems
-                <ul>
-                    <li><time datetime="2023-11-09" class="date">2023-11-09</time> <a href="#" alt="Glass on the Ground poem in Irish" lang="ga">gloine ar an talamh</a> (glass on the ground)</li>
-                </ul>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2023-11-11</span>
+                    <span class="item-title"><a href="songs/you-do-you.html">you do you</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2023-10-22</span>
+                    <span class="item-title"><a href="songs/my-happiness-is-not-held-by-others.html">my happiness is not held by others</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2023-10-06</span>
+                    <span class="item-title"><a href="songs/liminal-depths.html">liminal depths</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2023-09-27</span>
+                    <span class="item-title"><a href="songs/think-of-a-colour.html">think of a colour</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2023-05-14</span>
+                    <span class="item-title"><a href="songs/we-were-lucky-that-we-found-each-other.html">we were lucky that we found each other</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2023-04-16</span>
+                    <span class="item-title"><a href="songs/i-havent-even-got-my-own-guitar.html">i haven't even got my own guitar</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2022-11-16</span>
+                    <span class="item-title"><a href="songs/problems-of-my-own-making.html">problems of my own making</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2022-06-25</span>
+                    <span class="item-title"><a href="songs/straight-and-narrow.html">straight and narrow</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2022-05-02</span>
+                    <span class="item-title"><a href="songs/it-wasnt-supposed-to-be-this-hard.html">it wasn't supposed to be this hard</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2022-03-28</span>
+                    <span class="item-title"><a href="songs/frontal-lobe-fritz.html">frontal lobe fritz</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2022-03-12</span>
+                    <span class="item-title"><a href="songs/red-flag.html">red flag</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2022-02-22</span>
+                    <span class="item-title"><a href="songs/let-the-making-be-enough.html">let the making be enough</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2021-12-24</span>
+                    <span class="item-title"><a href="songs/william-i-will-not-let-you-down.html">william, i will not let you down</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2021-12-04</span>
+                    <span class="item-title"><a href="songs/rad-typo.html">rad typo</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2021-10-04</span>
+                    <span class="item-title"><a href="songs/let-me-tell-you-about-john.html">let me tell you about john</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2021-08-16</span>
+                    <span class="item-title"><a href="songs/fullness-of-time.html">fullness of time</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2021-07-31</span>
+                    <span class="item-title"><a href="songs/what-now.html">what now</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2021-07-30</span>
+                    <span class="item-title"><a href="songs/graphic-designs.html">graphic designs</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2021-05-25</span>
+                    <span class="item-title"><a href="songs/you-were-right-sinead.html">you were right sinead</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2021-05-24</span>
+                    <span class="item-title"><a href="songs/slim-possibility.html">slim possibility</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2021-04-09</span>
+                    <span class="item-title"><a href="songs/write-me-a-sad-banger.html">write me a sad banger</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2020-09-10</span>
+                    <span class="item-title"><a href="songs/muriel.html">muriel</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2020-01-24</span>
+                    <span class="item-title"><a href="songs/bad-fortune.html">bad fortune</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">2020-01-08</span>
+                    <span class="item-title"><a href="songs/whats-not-to-like.html">what's not to like</a></span>
+                </div>
             </li>
         </ul>
-    </nav>
-    <div class="credit">← inspired by <a href="https://elly.town" alt="Elly's website">elly.town</a></div>
+    </section>
 
-    <script>
-        function toggleTheme() {
-            const body = document.documentElement;
-            const button = document.querySelector('.theme-toggle');
-            const isDark = body.getAttribute('data-theme') === 'dark';
-            
-            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-            button.innerHTML = isDark ? '○ dark mode' : '● light mode';
-            
-            localStorage.setItem('theme', isDark ? 'light' : 'dark');
-        }
+    <section class="section">
+        <h2>albums</h2>
+        <ul class="item-list">
+            <li class="album-item">
+                <div class="album-info">
+                    <div class="album-header">
+                        <span class="binary-indicator">■□□□□□□□</span>
+                        <div><a href="albums/hard-hitter.html">hard hitter</a></div>
+                    </div>
+                    <div class="album-details">2025-07-06 • lathe cut • 8 songs</div>
+                </div>
+            </li>
+            <li class="album-item">
+                <div class="album-info">
+                    <div class="album-header">
+                        <span class="binary-indicator">□■□□□□□□</span>
+                        <div><a href="albums/second-sleep.html">second sleep</a></div>
+                    </div>
+                    <div class="album-details">2025-12-06 • lathe cut • 10 songs</div>
+                </div>
+            </li>
+            <li class="album-item">
+                <div class="album-info">
+                    <div class="album-header">
+                        <span class="binary-indicator">■■□□□□□□</span>
+                        <div><a href="albums/red-flag.html">red flag</a></div>
+                    </div>
+                    <div class="album-details">2026 • 4/8 songs available</div>
+                </div>
+            </li>
+        </ul>
+    </section>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                document.documentElement.setAttribute('data-theme', savedTheme);
-                const button = document.querySelector('.theme-toggle');
-                button.innerHTML = savedTheme === 'dark' 
-                    ? '● light mode' 
-                    : '○ dark mode';
-            }
-        });
-    </script>
-    <script src="derry-weather.js"></script>
+    <section class="section">
+        <h2>other</h2>
+        <ul class="item-list">
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">poem</span>
+                    <span class="item-title"><a href="other/gloine-ar-an-talamh.html">gloine ar an talamh</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">essay</span>
+                    <span class="item-title"><a href="other/404-song-not-found.html">404: song not found (but still emitting CO₂)</a></span>
+                </div>
+            </li>
+            <li class="item">
+                <div class="item-info">
+                    <span class="item-date">artwork</span>
+                    <span class="item-title"><a href="other/well-be-lucky-if-i-dont-bust-out-crying.html">we'll be lucky if i don't bust out crying</a></span>
+                </div>
+            </li>
+        </ul>
+    </section>
+
+    <footer class="footer">
+        └─ <a href="infrastructure.html">infrastructure</a> | <a href="contact.html">contact</a>
+    </footer>
 </body>
 </html>
