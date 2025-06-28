@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rad.typo</title>
+    <style>
+        :root {
+            --bg-color: #fff;
+            --text-color: #000;
+            --link-color: #0000FF;
+            --secondary-color: #666;
+            --code-bg: #f5f5f5;
+        }
+
+        body {
+            font-family: monospace;
+            max-width: 800px;
+            margin: 48px auto;
+            padding: 24px;
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin: 0 0 24px 0;
+        }
+
+        h2 {
+            font-size: 16px;
+            margin: 0 0 15px 0;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .status {
+            color: var(--secondary-color);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .breathing-dots::after {
+            content: '';
+            animation: breathe 4s infinite;
+        }
+
+        @keyframes breathe {
+            0% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+            100% { content: ''; }
+        }
+
+        .section {
+            margin: 40px 0;
+        }
+
+        .item-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--code-bg);
+        }
+
+        .item:hover {
+            background-color: var(--code-bg);
+            margin: 0 -10px;
+            padding: 8px 10px;
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            gap: 15px;
+        }
+
+        .item-date {
+            color: var(--secondary-color);
+            font-size: 13px;
+            min-width: 80px;
+            flex-shrink: 0;
+        }
+
+        .item-title {
+            flex-grow: 1;
+        }
+
+        .build-status {
+            text-align: center;
+            margin: 60px 0;
+            padding: 40px 24px;
+            border: 1px solid var(--secondary-color);
+            background-color: var(--code-bg);
+        }
+
+        .build-title {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+
+        .go-live-date {
+            font-size: 16px;
+            margin: 20px 0;
+            color: var(--secondary-color);
+        }
+
+        .binary-countdown {
+            font-family: monospace;
+            font-size: 18px;
+            letter-spacing: 8px;
+            margin: 30px 0;
+            color: var(--text-color);
+            text-align: center;
+            background-color: var(--code-bg);
+            padding: 20px;
+            border: 1px solid var(--secondary-color);
+            white-space: pre-line;
+            line-height: 1.4;
+        }
+
+        .solar-section {
+            margin: 30px 0;
+        }
+
+        .solar-indicator {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        .solar-bar-container {
+            margin: 15px 0;
+        }
+
+        .solar-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--code-bg);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            margin: 10px 0;
+        }
+
+        .solar-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .solar-current {
+            color: var(--text-color);
+        }
+
+        .solar-max {
+            color: var(--secondary-color);
+        }
+
+        .solar-fill {
+            height: 100%;
+            background-color: var(--text-color);
+            width: 67%;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .weather-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .weather-day {
+            padding: 15px;
+            border: 1px solid var(--code-bg);
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .day-label {
+            color: var(--secondary-color);
+            margin-bottom: 8px;
+        }
+
+        .album-showcase {
+            text-align: center;
+            margin: 60px 0;
+        }
+
+        .album-title {
+            font-size: 20px;
+            margin: 20px 0;
+        }
+
+        .dithered-artwork {
+            width: 200px;
+            height: 200px;
+            margin: 30px auto;
+            background: 
+                radial-gradient(circle at 30% 20%, var(--text-color) 2px, transparent 2px),
+                radial-gradient(circle at 70% 30%, var(--text-color) 1px, transparent 1px),
+                radial-gradient(circle at 20% 60%, var(--text-color) 1.5px, transparent 1.5px),
+                radial-gradient(circle at 80% 70%, var(--text-color) 2px, transparent 2px),
+                radial-gradient(circle at 50% 40%, var(--text-color) 1px, transparent 1px),
+                radial-gradient(circle at 10% 80%, var(--text-color) 1.5px, transparent 1.5px),
+                radial-gradient(circle at 90% 10%, var(--text-color) 1px, transparent 1px),
+                radial-gradient(circle at 40% 90%, var(--text-color) 2px, transparent 2px);
+            background-size: 
+                20px 20px, 15px 15px, 25px 25px, 18px 18px,
+                12px 12px, 22px 22px, 16px 16px, 24px 24px;
+            background-position:
+                0 0, 10px 5px, 5px 10px, 15px 15px,
+                3px 3px, 8px 18px, 12px 2px, 6px 20px;
+            border: 1px solid var(--secondary-color);
+            animation: sparkle 8s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { 
+                filter: contrast(1) brightness(1);
+                background-size: 
+                    20px 20px, 15px 15px, 25px 25px, 18px 18px,
+                    12px 12px, 22px 22px, 16px 16px, 24px 24px;
+            }
+            50% { 
+                filter: contrast(1.1) brightness(1.05);
+                background-size: 
+                    22px 22px, 17px 17px, 27px 27px, 20px 20px,
+                    14px 14px, 24px 24px, 18px 18px, 26px 26px;
+            }
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--secondary-color);
+            font-size: 14px;
+            color: var(--secondary-color);
+        }
+
+        .footer a {
+            color: var(--secondary-color);
+        }
+
+        @media (max-width: 600px) {
+            body { 
+                margin: 20px auto;
+                padding: 15px;
+            }
+            
+            .weather-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .dithered-artwork {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .item { 
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+                padding: 12px 0;
+            }
+            
+            .item:hover {
+                padding: 12px 10px;
+            }
+            
+            .item-info {
+                flex-direction: row;
+                gap: 15px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>rad.typo</h1>
+        <div class="status"><span id="statusLine">derry: 15°C ⛅ | battery: 67% ⚡ | 54°C</span><span class="breathing-dots"></span></div>
+    </header>
+
+    <div class="build-status">
+        <div class="build-title">build in progress</div>
+        <div class="binary-countdown" id="binaryCountdown">calculating...</div>
+        <div class="cursor">█</div>
+    </div>
+
+
+
+    <section class="section">
+        <h2>solar</h2>
+        <div class="solar-bar-container">
+            <div class="solar-labels">
+                <span class="solar-current" id="solarCurrent">0.0W</span>
+                <span class="solar-max">3.5W</span>
+            </div>
+            <div class="solar-bar">
+                <div class="solar-fill"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>weather</h2>
+        <div class="weather-grid">
+            <div class="weather-day">
+                <div class="day-label">today</div>
+                <div>15°C</div>
+                <div>⛅ cloudy</div>
+            </div>
+            <div class="weather-day">
+                <div class="day-label">tomorrow</div>
+                <div>17°C</div>
+                <div>🌦 rain</div>
+            </div>
+            <div class="weather-day">
+                <div class="day-label">this week</div>
+                <div>14-19°C</div>
+                <div>🌧 mixed</div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <footer class="footer">
+        └─ 55.014662, -7.302903
+    </footer>
+
+    <script>
+        // Binary countdown to July 12, 2025 00:00:00 (The Twelfth)
+        function updateBinaryCountdown() {
+            const targetDate = new Date('2025-07-12T00:00:00');
+            const now = new Date();
+            const timeDiff = targetDate - now;
+            
+            if (timeDiff <= 0) {
+                // When countdown reaches zero, show all zeros and redirect
+                const binaryElement = document.getElementById('binaryCountdown');
+                binaryElement.textContent = '00000000\n00000000\n00000000\n00000000';
+                
+                // Hide cursor during final state
+                document.querySelector('.cursor').style.display = 'none';
+                
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+                return;
+            }
+            
+            // Convert milliseconds to seconds
+            const totalSeconds = Math.floor(timeDiff / 1000);
+            
+            // Convert to 32-bit binary (split into 4 bytes for display)
+            const binary32bit = totalSeconds.toString(2).padStart(32, '0');
+            
+            // Format as 4 lines of 8 bits each (very computer-like)
+            const byte1 = binary32bit.substr(0, 8);
+            const byte2 = binary32bit.substr(8, 8);
+            const byte3 = binary32bit.substr(16, 8);
+            const byte4 = binary32bit.substr(24, 8);
+            
+            const binaryString = `${byte1}\n${byte2}\n${byte3}\n${byte4}`;
+            
+            document.getElementById('binaryCountdown').textContent = binaryString;
+        }
+
+        // Weather API using Open-Meteo (same as your existing weather.html)
+        const LAT = 55.014662;
+        const LON = -7.302903;
+        
+        const weatherMapping = {
+            0: { icon: '☀️', description: 'clear' },
+            1: { icon: '🌤', description: 'clear' },
+            2: { icon: '⛅', description: 'cloudy' },
+            3: { icon: '☁️', description: 'overcast' },
+            45: { icon: '🌫', description: 'fog' },
+            48: { icon: '🌫', description: 'fog' },
+            51: { icon: '🌦', description: 'drizzle' },
+            53: { icon: '🌦', description: 'drizzle' },
+            55: { icon: '🌦', description: 'drizzle' },
+            61: { icon: '🌧', description: 'rain' },
+            63: { icon: '🌧', description: 'rain' },
+            65: { icon: '🌧', description: 'rain' },
+            71: { icon: '🌨', description: 'snow' },
+            73: { icon: '🌨', description: 'snow' },
+            75: { icon: '❄️', description: 'snow' },
+            80: { icon: '🌦', description: 'showers' },
+            81: { icon: '🌧', description: 'showers' },
+            82: { icon: '🌧', description: 'showers' },
+            95: { icon: '⛈', description: 'storms' },
+            96: { icon: '⛈', description: 'storms' },
+            99: { icon: '⛈', description: 'storms' }
+        };
+
+        async function updateWeather() {
+            try {
+                // Using Open-Meteo API (same as your working weather.html)
+                const response = await fetch(
+                    `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=7&timezone=Europe%2FLondon`
+                );
+                
+                if (!response.ok) {
+                    updateMockWeather();
+                    return;
+                }
+                
+                const data = await response.json();
+                
+                // Update header status line to match weather data
+                const battery = 66 + Math.random() * 2;
+                const cpuTemp = 53 + Math.random() * 2;
+                document.getElementById('statusLine').textContent = 
+                    `derry: ${todayTemp}°C ${todayWeather.icon} | battery: ${Math.round(battery)}% ⚡ | ${Math.round(cpuTemp)}°C`;
+                const todayTemp = Math.round(data.current.temperature_2m);
+                const todayWeather = weatherMapping[data.current.weather_code] || weatherMapping[0];
+                document.querySelector('.weather-day:nth-child(1) div:nth-child(2)').textContent = todayTemp + '°C';
+                document.querySelector('.weather-day:nth-child(1) div:nth-child(3)').textContent = 
+                    todayWeather.icon + ' ' + todayWeather.description;
+                
+                // Update tomorrow
+                const tomorrowTemp = Math.round(data.daily.temperature_2m_max[1]);
+                const tomorrowWeather = weatherMapping[data.daily.weather_code[1]] || weatherMapping[0];
+                document.querySelector('.weather-day:nth-child(2) div:nth-child(2)').textContent = tomorrowTemp + '°C';
+                document.querySelector('.weather-day:nth-child(2) div:nth-child(3)').textContent = 
+                    tomorrowWeather.icon + ' ' + tomorrowWeather.description;
+                
+                // Update week range
+                const weekTemps = data.daily.temperature_2m_max.slice(0, 7);
+                const minTemp = Math.round(Math.min(...weekTemps));
+                const maxTemp = Math.round(Math.max(...weekTemps));
+                document.querySelector('.weather-day:nth-child(3) div:nth-child(2)').textContent = 
+                    `${minTemp}-${maxTemp}°C`;
+                document.querySelector('.weather-day:nth-child(3) div:nth-child(3)').textContent = '🌦 mixed';
+                
+            } catch (error) {
+                console.log('Weather API failed, using mock data');
+                updateMockWeather();
+            }
+        }
+        
+        function updateMockWeather() {
+            // Fallback realistic weather for Derry in summer
+            const temps = [14, 15, 16, 17, 18];
+            const conditions = [
+                { icon: '⛅', description: 'cloudy' },
+                { icon: '🌦', description: 'light rain' },
+                { icon: '☀️', description: 'sunny' },
+                { icon: '🌧', description: 'rain' }
+            ];
+            
+            const todayTemp = temps[Math.floor(Math.random() * temps.length)];
+            const tomorrowTemp = temps[Math.floor(Math.random() * temps.length)];
+            const todayCondition = conditions[Math.floor(Math.random() * conditions.length)];
+            const tomorrowCondition = conditions[Math.floor(Math.random() * conditions.length)];
+            
+            // Update weather section
+            document.querySelector('.weather-day:nth-child(1) div:nth-child(2)').textContent = todayTemp + '°C';
+            document.querySelector('.weather-day:nth-child(1) div:nth-child(3)').textContent = 
+                todayCondition.icon + ' ' + todayCondition.description;
+            document.querySelector('.weather-day:nth-child(2) div:nth-child(2)').textContent = tomorrowTemp + '°C';
+            document.querySelector('.weather-day:nth-child(2) div:nth-child(3)').textContent = 
+                tomorrowCondition.icon + ' ' + tomorrowCondition.description;
+                
+            // Update header to match
+            const battery = 66 + Math.random() * 2;
+            const cpuTemp = 53 + Math.random() * 2;
+            document.getElementById('statusLine').textContent = 
+                `derry: ${todayTemp}°C ${todayCondition.icon} | battery: ${Math.round(battery)}% ⚡ | ${Math.round(cpuTemp)}°C`;
+        }
+
+        // Realistic solar generation based on conditions
+        function calculateSolarGeneration() {
+            const now = new Date();
+            const hour = now.getHours();
+            const minutes = now.getMinutes();
+            const timeDecimal = hour + (minutes / 60);
+            
+            // Base generation curve (sunrise ~5am, sunset ~9pm in summer)
+            let baseGeneration = 0;
+            if (timeDecimal >= 5 && timeDecimal <= 21) {
+                // Parabolic curve peaking at solar noon (13:00)
+                const solarNoon = 13;
+                const dayLength = 16; // hours of daylight
+                const timeFromNoon = Math.abs(timeDecimal - solarNoon);
+                const maxTimeFromNoon = dayLength / 2;
+                
+                if (timeFromNoon <= maxTimeFromNoon) {
+                    baseGeneration = Math.max(0, 1 - Math.pow(timeFromNoon / maxTimeFromNoon, 2));
+                }
+            }
+            
+            return baseGeneration;
+        }
+        
+        async function updateRealisticSolar() {
+            try {
+                // Get current weather to affect solar generation
+                const response = await fetch(
+                    `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=cloud_cover,temperature_2m&timezone=Europe%2FLondon`
+                );
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const cloudCover = data.current.cloud_cover || 50; // 0-100%
+                    
+                    // Calculate solar generation based on time and weather
+                    const timeBasedGeneration = calculateSolarGeneration();
+                    const cloudReduction = (100 - cloudCover) / 100; // 0-1
+                    
+                    // Solar generation: 0-3.5W max, reduced by clouds
+                    const maxGeneration = 3.5;
+                    const actualGeneration = timeBasedGeneration * cloudReduction * maxGeneration;
+                    
+                    // Add small random variation for realism
+                    const variation = (Math.random() - 0.5) * 0.2;
+                    const finalGeneration = Math.max(0, actualGeneration + variation);
+                    
+                    // Update display
+                    const solarText = document.getElementById('solarCurrent');
+                    solarText.textContent = finalGeneration.toFixed(1) + 'W';
+                    
+                    // Update visual bar (0-3.5W = 0-100%)
+                    const solarBar = document.querySelector('.solar-fill');
+                    const barPercentage = Math.min(100, (finalGeneration / maxGeneration) * 100);
+                    solarBar.style.width = barPercentage + '%';
+                    
+                } else {
+                    // Fallback to time-based only
+                    updateSolarTimeOnly();
+                }
+                
+            } catch (error) {
+                updateSolarTimeOnly();
+            }
+        }
+        
+        function updateSolarTimeOnly() {
+            const timeBasedGeneration = calculateSolarGeneration();
+            const maxGeneration = 3.5;
+            const estimated = timeBasedGeneration * maxGeneration * 0.7; // Assume some clouds
+            
+            // Add variation
+            const variation = (Math.random() - 0.5) * 0.3;
+            const finalGeneration = Math.max(0, estimated + variation);
+            
+            const solarText = document.getElementById('solarCurrent');
+            solarText.textContent = finalGeneration.toFixed(1) + 'W';
+            
+            const solarBar = document.querySelector('.solar-fill');
+            const barPercentage = Math.min(100, (finalGeneration / maxGeneration) * 100);
+            solarBar.style.width = barPercentage + '%';
+        }
+
+        // Update binary countdown every second (the artwork is the system)
+        setInterval(updateBinaryCountdown, 1000);
+        updateBinaryCountdown(); // Initial call
+        
+        // Update weather every 30 minutes
+        setInterval(updateWeather, 1800000);
+        updateWeather(); // Initial call
+        
+        // Update solar every 30 seconds (realistic for solar monitoring)
+        setInterval(updateRealisticSolar, 30000);
+        updateRealisticSolar(); // Initial call
+    </script>
+</body>
+</html>
