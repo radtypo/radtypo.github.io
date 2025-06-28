@@ -49,6 +49,38 @@
             100% { content: ''; }
         }
 
+        .binary-countdown {
+            margin: 60px 0;
+            text-align: left;
+        }
+
+        .binary-display {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 4px;
+            margin: 20px 0;
+            max-width: 600px;
+        }
+
+        .binary-square {
+            width: 12px;
+            height: 12px;
+            border: 1px solid var(--secondary-color);
+            background-color: var(--bg-color);
+            transition: background-color 0.1s ease;
+        }
+
+        .binary-square.filled {
+            background-color: var(--text-color);
+        }
+
+        .binary-info {
+            font-size: 12px;
+            color: var(--secondary-color);
+            margin-top: 10px;
+        }
+
         .footer {
             margin-top: 60px;
             padding-top: 20px;
@@ -70,6 +102,13 @@
         <h1>rad.typo</h1>
         <div class="status"><span id="statusLine">derry: 15°C ⛅ | battery: 67% ⚡ | 54°C</span><span class="breathing-dots"></span></div>
     </header>
+
+    <div class="binary-countdown">
+        <div class="binary-display" id="binaryDisplay"></div>
+        <div class="binary-info">
+            <span id="timeRemaining">calculating...</span>
+        </div>
+    </div>
 
     <footer class="footer">
         └─ 55.014662, -7.302903
@@ -152,9 +191,63 @@
                 `derry: ${todayTemp}°C ${todayCondition.icon} | battery: ${Math.round(battery)}% ⚡ | ${Math.round(cpuTemp)}°C`;
         }
         
+        function updateBinaryCountdown() {
+            // Target: July 12th, 2025 at midnight in Derry (Europe/London timezone)
+            const targetDate = new Date('2025-07-12T00:00:00+01:00'); // BST (British Summer Time)
+            const now = new Date();
+            const timeDiff = targetDate - now;
+            
+            if (timeDiff <= 0) {
+                // Countdown finished - show all zeros
+                displayBinaryCountdown(0);
+                document.getElementById('timeRemaining').textContent = '0 seconds';
+                return;
+            }
+            
+            // Convert milliseconds to seconds
+            const totalSeconds = Math.floor(timeDiff / 1000);
+            
+            // Update display
+            displayBinaryCountdown(totalSeconds);
+            
+            // Show just the number of seconds
+            document.getElementById('timeRemaining').textContent = `${totalSeconds} seconds`;
+        }
+        
+        function displayBinaryCountdown(seconds) {
+            const binaryString = seconds.toString(2);
+            const container = document.getElementById('binaryDisplay');
+            
+            // Clear existing squares
+            container.innerHTML = '';
+            
+            // Add squares for each binary digit
+            for (let i = 0; i < binaryString.length; i++) {
+                const square = document.createElement('div');
+                square.className = 'binary-square';
+                
+                if (binaryString[i] === '1') {
+                    square.classList.add('filled');
+                }
+                
+                container.appendChild(square);
+            }
+            
+            // If no squares (0 seconds), show at least one empty square
+            if (binaryString.length === 0 || seconds === 0) {
+                const square = document.createElement('div');
+                square.className = 'binary-square';
+                container.appendChild(square);
+            }
+        }
+        
         // Update weather every 30 minutes
         setInterval(updateWeather, 1800000);
         updateWeather(); // Initial call
+        
+        // Update binary countdown every second
+        setInterval(updateBinaryCountdown, 1000);
+        updateBinaryCountdown(); // Initial call
     </script>
 </body>
 </html>
