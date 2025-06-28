@@ -3,37 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rad.typo - radio</title>
+    <title>rad.typo</title>
     <style>
         :root {
             --bg-color: #fff;
             --text-color: #000;
             --link-color: #0000FF;
             --secondary-color: #666;
-            --spacing: 20px;
-        }
-
-        [data-theme="dark"] {
-            --bg-color: #1a1a1a;
-            --text-color: #fff;
-            --link-color: #809fff;
-            --secondary-color: #999;
+            --code-bg: #f5f5f5;
         }
 
         body {
             font-family: monospace;
             max-width: 800px;
-            margin: 40px auto;
-            padding: var(--spacing);
+            margin: 48px auto;
+            padding: 24px;
             line-height: 1.6;
             background-color: var(--bg-color);
             color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
         }
 
         h1 {
             font-size: 24px;
-            margin-bottom: 10px;
+            margin: 0 0 24px 0;
+        }
+
+        h2 {
+            font-size: 16px;
+            margin: 0 0 15px 0;
         }
 
         a {
@@ -45,356 +42,422 @@
             text-decoration: underline;
         }
 
-        .date {
-            color: var(--secondary-color);
-            margin-bottom: 10px;
+        .header {
+            margin-bottom: 30px;
+            position: relative;
         }
 
         .back {
-            margin-bottom: 30px;
-            display: block;
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 14px;
         }
 
-        .theme-toggle {
-            position: fixed;
-            top: var(--spacing);
-            right: var(--spacing);
-            background: none;
-            border: none;
-            color: var(--text-color);
-            font-family: monospace;
-            cursor: pointer;
-            padding: 5px;
+        .status {
+            color: var(--secondary-color);
+            font-size: 14px;
+            margin-bottom: 20px;
         }
 
-        /* Radio Player Styles */
-        .radio-container {
+        .breathing-dots::after {
+            content: '';
+            animation: breathe 4s infinite;
+        }
+
+        @keyframes breathe {
+            0% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+            100% { content: ''; }
+        }
+
+        .player {
             border: 1px solid var(--secondary-color);
             border-radius: 4px;
-            padding: 20px;
-            margin-bottom: 30px;
+            padding: 24px;
+            margin-bottom: 40px;
         }
 
         .now-playing {
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px dashed var(--secondary-color);
+            margin-bottom: 24px;
+            font-size: 20px;
+            border-bottom: 1px solid var(--secondary-color);
+            padding-bottom: 16px;
         }
 
-        .current-track {
-            font-weight: bold;
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--secondary-color);
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 16px 0 4px 0;
         }
 
-        .player-controls {
+        .progress-fill {
+            height: 100%;
+            background-color: var(--text-color);
+            border-radius: 4px;
+            width: 0%;
+        }
+
+        .time-display {
             display: flex;
-            align-items: center;
-            margin-bottom: 20px;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--secondary-color);
+            margin-bottom: 16px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            border-top: 1px solid var(--secondary-color);
+            padding-top: 16px;
         }
 
         .control-btn {
             background: none;
             border: 1px solid var(--secondary-color);
             color: var(--text-color);
-            padding: 5px 10px;
-            margin-right: 10px;
-            cursor: pointer;
             font-family: monospace;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
         }
 
         .control-btn:hover {
-            background-color: var(--secondary-color);
-            color: var(--bg-color);
+            background-color: var(--code-bg);
         }
 
-        .track-progress {
-            width: 100%;
-            height: 5px;
-            background-color: var(--secondary-color);
-            position: relative;
-            margin-top: 10px;
-        }
-
-        .progress-bar {
-            height: 100%;
+        .control-btn.active {
             background-color: var(--link-color);
-            width: 0%;
+            color: var(--bg-color);
+            border-color: var(--link-color);
         }
 
-        .playlist {
-            margin-top: 30px;
+        .section {
+            margin: 40px 0;
         }
 
-        .playlist-track {
-            padding: 8px 0;
-            border-bottom: 1px dotted var(--secondary-color);
+        .item-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .item {
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--code-bg);
             cursor: pointer;
         }
 
-        .playlist-track:hover {
-            background-color: rgba(0,0,0,0.05);
+        .item:hover {
+            background-color: var(--code-bg);
+            margin: 0 -10px;
+            padding: 8px 10px;
         }
 
-        [data-theme="dark"] .playlist-track:hover {
-            background-color: rgba(255,255,255,0.05);
-        }
-
-        .track-playing {
+        .item.current {
+            color: var(--link-color);
             font-weight: bold;
         }
 
-        .track-playing:before {
-            content: "► ";
+        .item-info {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            gap: 15px;
         }
 
-        .track-duration {
+        .item-title {
+            flex: 1;
+            font-size: 13px;
+        }
+
+        .item-duration {
+            color: var(--secondary-color);
+            font-size: 13px;
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--secondary-color);
+            font-size: 14px;
             color: var(--secondary-color);
         }
 
-        /* Visibility support */
-        .visibility-note {
-            margin-top: 30px;
-            padding: 10px;
-            background-color: rgba(0,0,0,0.05);
-            border-radius: 4px;
-            font-size: 0.9em;
+        .footer a {
+            color: var(--secondary-color);
         }
 
-        [data-theme="dark"] .visibility-note {
-            background-color: rgba(255,255,255,0.05);
+        @media (max-width: 600px) {
+            body { 
+                margin: 20px auto;
+                padding: 15px;
+            }
+            
+            .item { 
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+                padding: 12px 0;
+            }
+            
+            .item:hover {
+                padding: 12px 10px;
+            }
+            
+            .item-info {
+                flex-direction: row;
+                gap: 15px;
+                width: 100%;
+            }
         }
     </style>
-    <script>
-        // Immediately check and apply the theme before page renders
-        (function() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            }
-        })();
-    </script>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
+    <header class="header">
+        <a href="/" class="back">← back</a>
+        <h1>rad.typo</h1>
+        <div class="status">derry: 15°C ⛅ | battery: 67% ⚡ | 54°C<span class="breathing-dots"></span></div>
+    </header>
 
-    <a href="/" class="back">← back</a>
-    
-    <h1>rad.typo radio</h1>
-    <div class="date">continuous playback</div>
-
-    <div class="radio-container">
-        <div class="now-playing">
-            <div>Now playing:</div>
-            <div class="current-track" id="current-track">muriel</div>
-            <div class="track-progress">
-                <div class="progress-bar" id="progress-bar"></div>
-            </div>
+    <div class="player">
+        <div class="now-playing" id="nowPlaying">fullness of time</div>
+        
+        <div class="progress-bar" id="progressBar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        
+        <div class="time-display">
+            <span id="currentTime">0:00</span>
+            <span id="totalTime">0:00</span>
         </div>
 
-        <div class="player-controls">
-            <button class="control-btn" id="prev-btn">← prev</button>
-            <button class="control-btn" id="play-btn">▶ play</button>
-            <button class="control-btn" id="next-btn">next →</button>
-        </div>
-
-        <audio id="audio-player"></audio>
-
-        <div class="playlist">
-            <div class="playlist-track track-playing" data-src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" data-name="muriel">
-                <span class="track-name">muriel</span>
-                <span class="track-duration">3:43</span>
-            </div>
-            <div class="playlist-track" data-src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" data-name="bad fortune">
-                <span class="track-name">bad fortune</span>
-                <span class="track-duration">3:43</span>
-            </div>
-            <div class="playlist-track" data-src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" data-name="what's not to like">
-                <span class="track-name">what's not to like</span>
-                <span class="track-duration">3:43</span>
-            </div>
+        <div class="controls">
+            <button class="control-btn" id="prevBtn">← prev</button>
+            <button class="control-btn" id="playBtn">▶ play</button>
+            <button class="control-btn" id="nextBtn">next →</button>
+            <button class="control-btn" id="shuffleBtn">shuffle</button>
+            <button class="control-btn" id="loopBtn">loop</button>
         </div>
     </div>
 
-    <div class="visibility-note">
-        Note: The radio player will continue playing even if you switch to another browser tab.
-    </div>
+    <section class="section">
+        <h2>songs</h2>
+        <ul class="item-list" id="playlist"></ul>
+    </section>
+
+    <footer class="footer">
+        └─ <a href="infrastructure.html">infrastructure</a> | <a href="contact.html">contact</a>
+    </footer>
+
+    <audio id="audioPlayer" preload="none"></audio>
 
     <script>
-        function toggleTheme() {
-            const body = document.documentElement;
-            const button = document.querySelector('.theme-toggle');
-            const isDark = body.getAttribute('data-theme') === 'dark';
+        const songs = [
+            { title: "fullness of time", duration: "3:42", file: "fullness-of-time.mp3" },
+            { title: "the one we didn't get to record with steve albini", duration: "4:17", file: "steve-albini.mp3" },
+            { title: "bad fortune", duration: "3:28", file: "bad-fortune.mp3" },
+            { title: "what's not to like?", duration: "2:51", file: "whats-not-to-like.mp3" },
+            { title: "birthday cake", duration: "4:03", file: "birthday-cake.mp3" },
+            { title: "muriel", duration: "3:15", file: "muriel.mp3" },
+            { title: "frontal lobe fritz", duration: "2:47", file: "frontal-lobe-fritz.mp3" },
+            { title: "straight and narrow", duration: "3:33", file: "straight-and-narrow.mp3" },
+            { title: "hard hitter", duration: "4:21", file: "hard-hitter.mp3" },
+            { title: "where i'm at", duration: "3:09", file: "where-im-at.mp3" },
+            { title: "i haven't even got my own guitar", duration: "2:58", file: "no-guitar.mp3" },
+            { title: "now you see me", duration: "3:44", file: "now-you-see-me.mp3" },
+            { title: "graphic designs", duration: "3:12", file: "graphic-designs.mp3" },
+            { title: "i am queen panda", duration: "2:39", file: "queen-panda.mp3" },
+            { title: "you do you", duration: "4:05", file: "you-do-you.mp3" }
+        ];
+
+        let currentSongIndex = 0;
+        let isPlaying = false;
+        let isShuffled = false;
+        let isLooped = false;
+        let shuffledPlaylist = [];
+
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const shuffleBtn = document.getElementById('shuffleBtn');
+        const loopBtn = document.getElementById('loopBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+        const currentTimeEl = document.getElementById('currentTime');
+        const totalTimeEl = document.getElementById('totalTime');
+        const nowPlayingEl = document.getElementById('nowPlaying');
+
+        function init() {
+            createPlaylist();
+            loadState();
             
-            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-            button.innerHTML = isDark ? '○ dark mode' : '● light mode';
+            playBtn.addEventListener('click', togglePlay);
+            prevBtn.addEventListener('click', prevTrack);
+            nextBtn.addEventListener('click', nextTrack);
+            shuffleBtn.addEventListener('click', toggleShuffle);
+            loopBtn.addEventListener('click', toggleLoop);
             
-            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            progressBar.addEventListener('click', (e) => {
+                if (audioPlayer.duration) {
+                    const rect = progressBar.getBoundingClientRect();
+                    const progress = (e.clientX - rect.left) / rect.width;
+                    audioPlayer.currentTime = progress * audioPlayer.duration;
+                }
+            });
+            
+            audioPlayer.addEventListener('timeupdate', updateProgress);
+            audioPlayer.addEventListener('ended', () => !isLooped && nextTrack());
+            audioPlayer.addEventListener('loadedmetadata', () => {
+                totalTimeEl.textContent = formatTime(audioPlayer.duration);
+            });
+            
+            setInterval(saveState, 5000);
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                document.documentElement.setAttribute('data-theme', savedTheme);
-                const button = document.querySelector('.theme-toggle');
-                button.innerHTML = savedTheme === 'dark' 
-                    ? '● light mode' 
-                    : '○ dark mode';
-            }
-
-            // Radio Player Implementation using an alternative approach
-            const audioPlayer = document.getElementById('audio-player');
-            const playBtn = document.getElementById('play-btn');
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            const progressBar = document.getElementById('progress-bar');
-            const currentTrackDisplay = document.getElementById('current-track');
-            const playlistTracks = document.querySelectorAll('.playlist-track');
-            
-            // Track data with full source elements to better handle GitHub files
-            const tracks = [
-                {
-                    name: "muriel",
-                    element: `<source src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" type="audio/mpeg">`
-                },
-                {
-                    name: "bad fortune",
-                    element: `<source src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" type="audio/mpeg">`
-                },
-                {
-                    name: "what's not to like",
-                    element: `<source src="https://github.com/radtypo/radtypo.github.io/releases/download/v1.0.0-bad-fortune/bad-fortune.mp3" type="audio/mpeg">`
-                }
-            ];
-            
-            let currentTrackIndex = 0;
-            let isPlaying = false;
-
-            // Initial load
-            loadTrack(currentTrackIndex);
-
-            // Play/Pause button
-            playBtn.addEventListener('click', togglePlay);
-
-            // Previous track
-            prevBtn.addEventListener('click', () => {
-                currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-                loadTrack(currentTrackIndex);
-                if (isPlaying) {
-                    playAudio();
-                }
+        function createPlaylist() {
+            const playlistEl = document.getElementById('playlist');
+            songs.forEach((song, index) => {
+                const songEl = document.createElement('li');
+                songEl.className = 'item';
+                songEl.innerHTML = `
+                    <div class="item-info">
+                        <span class="item-title">${song.title}</span>
+                    </div>
+                    <span class="item-duration">${song.duration}</span>
+                `;
+                songEl.addEventListener('click', () => playTrack(index));
+                playlistEl.appendChild(songEl);
             });
+        }
 
-            // Next track
-            nextBtn.addEventListener('click', () => {
-                currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-                loadTrack(currentTrackIndex);
-                if (isPlaying) {
-                    playAudio();
-                }
+        function playTrack(index) {
+            currentSongIndex = index;
+            const song = songs[currentSongIndex];
+            
+            audioPlayer.src = `audio/${song.file}`;
+            nowPlayingEl.textContent = song.title;
+            
+            document.querySelectorAll('.item').forEach((item, i) => {
+                item.classList.toggle('current', i === currentSongIndex);
             });
-
-            // Track ended event
-            audioPlayer.addEventListener('ended', () => {
-                currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-                loadTrack(currentTrackIndex);
-                playAudio();
-            });
-
-            // Update progress bar
-            audioPlayer.addEventListener('timeupdate', updateProgress);
-
-            // Click on playlist tracks
-            playlistTracks.forEach((track, index) => {
-                track.addEventListener('click', () => {
-                    currentTrackIndex = index;
-                    loadTrack(currentTrackIndex);
-                    playAudio();
-                });
-            });
-
-            // Page visibility support
-            document.addEventListener('visibilitychange', handleVisibilityChange);
-
-            // Helper Functions
-            function loadTrack(index) {
-                // Clear and reload the audio element
-                audioPlayer.innerHTML = '';
-                audioPlayer.innerHTML = tracks[index].element;
-                
-                // Force browser to load the audio
-                audioPlayer.load();
-                
-                // Update display
-                currentTrackDisplay.textContent = tracks[index].name;
-                
-                // Update playlist visual state
-                playlistTracks.forEach((t, i) => {
-                    if (i === index) {
-                        t.classList.add('track-playing');
-                    } else {
-                        t.classList.remove('track-playing');
-                    }
-                });
-                
-                // Reset progress
-                progressBar.style.width = '0%';
-                
-                // Add error handling
-                audioPlayer.onerror = function() {
-                    console.error('Error loading audio:', audioPlayer.error);
-                    alert('Sorry, there was an error loading the audio. Please try again later.');
-                };
-            }
             
-            function togglePlay() {
-                if (isPlaying) {
-                    audioPlayer.pause();
-                    playBtn.textContent = '▶ play';
-                } else {
-                    playAudio();
-                }
-                isPlaying = !isPlaying;
+            if (isPlaying) {
+                audioPlayer.play().catch(e => console.log('Playback failed:', e));
             }
+        }
+
+        function togglePlay() {
+            if (isPlaying) {
+                audioPlayer.pause();
+                playBtn.textContent = '▶ play';
+                isPlaying = false;
+            } else {
+                if (!audioPlayer.src) playTrack(currentSongIndex);
+                audioPlayer.play().then(() => {
+                    playBtn.textContent = '⏸ pause';
+                    isPlaying = true;
+                }).catch(e => console.log('Playback failed:', e));
+            }
+        }
+
+        function prevTrack() {
+            const playlist = isShuffled ? shuffledPlaylist : songs.map((_, i) => i);
+            const currentIndex = playlist.indexOf(currentSongIndex);
+            const prevIndex = currentIndex > 0 ? currentIndex - 1 : playlist.length - 1;
+            playTrack(playlist[prevIndex]);
+        }
+
+        function nextTrack() {
+            const playlist = isShuffled ? shuffledPlaylist : songs.map((_, i) => i);
+            const currentIndex = playlist.indexOf(currentSongIndex);
+            const nextIndex = currentIndex < playlist.length - 1 ? currentIndex + 1 : 0;
+            playTrack(playlist[nextIndex]);
+        }
+
+        function toggleShuffle() {
+            isShuffled = !isShuffled;
+            shuffleBtn.classList.toggle('active', isShuffled);
             
-            function playAudio() {
-                // Play with error handling
-                const playPromise = audioPlayer.play();
-                
-                if (playPromise !== undefined) {
-                    playPromise.then(() => {
-                        // Playback started successfully
-                        playBtn.textContent = '❚❚ pause';
-                        isPlaying = true;
-                    }).catch(error => {
-                        // Auto-play was prevented or there was an error
-                        console.error('Playback failed:', error);
-                        playBtn.textContent = '▶ play';
-                        isPlaying = false;
-                    });
+            if (isShuffled) {
+                shuffledPlaylist = [...songs.keys()];
+                for (let i = shuffledPlaylist.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffledPlaylist[i], shuffledPlaylist[j]] = [shuffledPlaylist[j], shuffledPlaylist[i]];
                 }
             }
-            
-            function updateProgress() {
-                if (audioPlayer.duration) {
-                    const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-                    progressBar.style.width = `${progress}%`;
-                }
+        }
+
+        function toggleLoop() {
+            isLooped = !isLooped;
+            loopBtn.classList.toggle('active', isLooped);
+            audioPlayer.loop = isLooped;
+        }
+
+        function updateProgress() {
+            if (audioPlayer.duration) {
+                const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                progressFill.style.width = progress + '%';
+                currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+                totalTimeEl.textContent = formatTime(audioPlayer.duration);
             }
-            
-            function handleVisibilityChange() {
-                if (document.hidden) {
-                    // Tab is hidden, do nothing special
-                } else {
-                    // Tab is visible again, update UI if needed
-                    if (isPlaying) {
-                        playBtn.textContent = '❚❚ pause';
-                    } else {
-                        playBtn.textContent = '▶ play';
-                    }
-                }
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function saveState() {
+            localStorage.setItem('playerState', JSON.stringify({
+                currentSongIndex,
+                isShuffled,
+                isLooped,
+                shuffledPlaylist,
+                currentTime: audioPlayer.currentTime || 0
+            }));
+        }
+
+        function loadState() {
+            const saved = localStorage.getItem('playerState');
+            if (saved) {
+                const state = JSON.parse(saved);
+                currentSongIndex = state.currentSongIndex || 0;
+                isShuffled = state.isShuffled || false;
+                isLooped = state.isLooped || false;
+                shuffledPlaylist = state.shuffledPlaylist || [];
+                
+                shuffleBtn.classList.toggle('active', isShuffled);
+                loopBtn.classList.toggle('active', isLooped);
+                audioPlayer.loop = isLooped;
+                
+                playTrack(currentSongIndex);
+                if (state.currentTime) audioPlayer.currentTime = state.currentTime;
             }
-        });
+        }
+
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.setActionHandler('play', togglePlay);
+            navigator.mediaSession.setActionHandler('pause', togglePlay);
+            navigator.mediaSession.setActionHandler('previoustrack', prevTrack);
+            navigator.mediaSession.setActionHandler('nexttrack', nextTrack);
+        }
+
+        init();
     </script>
 </body>
 </html>
+        
