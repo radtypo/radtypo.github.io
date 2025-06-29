@@ -1,0 +1,43 @@
+← back
+rad.typo
+Derry: 21 °C ☁️ | Battery: 67 % ⚡ | CPU Temp: 53 °C
+404: Song Not Found (But Still Emitting CO₂)
+An essay about music streaming, solar panels, and what happens when you actually try to build a meaningful alternative.
+
+How I Got Here
+I landed on Forgotify—a site that surfaces songs on Spotify that have never been played—and clicked on one. That moment gave it its first and possibly only stream: mine.
+
+Spotify now hosts over 100 million tracks, and around 20 million of them have never been played. That track I played? One of them. Each of these unheard tracks still consumes server space, cooling water, and electricity.
+
+I've released music across platforms—MySpace, YouTube, Spotify—tracking streams, optimizing metadata, and chasing listener stats. The economics are stark: artists typically earn £0.003 per stream, meaning 1,000 plays ≈ £3. Spotify now withholds royalties on tracks with fewer than 1,000 streams per year, meaning most artists earn nothing at all.
+
+The Invisible Weight of Streaming
+Data centres globally consume 240–340 TWh/year, comparable to the UK's total electricity use, and account for 2–4 % of global CO₂ emissions. In Ireland, data centres already consume 18 % of national electricity, projected to hit 28 % by 2031.
+
+Water is another hidden cost. Cooling a single gigabyte of data can use up to 200 litres of water. Streaming a 50 MB song = ~0.5 litres.
+
+"The planet pays nearly 10 times more to deliver your song than the artist earns from it."
+My Stream Calculations
+Financial Metric	Value per Stream	Explanation
+Gross Payout	0.02p – 0.04p	Paid by platform
+After Distributor Cut	~0.017p – 0.034p	10–15% cut
+After Label Cut	~0.0025p – 0.017p	50–85% cut
+Artist Receives	~0.01p (avg)	Final share
+Environmental Metric	Per Stream	Estimated Cost
+Energy	~0.0045 kWh	~0.09p (at £0.19/kWh)
+Emissions	~2 g CO₂	~0.02p (at £100/tonne CO₂)
+Water Use	~0.5 L	~0.0005p (at £1/1,000 L)
+Total Impact	—	~0.11p
+Building Something Different
+You’re reading this article on a solar-powered server built on a £25 Raspberry Pi, powered by a £50 solar panel, and backed by a £25 battery. It holds 64 tracks and supports up to 25 listeners. When the sun shines, it works. When it doesn't, it doesn't.
+
+This setup carries a footprint—panel, battery, transformer—but these are mostly one-off costs. With scale, solar infrastructure could support bigger streaming farms or parts of the traditional stack.
+
+Solar Server Stream Calculations
+Environmental Metric	Per Stream	Estimated Cost
+Energy	~0.000175 kWh	~£0.000033
+Emissions	~0 g CO₂	£0.00
+Water Use	~0 L	£0.00
+Total Impact	—	~£0.000033
+Compared to a traditional stream (0.11p), the solar server reduces environmental impact by ~99%.
+└─ infrastructure | contact
