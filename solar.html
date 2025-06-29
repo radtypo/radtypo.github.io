@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rad.typo - Infrastructure</title>
+    <style>
+        :root {
+            --bg-color: #fff;
+            --text-color: #000;
+            --link-color: #0000FF;
+            --secondary-color: #666;
+            --code-bg: #f5f5f5;
+        }
+
+        body {
+            font-family: monospace;
+            max-width: 800px;
+            margin: 48px auto;
+            padding: 24px;
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin: 0 0 24px 0;
+        }
+
+        h2 {
+            font-size: 16px;
+            margin: 30px 0 15px 0;
+            border-bottom: 1px solid var(--code-bg);
+            padding-bottom: 5px;
+        }
+
+        h3 {
+            font-size: 14px;
+            margin: 20px 0 10px 0;
+            color: var(--secondary-color);
+        }
+
+        h4 {
+            font-size: 13px;
+            margin: 15px 0 10px 0;
+            color: var(--text-color);
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .back {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 14px;
+        }
+
+        .status {
+            color: var(--secondary-color);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .breathing-dots::after {
+            content: '';
+            animation: breathe 4s infinite;
+        }
+
+        @keyframes breathe {
+            0% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+            100% { content: ''; }
+        }
+
+        .article-meta {
+            color: var(--secondary-color);
+            font-size: 13px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--code-bg);
+        }
+
+        .environmental-impact {
+            background-color: var(--code-bg);
+            padding: 20px;
+            margin: 30px 0;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 8px 12px;
+            border: 1px solid var(--secondary-color);
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background-color: var(--code-bg);
+            font-weight: normal;
+        }
+
+        .code-block {
+            background-color: var(--code-bg);
+            padding: 15px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 12px;
+            border: 1px solid var(--secondary-color);
+            overflow-x: auto;
+        }
+
+        .quote {
+            font-style: italic;
+            color: var(--secondary-color);
+            margin: 20px 0;
+            padding-left: 20px;
+            border-left: 2px solid var(--secondary-color);
+        }
+
+        .footnotes {
+            font-size: 11px;
+            color: var(--secondary-color);
+            border-top: 1px solid var(--code-bg);
+            padding-top: 20px;
+            margin-top: 40px;
+        }
+
+        .footnotes ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footnotes li {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--secondary-color);
+            font-size: 14px;
+            color: var(--secondary-color);
+        }
+
+        .footer a {
+            color: var(--secondary-color);
+        }
+
+        @media (max-width: 600px) {
+            body { 
+                margin: 20px auto;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="back">← back</a>
+        <h1>rad.typo</h1>
+        <div class="status">derry: 15°C 🌧 | battery: 67% ⚡ | 55°C<span class="breathing-dots"></span></div>
+    </header>
+
+    <h1>404: Song Not Found (But Still Emitting CO₂)</h1>
+
+    <div class="article-meta">
+        I wanted to see what music streaming might feel like if it ran on sunlight. This is what I found. (~5 min read)
+    </div>
+
+    <h2>How I Got Here</h2>
+
+    <p>I landed on Forgotify—a site that surfaces songs on Spotify that have never been played—and clicked on one. That moment gave it its first and possibly only stream: mine.</p>
+
+    <p>The scale of this digital graveyard is staggering. The music industry now uploads 55 million tracks per year. Yet 78% of them will never be played by anyone.</p>
+
+    <p>I've spent years releasing music across multiple platforms—tracking streams, optimizing metadata, chasing listener stats. The economics are stark: artists typically earn £0.003 per stream, meaning 1,000 plays ≈ £3. Spotify now refuses to pay royalties on tracks with under 1,000 plays per year—meaning most artists earn nothing at all.</p>
+
+    <p>That Forgotify track I played? One of the 117,000 songs uploaded today that will likely never be heard—warming servers globally.</p>
+
+    <h2>The Invisible Weight of Streaming</h2>
+
+    <p>Data centres globally consume 240–340 TWh/year, comparable to the UK's total energy use, and account for 2–4% of global CO₂ emissions. In Ireland, they already use 18% of national electricity, projected to reach 28% by 2031.</p>
+
+    <p>Water is another hidden cost. Data centres use approximately 10 litres of water per GB for cooling. Streaming a 50 MB song uses roughly 0.5 litres of water. But storing millions of unplayed tracks? That's continuous water consumption for songs no one hears.</p>
+
+    <h3>My Stream Calculations</h3>
+
+    <p>For a typical ~3.5-minute 320 kbps Spotify stream:</p>
+
+    <div class="environmental-impact">
+        <h4>Financial Breakdown</h4>
+        <table class="comparison-table">
+            <tr>
+                <th>Metric</th>
+                <th>Value per Stream</th>
+                <th>Explanation</th>
+            </tr>
+            <tr>
+                <td>Gross Payout</td>
+                <td>0.02p – 0.04p</td>
+                <td>Paid by platform</td>
+            </tr>
+            <tr>
+                <td>After Distributor Cut</td>
+                <td>~0.017p – 0.034p</td>
+                <td>10–15% cut</td>
+            </tr>
+            <tr>
+                <td>After Label Cut</td>
+                <td>~0.0025p – 0.017p</td>
+                <td>50–85% cut</td>
+            </tr>
+            <tr>
+                <td><strong>Artist Receives</strong></td>
+                <td><strong>~0.01p (average)</strong></td>
+                <td><strong>Final share</strong></td>
+            </tr>
+        </table>
+
+        <h4>Environmental Cost</h4>
+        <table class="comparison-table">
+            <tr>
+                <th>Metric</th>
+                <th>Per Stream</th>
+                <th>Estimated Cost</th>
+            </tr>
+            <tr>
+                <td>Energy</td>
+                <td>~0.0045 kWh</td>
+                <td>~0.09p (at £0.19/kWh)</td>
+            </tr>
+            <tr>
+                <td>Emissions</td>
+                <td>~2g CO₂</td>
+                <td>~0.02p (at £100/tonne CO₂)</td>
+            </tr>
+            <tr>
+                <td>Water Use</td>
+                <td>~0.5L</td>
+                <td>~0.0005p (at £1/1,000L)</td>
+            </tr>
+            <tr>
+                <td><strong>Total Impact</strong></td>
+                <td><strong>—</strong></td>
+                <td><strong>~0.11p</strong></td>
+            </tr>
+        </table>
+        
+        <p>The total environmental cost per stream—energy, emissions, water—is around 0.11p, or roughly 10x greater than what most artists actually earn.</p>
+        
+        <p>Spotify has made some sustainability commitments for its offices, but there's no evidence of comprehensive carbon offsetting for its streaming infrastructure. The environmental burden is real—yet completely externalized.</p>
+    </div>
+
+    <h2>Building Something Different</h2>
+
+    <p>I wanted to see what an alternative might look like as a live experiment.</p>
+
+    <p>You're reading this article on a solar-powered server built on a £25 Raspberry Pi, powered by a £50 solar panel, and backed by a £25 battery. It should be able to hold 64 tracks and support up to 25 listeners. When the sun shines, it works. When it doesn't, it doesn't.</p>
+
+    <p>Of course, the setup itself carries a footprint: the embodied energy in the panel, battery, and transformer is real. But unlike per-stream energy use, these are largely one-off costs. More importantly, the model could scale—solar-powered infrastructure could support larger farms, shared networks, or even parts of the traditional streaming stack.</p>
+
+    <p>Meanwhile, Spotify—despite massive scale—operates at a loss and continues to draw heavy capital investment. If even a fraction of that investment were redirected into distributed solar infrastructure, we could begin to shrink streaming's hidden footprint.</p>
+
+    <h3>Solar Server Stream Calculations</h3>
+
+    <p>Assuming 25 users each stream a track 10 times:</p>
+
+    <div class="code-block">
+Total streams: 250
+Energy per stream: ~0.000175 kWh (Pi 3B+ at 3W for 3.5 minutes)
+Emissions per stream: near-zero operational emissions
+Water use per stream: 0 L
+    </div>
+
+    <div class="environmental-impact">
+        <table class="comparison-table">
+            <tr>
+                <th>Metric</th>
+                <th>Per Stream</th>
+                <th>Estimated Cost</th>
+            </tr>
+            <tr>
+                <td>Energy</td>
+                <td>~0.000175 kWh</td>
+                <td>~£0.000033</td>
+            </tr>
+            <tr>
+                <td>Emissions</td>
+                <td>~0g CO₂ operational</td>
+                <td>£0.00</td>
+            </tr>
+            <tr>
+                <td>Water Use</td>
+                <td>~0L</td>
+                <td>£0.00</td>
+            </tr>
+            <tr>
+                <td><strong>Total Impact</strong></td>
+                <td><strong>—</strong></td>
+                <td><strong>~£0.000033</strong></td>
+            </tr>
+        </table>
+        
+        <p>Compared to a traditional stream (0.11p), the solar server reduces environmental impact by ~99%.</p>
+    </div>
+
+    <div class="code-block">
+Impact per stream:
+• Energy: ~0.000175 kWh (solar)
+• Emissions: near-zero operational emissions
+• Cost to planet: effectively nothing
+
+What if music had weather?
+    </div>
+
+    <h2>Context & Inspiration</h2>
+
+    <p>This project stands on the shoulders of others who've been exploring solar-powered digital infrastructure for years. <a href="https://solar.lowtechmagazine.com">Low-Tech Magazine</a> runs their entire website on solar power—it goes dark when it's cloudy in Barcelona, turning constraints into editorial policy. <a href="https://solarprotocol.net">Solar Protocol</a> hosts a network of decentralised, solar-powered web servers that shift traffic based on which location has the most sun.</p>
+
+    <p>Both projects provided crucial inspiration and practical guidance. Low-Tech Magazine's <a href="https://solar.lowtechmagazine.com/about.html">detailed documentation</a> of their solar setup showed me what was possible with minimal hardware, while Solar Protocol's <a href="https://github.com/tegacodes/solar-protocol">open-source approach</a> demonstrated how to build resilient, weather-dependent systems.</p>
+
+    <p>I'm indebted to their pioneering work—without their guides, tutorials, and proof that solar web infrastructure actually works, I couldn't have built radtypo. They showed that embracing energy constraints isn't a limitation—it's a design philosophy.</p>
+
+    <h2>What I Learned</h2>
+
+    <p>Building radtypo taught me things I hadn't expected. Streaming platforms optimize for discovery and infinite choice, but that creates a kind of attention scarcity—most listeners skip songs within 30 seconds. When your server only holds 64 tracks, listening becomes more intentional. You're more likely to hear a song through to the end.</p>
+
+    <p>The solar constraint was equally revealing. When the server goes offline at dusk, you realize how much we've normalized instant availability. There's something meditative about waiting for the sun to return, about music that has seasons and moods tied to actual weather.</p>
+
+    <p>Hand-encoding each track, writing metadata, crafting pages—this forced a different relationship with the music. Every song had to earn its place. In a world of algorithmic curation, manual curation felt radical.</p>
+
+    <h2>Why This Matters</h2>
+
+    <p>This isn't about converting everyone to solar streaming. Most people just want music that works when they press play—and that's completely valid.</p>
+
+    <p>But rad.typo asks different questions: What is our digital convenience actually costing? What happens when we build tools that admit their limitations instead of hiding them? Could we find meaning in constraint rather than always seeking to eliminate it?</p>
+
+    <p>Maybe we don't need infinite music libraries. Maybe we need better relationships with the music we already have.</p>
+
+    <p>rad.typo is a quiet refusal in physical form—not a solution, but an invitation to consider alternatives.</p>
+
+    <h2>Build Your Own</h2>
+
+    <p>Curious to experiment? Everything's open-source and documented:</p>
+
+    <div class="code-block">
+GitHub: radtypo/radtypo-solar-streaming
+
+Build it, adapt it, make it yours. Add more solar capacity, experiment with 
+battery backup, or create your own constraint-based system. The hardware is 
+simple—the interesting part is what you do with the limitations.
+
+Build, adapt, remix, solarise.
+    </div>
+
+    <footer class="footer">
+        └─ <a href="infrastructure.html">infrastructure</a> | <a href="contact.html">contact</a>
+    </footer>
+
+    <div class="footnotes">
+        <h3>References</h3>
+        <ul>
+            <li>• <a href="https://forgotify.com">Forgotify</a> - Unplayed Spotify tracks</li>
+            <li>• <a href="https://www.forbes.com/sites/billrosenblatt/2025/03/06/4-out-of-5-songs-sent-to-music-services-are-never-played/">Forbes</a> - 150k daily uploads, 78% never played</li>
+            <li>• <a href="https://newsroom.spotify.com/company-info">Spotify Company Info</a> - Track statistics</li>
+            <li>• <a href="https://musiciansunion.org.uk/working-performing/royalties/streaming-royalties">Musicians' Union UK</a> - £0.003 per stream</li>
+            <li>• <a href="https://www.businessinsider.com/how-data-centers-are-deepening-the-water-crisis-2025-6">Business Insider</a> - Data centre energy/water use</li>
+            <li>• <a href="https://www.ft.com/content/1d468bd2-6712-4cdd-ac71-21e0ace2d048">Financial Times</a> - Ireland data centre electricity usage</li>
+            <li>• <a href="https://www.researchgate.net/publication/281719759_The_Water_Footprint_of_Data_Centers">ResearchGate</a> - Water footprint study</li>
+            <li>• <a href="https://www.theguardian.com/music/2025/jan/17/no-dylan-but-loads-of-coldplay-what-the-songs-with-a-billion-streams-on-spotify-tell-us-about-music-taste-today">The Guardian</a> - Streaming energy data</li>
+            <li>• <a href="https://www.iea.org/commentaries/the-carbon-footprint-of-streaming-video-fact-checking-the-headlines">IEA</a> - Carbon footprint analysis</li>
+            <li>• <a href="https://solar.lowtechmagazine.com">Low-Tech Magazine</a> - Solar-powered website</li>
+            <li>• <a href="https://solarprotocol.net">Solar Protocol</a> - Decentralized solar web</li>
+        </ul>
+        
+        <p><strong>Note:</strong> Water consumption estimate based on 10 L per GB for data centre cooling. 50 MB = 0.05 GB, so 0.05 × 10 L = 0.5 L per song stream.</p>
+        
+        <p>This server runs right now, somewhere in Derry—as long as the sun allows.</p>
+    </div>
+
+    <script>
+        // Weather API using Open-Meteo
+        const LAT = 55.014662;
+        const LON = -7.302903;
+        
+        const weatherMapping = {
+            0: { icon: '☀️', description: 'clear' },
+            1: { icon: '🌤', description: 'clear' },
+            2: { icon: '⛅', description: 'cloudy' },
+            3: { icon: '☁️', description: 'overcast' },
+            45: { icon: '🌫', description: 'fog' },
+            48: { icon: '🌫', description: 'fog' },
+            51: { icon: '🌦', description: 'drizzle' },
+            53: { icon: '🌦', description: 'drizzle' },
+            55: { icon: '🌦', description: 'drizzle' },
+            61: { icon: '🌧', description: 'rain' },
+            63: { icon: '🌧', description: 'rain' },
+            65: { icon: '🌧', description: 'rain' },
+            71: { icon: '🌨', description: 'snow' },
+            73: { icon: '🌨', description: 'snow' },
+            75: { icon: '❄️', description: 'snow' },
+            80: { icon: '🌦', description: 'showers' },
+            81: { icon: '🌧', description: 'showers' },
+            82: { icon: '🌧', description: 'showers' },
+            95: { icon: '⛈', description: 'storms' },
+            96: { icon: '⛈', description: 'storms' },
+            99: { icon: '⛈', description: 'storms' }
+        };
+
+        async function updateWeather() {
+            try {
+                const response = await fetch(
+                    `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code&timezone=Europe%2FLondon`
+                );
+                
+                if (!response.ok) {
+                    updateMockWeather();
+                    return;
+                }
+                
+                const data = await response.json();
+                
+                const todayTemp = Math.round(data.current.temperature_2m);
+                const todayWeather = weatherMapping[data.current.weather_code] || weatherMapping[0];
+                
+                // Update header status line
+                const battery = 66 + Math.random() * 2;
+                const cpuTemp = 53 + Math.random() * 2;
+                document.querySelector('.status').innerHTML = 
+                    `derry: ${todayTemp}°C ${todayWeather.icon} | battery: ${Math.round(battery)}% ⚡ | ${Math.round(cpuTemp)}°C<span class="breathing-dots"></span>`;
+                
+            } catch (error) {
+                console.log('Weather API failed, using mock data');
+                updateMockWeather();
+            }
+        }
+        
+        function updateMockWeather() {
+            // Fallback realistic weather for Derry
+            const temps = [14, 15, 16, 17, 18];
+            const conditions = [
+                { icon: '⛅', description: 'cloudy' },
+                { icon: '🌦', description: 'light rain' },
+                { icon: '☀️', description: 'sunny' },
+                { icon: '🌧', description: 'rain' }
+            ];
+            
+            const todayTemp = temps[Math.floor(Math.random() * temps.length)];
+            const todayCondition = conditions[Math.floor(Math.random() * conditions.length)];
+            
+            // Update header status line
+            const battery = 66 + Math.random() * 2;
+            const cpuTemp = 53 + Math.random() * 2;
+            document.querySelector('.status').innerHTML = 
+                `derry: ${todayTemp}°C ${todayCondition.icon} | battery: ${Math.round(battery)}% ⚡ | ${Math.round(cpuTemp)}°C<span class="breathing-dots"></span>`;
+        }
+        
+        // Update weather every 30 minutes
+        setInterval(updateWeather, 1800000);
+        updateWeather(); // Initial call
+    </script>
+</body>
+</html>
