@@ -144,7 +144,7 @@
         };
 
         // Battery simulation based on solar generation
-        function calculateSolarGeneration(weatherCode, timeOfDay) {
+        function calculateSolarGeneration(weatherCode) {
             // Base generation rates by weather (% per hour)
             const weatherRates = {
                 0: 12,   // clear sky
@@ -172,8 +172,14 @@
             
             const baseRate = weatherRates[weatherCode] || 2;
             
-            // Time of day modifier (solar angle)
-            const hour = timeOfDay.getHours();
+            // Use Derry time for solar calculations
+            const derryTime = new Date().toLocaleString('en-GB', {
+                timeZone: 'Europe/London',
+                hour12: false,
+                hour: '2-digit'
+            });
+            const hour = parseInt(derryTime.split(':')[0]);
+            
             let timeModifier = 0;
             
             if (hour >= 6 && hour < 9) {
@@ -213,7 +219,7 @@
             
             if (lastUpdate) {
                 const timeDiff = (now - new Date(lastUpdate)) / (1000 * 60); // minutes elapsed
-                const generationRate = calculateSolarGeneration(weatherCode, now);
+                const generationRate = calculateSolarGeneration(weatherCode);
                 const consumption = 4; // 4% per hour consumption
                 const netRate = (generationRate - consumption) / 60; // per minute
                 
@@ -236,7 +242,7 @@
                 localStorage.setItem('batteryLevel', currentLevel.toString());
                 localStorage.setItem('batteryLastUpdate', now.toISOString());
                 
-                const generationRate = calculateSolarGeneration(weatherCode, now);
+                const generationRate = calculateSolarGeneration(weatherCode);
                 return {
                     level: Math.round(currentLevel),
                     indicator: getBatteryIndicator(generationRate)
