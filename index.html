@@ -9,6 +9,7 @@
             --bg-color: #fff;
             --text-color: #000;
             --secondary-color: #666;
+            --link-color: #0066cc;
         }
 
         body {
@@ -27,7 +28,7 @@
         }
 
         .header {
-            margin-bottom: 30px;
+            margin-bottom: 60px;
         }
 
         .status {
@@ -49,8 +50,8 @@
             100% { content: ''; }
         }
 
-        .binary-countdown {
-            margin: 60px 0;
+        .binary-section {
+            margin: 80px 0;
             text-align: left;
         }
 
@@ -59,7 +60,7 @@
             flex-wrap: wrap;
             justify-content: flex-start;
             gap: 4px;
-            margin: 20px 0;
+            margin: 0;
             max-width: 600px;
         }
 
@@ -75,24 +76,107 @@
             background-color: var(--text-color);
         }
 
-        .binary-info {
-            font-size: 12px;
-            color: var(--secondary-color);
-            margin-top: 10px;
+        .binary-square:nth-child(12n) {
+            margin-right: 20px;
         }
 
         .footer {
-            margin-top: 60px;
+            margin-top: 120px;
             padding-top: 20px;
             border-top: 1px solid var(--secondary-color);
             font-size: 14px;
             color: var(--secondary-color);
         }
 
+        .footer .mailing-section {
+            margin-bottom: 30px;
+        }
+
+        .footer .mailing-section h2 {
+            font-size: 14px;
+            margin: 0 0 15px 0;
+            font-weight: normal;
+            color: var(--text-color);
+        }
+
+        .footer .mailing-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .footer .mailing-form input {
+            font-family: monospace;
+            font-size: 12px;
+            padding: 8px 10px;
+            border: 1px solid var(--secondary-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            width: 220px;
+        }
+
+        .footer .mailing-form input:focus {
+            outline: none;
+            border-color: var(--text-color);
+        }
+
+        .footer .mailing-form input::placeholder {
+            color: var(--secondary-color);
+        }
+
+        .footer .mailing-form button {
+            font-family: monospace;
+            font-size: 12px;
+            padding: 8px 16px;
+            border: 1px solid var(--secondary-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: background-color 0.1s ease;
+            text-align: center;
+        }
+
+        .footer .mailing-form button:hover {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+        }
+
+        .footer .infrastructure-link {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+
+        .footer .infrastructure-link:hover {
+            text-decoration: underline;
+        }
+
         @media (max-width: 600px) {
             body { 
                 margin: 20px auto;
                 padding: 15px;
+            }
+            
+            .header {
+                margin-bottom: 40px;
+            }
+            
+            .binary-section {
+                margin: 60px 0;
+            }
+            
+            .footer {
+                margin-top: 80px;
+            }
+            
+            .footer .mailing-form {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            
+            .footer .mailing-form input {
+                width: 100%;
+                max-width: 280px;
             }
         }
     </style>
@@ -103,15 +187,19 @@
         <div class="status"><span id="statusLine">derry: 15°C ⛅ | battery: 67% ⚡ | 54°C</span><span class="breathing-dots"></span></div>
     </header>
 
-    <div class="binary-countdown">
+    <div class="binary-section">
         <div class="binary-display" id="binaryDisplay"></div>
-        <div class="binary-info">
-            <span id="timeRemaining">calculating...</span>
-        </div>
     </div>
 
     <footer class="footer">
-        └─ 55.014662, -7.302903
+        <div class="mailing-section">
+            <h2>mailing list</h2>
+            <form class="mailing-form" id="mailingForm">
+                <input type="email" id="emailInput" placeholder="email" autocomplete="email">
+                <button type="submit">subscribe</button>
+            </form>
+        </div>
+        └─ <a href="infrastructure.html" class="infrastructure-link">infrastructure</a>
     </footer>
 
     <script>
@@ -145,34 +233,14 @@
 
         // Battery simulation based on solar generation
         function calculateSolarGeneration(weatherCode) {
-            // Base generation rates by weather (% per hour)
             const weatherRates = {
-                0: 12,   // clear sky
-                1: 10,   // mainly clear
-                2: 6,    // partly cloudy
-                3: 2,    // overcast
-                45: 1,   // fog
-                48: 1,   // depositing rime fog
-                51: 3,   // light drizzle
-                53: 2,   // moderate drizzle
-                55: 1,   // dense drizzle
-                61: 1,   // slight rain
-                63: 0,   // moderate rain
-                65: 0,   // heavy rain
-                71: 2,   // slight snow
-                73: 1,   // moderate snow
-                75: 0,   // heavy snow
-                80: 1,   // slight showers
-                81: 0,   // moderate showers
-                82: 0,   // violent showers
-                95: 0,   // thunderstorm
-                96: 0,   // thunderstorm with hail
-                99: 0    // thunderstorm with heavy hail
+                0: 12, 1: 10, 2: 6, 3: 2, 45: 1, 48: 1, 51: 3, 53: 2, 55: 1,
+                61: 1, 63: 0, 65: 0, 71: 2, 73: 1, 75: 0, 80: 1, 81: 0, 82: 0,
+                95: 0, 96: 0, 99: 0
             };
             
             const baseRate = weatherRates[weatherCode] || 2;
             
-            // Use Derry time for solar calculations
             const derryTime = new Date().toLocaleString('en-GB', {
                 timeZone: 'Europe/London',
                 hour12: false,
@@ -181,35 +249,23 @@
             const hour = parseInt(derryTime.split(':')[0]);
             
             let timeModifier = 0;
-            
-            if (hour >= 6 && hour < 9) {
-                timeModifier = 0.3; // sunrise
-            } else if (hour >= 9 && hour < 15) {
-                timeModifier = 1.0; // peak solar
-            } else if (hour >= 15 && hour < 18) {
-                timeModifier = 0.7; // afternoon
-            } else {
-                timeModifier = 0; // night
-            }
+            if (hour >= 6 && hour < 9) timeModifier = 0.3;
+            else if (hour >= 9 && hour < 15) timeModifier = 1.0;
+            else if (hour >= 15 && hour < 18) timeModifier = 0.7;
+            else timeModifier = 0;
             
             return baseRate * timeModifier;
         }
         
         function getBatteryIndicator(generationRate) {
-            const consumption = 4; // Pi draws 4% per hour
+            const consumption = 4;
             const netRate = generationRate - consumption;
             
-            if (netRate > 6) {
-                return '⚡⚡⚡'; // fast charging
-            } else if (netRate > 2) {
-                return '⚡⚡'; // moderate charging
-            } else if (netRate > 0) {
-                return '⚡'; // slow charging
-            } else if (netRate > -5) {
-                return '↘'; // normal draining
-            } else {
-                return '↘↘'; // fast draining
-            }
+            if (netRate > 6) return '⚡⚡⚡';
+            else if (netRate > 2) return '⚡⚡';
+            else if (netRate > 0) return '⚡';
+            else if (netRate > -5) return '↘';
+            else return '↘↘';
         }
         
         function updateBatteryLevel(weatherCode) {
@@ -218,18 +274,14 @@
             const currentLevel = parseFloat(localStorage.getItem('batteryLevel')) || 67;
             
             if (lastUpdate) {
-                const timeDiff = (now - new Date(lastUpdate)) / (1000 * 60); // minutes elapsed
+                const timeDiff = (now - new Date(lastUpdate)) / (1000 * 60);
                 const generationRate = calculateSolarGeneration(weatherCode);
-                const consumption = 4; // 4% per hour consumption
-                const netRate = (generationRate - consumption) / 60; // per minute
+                const consumption = 4;
+                const netRate = (generationRate - consumption) / 60;
                 
-                // Update battery level
                 let newLevel = currentLevel + (netRate * timeDiff);
-                
-                // Battery constraints: 0-100%
                 newLevel = Math.max(0, Math.min(100, newLevel));
                 
-                // Store updated values
                 localStorage.setItem('batteryLevel', newLevel.toString());
                 localStorage.setItem('batteryLastUpdate', now.toISOString());
                 
@@ -238,7 +290,6 @@
                     indicator: getBatteryIndicator(generationRate)
                 };
             } else {
-                // First run - initialize
                 localStorage.setItem('batteryLevel', currentLevel.toString());
                 localStorage.setItem('batteryLastUpdate', now.toISOString());
                 
@@ -267,7 +318,6 @@
                 const todayWeather = weatherMapping[data.current.weather_code] || weatherMapping[0];
                 const weatherCode = data.current.weather_code;
                 
-                // Update realistic battery based on weather and time
                 const battery = updateBatteryLevel(weatherCode);
                 const cpuTemp = 53 + Math.random() * 2;
                 
@@ -281,9 +331,8 @@
         }
         
         function updateMockWeather() {
-            // Fallback realistic weather for Derry
             const temps = [14, 15, 16, 17, 18];
-            const weatherCodes = [2, 3, 61, 63]; // mostly cloudy/rainy for Derry
+            const weatherCodes = [2, 3, 61, 63];
             const conditions = [
                 { icon: '⛅', description: 'cloudy' },
                 { icon: '🌦', description: 'light rain' },
@@ -295,7 +344,6 @@
             const todayCondition = conditions[Math.floor(Math.random() * conditions.length)];
             const mockWeatherCode = weatherCodes[Math.floor(Math.random() * weatherCodes.length)];
             
-            // Update realistic battery with mock weather
             const battery = updateBatteryLevel(mockWeatherCode);
             const cpuTemp = 53 + Math.random() * 2;
             
@@ -303,63 +351,61 @@
                 `derry: ${todayTemp}°C ${todayCondition.icon} | battery: ${battery.level}% ${battery.indicator} | ${Math.round(cpuTemp)}°C`;
         }
         
-        function updateBinaryCountdown() {
-            // Target: August 3rd, 2025 at midnight in Derry (Europe/London timezone)
-            const targetDate = new Date('2025-08-03T00:00:00+01:00'); // BST (British Summer Time)
+        function updateBinaryDateTime() {
             const now = new Date();
-            const timeDiff = targetDate - now;
+            const derryTime = new Date(now.toLocaleString('en-US', {timeZone: 'Europe/London'}));
             
-            if (timeDiff <= 0) {
-                // Countdown finished - show all zeros
-                displayBinaryCountdown(0);
-                document.getElementById('timeRemaining').textContent = '0 seconds';
-                return;
-            }
+            const hours = String(derryTime.getHours()).padStart(2, '0');
+            const minutes = String(derryTime.getMinutes()).padStart(2, '0');
+            const seconds = String(derryTime.getSeconds()).padStart(2, '0');
             
-            // Convert milliseconds to seconds
-            const totalSeconds = Math.floor(timeDiff / 1000);
-            
-            // Update display
-            displayBinaryCountdown(totalSeconds);
-            
-            // Show just the number of seconds
-            document.getElementById('timeRemaining').textContent = `${totalSeconds} seconds`;
+            const timeNumber = parseInt(hours + minutes + seconds);
+            displayBinaryDateTime(timeNumber);
         }
         
-        function displayBinaryCountdown(seconds) {
-            const binaryString = seconds.toString(2);
+        function displayBinaryDateTime(number) {
+            const binaryString = number.toString(2);
             const container = document.getElementById('binaryDisplay');
             
-            // Clear existing squares
             container.innerHTML = '';
             
-            // Add squares for each binary digit
-            for (let i = 0; i < binaryString.length; i++) {
+            const paddedBinary = binaryString.padStart(24, '0');
+            
+            for (let i = 0; i < paddedBinary.length; i++) {
                 const square = document.createElement('div');
                 square.className = 'binary-square';
                 
-                if (binaryString[i] === '1') {
+                if (paddedBinary[i] === '1') {
                     square.classList.add('filled');
                 }
                 
                 container.appendChild(square);
             }
-            
-            // If no squares (0 seconds), show at least one empty square
-            if (binaryString.length === 0 || seconds === 0) {
-                const square = document.createElement('div');
-                square.className = 'binary-square';
-                container.appendChild(square);
-            }
         }
+
+        // Handle mailing list form
+        document.getElementById('mailingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const emailInput = document.getElementById('emailInput');
+            const email = emailInput.value.trim();
+            
+            if (email) {
+                emailInput.value = '';
+                emailInput.placeholder = 'subscribed';
+                
+                setTimeout(() => {
+                    emailInput.placeholder = 'email';
+                }, 2000);
+            }
+        });
         
         // Update weather and battery every 5 minutes
         setInterval(updateWeather, 300000);
-        updateWeather(); // Initial call
+        updateWeather();
         
-        // Update binary countdown every second
-        setInterval(updateBinaryCountdown, 1000);
-        updateBinaryCountdown(); // Initial call
+        // Update binary time every second
+        setInterval(updateBinaryDateTime, 1000);
+        updateBinaryDateTime();
     </script>
 </body>
 </html>
