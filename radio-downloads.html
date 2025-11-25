@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rad.typo</title>
+    <style>
+        :root {
+            --bg-color: #fff;
+            --text-color: #000;
+            --link-color: #0000FF;
+            --secondary-color: #666;
+            --code-bg: #f5f5f5;
+        }
+
+        body {
+            font-family: monospace;
+            max-width: 800px;
+            margin: 48px auto;
+            padding: 24px;
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        h1, h2 {
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: normal;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .back {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 14px;
+        }
+
+        .status {
+            color: var(--secondary-color);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .breathing-dots::after {
+            content: '';
+            animation: breathe 4s infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+        }
+
+        /* Password section */
+        .password-section {
+            text-align: center;
+            margin: 60px 0;
+        }
+
+        .password-input {
+            font-family: monospace;
+            font-size: 16px;
+            padding: 10px;
+            border: 1px solid var(--secondary-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin-right: 10px;
+            width: 200px;
+        }
+
+        .access-button {
+            font-family: monospace;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: 1px solid var(--secondary-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .access-button:hover {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+        }
+
+        .error-message {
+            color: var(--secondary-color);
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        /* Content section */
+        .content-section {
+            display: none;
+        }
+
+        .binary-header {
+            font-size: 18px;
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+        }
+
+        .album-title {
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        /* Downloads table */
+        .downloads-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+        }
+
+        .downloads-table th,
+        .downloads-table td {
+            text-align: left;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .downloads-table th {
+            color: var(--secondary-color);
+            font-weight: normal;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        .downloads-table tr:hover {
+            background-color: var(--code-bg);
+        }
+
+        .download-link {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .download-link:hover {
+            text-decoration: underline;
+        }
+
+        .isrc-code {
+            font-family: monospace;
+            color: var(--secondary-color);
+            font-size: 14px;
+        }
+
+        .track-title {
+            max-width: 300px;
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--secondary-color);
+            font-size: 14px;
+            color: var(--secondary-color);
+        }
+
+        .footer a {
+            color: var(--secondary-color);
+        }
+
+        @media (max-width: 600px) {
+            body { 
+                margin: 20px auto;
+                padding: 15px;
+            }
+
+            .password-input {
+                width: 150px;
+                margin-bottom: 10px;
+                margin-right: 0;
+            }
+
+            .downloads-table {
+                font-size: 14px;
+            }
+
+            .downloads-table th,
+            .downloads-table td {
+                padding: 8px 12px;
+            }
+
+            .track-title {
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="back">← back</a>
+        <h1>rad.typo</h1>
+        <div class="status">derry: <span id="weather-temp">15</span>°C <span id="weather-icon">⛅</span> | cpu: <span id="cpu-temp">55</span>°C<span class="breathing-dots"></span></div>
+    </header>
+
+    <!-- Password Section -->
+    <div class="password-section" id="password-section">
+        <input type="password" 
+               class="password-input" 
+               id="password-input" 
+               placeholder="access code"
+               autocomplete="off">
+        <button class="access-button" onclick="checkPassword()">access</button>
+        <div class="error-message" id="error-message"></div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="content-section" id="content-section">
+        <div class="binary-header">□□□□□□□■</div>
+        <div class="album-title">hard hitter</div>
+
+        <table class="downloads-table">
+            <thead>
+                <tr>
+                    <th>ISRC</th>
+                    <th>Track</th>
+                    <th>Master</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="isrc-code">GXDWY2500001</span></td>
+                    <td class="track-title">bad fortune</td>
+                    <td><a href="../masters/bad-fortune-master.wav" download class="download-link">⬇ WAV</a></td>
+                </tr>
+                <tr>
+                    <td><span class="isrc-code">GXDWY2500002</span></td>
+                    <td class="track-title">what's not to like</td>
+                    <td><a href="../masters/whats-not-to-like-master.wav" download class="download-link">⬇ WAV</a></td>
+                </tr>
+                <tr>
+                    <td><span class="isrc-code">GXDWY2500003</span></td>
+                    <td class="track-title">muriel</td>
+                    <td><a href="../masters/muriel-master.wav" download class="download-link">⬇ WAV</a></td>
+                </tr>
+                <tr>
+                    <td><span class="isrc-code">GXDWY2400001</span></td>
+                    <td class="track-title">the one we didn't get to record with steve albini</td>
+                    <td><a href="../masters/the-one-we-didnt-get-to-record-with-steve-albini-master.wav" download class="download-link">⬇ WAV</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer class="footer">
+        └─ <a href="https://radtypo.com/infrastructure.html">infrastructure</a> | <a href="mailto:hello@radtypo.com">hello@radtypo.com</a>
+    </footer>
+
+    <script>
+        function checkPassword() {
+            const input = document.getElementById('password-input');
+            const errorMessage = document.getElementById('error-message');
+            const passwordSection = document.getElementById('password-section');
+            const contentSection = document.getElementById('content-section');
+            
+            if (input.value === 'whatsnottolike') {
+                // Access granted
+                passwordSection.style.display = 'none';
+                contentSection.style.display = 'block';
+                
+                // Log access
+                console.log('rad.radio access granted:', {
+                    timestamp: new Date().toISOString(),
+                    userAgent: navigator.userAgent,
+                    referrer: document.referrer || 'direct'
+                });
+                
+                errorMessage.textContent = '';
+            } else {
+                // Access denied
+                errorMessage.textContent = 'incorrect access code';
+                input.value = '';
+                
+                // Log failed attempt
+                console.log('rad.radio access denied:', {
+                    timestamp: new Date().toISOString(),
+                    attempt: input.value
+                });
+            }
+        }
+
+        // Allow Enter key to submit password
+        document.getElementById('password-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        async function updateCpuTemp() {
+            try {
+                const response = await fetch('/api/stats.json');
+                const data = await response.json();
+                
+                if (data.thermal && data.thermal.cpu_temp) {
+                    const temp = data.thermal.cpu_temp.replace('°C', '');
+                    document.getElementById('cpu-temp').textContent = temp;
+                }
+            } catch (error) {
+                console.log('CPU temperature fetch failed (server constraint):', error);
+            }
+        }
+
+        async function updateWeather() {
+            try {
+                const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=55.014662&longitude=-7.302903&current=temperature_2m,weather_code&timezone=Europe%2FLondon');
+                const data = await response.json();
+                
+                if (data.current) {
+                    const temp = Math.round(data.current.temperature_2m);
+                    document.getElementById('weather-temp').textContent = temp;
+                    
+                    const code = data.current.weather_code;
+                    let icon = '⛅';
+                    
+                    if (code === 0) icon = '☀️';
+                    else if (code <= 3) icon = '⛅';
+                    else if (code <= 48) icon = '🌫️';
+                    else if (code <= 67) icon = '🌧️';
+                    else if (code <= 77) icon = '🌨️';
+                    else if (code <= 82) icon = '🌦️';
+                    else if (code >= 95) icon = '⛈️';
+                    
+                    document.getElementById('weather-icon').textContent = icon;
+                }
+            } catch (error) {
+                console.log('Weather fetch failed (server constraint):', error);
+            }
+        }
+
+        updateCpuTemp();
+        updateWeather();
+        setInterval(updateCpuTemp, 30000);
+        setInterval(updateWeather, 300000);
+    </script>
+</body>
+</html>

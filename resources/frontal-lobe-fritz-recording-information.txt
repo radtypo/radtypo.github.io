@@ -1,0 +1,93 @@
+frontal lobe fritz - recording information
+
+track details
+title: frontal lobe fritz
+artist: rad.typo
+release date: october 8, 2025
+composition date: march 28, 2022
+isrc: gxdwy2500009
+key: g major
+bpm: 100
+time signature: 4/4
+tuning: cgdgbe
+
+credits
+engineering & production: all composers
+mixed and mastered by: caolán austin
+
+equipment used
+guitars:
+- fender vintera jazzmaster ow mim - staytrem bridge
+- fender jaguar 66 ri car cij - staytrem bridge & tremolo, seymour duncan vintage jaguar pickups
+- epiphone frontier masterbuilt - se electronics t2
+
+guitar amplification & effects:
+- budda superdrive 45 mkii - drive channel
+- fender twin reverb - channel 2
+- orange or120
+- zilla studio pro 212 - celestion alnico blue
+- zilla studio pro 212 - celestion vintage 30
+- chase bliss preamp mkii
+- line 6 hx effects
+- line 6 pod pro
+- shure sm57/sennheiser md421 per cabinet
+- little labs redeye passive
+- radial tonebone shotgun
+- khe audio electronics acs 8x4
+
+bass:
+- fender pj bass mim sb - seymour duncan quarter pounder pickups & badass bridge
+- ampeg svt pro ii
+- ampeg 810 cabinet
+- electrovoice re20
+- little labs redeye passive di
+- darkglass b7k ultra
+
+keys:
+- behringer model d
+- roland ju-06a
+- spitfire audio labs - ghost keys
+
+vocal:
+- se electronics t2
+
+drums:
+- mapex saturn 20x22, 12x9, 16x16
+- mapex black panther hand hammered aluminium snare 14x5.5
+- zildjian k custom 14" hi hats
+- zildjian k custom 22" ride
+- zildjian k custom 17" crash
+- dream bliss 20" crash/ride
+
+drum microphone setup (18-channel configuration):
+1. kick in - akg d112
+2. kick out - aston spirit
+3. snare top - beyerdynamic m201
+4. snare bottom - oktava mk012
+5. rack tom - sennheiser md421
+6. floor tom - sennheiser md421
+7. ride - oktava mk012
+8. hi hats - shure sm7b
+9. overhead left - beyerdynamic m160
+10. overhead right - beyerdynamic m160
+11. kit high center - aea r92
+12. kit low - se electronics rnr1
+13. m/s middle - rode k2
+14. m/s side - cascade gomez mje
+15. room left - cascade fathead
+16. room right - cascade fathead
+17. stairs left - se electronics t2
+18. stairs right - se electronics t2
+
+recording chain:
+audient asp8024 > avid hd i/o > pro tools
+
+file information:
+format: mp3
+bitrate: 320 kbps
+file size: 8.3 mb
+duration: 4:06
+
+---
+rad.typo - constraint-embracing music from derry
+https://radtypo.com

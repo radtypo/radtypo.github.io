@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>radtypo server telemetry</title>
+    <style>
+        :root {
+            --bg-color: #fff;
+            --text-color: #000;
+            --link-color: #0000FF;
+            --secondary-color: #666;
+            --spacing: 20px;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #fff;
+            --link-color: #809fff;
+            --secondary-color: #999;
+        }
+
+        body {
+            font-family: monospace;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: var(--spacing);
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .section {
+            margin: var(--spacing) 0;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+        }
+
+        .section-header {
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid transparent;
+        }
+
+        .section-header:hover {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+        }
+
+        .section-content {
+            padding: 15px;
+            display: none;
+        }
+
+        .section-content.open {
+            display: block;
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .nav {
+            margin-bottom: 30px;
+        }
+
+        .nav a {
+            margin-right: 15px;
+            color: var(--link-color);
+        }
+
+        .metadata-content dl {
+            margin: 0;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 8px 16px;
+        }
+
+        .metadata-content dt {
+            color: var(--secondary-color);
+        }
+
+        .metadata-content dd {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .status-indicator {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            padding: 15px;
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+            border-radius: 4px;
+            margin: var(--spacing) 0;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: var(--spacing);
+            right: var(--spacing);
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-family: monospace;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--secondary-color);
+            font-size: 12px;
+            color: var(--secondary-color);
+            text-align: center;
+        }
+
+        .refresh-note {
+            color: var(--secondary-color);
+            font-size: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">○ dark mode</button>
+
+    <div class="nav">
+        <a href="/">← back to music</a>
+        <a href="/api/stats.json">json data</a>
+    </div>
+    
+    <h1>radtypo server telemetry</h1>
+    <div class="subtitle">
+        Location: Derry, UK | Hardware: Raspberry Pi 3 Model B Plus Rev 1.3
+    </div>
+
+    <div class="refresh-note">
+        ⟳ Auto-refresh every 60 seconds | Last updated: 2025-11-25 07:48:01 GMT
+    </div>
+
+    <div class="status-indicator">
+        Status: 🔥 EMBRACING CONSTRAINTS
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('thermal')">
+            <span>🌡️ Thermal Monitoring</span>
+            <span class="toggle">[ - ]</span>
+        </div>
+        <div class="section-content open" id="thermal">
+            <div class="metadata-content">
+                <dl>
+                    <dt>CPU Temperature</dt>
+                    <dd>58°C</dd>
+                    
+                    <dt>GPU Temperature</dt>
+                    <dd>58.0°C</dd>
+                    
+                    <dt>Throttling Status</dt>
+                    <dd>⚠️  THROTTLED</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('power')">
+            <span>⚡ Power & Performance</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="power">
+            <div class="metadata-content">
+                <dl>
+                    <dt>Core Voltage</dt>
+                    <dd>1.2000V</dd>
+                    
+                    <dt>Power Estimate</dt>
+                    <dd>~3.5W (moderate load)</dd>
+                    
+                    <dt>CPU Load (1/5/15min)</dt>
+                    <dd>1.13 0.62 0.30</dd>
+
+                    <dt>Uptime</dt>
+                    <dd>1 day, 22 hours, 40 minutes (since 2025-11-23 09:07:23)</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('resources')">
+            <span>💾 System Resources</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="resources">
+            <div class="metadata-content">
+                <dl>
+                    <dt>Memory Usage</dt>
+                    <dd>218MB / 921MB (23%)</dd>
+                    
+                    <dt>Disk Usage</dt>
+                    <dd>3.8G / 58G (7%)</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('network')">
+            <span>🌐 Network Activity</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="network">
+            <div class="metadata-content">
+                <dl>
+                    <dt>Interface Stats</dt>
+                    <dd>Interface: eth0 | ↓ 63MB ↑ 568MB</dd>
+                    
+                    <dt>Active Connections</dt>
+                    <dd>HTTP: 0 | Total: 4</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('music')">
+            <span>🎵 Music Server Status</span>
+            <span class="toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="music">
+            <div class="metadata-content">
+                <dl>
+                    <dt>Apache Status</dt>
+                    <dd>✅ RUNNING | 210 requests today</dd>
+                    
+                    <dt>Music Library</dt>
+                    <dd>0 songs | 304K total</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        sustainable infrastructure • constraint-embracing computing<br>
+        powered by £23.33 raspberry pi • constraint is creative material<br>
+        <a href="https://lowtechmagazine.com">inspired by low-tech magazine</a>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.documentElement;
+            const button = document.querySelector('.theme-toggle');
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            button.innerHTML = isDark ? '○ dark mode' : '● light mode';
+            
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+        }
+
+        function toggleSection(id) {
+            const content = document.getElementById(id);
+            const toggle = content.previousElementSibling.querySelector('.toggle');
+            const isOpen = content.classList.contains('open');
+            
+            content.classList.toggle('open');
+            toggle.textContent = isOpen ? '[ + ]' : '[ - ]';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                const button = document.querySelector('.theme-toggle');
+                button.innerHTML = savedTheme === 'dark' 
+                    ? '● light mode' 
+                    : '○ dark mode';
+            }
+        });
+
+        // Auto-refresh the page every 60 seconds
+        setTimeout(() => {
+            window.location.reload();
+        }, 60000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+rad typo - recording information
+=====================================
+
+track details
+-------------
+title: rad typo
+artist: rad.typo
+album: hard hitter
+composition date: december 4, 2021
+release date: august 27, 2025
+key: g major
+bpm: 83
+time signature: 4/4
+tuning: eadgbe
+isrc: gxdwy2500004
+
+guitars
+-------
+fender vintera jazzmaster ow mim - staytrem bridge
+fender jaguar 66 ri car cij - staytrem bridge
+
+guitar amplification & effects
+-------------------------------
+fender twin reverb - channel 2
+orange ad30
+vox ac15cc2
+zilla studio pro 212 - celestion vintage 30
+electro harmonix big muff op - amp
+fulltone ocd
+little labs redeye passive
+radial tonebone shotgun
+khe audio electronics acs 8x4
+
+bass
+----
+fender pj bass mim sb - seymour duncan quarter pounder pickups & badass bridge
+ampeg svt pro ii
+ampeg 810 cabinet
+electrovoice re20
+little labs redeye passive di
+darkglass b7k ultra
+
+keyboards
+---------
+korg sv-1
+spitfire audio bbc symphony orchestra cellos & violins
+digital suburban dexed
+
+drums
+-----
+premier 24x14 bass drum
+mapex saturn series toms 12x10, 16x16
+mapex black panther hand hammered aluminium snare 14x5.5
+zildjian k custom 14" hi hats
+zildjian k custom 22" ride
+zildjian k custom 17" crash
+dream bliss 20" crash/ride
+
+microphone setup
+----------------
+1. kick in - akg d112
+2. kick out - aston spirit
+3. snare top - beyerdynamic m201
+4. snare bottom - oktava mk012
+5. rack tom - sennheiser md421
+6. floor tom - sennheiser md421
+7. ride - oktava mk012
+8. hi hats - shure sm7b
+9. overhead left - beyerdynamic m160
+10. overhead right - beyerdynamic m160
+11. kit high center - aea r92
+12. kit low - se electronics rnr1
+13. m/s middle - rode k2
+14. m/s side - cascade gomez mje
+15. room left - cascade fathead
+16. room right - cascade fathead
+17. stairs left - se electronics t2
+18. stairs right - se electronics t2
+
+recording chain
+---------------
+audient asp8024 > m audio profire 2626 > pro tools
+
+credits
+-------
+engineering & production: all composers
+mixed and mastered by: caolán austin

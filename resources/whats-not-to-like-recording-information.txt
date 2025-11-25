@@ -1,0 +1,53 @@
+what's not to like - recording information
+
+track details:
+title: what's not to like
+composition date: january 8, 2020
+release date: august 13, 2025
+key: c major
+bpm: 120
+time signature: 4/4
+tuning: eadgbe
+isrc: gxdwy2500002
+
+credits:
+engineering & production: all composers
+mixed by caolán austin
+mastered by matt colton
+
+equipment:
+
+guitars:
+epiphone les paul inspired by gibson goldtop
+fender telecaster 3tsb mij
+gibson sg - walnut stain usa
+squier classic vibe starcaster 3tsb
+sigma jm-sg 45
+turner 40ce (nashville strung)
+
+guitar amplifier:
+budda superdrive 45 mkii
+fender 65' twin reverb ri
+orange or120
+vox ac15cc2
+zilla studio pro 212 - celestion vintage 30
+friedman be-od
+keeley filaments
+proco rat
+
+bass:
+fender pj bass mim sb - seymour duncan quarter pounder pickups & badass bridge
+ampeg svt pro ii
+ampeg 810 cabinet
+electrovoice re20
+little labs redeye passive di
+darkglass b7k ultra
+
+keys:
+korg sv1 - b3 & wurlitzer
+
+drums:
+mapex saturn 20x22, 12x10, 16x16
+mapex black panther hand hammered aluminium snare 14x5.5
+zildjian k custom 14" hi hats
+zildjian k custom 22" ride

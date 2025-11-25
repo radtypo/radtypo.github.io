@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>it ain't pretty - rad.typo</title>
+    <style>
+        :root {
+            --bg-color: #fff;
+            --text-color: #000;
+            --link-color: #0000FF;
+            --secondary-color: #666;
+            --interactive-color: #333;
+            --code-bg: #f5f5f5;
+        }
+
+        body {
+            font-family: monospace;
+            max-width: 800px;
+            margin: 48px auto;
+            padding: 24px;
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        h1, h2 {
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: normal;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .back {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 14px;
+        }
+
+        .status {
+            color: var(--secondary-color);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .breathing-dots::after {
+            content: '';
+            animation: breathe 4s infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+        }
+
+        .album-info {
+            margin-bottom: 40px;
+        }
+
+        .album-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .album-header h2 {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .album-meta {
+            color: var(--secondary-color);
+            font-size: 14px;
+        }
+
+        /* Carousel Styles */
+        .carousel-container {
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .carousel {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+        }
+
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .carousel-slide.active {
+            opacity: 1;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+        }
+
+        .song-video {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .song-video video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+        }
+
+        .carousel-nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .carousel-btn {
+            background: none;
+            border: 1px solid var(--secondary-color);
+            color: var(--secondary-color);
+            font-family: monospace;
+            font-size: 14px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .carousel-btn:hover {
+            background: var(--text-color);
+            color: var(--bg-color);
+        }
+
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .indicator.active {
+            background: var(--text-color);
+        }
+
+        .player-container {
+            margin: 30px 0;
+        }
+
+        audio {
+            width: 100%;
+        }
+
+        .section {
+            margin: 20px 0;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+        }
+
+        .section-header {
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid transparent;
+        }
+
+        .section-header:hover {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+        }
+
+        .section-content {
+            padding: 15px;
+            display: none;
+        }
+
+        .section-content.open {
+            display: block;
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        .lyrics {
+            white-space: pre-line;
+            line-height: 1.8;
+        }
+
+        /* Details section with button navigation */
+        .button-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            background: none;
+            border: 1px solid var(--secondary-color);
+            color: var(--text-color);
+            padding: 8px 12px;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .nav-button:hover {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+        }
+
+        .nav-button.active {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+        }
+
+        .details-content {
+            min-height: 150px;
+        }
+
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 8px 16px;
+        }
+
+        .metadata-grid dt {
+            color: var(--secondary-color);
+            font-weight: normal;
+        }
+
+        .metadata-grid dd {
+            margin: 0;
+        }
+
+        .equipment-list {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .equipment-category {
+            font-weight: normal;
+            margin: 15px 0 8px 0;
+            color: var(--secondary-color);
+        }
+
+        .resource-link {
+            display: block;
+            margin: 5px 0;
+            color: var(--link-color);
+        }
+
+        .resource-link:before {
+            content: "• ";
+            color: var(--text-color);
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--secondary-color);
+            font-size: 14px;
+            color: var(--secondary-color);
+        }
+
+        .footer a {
+            color: var(--secondary-color);
+        }
+
+        /* Mobile: Smaller, tighter buttons */
+        @media (max-width: 600px) {
+            body { 
+                margin: 20px auto;
+                padding: 15px;
+            }
+
+            .carousel-nav {
+                gap: 10px;
+            }
+            
+            .carousel-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+
+            .button-nav {
+                gap: 6px;
+                margin-bottom: 15px;
+            }
+
+            .nav-button {
+                padding: 6px 8px;
+                font-size: 12px;
+                border-radius: 2px;
+            }
+
+            .metadata-grid {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+
+            .metadata-grid dt {
+                margin-top: 12px;
+            }
+
+            .metadata-grid dt:first-child {
+                margin-top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="back">← back</a>
+        <h1>rad.typo</h1>
+        <div class="status">derry: <span id="weather-temp">15</span>°C <span id="weather-icon">☁️</span> | cpu: <span id="cpu-temp">54</span>°C<span class="breathing-dots"></span></div>
+    </header>
+
+    <div class="album-info">
+        <div class="album-header">
+            <h2>it ain't pretty</h2>
+        </div>
+        <div class="album-meta">2025-09-10</div>
+    </div>
+
+    <div class="carousel-container">
+        <div class="carousel" id="carousel">
+            <div class="carousel-slide active">
+                <img src="../images/it-aint-pretty-artwork.jpg" alt="it ain't pretty artwork">
+            </div>
+            <div class="carousel-slide">
+                <div class="song-video">
+                    <video controls preload="none" poster="../images/it-aint-pretty-video-thumb.jpg">
+                        <source src="../videos/it-aint-pretty.mp4" type="video/mp4">
+                        Your browser does not support the video element.
+                    </video>
+                </div>
+            </div>
+        </div>
+        
+        <div class="carousel-nav">
+            <button class="carousel-btn" onclick="changeSlide(-1)">← prev</button>
+            <button class="carousel-btn" onclick="changeSlide(1)">next →</button>
+        </div>
+        
+        <div class="carousel-indicators">
+            <div class="indicator active" onclick="goToSlide(0)"></div>
+            <div class="indicator" onclick="goToSlide(1)"></div>
+        </div>
+    </div>
+
+    <div class="player-container">
+        <audio controls preload="metadata">
+            <source src="../audio/it-aint-pretty.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('lyrics')">
+            <span>lyrics</span>
+            <span class="toggle" id="lyrics-toggle">[ - ]</span>
+        </div>
+        <div class="section-content open" id="lyrics">
+            <div class="lyrics">breathe and push, push and breathe
+no it ain't pretty
+here's a warning i could heed
+it ain't pretty
+
+lesson learned
+don't wanna be an alternate
+i wanna be an awkward fit
+get left outside in the cold
+silent spring
+there are no songbirds here
+fog truck killed them off
+and got away with it all
+
+this could be my sole talent
+to wreak complete havoc
+deniers to the left of me
+and posers to the right
+children listen all
+you don't have to fall
+cos' what we thought as gospel
+turned out to be lies
+
+breathe and push, push and breathe
+no it ain't pretty
+here's a warning i could heed
+but it ain't pretty
+
+lesson learned
+don't wanna be an also ran
+don't wanna a be a postscript man
+who keeps his mouth in control
+dirty plays
+spraying suburban kids
+with man made pathogens
+getting away with it all
+what will be my sole challenge
+what causes most damage
+the virus quelled the protests
+but just for a time
+children listen all
+you don't have to fall
+what we thought was gospel
+turned out to be lies
+
+breathe and push, push and breathe
+no it ain't pretty
+here's a warning i could heed
+but it ain't pretty
+breathe and push, push and breathe
+no it ain't pretty
+no excuses i can plead
+no it ain't pretty
+yeah</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('details')">
+            <span>details</span>
+            <span class="toggle" id="details-toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="details">
+            <div class="button-nav">
+                <button class="nav-button active" onclick="showDetailsContent('track', this)">track</button>
+                <button class="nav-button" onclick="showDetailsContent('equipment', this)">equipment</button>
+                <button class="nav-button" onclick="showDetailsContent('technical', this)">technical</button>
+                <button class="nav-button" onclick="showDetailsContent('credits', this)">credits</button>
+            </div>
+            
+            <div class="details-content" id="details-content">
+                <dl class="metadata-grid">
+                    <dt>composition date</dt>
+                    <dd>february 13, 2021</dd>
+                    <dt>release date</dt>
+                    <dd>september 10, 2025</dd>
+                    <dt>key</dt>
+                    <dd>a major</dd>
+                    <dt>bpm</dt>
+                    <dd>84</dd>
+                    <dt>time signature</dt>
+                    <dd>4/4</dd>
+                    <dt>tuning</dt>
+                    <dd>daec#ae</dd>
+                    <dt>sample credit</dt>
+                    <dd><a href="https://www.youtube.com/watch?v=JY3A-eoHeig&t=24s" target="_blank">valarie kaur - 2016 nye watch night address</a></dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('resources')">
+            <span>resources</span>
+            <span class="toggle" id="resources-toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="resources">
+            <a href="../audio/it-aint-pretty.mp3" download class="resource-link">mp3 download</a>
+            <a href="../videos/it-aint-pretty.mp4" download class="resource-link">video download</a>
+            <a href="../resources/it-aint-pretty-recording-information.txt" download class="resource-link">recording information</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        └─ <a href="https://radtypo.com/infrastructure.html">infrastructure</a> | <a href="mailto:hello@radtypo.com">hello@radtypo.com</a>
+    </footer>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 2;
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide >= totalSlides) currentSlide = 0;
+            else if (currentSlide < 0) currentSlide = totalSlides - 1;
+            updateCarousel();
+        }
+
+        function goToSlide(slideIndex) {
+            currentSlide = slideIndex;
+            updateCarousel();
+        }
+
+        function updateCarousel() {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const indicators = document.querySelectorAll('.indicator');
+            
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+            
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentSlide);
+            });
+
+            // Pause videos when not active
+            const videos = document.querySelectorAll('video');
+            videos.forEach(video => {
+                if (!video.closest('.carousel-slide').classList.contains('active')) {
+                    video.pause();
+                }
+            });
+        }
+
+        function toggleSection(id) {
+            const content = document.getElementById(id);
+            const toggle = document.getElementById(id + '-toggle');
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                toggle.textContent = '[ + ]';
+            } else {
+                content.classList.add('open');
+                toggle.textContent = '[ - ]';
+            }
+        }
+
+        function showDetailsContent(type, button) {
+            const contentArea = document.getElementById('details-content');
+            const buttons = button.parentElement.querySelectorAll('.nav-button');
+            
+            // Update active button
+            buttons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            // Update content
+            let content = '';
+            
+            switch(type) {
+                case 'track':
+                    content = `
+                        <dl class="metadata-grid">
+                            <dt>composition date</dt>
+                            <dd>february 13, 2021</dd>
+                            <dt>release date</dt>
+                            <dd>september 10, 2025</dd>
+                            <dt>key</dt>
+                            <dd>a major</dd>
+                            <dt>bpm</dt>
+                            <dd>84</dd>
+                            <dt>time signature</dt>
+                            <dd>4/4</dd>
+                            <dt>tuning</dt>
+                            <dd>daec#ae</dd>
+                            <dt>sample credit</dt>
+                            <dd>valarie kaur - 2016 nye watch night address</dd>
+                        </dl>
+                    `;
+                    break;
+                case 'equipment':
+                    content = `
+                        <div class="equipment-category">guitars:</div>
+                        <div class="equipment-list">
+                            fender jaguar 66 ri car cij - staytrem bridge & tremolo, seymour duncan vintage jaguar pickups<br>
+                            fender vintera jazzmaster ow mim - staytrem bridge<br>
+                            gibson sg - walnut stain usa<br>
+                            squier starcaster - 3tsb<br>
+                            tokai love sg79 cherry (nashville strung)<br>
+                            sigma jm-sg 45<br>
+                            turner 40ce (nashville strung)
+                        </div>
+                        
+                        <div class="equipment-category">guitar amplification & effects:</div>
+                        <div class="equipment-list">
+                            fender princeton 68 ri<br>
+                            fender twin reverb 65 ri<br>
+                            zilla studio pro 212 - celestion vintage 30<br>
+                            sennheiser md421<br>
+                            shure sm57<br>
+                            boss ce-5<br>
+                            boss tr-2<br>
+                            electro harmonix deluxe memory man<br>
+                            fulltone ocd<br>
+                            line 6 hx effects<br>
+                            strymon blue sky<br>
+                            little labs redeye passive<br>
+                            radial tonebone shotgun<br>
+                            khe audio electronics acs 8x4
+                        </div>
+                        
+                        <div class="equipment-category">bass:</div>
+                        <div class="equipment-list">
+                            fender player precision bass buttercream mim<br>
+                            ampeg svt pro ii<br>
+                            ampeg 810 cabinet<br>
+                            electrovoice re20<br>
+                            little labs redeye passive di<br>
+                            darkglass b7k ultra
+                        </div>
+                        
+                        <div class="equipment-category">keys:</div>
+                        <div class="equipment-list">
+                            behringer model d<br>
+                            korg sv-1 - rhodes<br>
+                            roland ju-06a<br>
+                            spitfire audio bbc symphony orchestra - flutes, horns, piccolo, trombone, trumpet & ghost keys<br>
+                            yamaha mc108o piano - neumann bcm104 (stereo) hammers & rode k2 (stereo) soundboard
+                        </div>
+                        
+                        <div class="equipment-category">clarinet:</div>
+                        <div class="equipment-list">
+                            se electronics rnr1
+                        </div>
+                        
+                        <div class="equipment-category">drums:</div>
+                        <div class="equipment-list">
+                            apple logic - atlanta<br>
+                            premier 24x14 bass drum<br>
+                            mapex saturn series toms 12x10, 16x16<br>
+                            mapex black panther hand hammered aluminium snare 14x5.5<br>
+                            zildjian k custom 14" hi hats<br>
+                            zildjian k custom 22" ride<br>
+                            zildjian k custom 17" crash<br>
+                            dream bliss 20" crash/ride
+                        </div>
+                    `;
+                    break;
+                case 'technical':
+                    content = `
+                        <div class="equipment-category">drum channels:</div>
+                        <div class="equipment-list">
+                            1. kick in - akg d112<br>
+                            2. kick out - aston spirit<br>
+                            3. snare top - beyerdynamic m201<br>
+                            4. snare bottom - oktava mk012<br>
+                            5. overhead left - beyerdynamic m160<br>
+                            6. overhead right - beyerdynamic m160<br>
+                            7. kit high center - aea r92<br>
+                            8. kit low - se electronics rnr1
+                        </div>
+                        
+                        <div class="equipment-category">recording chain:</div>
+                        <div class="equipment-list">
+                            audient asp8024 > m audio profire 2626 > pro tools
+                        </div>
+                    `;
+                    break;
+                case 'credits':
+                    content = `
+                        <dl class="metadata-grid">
+                            <dt>engineering & production</dt>
+                            <dd>all composers</dd>
+                            <dt>mixed and mastered by</dt>
+                            <dd>caolán austin</dd>
+                        </dl>
+                    `;
+                    break;
+            }
+            
+            contentArea.innerHTML = content;
+        }
+
+        async function updateCpuTemp() {
+            try {
+                const response = await fetch('/api/stats.json');
+                const data = await response.json();
+                
+                if (data.thermal && data.thermal.cpu_temp) {
+                    const temp = data.thermal.cpu_temp.replace('°C', '');
+                    document.getElementById('cpu-temp').textContent = temp;
+                }
+            } catch (error) {
+                console.log('CPU temperature fetch failed (server constraint):', error);
+            }
+        }
+
+        async function updateWeather() {
+            try {
+                const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=55.014662&longitude=-7.302903&current=temperature_2m,weather_code&timezone=Europe%2FLondon');
+                const data = await response.json();
+                
+                if (data.current) {
+                    const temp = Math.round(data.current.temperature_2m);
+                    document.getElementById('weather-temp').textContent = temp;
+                    
+                    const code = data.current.weather_code;
+                    let icon = '☁️';
+                    
+                    if (code === 0) icon = '☀️';
+                    else if (code <= 3) icon = '☁️';
+                    else if (code <= 48) icon = '🌫️';
+                    else if (code <= 67) icon = '🌧️';
+                    else if (code <= 77) icon = '🌨️';
+                    else if (code <= 82) icon = '🌦️';
+                    else if (code >= 95) icon = '⛈️';
+                    
+                    document.getElementById('weather-icon').textContent = icon;
+                }
+            } catch (error) {
+                console.log('Weather fetch failed (server constraint):', error);
+            }
+        }
+
+        updateCpuTemp();
+        updateWeather();
+        setInterval(updateCpuTemp, 30000);
+        setInterval(updateWeather, 300000);
+    </script>
+</body>
+</html>

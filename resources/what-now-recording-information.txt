@@ -1,0 +1,98 @@
+what now - recording information
+
+track details
+title: what now
+artist: rad.typo
+album: singles
+release date: october 1, 2025
+composition date: july 31, 2021
+isrc: gxdwy2500008
+key: f major (modulates to c major in bridge)
+bpm: 94
+time signature: 4/4
+tuning: eadgbe
+
+credits
+engineering & production: all composers
+mixed and mastered by: caolán austin
+
+equipment used
+
+guitars:
+- fender telecaster 3tsb mij
+- gibson sg - walnut stain usa
+- squier classic vibe starcaster 3tsb
+- tokai love sg79 cherry (nashville strung)
+- epiphone frontier masterbuilt - se electronics t2
+- sigma jm-sg45 - se electronics t2
+
+guitar amplification & effects:
+- budda superdrive 45 mkii
+- fender 65' twin reverb ri
+- line 6 pod pro
+- vox ac15cc2
+- zilla studio pro 212 - celestion vintage 30
+- chase bliss preamp mkii
+- electro harmonix big muff op - amp
+- electro harmonix deluxe memory man
+- fulltone ocd
+- line 6 hx effects
+- strymon big sky
+- little labs redeye passive
+- radial tonebone shotgun
+- khe audio electronics acs 8x4
+
+bass:
+- fender pj bass mim sb - seymour duncan quarter pounder pickups & badass bridge
+- ampeg svt pro ii
+- ampeg 810 cabinet
+- electrovoice re20
+- little labs redeye passive di
+- darkglass b7k ultra
+
+keys:
+- korg sv1 - piano & rhodes
+- logic pro x - emotion pad
+- yamaha mc108o piano - neumann bcm104 (stereo) hammers & rode k2 (stereo) soundboard
+
+drums:
+- premier 24x14 bass drum
+- mapex saturn series toms 12x9, 16x16
+- mapex black panther hand hammered aluminium snare 14x5.5
+- zildjian k custom 14" hi hats
+- zildjian k custom 22" ride
+- zildjian k custom 17" crash
+- dream bliss 20" crash/ride
+
+drum microphone setup (18-channel configuration):
+1. kick in - akg d112
+2. kick out - aston spirit
+3. snare top - beyerdynamic m201
+4. snare bottom - oktava mk012
+5. rack tom - sennheiser md421
+6. floor tom - sennheiser md421
+7. ride - oktava mk012
+8. hi hats - shure sm7b
+9. overhead left - beyerdynamic m160
+10. overhead right - beyerdynamic m160
+11. kit high center - aea r92
+12. kit low - se electronics rnr1
+13. m/s middle - rode k2
+14. m/s side - cascade gomez mje
+15. room left - cascade fathead
+16. room right - cascade fathead
+17. stairs left - se electronics t2
+18. stairs right - se electronics t2
+
+recording chain:
+audient asp8024 > avid hd i/o > pro tools
+
+file information:
+format: mp3
+bitrate: 320 kbps
+file size: 8.7 mb
+duration: 4:22
+
+---
+rad.typo - constraint-embracing music from derry
+https://radtypo.com

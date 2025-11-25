@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>infrastructure - rad.typo</title>
+    <style>
+        :root {
+            --bg-color: #fff;
+            --text-color: #000;
+            --link-color: #0000FF;
+            --secondary-color: #666;
+            --code-bg: #f5f5f5;
+        }
+
+        body {
+            font-family: monospace;
+            max-width: 800px;
+            margin: 48px auto;
+            padding: 24px;
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        h1, h2 {
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: normal;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .back {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 14px;
+        }
+
+        .status {
+            color: var(--secondary-color);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .breathing-dots::after {
+            content: '';
+            animation: breathe 4s infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+        }
+
+        .album-info {
+            margin-bottom: 40px;
+        }
+
+        .album-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .album-header h2 {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .intro-text {
+            color: var(--text-color);
+            font-size: 14px;
+            font-style: italic;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .server-image {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .pi-image {
+            max-width: 100%;
+            max-height: 400px;
+            cursor: pointer;
+        }
+
+        .section {
+            margin: 20px 0;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+        }
+
+        .section-header {
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid transparent;
+        }
+
+        .section-header:hover {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+        }
+
+        .section-content {
+            padding: 15px;
+            display: none;
+        }
+
+        .section-content.open {
+            display: block;
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 8px 16px;
+        }
+
+        .specs-grid dt {
+            color: var(--secondary-color);
+            font-weight: normal;
+        }
+
+        .specs-grid dd {
+            margin: 0;
+        }
+
+        .decision-item {
+            margin: 20px 0;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--code-bg);
+        }
+
+        .decision-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .decision-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .decision-choice {
+            margin: 8px 0;
+        }
+
+        .decision-rationale {
+            margin: 8px 0;
+            color: var(--text-color);
+        }
+
+        .philosophy-item {
+            margin: 12px 0;
+        }
+
+        .philosophy-term {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .inspiration-links {
+            margin: 20px 0;
+        }
+
+        .inspiration-links a {
+            display: block;
+            margin: 8px 0;
+            color: var(--link-color);
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--secondary-color);
+            font-size: 14px;
+            color: var(--secondary-color);
+        }
+
+        .footer a {
+            color: var(--secondary-color);
+        }
+
+        @media (max-width: 600px) {
+            body { 
+                margin: 20px auto;
+                padding: 15px;
+            }
+
+            .specs-grid {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+
+            .specs-grid dt {
+                margin-top: 12px;
+            }
+
+            .specs-grid dt:first-child {
+                margin-top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="back">← back</a>
+        <h1>rad.typo</h1>
+        <div class="status">derry: <span id="weather-temp">15</span>°C <span id="weather-icon">⛅</span> | cpu: <span id="header-cpu-temp">54</span>°C<span class="breathing-dots"></span></div>
+    </header>
+
+    <div class="album-info">
+        <div class="album-header">
+            <h2>infrastructure</h2>
+        </div>
+    </div>
+
+    <div class="intro-text">
+        rad.typo runs on a single-board computer connected to a home internet connection. no cloud, no data centers - just a raspberry pi, ticking gently in derry. at times the site may go down or get slow...
+    </div>
+
+    <div class="server-image">
+        <img src="images/raspberry-pi-server.jpg"
+             alt="Raspberry Pi 3B+ server running 24/7 in Derry"
+             class="pi-image">
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('hardware')">
+            <span>hardware specifications</span>
+            <span class="toggle" id="hardware-toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="hardware">
+            <dl class="specs-grid">
+                <dt>computer</dt>
+                <dd>Raspberry Pi 3B+</dd>
+                <dt>cpu</dt>
+                <dd>ARM Cortex-A53 1.4GHz quad-core</dd>
+                <dt>memory</dt>
+                <dd>1GB LPDDR2 SDRAM</dd>
+                <dt>storage</dt>
+                <dd>32GB microSD (SanDisk Ultra)</dd>
+                <dt>power consumption</dt>
+                <dd>2.4W idle • 3.8W streaming</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('software')">
+            <span>software stack</span>
+            <span class="toggle" id="software-toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="software">
+            <dl class="specs-grid">
+                <dt>operating system</dt>
+                <dd>Raspberry Pi OS Lite (Debian 12)</dd>
+                <dt>web server</dt>
+                <dd>Apache 2.4.62</dd>
+                <dt>security</dt>
+                <dd>UFW firewall + fail2ban + SSH keys</dd>
+                <dt>ssl certificate</dt>
+                <dd>Let's Encrypt</dd>
+                <dt>dns</dt>
+                <dd>DuckDNS dynamic DNS</dd>
+                <dt>monitoring</dt>
+                <dd>Custom bash scripts + cron jobs</dd>
+                <dt>audio streaming</dt>
+                <dd>HTML5 native (no proprietary codecs)</dd>
+                <dt>frontend</dt>
+                <dd>Pure HTML/CSS/JS (no frameworks)</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('decisions')">
+            <span>technical decisions</span>
+            <span class="toggle" id="decisions-toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="decisions">
+            <div class="decision-item">
+                <div class="decision-title">Apache vs Nginx</div>
+                <div class="decision-choice"><strong>Choice:</strong> Apache 2.4.62</div>
+                <div class="decision-rationale"><strong>Rationale:</strong> Apache's .htaccess support makes configuration changes possible without root access. More importantly, Apache handles concurrent connections gracefully within our constraints, and the slight performance difference vs Nginx is negligible at our scale. The extra memory usage (50-100MB) is acceptable within our 1GB limit.</div>
+            </div>
+            
+            <div class="decision-item">
+                <div class="decision-title">No Database</div>
+                <div class="decision-choice"><strong>Choice:</strong> Static HTML + JSON APIs</div>
+                <div class="decision-rationale"><strong>Rationale:</strong> Eliminating database reduces attack surface to zero for SQL injection. File-based storage uses less memory and CPU cycles. Stats are generated by bash scripts and served as static JSON - honest, transparent, and resource-efficient.</div>
+            </div>
+            
+            <div class="decision-item">
+                <div class="decision-title">Monospace Typography</div>
+                <div class="decision-choice"><strong>Choice:</strong> System monospace fonts only</div>
+                <div class="decision-rationale"><strong>Rationale:</strong> No web font downloads reduces bandwidth usage and load times. Monospace maintains consistent character spacing across all devices.</div>
+            </div>
+            
+            <div class="decision-item">
+                <div class="decision-title">Real-time vs Cached Data</div>
+                <div class="decision-choice"><strong>Choice:</strong> 30-second frontend polling of 60-second server updates</div>
+                <div class="decision-rationale"><strong>Rationale:</strong> Balances freshness with Pi resource constraints. CPU temperature changes meaningfully over 30-60 seconds. More frequent updates would waste cycles without meaningful benefit.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('philosophy')">
+            <span>design philosophy</span>
+            <span class="toggle" id="philosophy-toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="philosophy">
+            <div class="philosophy-item">
+                <div class="philosophy-term">visible infrastructure:</div>
+                <div>Users understand the physical reality of their music streaming.</div>
+            </div>
+            <div class="philosophy-item">
+                <div class="philosophy-term">sustainable computing:</div>
+                <div>0.2kg CO₂/month vs 12kg for traditional hosting. A single LED bulb uses more power than our entire server.</div>
+            </div>
+            <div class="philosophy-item">
+                <div class="philosophy-term">local infrastructure:</div>
+                <div>Home internet connection, no CDN, no cloud abstraction. Real geographical presence.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('inspiration')">
+            <span>inspiration</span>
+            <span class="toggle" id="inspiration-toggle">[ + ]</span>
+        </div>
+        <div class="section-content" id="inspiration">
+            <div class="inspiration-links">
+                <a href="https://solar.lowtechmagazine.com/" target="_blank">https://solar.lowtechmagazine.com/</a>
+                <a href="https://elly.town/" target="_blank">https://elly.town/</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        └─ <a href="mailto:hello@radtypo.com">hello@radtypo.com</a>
+    </footer>
+
+    <script>
+        function toggleSection(id) {
+            const content = document.getElementById(id);
+            const toggle = document.getElementById(id + '-toggle');
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                toggle.textContent = '[ + ]';
+            } else {
+                content.classList.add('open');
+                toggle.textContent = '[ - ]';
+            }
+        }
+
+        async function updateWeather() {
+            try {
+                const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=55.014662&longitude=-7.302903&current=temperature_2m,weather_code&timezone=Europe%2FLondon');
+                const data = await response.json();
+                
+                if (data.current) {
+                    const temp = Math.round(data.current.temperature_2m);
+                    document.getElementById('weather-temp').textContent = temp;
+                    
+                    const code = data.current.weather_code;
+                    let icon = '⛅';
+                    if (code === 0) icon = '☀️';
+                    else if (code <= 3) icon = '⛅';
+                    else if (code <= 48) icon = '🌫️';
+                    else if (code <= 67) icon = '🌧️';
+                    else if (code <= 77) icon = '🌨️';
+                    else if (code <= 82) icon = '🌦️';
+                    else if (code >= 95) icon = '⛈️';
+                    
+                    document.getElementById('weather-icon').textContent = icon;
+                }
+            } catch (error) {
+                console.log('Weather fetch failed (server constraint):', error);
+            }
+        }
+
+        async function updateCpuTemp() {
+            try {
+                const response = await fetch('/api/stats.json');
+                const data = await response.json();
+                
+                if (data.thermal && data.thermal.cpu_temp) {
+                    const temp = data.thermal.cpu_temp.replace('°C', '');
+                    document.getElementById('header-cpu-temp').textContent = temp;
+                }
+            } catch (error) {
+                console.log('Stats fetch failed (server constraint):', error);
+            }
+        }
+
+        // Update immediately and then on intervals
+        updateWeather();
+        updateCpuTemp();
+        setInterval(updateCpuTemp, 30000);
+        setInterval(updateWeather, 300000);
+    </script>
+</body>
+</html>

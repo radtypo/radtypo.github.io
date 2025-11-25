@@ -1,0 +1,88 @@
+muriel - recording information
+
+track details
+title: muriel
+artist: rad.typo
+album: hard hitter
+release date: september 3, 2025
+composition date: september 10, 2020
+isrc: gxdwy2500005
+key: a major
+bpm: 96
+time signature: 4/4
+tuning: dadgbe
+
+credits
+engineering & production: all composers
+mixed by: caolán austin
+mastered by: matt colton
+
+equipment used
+
+guitars:
+- epiphone les paul inspired by gibson goldtop
+- fender stratocaster wine red mim
+- gibson sg - walnut stain usa
+
+guitar amplification & effects:
+- budda superdrive 45 mkii
+- fender 65' twin reverb ri
+- mesa boogie dual rectifier
+- vox ac15cc2
+- zilla studio pro 212 - celestion vintage 30
+- sennheiser md421
+- shure sm57
+- line 6 hx effects
+
+bass:
+- fender pj bass mim sb - seymour duncan quarter pounder pickups & badass bridge
+- ampeg svt pro ii
+- ampeg 810 cabinet
+- electrovoice re20
+- little labs redeye passive di
+- darkglass b7k ultra
+
+keys:
+- korg sv1 - b3 & piano
+- apple logic - after party percussion loop
+- kids toy glockenspiel
+- yamaha mc108o piano - neumann bcm104 (stereo) hammers & rode k2 (stereo) soundboard
+
+drums:
+- mapex saturn 20x22, 12x10, 16x16
+- mapex black panther hand hammered aluminium snare 14x5.5
+- zildjian k custom 14" hi hats
+- zildjian k custom 22" ride
+- zildjian k custom 17" crash
+- dream bliss 20" crash/ride
+
+drum microphone setup (16-channel configuration):
+1. kick in - akg d112
+2. kick out - aston spirit
+3. snare top - beyerdynamic m201
+4. snare bottom - oktava mk012
+5. rack tom - sennheiser md421
+6. floor tom - sennheiser md421
+7. ride - oktava mk012
+8. mono room - se electronics rnr1
+9. overhead left - beyerdynamic m160
+10. overhead right - beyerdynamic m160
+11. room m/s middle - rode k2
+12. room m/s side - cascade gomez mje
+13. room left - cascade fathead
+14. room right - cascade fathead
+15. stairs left - se electronics t2
+16. stairs right - se electronics t2
+
+recording chain:
+audient asp8024 > m audio profire 2626 > pro tools
+
+file information:
+format: mp3
+bitrate: variable
+file size: 8.1 mb
+duration: 4:03
+
+---
+rad.typo - constraint-embracing music from derry
+https://radtypo.com
