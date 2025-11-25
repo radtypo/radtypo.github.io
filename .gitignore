@@ -1,1 +1,14 @@
+# Large video files
 videos/it-aint-pretty.mp4
+
+# Backups (Git is the backup)
+*.backup
+*.save
+*-backup.html
+
+# Staging/WIP (don't publish unreleased work)
+album-staging/
+
+# System files
+.DS_Store
+*.log

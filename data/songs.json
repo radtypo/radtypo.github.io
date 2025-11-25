@@ -1,0 +1,89 @@
+{
+  "bad-fortune": {
+    "title": "bad fortune",
+    "date": "2025-08-06",
+    "artwork": "bad-fortune-artwork.jpg",
+    "audio": "bad-fortune.mp3",
+    "lyrics": "i'm happy to go\nwhere the algorithm takes us\nand get told off\nby vegan-baiting waitress\ni'll pick my bad fortune\nright from off of the ground\n<em>it's worse than that</em>\nwithout you i'm no prospect\nbut i'm lonely when i'm with you\n\ndo you think you'll talk me out of this\n<em>and hold my head up high</em>\ndo you think i'll just snap out of it\n<em>and hold my head up high</em>\n\nnow what comes next\non the kitchen disco playlist?\n<em>it's worse than that</em>\nthe hours drip\nand the coffee makes us weightless\n<em>it's worse than that</em>\nwho's wrong, who's right?\nwho cares at all?\nwho's gonna be the last one standing\nin life's laundromat\nthis is the sticky floor\nspinning and twirling to a cycle's final roar",
+    "details": {
+      "track": {
+        "composition_date": "january 24, 2020",
+        "release_date": "august 6, 2025",
+        "key": "d major",
+        "bpm": "116",
+        "time_signature": "4/4",
+        "tuning": "EADGBE",
+        "isrc": "GXDWY2500001"
+      },
+      "equipment": {
+        "guitars": [
+          "epiphone les paul inspired by gibson goldtop",
+          "fender telecaster 3tsb mij",
+          "fender stratocaster wine red mim",
+          "gibson sg walnut stain usa",
+          "squier classic vibe starcaster 3tsb",
+          "squier classic vibe bass vi black",
+          "sigma jm-sg 45",
+          "turner 40ce (nashville strung)"
+        ],
+        "guitar_amplifiers": [
+          "5 watt custom amp by leif bodnarachuk",
+          "budda superdrive 45 mkii",
+          "fender 65' twin reverb ri",
+          "orange or120",
+          "vox ac15cc2",
+          "zilla studio pro 212 - celestion vintage 30",
+          "keeley filaments"
+        ],
+        "bass": [
+          "fender pj bass mim sb - seymour duncan quarter pounder pickups & badass bridge",
+          "ampeg svt pro ii",
+          "ampeg 810 cabinet",
+          "electrovoice re20",
+          "little labs redeye passive di",
+          "darkglass b7k ultra"
+        ],
+        "keys": [
+          "korg sv1 - hammond, clavinet & vox continental"
+        ],
+        "drums": [
+          "mapex saturn 20x22, 12x10, 16x16",
+          "mapex black panther hand hammered aluminium snare 14x5.5",
+          "zildjian k custom 14\" hi hats",
+          "zildjian k custom 22\" ride",
+          "zildjian k custom 17\" crash",
+          "dream bliss 20\" crash/ride"
+        ]
+      },
+      "technical": {
+        "drum_channels": [
+          "1. kick in - akg d112",
+          "2. kick out - aston spirit",
+          "3. snare top - beyerdynamic m201",
+          "4. snare bottom - oktava mk012",
+          "5. rack tom - sennheiser md421",
+          "6. floor tom - sennheiser md421",
+          "7. ride - oktava mk012",
+          "8. hi hats - shure sm7b",
+          "9. overhead left - beyerdynamic m160",
+          "10. overhead right - beyerdynamic m160",
+          "11-12. m/s middle - rode k2",
+          "13-14. m/s side - cascade gomez mje",
+          "15. room left - cascade fathead",
+          "16. room right - cascade fathead",
+          "17. stairs left - se electronics t2",
+          "18. stairs right - se electronics t2"
+        ],
+        "recording_chain": "audient asp8024 > m audio profire 2626 > pro tools"
+      },
+      "credits": {
+        "engineering_production": "rad.typo",
+        "mixed_mastered": "caolán austin"
+      }
+    },
+    "resources": [
+      {"name": "mp3 download", "url": "../audio/bad-fortune.mp3"},
+      {"name": "recording information", "url": "../resources/bad-fortune-recording-information.txt"}
+    ]
+  }
+}
