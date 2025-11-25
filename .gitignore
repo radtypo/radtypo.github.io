@@ -12,3 +12,4 @@ album-staging/
 # System files
 .DS_Store
 *.log
+works-event/audio
