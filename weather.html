@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Supply - radtypo</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: #fefefe;
+            color: #1a1a1a;
+            margin: 40px;
+            line-height: 1.6;
+            max-width: 800px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .forecast-intro {
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .current-weather {
+            margin: 20px 0 30px 0;
+            font-size: 18px;
+            font-weight: bold;
+            border: 1px solid #1a1a1a;
+            padding: 15px;
+            background: #f8f8f8;
+        }
+        
+        .forecast-container {
+            margin: 30px 0;
+        }
+        
+        .forecast-day {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .day-label {
+            text-transform: uppercase;
+            font-weight: bold;
+            display: inline-block;
+            width: 200px;
+        }
+        
+        .weather-icon {
+            margin: 0 5px;
+        }
+        
+        .weather-condition {
+            margin-left: 5px;
+        }
+        
+        .powered-by {
+            margin-top: 40px;
+            font-size: 16px;
+        }
+        
+        .powered-by a {
+            color: #1a1a1a;
+            text-decoration: underline;
+        }
+        
+        .loading {
+            font-style: italic;
+            color: #666;
+        }
+        
+        .error {
+            color: #666;
+            font-style: italic;
+        }
+        
+        .server-location {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #666;
+            border-top: 1px solid #1a1a1a;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Power supply</h1>
+    
+    <div class="forecast-intro">
+        This is a forecast for the coming days, updated daily:
+    </div>
+    
+    <div class="current-weather" id="current-weather">
+        <div class="loading">Loading current weather...</div>
+    </div>
+    
+    <div class="forecast-container" id="forecast">
+        <div class="loading">Loading weather data...</div>
+    </div>
+    
+    <div class="powered-by">
+        This weather forecast is <u>powered by Open-Meteo</u>.
+    </div>
+    
+    <div class="server-location">
+        Location: 55.014662, -7.302903<br>
+        Server: £23.33 raspberry pi<br>
+        Last updated: <span id="last-updated">--</span>
+    </div>
+
+    <script>
+        // Server location coordinates
+        const LAT = 55.014662;
+        const LON = -7.302903;
+        
+        // Weather condition mapping to simple descriptions and unicode symbols
+        // Based on WMO weather codes used by Open-Meteo
+        const weatherMapping = {
+            0: { icon: '☀', description: 'clear sky' },
+            1: { icon: '🌤', description: 'mainly clear' },
+            2: { icon: '⛅', description: 'partly cloudy' },
+            3: { icon: '☁', description: 'overcast' },
+            45: { icon: '🌫', description: 'fog' },
+            48: { icon: '🌫', description: 'depositing rime fog' },
+            51: { icon: '🌦', description: 'light drizzle' },
+            53: { icon: '🌦', description: 'moderate drizzle' },
+            55: { icon: '🌦', description: 'dense drizzle' },
+            61: { icon: '🌧', description: 'slight rain' },
+            63: { icon: '🌧', description: 'moderate rain' },
+            65: { icon: '🌧', description: 'heavy rain' },
+            71: { icon: '🌨', description: 'slight snow' },
+            73: { icon: '🌨', description: 'moderate snow' },
+            75: { icon: '❄', description: 'heavy snow' },
+            80: { icon: '🌦', description: 'slight rain showers' },
+            81: { icon: '🌧', description: 'moderate rain showers' },
+            82: { icon: '🌧', description: 'violent rain showers' },
+            95: { icon: '⛈', description: 'thunderstorm' },
+            96: { icon: '⛈', description: 'thunderstorm with hail' },
+            99: { icon: '⛈', description: 'thunderstorm with heavy hail' }
+        };
+        
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const dayAfter = new Date(today);
+            dayAfter.setDate(dayAfter.getDate() + 2);
+            
+            const targetDate = date.toDateString();
+            
+            if (targetDate === today.toDateString()) {
+                return 'TODAY';
+            } else if (targetDate === tomorrow.toDateString()) {
+                return 'TOMORROW';
+            } else if (targetDate === dayAfter.toDateString()) {
+                return 'DAY AFTER TOMORROW';
+            } else {
+                return date.toLocaleDateString('en-GB', { 
+                    weekday: 'long' 
+                }).toUpperCase();
+            }
+        }
+        
+        async function fetchWeather() {
+            try {
+                // Fetch current weather first
+                await fetchCurrentWeather();
+                
+                // Get 3-day forecast using Open-Meteo
+                const response = await fetch(
+                    `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&daily=weather_code,temperature_2m_max&forecast_days=3&timezone=Europe%2FLondon`
+                );
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                displayForecast(data.daily);
+                
+            } catch (error) {
+                console.error('Error fetching weather:', error);
+                document.getElementById('forecast').innerHTML = 
+                    '<div class="error">Weather data temporarily unavailable (server constraint)</div>';
+            }
+        }
+        
+        async function fetchCurrentWeather() {
+            try {
+                const response = await fetch(
+                    `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code,wind_speed_10m&timezone=Europe%2FLondon`
+                );
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                displayCurrentWeather(data.current);
+                
+            } catch (error) {
+                console.error('Error fetching current weather:', error);
+                document.getElementById('current-weather').innerHTML = 
+                    '<div class="error">Current weather temporarily unavailable (server constraint)</div>';
+            }
+        }
+        
+        function displayCurrentWeather(currentWeather) {
+            // Determine weather condition using WMO weather codes
+            let weather = weatherMapping[0]; // default to clear sky
+            if (currentWeather.weather_code !== undefined && weatherMapping[currentWeather.weather_code]) {
+                weather = weatherMapping[currentWeather.weather_code];
+            }
+            
+            const temperature = currentWeather.temperature_2m ? Math.round(currentWeather.temperature_2m) : '--';
+            
+            const currentHTML = `
+                <span class="weather-icon">${weather.icon}</span>
+                ${weather.description}, ${temperature}°C
+            `;
+            
+            document.getElementById('current-weather').innerHTML = currentHTML;
+        }
+        
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const dayAfter = new Date(today);
+            dayAfter.setDate(dayAfter.getDate() + 2);
+            
+            const targetDate = date.toDateString();
+            
+            if (targetDate === today.toDateString()) {
+                return 'TODAY';
+            } else if (targetDate === tomorrow.toDateString()) {
+                return 'TOMORROW';
+            } else if (targetDate === dayAfter.toDateString()) {
+                return 'DAY AFTER TOMORROW';
+            } else {
+                return date.toLocaleDateString('en-GB', { 
+                    weekday: 'long' 
+                }).toUpperCase();
+            }
+        }
+        
+        function displayForecast(dailyData) {
+            let forecastHTML = '';
+            
+            for (let i = 0; i < dailyData.time.length; i++) {
+                const date = dailyData.time[i];
+                const weatherCode = dailyData.weather_code[i];
+                const dayLabel = formatDate(date);
+                
+                // Determine weather condition using WMO codes
+                let weather = weatherMapping[0]; // default to clear sky
+                if (weatherCode !== undefined && weatherMapping[weatherCode]) {
+                    weather = weatherMapping[weatherCode];
+                }
+                
+                forecastHTML += `
+                    <div class="forecast-day">
+                        <span class="day-label">${dayLabel}</span>
+                        <span class="weather-icon">${weather.icon}</span>
+                        <span class="weather-condition">${weather.description}</span>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('forecast').innerHTML = forecastHTML;
+            document.getElementById('last-updated').textContent = new Date().toLocaleString('en-GB');
+        }
+        
+        // Load weather on page load
+        fetchWeather();
+    </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+straight and narrow - recording information
+
+track details
+title: straight and narrow
+artist: rad.typo
+release date: october 15, 2025
+composition date: june 25, 2022
+isrc: gxdwy2500010
+key: e major
+bpm: 126
+time signature: 4/4
+tuning: eadgbe
+
+credits
+engineering & production: all composers
+mixed and mastered by: caolán austin
+
+equipment used
+
+guitar:
+- fender vintera jazzmaster ow mim - staytrem bridge
+
+guitar amplification & effects:
+- vox ac15cc2
+- zilla studio pro 212 - celestion vintage 30
+- boss tr-2
+- fulltone ocd
+- little labs redeye passive
+- radial tonebone shotgun
+- khe audio electronics acs 8x4
+
+bass:
+- fender pj bass mim sb - seymour duncan quarter pounder pickups & badass bridge
+- ampeg svt pro ii
+- ampeg 810 cabinet
+- electrovoice re20
+- little labs redeye passive di
+- darkglass b7k ultra
+
+keys:
+- korg sv-1
+- roland ju-06a
+- spitfire audio bbc symphony orchestra ghost keys
+- yamaha mc1080 piano - neumann bcm104 (stereo) hammers & rode k2 (stereo) soundboard
+
+drums:
+- premier 24x14 bass drum
+- mapex saturn series toms 12x10, 16x16
+- mapex black panther hand hammered aluminium snare 14x5.5
+- zildjian k custom 14" hi hats
+- zildjian k custom 22" ride
+- zildjian k custom 17" crash
+- dream bliss 20" crash/ride
+
+drum microphone setup (16-channel configuration):
+1. kick in - akg d112
+2. kick out - aston spirit
+3. snare top - beyerdynamic m201
+4. snare bottom - oktava mk012
+5. rack tom - sennheiser md421
+6. floor tom - sennheiser md421
+7. overhead left - beyerdynamic m160
+8. overhead right - beyerdynamic m160
+9. kit high center - aea r92
+10. kit low - se electronics rnr1
+11. m/s middle - rode k2
+12. m/s side - cascade gomez mje
+13. room left - cascade fathead
+14. room right - cascade fathead
+15. stairs left - se electronics t2
+16. stairs right - se electronics t2
+
+recording chain:
+audient asp8024 > avid hd i/o > pro tools
+
+file information:
+format: mp3
+bitrate: 320 kbps
+file size: 9 mb
+duration: 3:58
+
+---
+rad.typo - constraint-embracing music from derry
+https://radtypo.com

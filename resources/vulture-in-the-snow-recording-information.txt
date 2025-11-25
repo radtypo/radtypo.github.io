@@ -1,0 +1,95 @@
+vulture in the snow - recording information
+
+title: vulture in the snow
+artist: rad.typo
+release date: october 22, 2025
+composition date: september 21, 2020
+isrc: gxdwy2500011
+key: b minor
+bpm: 118
+time signature: 4/4 (6/8 bridge)
+tuning: dadgbe
+
+credits
+engineering & production: all composers
+mixed and mastered by: caolán austin
+
+equipment used
+
+guitars:
+- fender jaguar 66 ri car cij - staytrem bridge
+- fender telecaster 3tsb mij
+- gibson sg - walnut stain usa
+- gibson sg raw power - maple - natural usa
+- squier classic vibe bass vi
+
+guitar amplification & effects:
+- chase bliss preamp mkii
+- line 6 hx effects
+- budda superdrive 45 mkii - drive channel
+- orange ad30 - channel 1
+- fender twin reverb - vibrato channel
+- shure sm57/sennheiser md421 per cabinet
+- little labs redeye passive
+- radial tonebone shotgun
+- khe audio electronics acs 8x4
+
+bass:
+- fender pj bass mim sb - seymour duncan quarter pounder pickups & badass bridge
+- ampeg svt pro ii
+- ampeg 810 cabinet
+- electrovoice re20
+- little labs redeye passive di
+- darkglass b7k ultra
+
+keys:
+- behringer model d
+- dave smith instruments mopho x4
+- logic pro x studio strings 2
+
+woodwind:
+- clarinet - rode k2
+
+vocal:
+- blue mouse
+
+drums:
+- mapex saturn 20x22, 12x9, 16x16
+- mapex black panther hand hammered aluminium snare 14x5.5
+- zildjian k custom 14" hi hats
+- zildjian k custom 22" ride
+- zildjian k custom 17" crash
+- dream bliss 20" crash/ride
+
+drum microphone setup (18-channel configuration):
+1. kick in - akg d112
+2. kick out - aston spirit
+3. snare top - beyerdynamic m201
+4. snare bottom - oktava mk012
+5. rack tom - sennheiser md421
+6. floor tom - sennheiser md421
+7. ride - oktava mk012
+8. hi hats - shure sm7b
+9. overhead left - beyerdynamic m160
+10. overhead right - beyerdynamic m160
+11. kit high center - aea r92
+12. kit low - se electronics rnr1
+13. m/s middle - rode k2
+14. m/s side - cascade gomez mje
+15. room left - cascade fathead
+16. room right - cascade fathead
+17. stairs left - se electronics t2
+18. stairs right - se electronics t2
+
+recording chain:
+audient asp8024 > m audio profire 2626 > pro tools
+
+file information:
+format: mp3
+bitrate: 320 kbps
+file size: 10.8 mb
+duration: 5:06
+
+---
+rad.typo - constraint-embracing music from derry
+https://radtypo.com

@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-11-25 07:47:01 GMT",
+  "location": "Derry, UK",
+  "uptime": "1 day, 22 hours, 39 minutes",
+  "hardware": "Raspberry Pi 3 Model B Plus Rev 1.3",
+  "constraint_status": "🔥 EMBRACING CONSTRAINTS",
+  "thermal": {
+    "cpu_temp": "54°C",
+    "gpu_temp": "55.8°C",
+    "throttling": "⚠️  THROTTLED"
+  },
+  "power": {
+    "core_voltage": "1.2000V",
+    "estimated_consumption": "~3.5W (moderate load)"
+  },
+  "resources": {
+    "memory": "216MB / 921MB (23%)",
+    "disk": "3.6G / 58G (7%)",
+    "cpu_load": "0.44 0.42 0.21"
+  },
+  "network": {
+    "interface_stats": "Interface: eth0 | ↓ 63MB ↑ 568MB",
+    "connections": "HTTP: 0 | Total: 4"
+  },
+  "services": {
+    "apache": "✅ RUNNING | 210 requests today",
+    "music_library": "0 songs | 304K total"
+  }
+}

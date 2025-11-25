@@ -1,0 +1,96 @@
+it ain't pretty - recording information
+
+track details
+title: it ain't pretty
+artist: rad.typo
+album: hard hitter
+release date: september 10, 2025
+composition date: february 13, 2021
+isrc: gxdwy2500006
+key: a major
+bpm: 84
+time signature: 4/4
+tuning: daec#ae
+sample credit: valarie kaur - 2016 nye watch night address at the metropolitan ame church
+
+credits
+engineering & production: all composers
+mixed and mastered by: caolán austin
+
+equipment used
+
+guitars:
+- fender jaguar 66 ri car cij - staytrem bridge & tremolo, seymour duncan vintage jaguar pickups
+- fender vintera jazzmaster ow mim - staytrem bridge
+- gibson sg - walnut stain usa
+- squier starcaster - 3tsb
+- tokai love sg79 cherry (nashville strung)
+- sigma jm-sg 45
+- turner 40ce (nashville strung)
+
+guitar amplification & effects:
+- fender princeton 68 ri
+- fender twin reverb 65 ri
+- zilla studio pro 212 - celestion vintage 30
+- sennheiser md421
+- shure sm57
+- boss ce-5
+- boss tr-2
+- electro harmonix deluxe memory man
+- fulltone ocd
+- line 6 hx effects
+- strymon blue sky
+- little labs redeye passive
+- radial tonebone shotgun
+- khe audio electronics acs 8x4
+
+bass:
+- fender player precision bass buttercream mim
+- ampeg svt pro ii
+- ampeg 810 cabinet
+- electrovoice re20
+- little labs redeye passive di
+- darkglass b7k ultra
+
+keys:
+- behringer model d
+- korg sv-1 - rhodes
+- roland ju-06a
+- spitfire audio bbc symphony orchestra - flutes, horns, piccolo, trombone, trumpet & ghost keys
+- yamaha mc108o piano - neumann bcm104 (stereo) hammers & rode k2 (stereo) soundboard
+
+clarinet:
+- se electronics rnr1
+
+drums:
+- apple logic - atlanta
+- premier 24x14 bass drum
+- mapex saturn series toms 12x10, 16x16
+- mapex black panther hand hammered aluminium snare 14x5.5
+- zildjian k custom 14" hi hats
+- zildjian k custom 22" ride
+- zildjian k custom 17" crash
+- dream bliss 20" crash/ride
+
+drum microphone setup (8-channel configuration):
+1. kick in - akg d112
+2. kick out - aston spirit
+3. snare top - beyerdynamic m201
+4. snare bottom - oktava mk012
+5. overhead left - beyerdynamic m160
+6. overhead right - beyerdynamic m160
+7. kit high center - aea r92
+8. kit low - se electronics rnr1
+
+recording chain:
+audient asp8024 > m audio profire 2626 > pro tools
+
+file information:
+format: mp3
+bitrate: variable
+file size: 10.4 mb
+duration: 4:57
+
+---
+rad.typo - constraint-embracing music from derry
+https://radtypo.com
