@@ -292,9 +292,27 @@
         // Store song data globally for tab switching
         let currentSong = null;
 
-        // Get song ID from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const songId = urlParams.get('id');
+// Get song ID from URL (query string or path)
+
+        function getSongId() {
+
+            let id = new URLSearchParams(window.location.search).get('id');
+
+            if (!id) {
+
+                const match = window.location.pathname.match(/\/songs\/([^/]+)\.html$/);
+
+                if (match) id = match[1];
+
+            }
+
+            return id;
+
+        }
+
+        
+
+        const songId = getSongId();
 
         // Load and render song
         async function loadSong() {

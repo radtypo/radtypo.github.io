@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# Writing pages: /writing/works-event.html -> /writing-template.html?id=works-event
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^writing/([^/]+)\.html$ /writing-template.html?id=$1 [L,QSA]
+
+# Song pages: /songs/bad-fortune.html -> /song-template.html?id=bad-fortune
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^songs/([^/]+)\.html$ /song-template.html?id=$1 [L,QSA]
