@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>works event - rad.typo</title>
+    <title id="page-title">rad.typo</title>
     <style>
         :root {
             --bg-color: #fff;
@@ -78,23 +78,23 @@
             75% { content: '...'; }
         }
 
-        .poem-info {
+        .writing-info {
             margin-bottom: 40px;
         }
 
-        .poem-header {
+        .writing-header {
             display: flex;
             align-items: center;
             gap: 15px;
             margin-bottom: 20px;
         }
 
-        .poem-header h2 {
+        .writing-header h2 {
             margin: 0;
             font-weight: bold;
         }
 
-        .poem-meta {
+        .writing-meta {
             color: var(--secondary-color);
             font-size: 14px;
         }
@@ -104,7 +104,7 @@
             margin: 30px 0;
         }
 
-        .poem-artwork {
+        .writing-artwork {
             max-width: 100%;
             max-height: 400px;
             cursor: pointer;
@@ -140,7 +140,7 @@
             border-top: 1px solid var(--secondary-color);
         }
 
-        .poem-text {
+        .writing-text {
             white-space: pre-line;
             line-height: 1.8;
             font-family: monospace;
@@ -173,6 +173,18 @@
             color: var(--secondary-color);
         }
 
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--secondary-color);
+        }
+
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #c00;
+        }
+
         @media (max-width: 600px) {
             body { 
                 margin: 20px auto;
@@ -201,65 +213,8 @@
         <div class="status">derry: <span id="weather-temp">15</span>°C <span id="weather-icon">☁️</span> | cpu: <span id="cpu-temp">54</span>°C<span class="breathing-dots"></span></div>
     </header>
 
-    <div class="poem-info">
-        <div class="poem-header">
-            <h2>works event</h2>
-        </div>
-        <div class="poem-meta">2025-11-26</div>
-    </div>
-
-    <div class="artwork-container">
-        <img src="../images/works-event-artwork.jpg"
-             alt="Works Event artwork"
-             class="poem-artwork">
-    </div>
-
-    <div class="section">
-        <div class="section-header" onclick="toggleSection('poem')">
-            <span>poem</span>
-            <span class="toggle" id="poem-toggle">[ - ]</span>
-        </div>
-        <div class="section-content open" id="poem">
-            <div class="poem-text">i went to your works event,
-you left me by the dripping ice sculpture,
-talking to the german guy from legal
-about his lost cat
-and the number of points on his boots card.
-
-i set up the laptop
-for your presentation,
-and cut in funny videos against company updates,
-making transitions land on scripted beats.
-
-|
-
-i stayed for the whole of the works dinner
-and nodded obsequiously to a data analyst from zurich
-about her passive-aggressive downstairs neighbour
-who insists he can hear her walking about
-no matter what she puts on her feet.
-
-i went to the scavenger hunt,
-where i drew the card to be the mayor's mistress.
-when the judgement scene was enacted
-i squealed <em>'but i've always loved you'</em>
-and everyone stared because i was the only one still in character.</div>
-        </div>
-    </div>
-
-    <div class="section">
-        <div class="section-header" onclick="toggleSection('details')">
-            <span>details</span>
-            <span class="toggle" id="details-toggle">[ + ]</span>
-        </div>
-        <div class="section-content" id="details">
-            <dl class="metadata-grid">
-                <dt>composition date</dt>
-                <dd>september 17, 2014</dd>
-                <dt>publication date</dt>
-                <dd>november 26, 2025</dd>
-            </dl>
-        </div>
+    <div id="content">
+        <div class="loading">loading...</div>
     </div>
 
     <footer class="footer">
@@ -267,6 +222,79 @@ and everyone stared because i was the only one still in character.</div>
     </footer>
 
     <script>
+async function loadWriting() {
+    // Try query string first, then fall back to URL path
+    let writingId = new URLSearchParams(window.location.search).get('id');
+    
+    if (!writingId) {
+        // Extract from path: /writing/works-event.html -> works-event
+        const match = window.location.pathname.match(/\/writing\/([^/]+)\.html$/);
+        if (match) {
+            writingId = match[1];
+        }
+    }
+    
+    if (!writingId) {
+        document.getElementById('content').innerHTML = '<div class="error">no writing specified</div>';
+        return;
+    }            
+            try {
+                const response = await fetch('/data/writing.json');
+                const writings = await response.json();
+                const writing = writings[writingId];
+                
+                if (!writing) {
+                    document.getElementById('content').innerHTML = '<div class="error">writing not found</div>';
+                    return;
+                }
+                
+                document.getElementById('page-title').textContent = writing.title + ' - rad.typo';
+                
+                document.getElementById('content').innerHTML = `
+                    <div class="writing-info">
+                        <div class="writing-header">
+                            <h2>${writing.title}</h2>
+                        </div>
+                        <div class="writing-meta">${writing.date}</div>
+                    </div>
+
+                    <div class="artwork-container">
+                        <img src="/images/${writing.artwork}"
+                             alt="${writing.title} artwork"
+                             class="writing-artwork">
+                    </div>
+
+                    <div class="section">
+                        <div class="section-header" onclick="toggleSection('text')">
+                            <span>${writing.type}</span>
+                            <span class="toggle" id="text-toggle">[ - ]</span>
+                        </div>
+                        <div class="section-content open" id="text">
+                            <div class="writing-text">${writing.text}</div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-header" onclick="toggleSection('details')">
+                            <span>details</span>
+                            <span class="toggle" id="details-toggle">[ + ]</span>
+                        </div>
+                        <div class="section-content" id="details">
+                            <dl class="metadata-grid">
+                                <dt>composition date</dt>
+                                <dd>${writing.details.composition_date}</dd>
+                                <dt>publication date</dt>
+                                <dd>${writing.details.publication_date}</dd>
+                            </dl>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('content').innerHTML = '<div class="error">failed to load writing</div>';
+                console.error(error);
+            }
+        }
+
         function toggleSection(id) {
             const content = document.getElementById(id);
             const toggle = document.getElementById(id + '-toggle');
@@ -290,7 +318,7 @@ and everyone stared because i was the only one still in character.</div>
                     document.getElementById('cpu-temp').textContent = temp;
                 }
             } catch (error) {
-                console.log('CPU temperature fetch failed (server constraint):', error);
+                console.log('CPU temperature fetch failed:', error);
             }
         }
 
@@ -317,10 +345,11 @@ and everyone stared because i was the only one still in character.</div>
                     document.getElementById('weather-icon').textContent = icon;
                 }
             } catch (error) {
-                console.log('Weather fetch failed (server constraint):', error);
+                console.log('Weather fetch failed:', error);
             }
         }
 
+        loadWriting();
         updateCpuTemp();
         updateWeather();
         setInterval(updateCpuTemp, 30000);
