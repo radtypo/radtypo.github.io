@@ -1,0 +1,42 @@
+[
+  {
+    "date": "2025-11-28T20:19:05Z",
+    "message": "migrate writing to json template system\n\n- writing-template.html with kp index, tooltips, home link\n- all 6 poems in data/writing.json\n- delete static html files (backed up to ~/backup/)",
+    "sha": "2818820"
+  },
+  {
+    "date": "2025-11-27T08:04:33Z",
+    "message": "add kp index and tooltips to song template header\n\n- kp index with colored indicator matching homepage\n- hover tooltips on all three metrics (weather, kp, cpu)\n- rad.typo header now links to homepage\n- optimized css and js",
+    "sha": "1cb9a03"
+  },
+  {
+    "date": "2025-11-27T07:49:40Z",
+    "message": "migrate songs to json template system\n\n- add apache rewrite rules (.htaccess)\n- all 12 songs now served via song-template.html + data/songs.json\n- add writing-template.html + data/writing.json for poems\n- delete static html files (backed up to ~/backup/songs-static-html/)",
+    "sha": "16cda3d"
+  },
+  {
+    "date": "2025-11-25T13:03:53Z",
+    "message": "Exclude works-event symlink from Git",
+    "sha": "1f24d3d"
+  },
+  {
+    "date": "2025-11-25T13:03:39Z",
+    "message": "Exclude works-event symlink from Git",
+    "sha": "9d210e4"
+  },
+  {
+    "date": "2025-11-25T13:01:41Z",
+    "message": "Disable Jekyll builds",
+    "sha": "e36dfd8"
+  },
+  {
+    "date": "2025-11-25T12:43:32Z",
+    "message": "Cleanup: remove backups, update gitignore",
+    "sha": "5d37c2b"
+  },
+  {
+    "date": "2025-11-25T07:49:06Z",
+    "message": "Fresh sync from Pi",
+    "sha": "c06af01"
+  }
+]
