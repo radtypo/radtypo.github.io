@@ -331,6 +331,13 @@
 
         <ul class="item-list" id="items-list">
 
+<li class="item">
+    <div class="item-info">
+        <span class="item-date">2026-02-04</span>
+        <span class="item-title"><a href="https://radtypo.com/writing/solar-boat.html">solar boat</a></span>
+    </div>
+</li>
+
 <li class="item" data-type="writing" data-date="2026-01-28">
     <div class="item-info">
         <span class="item-date">2026-01-28</span>
@@ -555,7 +562,7 @@
 
     <footer class="footer">
 
-└─ <a href="https://radtypo.com/infrastructure.html">infrastructure</a> | <a href="https://radtypo.com/telemetry.html">telemetry</a> | <a href="https://radtypo.com/releases.html">releases</a>
+└─ <a href="https://radtypo.com/infrastructure.html">infrastructure</a> | <a href="https://radtypo.com/telemetry.html">telemetry</a> | <a href="https://radtypo.com/releases.html">releases</a> | build: <a href="https://radtypo.com/releases.html"><span id="build-version">-</span></a>
 
     </footer>
 
@@ -637,6 +644,18 @@
             document.body.removeChild(link);
         }
 
+        async function updateBuildVersion() {
+            try {
+                const response = await fetch('/data/commits.json');
+                const commits = await response.json();
+                if (commits.length > 0) {
+                    document.getElementById('build-version').textContent = commits[0].sha;
+                }
+            } catch (error) {
+                console.log('Build version fetch failed:', error);
+            }
+        }
+
         async function updateCpuTemp() {
             try {
                 const response = await fetch('/api/stats.json');
@@ -685,6 +704,7 @@
         updateCpuTemp();
         updateWeather();
         updateKPIndex();
+        updateBuildVersion();
         setInterval(updateCpuTemp, 30000); // Every 30 seconds
         setInterval(updateWeather, 300000); // Every 5 minutes
         setInterval(updateKPIndex, 900000); // Every 15 minutes

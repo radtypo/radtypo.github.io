@@ -1,4 +1,16 @@
 {
+"old-enough-to-handle-it": {
+    "title": "old enough to handle it",
+    "type": "song",
+    "date": "2026-02-07",
+    "artwork": "old-enough-to-handle-it-artwork.jpg",
+    "audio": "old-enough-to-handle-it.mp3",
+    "lyrics": "each day\nmarks a new season of time\nthis breaching heart of mine\nwill gladly take it's errant costume\nbelieve me\ni know i'll get left behind\ni'm travelling light this time\ni'm shedding all my father's papers\nnow\n\ntake one small building\nand throw it in the national park\nlearn the view off by heart\ntake one great idea\nand let it look over itself\nfrom myriad dimensions\n\nangry\ni'm angry\nbut i'm still here\nand i'm old enough to handle it\nif only\nyou could hear me\ni would keep this dream alive\nbuild this satellite\n\nnow i know\nlove is like a paper plane\nfolded in symmetry\nimpossible to know if it will\nglide or break\ni couldn't have asked for more\ni'm desolate and grateful\ndesolate and grateful for you\nnow",
+    "details": {
+      "recording_date": "january 25, 2026",
+      "release_date": "february 7, 2026"
+    }
+  },
   "bad-fortune": {
     "title": "bad fortune",
     "date": "2025-08-06",
@@ -789,6 +801,69 @@
       }
     ]
   },
+
+"the-most-generic-experience-ever": {
+    "title": "the most generic experience ever",
+    "date": "2026-01-21",
+    "artwork": "the-most-generic-experience-ever-artwork.jpg",
+    "audio": "the-most-generic-experience-ever.mp3",
+    "lyrics": "kissed me once and left me wanting more\nbefore my heart had even had a chance to mend yet\ntell me if you've seen this film before\nand which of us will be the one that finally ends it\n\neven though i've got my head screwed on\ni feel like a helicopter\ni know this could be\nthe most\ngeneric experience ever\nthe most\ngeneric experience ever\nthe most\ngeneric experience ever\nand i don't want you to stop it\n\ntell me if you need another take\nor if i should try again with a different accent\ni cry on cue you call it out as fake\nanother failed attempt to win her over with anguish\n\neven though i've got my head screwed on\ni feel like a helicopter\ni know this could be\nthe most\ngeneric experience ever\nthe most\ngeneric experience ever\nthe most\ngeneric experience ever\nand i don't want you to stop it\n\ni feel just like a ballerina\ntrained for grace but falling badly\ni know this could be\nthe most\ngeneric experience ever\nthe most\ngeneric experience ever\nthe most\ngeneric experience ever\nand i don't want you to stop it",
+    "details": {
+      "track": {
+        "composition_date": "november 17, 2025",
+        "release_date": "january 21, 2026",
+        "key": "c major",
+        "bpm": "114",
+        "time_signature": "4/4",
+        "tuning": "eadgbe (standard & capo 3)",
+        "isrc": "gxdwy2600001"
+      },
+      "equipment": {
+        "guitars": [
+          "tbd"
+        ],
+        "bass": [
+          "tbd"
+        ],
+        "keys": [
+          "tbd"
+        ],
+        "drums": [
+          "tbd"
+        ]
+      },
+      "technical": {
+        "drum_channels": [
+          "tbd"
+        ],
+        "recording_chain": "tbd"
+      },
+      "credits": {
+        "engineering_production": "tbd",
+        "mixed_mastered": "tbd"
+      }
+    },
+"resources": [
+    {
+        "name": "mp3 (320kbps)",
+        "url": "../audio/the-most-generic-experience-ever.mp3"
+    },
+    {
+        "name": "chord sheet",
+        "url": "../resources/the-most-generic-experience-ever-chords.pdf"
+    },
+    {
+        "name": "recording information",
+        "url": "../resources/the-most-generic-experience-ever-recording-information.txt"
+    },
+    {
+        "name": "wav stems (24-bit)",
+        "url": "https://rad-nas.eur9.ug.link/filemgr/share-download/?id=9de4d9021dbf4db59fd12ead3310f049",
+        "filename": "radtypo-the-most-generic-experience-ever-stems.zip"
+    }
+]
+  },
+
   "vulture-in-the-snow": {
     "title": "vulture in the snow",
     "date": "2025-10-22",

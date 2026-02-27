@@ -1,5 +1,30 @@
 [
   {
+    "date": "2026-02-01T11:53:17Z",
+    "message": "redesign homepage with unified chronological view\n\n- merged songs/writing/albums into single chronological list\n- added filter navigation: all | songs | writing | albums | rad.io\n- visual hierarchy: active filter (black/bold), inactive (grey), rad.io (blue link)\n- consistent spacing with invisible placeholders for writing entries\n- removed non-functional subscribe form\n- footer updated with releases link",
+    "sha": "6f9e4bf"
+  },
+  {
+    "date": "2025-11-28T23:08:34Z",
+    "message": "fix lyrics formatting: restore verse breaks\n\n- re-extracted lyrics from backup HTML files\n- preserves blank lines between verses/choruses\n- displays correctly with white-space: pre-line CSS",
+    "sha": "7b6e00f"
+  },
+  {
+    "date": "2025-11-28T22:57:13Z",
+    "message": "fix broken image references\n\n- albums/hard-hitter.html: /dev/images/ → /images/\n- radio.html: typo it-aint-pretty-artwor.jpg → it-aint-pretty-artwork.jpg\n- songs.json: add missing artwork field for it-aint-pretty",
+    "sha": "6141f24"
+  },
+  {
+    "date": "2025-11-28T22:43:26Z",
+    "message": "cleanup: remove unused files and empty directories\n\n- weather.html (old standalone page)\n- power.html (old standalone page)\n- dev/ (old development files)\n- other/ (empty)\n- masters/ (empty)",
+    "sha": "c263ebf"
+  },
+  {
+    "date": "2025-11-28T22:26:10Z",
+    "message": "add releases page with github commit history\n\n- fetches recent commits from github api\n- styled to match site aesthetic with kp/weather/cpu header\n- cron job updates hourly",
+    "sha": "7a99d93"
+  },
+  {
     "date": "2025-11-28T20:19:05Z",
     "message": "migrate writing to json template system\n\n- writing-template.html with kp index, tooltips, home link\n- all 6 poems in data/writing.json\n- delete static html files (backed up to ~/backup/)",
     "sha": "2818820"
@@ -23,20 +48,5 @@
     "date": "2025-11-25T13:03:39Z",
     "message": "Exclude works-event symlink from Git",
     "sha": "9d210e4"
-  },
-  {
-    "date": "2025-11-25T13:01:41Z",
-    "message": "Disable Jekyll builds",
-    "sha": "e36dfd8"
-  },
-  {
-    "date": "2025-11-25T12:43:32Z",
-    "message": "Cleanup: remove backups, update gitignore",
-    "sha": "5d37c2b"
-  },
-  {
-    "date": "2025-11-25T07:49:06Z",
-    "message": "Fresh sync from Pi",
-    "sha": "c06af01"
   }
 ]

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head><title>claude test</title></head>
+<body style="font-family: monospace; padding: 20px;">
+    <button onclick="askClaude()">ask claude</button>
+    <pre id="response"></pre>
+    <script>
+    async function askClaude() {
+
+document.getElementById('response').textContent = 'Error: ' + JSON.stringify(data, null, 2);
+
+        try {
+            const response = await fetch('/api/claude-proxy.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: 'claude-sonnet-4-20250514',
+                    max_tokens: 100,
+                    messages: [{ role: 'user', content: 'Say hello in exactly 5 words.' }]
+                })
+            });
+            const data = await response.json();
+            if (data.error) {
+                document.getElementById('response').textContent = 'Error: ' + data.error;
+            } else if (data.content) {
+                document.getElementById('response').textContent = data.content[0].text;
+            } else {
+                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+            }
+        } catch (e) {
+            document.getElementById('response').textContent = 'Error: ' + e.message;
+        }
+    }
+    </script>
+</body>
+</html>

@@ -3,135 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>radtypo sitemap</title>
+    <title>sitemap - rad.typo</title>
     <style>
-        body { 
-            font-family: 'Courier New', Courier, monospace;
-            background: #fefefe;
-            color: #1a1a1a;
-            margin: 40px;
-            line-height: 1.6;
-            max-width: 800px;
-        }
-        .section { 
-            border: 2px solid #1a1a1a;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .header {
-            font-weight: bold;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #1a1a1a;
-            padding-bottom: 5px;
-        }
-        .file-list { margin: 10px 0; }
-        .file-item { 
-            margin: 8px 0;
-            padding: 5px;
-            border-left: 3px solid #1a1a1a;
-            padding-left: 15px;
-        }
-        .file-name { font-weight: bold; }
-        .file-info { font-size: 0.9em; color: #666; margin-top: 3px; }
-        a { color: #1a1a1a; text-decoration: underline; }
-        .navigation {
-            margin-top: 30px;
-            border-top: 1px solid #1a1a1a;
-            padding-top: 20px;
-        }
-        .stats { background: #f5f5f5; padding: 10px; margin: 10px 0; }
+        body { font-family: monospace; background: #fff; color: #000; margin: 48px auto; padding: 24px; line-height: 1.6; max-width: 800px; }
+        h1 { font-size: 24px; margin-bottom: 8px; }
+        .subtitle { color: #666; margin-bottom: 24px; }
+        .toggle { margin-bottom: 24px; }
+        .toggle button { font-family: monospace; padding: 8px 16px; margin-right: 8px; cursor: pointer; border: 1px solid #000; background: #fff; }
+        .toggle button.active { background: #000; color: #fff; }
+        .view { display: none; }
+        .view.active { display: block; }
+        .tree { white-space: pre; line-height: 1.8; }
+        .tree a { color: #0000FF; text-decoration: none; }
+        .tree a:hover { text-decoration: underline; }
+        .chrono-item { margin: 8px 0; padding-left: 15px; border-left: 2px solid #666; }
+        .chrono-item a { color: #0000FF; text-decoration: none; }
+        .chrono-item a:hover { text-decoration: underline; }
+        .chrono-item .date { color: #666; }
+        .chrono-item .type { color: #666; font-size: 0.9em; }
+        .stats { background: #f5f5f5; padding: 10px; margin-top: 30px; font-size: 0.9em; color: #666; }
+        .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #666; font-size: 14px; color: #666; }
+        .footer a { color: #666; }
     </style>
 </head>
 <body>
-    <h1>radtypo complete sitemap</h1>
-    <p>constraint-embracing infrastructure index</p>
+    <h1>rad.typo</h1>
+    <div class="subtitle">sitemap</div>
 
-    <div class="section">
-        <div class="header">Main Pages</div>
-        <div class="file-list">
-            <div class="file-item">
-                <div class="file-name"><a href="404-song-not-found.html">404-song-not-found.html</a></div>
-                <div class="file-info">Size: 16K | Modified: 2025-10-10 17:03</div>
-            </div>
-            <div class="file-item">
-                <div class="file-name"><a href="album-maker.html">album-maker.html</a></div>
-                <div class="file-info">Size: 24K | Modified: 2025-11-17 07:53</div>
-            </div>
-            <div class="file-item">
-                <div class="file-name"><a href="index.html">index.html</a></div>
-                <div class="file-info">Size: 22K | Modified: 2025-11-25 23:51</div>
-            </div>
-            <div class="file-item">
-                <div class="file-name"><a href="infrastructure.html">infrastructure.html</a></div>
-                <div class="file-info">Size: 15K | Modified: 2025-11-28 22:37</div>
-            </div>
-            <div class="file-item">
-                <div class="file-name"><a href="radio-downloads.html">radio-downloads.html</a></div>
-                <div class="file-info">Size: 12K | Modified: 2025-08-14 07:55</div>
-            </div>
-            <div class="file-item">
-                <div class="file-name"><a href="radio.html">radio.html</a></div>
-                <div class="file-info">Size: 27K | Modified: 2025-11-28 22:50</div>
-            </div>
-            <div class="file-item">
-                <div class="file-name"><a href="releases.html">releases.html</a></div>
-                <div class="file-info">Size: 11K | Modified: 2025-11-28 20:24</div>
-            </div>
-            <div class="file-item">
-                <div class="file-name"><a href="server-status.html">server-status.html</a></div>
-                <div class="file-info">Size: 0 | Modified: 2025-11-28 22:55</div>
-            </div>
-            <div class="file-item">
-                <div class="file-name"><a href="song-template.html">song-template.html</a></div>
-                <div class="file-info">Size: 20K | Modified: 2025-11-27 08:02</div>
-            </div>
-            <div class="file-item">
-                <div class="file-name"><a href="telemetry.html">telemetry.html</a></div>
-                <div class="file-info">Size: 23K | Modified: 2025-10-09 10:28</div>
-            </div>
-            <div class="file-item">
-                <div class="file-name"><a href="writing-template.html">writing-template.html</a></div>
-                <div class="file-info">Size: 14K | Modified: 2025-11-28 20:16</div>
-            </div>
+    <div class="toggle">
+        <button id="btn-tree" class="active" onclick="showView('tree')">tree</button>
+        <button id="btn-chrono" onclick="showView('chrono')">chronological</button>
+    </div>
+
+    <div id="tree" class="view active">
+        <div class="tree">rad.typo/
+├── <a href="/">home</a>
+├── <a href="/infrastructure.html">infrastructure</a>
+├── <a href="/radio.html">radio</a>
+├── <a href="/telemetry.html">telemetry</a>
+├── <a href="/releases.html">releases</a>
+├── songs/
+│   ├── <a href="/songs/bad-fortune.html">bad fortune</a>
+│   ├── <a href="/songs/birthday-cake.html">birthday cake</a>
+│   ├── <a href="/songs/frontal-lobe-fritz.html">frontal lobe fritz</a>
+│   ├── <a href="/songs/hard-hitter.html">hard hitter</a>
+│   ├── <a href="/songs/it-aint-pretty.html">it ain't pretty</a>
+│   ├── <a href="/songs/muriel.html">muriel</a>
+│   ├── <a href="/songs/old-enough-to-handle-it.html">old enough to handle it</a>
+│   ├── <a href="/songs/rad-typo.html">rad typo</a>
+│   ├── <a href="/songs/straight-and-narrow.html">straight and narrow</a>
+│   ├── <a href="/songs/the-most-generic-experience-ever.html">the most generic experience ever</a>
+│   ├── <a href="/songs/the-one-we-didnt-get-to-record-with-steve-albini.html">the one we didn't get to record with steve albini</a>
+│   ├── <a href="/songs/vulture-in-the-snow.html">vulture in the snow</a>
+│   ├── <a href="/songs/what-now.html">what now</a>
+│   └── <a href="/songs/whats-not-to-like.html">what's not to like</a>
+└── writing/
+    ├── <a href="/writing/a-good-drying-day.html">a good drying day</a>
+    ├── <a href="/writing/archetypal-tarot.html">archetypal tarot</a>
+    ├── <a href="/writing/calibri-bodies-we-are.html">calibri bodies (we are)</a>
+    ├── <a href="/writing/cut-short.html">cut short</a>
+    ├── <a href="/writing/daytime-astronomy.html">daytime astronomy</a>
+    ├── <a href="/writing/lipstick-snake.html">lipstick snake</a>
+    ├── <a href="/writing/manhattan-petrichor.html">manhattan petrichor</a>
+    ├── <a href="/writing/no-matter-how-dark-my-thinking-would-become.html">no matter how dark my thinking would become</a>
+    ├── <a href="/writing/one-to-stun-two-to-kill-three-to-make-sure.html">one to stun, two to kill, three to make sure</a>
+    ├── <a href="/writing/post-hope.html">post hope</a>
+    ├── <a href="/writing/rewilding.html">rewilding</a>
+    ├── <a href="/writing/solar-boat.html">solar boat</a>
+    ├── <a href="/writing/wild-loops.html">wild loops</a>
+    ├── <a href="/writing/word-spread-quickly.html">word spread quickly</a>
+    └── <a href="/writing/works-event.html">works event</a>
         </div>
     </div>
 
-    <div class="section">
-        <div class="header">Music Library</div>
-        <div class="file-list">
-        </div>
+    <div id="chrono" class="view">
+<div class="chrono-item"><span class="date">2026-02-07</span> <span class="type">[song]</span> <a href="/songs/old-enough-to-handle-it.html">old enough to handle it</a></div>
+<div class="chrono-item"><span class="date">2026-01-28</span> <span class="type">[poem]</span> <a href="/writing/a-good-drying-day.html">a good drying day</a></div>
+<div class="chrono-item"><span class="date">2026-01-21</span> <span class="type">[poem]</span> <a href="/writing/wild-loops.html">wild loops</a></div>
+<div class="chrono-item"><span class="date">2026-01-21</span> <span class="type">[song]</span> <a href="/songs/the-most-generic-experience-ever.html">the most generic experience ever</a></div>
+<div class="chrono-item"><span class="date">2026-01-14</span> <span class="type">[poem]</span> <a href="/writing/rewilding.html">rewilding</a></div>
+<div class="chrono-item"><span class="date">2026-01-07</span> <span class="type">[poem]</span> <a href="/writing/calibri-bodies-we-are.html">calibri bodies (we are)</a></div>
+<div class="chrono-item"><span class="date">2025-12-31</span> <span class="type">[poem]</span> <a href="/writing/manhattan-petrichor.html">manhattan petrichor</a></div>
+<div class="chrono-item"><span class="date">2025-12-24</span> <span class="type">[poem]</span> <a href="/writing/post-hope.html">post hope</a></div>
+<div class="chrono-item"><span class="date">2025-12-17</span> <span class="type">[poem]</span> <a href="/writing/lipstick-snake.html">lipstick snake</a></div>
+<div class="chrono-item"><span class="date">2025-12-10</span> <span class="type">[poem]</span> <a href="/writing/archetypal-tarot.html">archetypal tarot</a></div>
+<div class="chrono-item"><span class="date">2025-12-03</span> <span class="type">[poem]</span> <a href="/writing/one-to-stun-two-to-kill-three-to-make-sure.html">one to stun, two to kill, three to make sure</a></div>
+<div class="chrono-item"><span class="date">2025-11-26</span> <span class="type">[poem]</span> <a href="/writing/works-event.html">works event</a></div>
+<div class="chrono-item"><span class="date">2025-11-19</span> <span class="type">[poem]</span> <a href="/writing/daytime-astronomy.html">daytime astronomy</a></div>
+<div class="chrono-item"><span class="date">2025-11-12</span> <span class="type">[poem]</span> <a href="/writing/cut-short.html">cut short</a></div>
+<div class="chrono-item"><span class="date">2025-11-05</span> <span class="type">[poem]</span> <a href="/writing/no-matter-how-dark-my-thinking-would-become.html">no matter how dark my thinking would become</a></div>
+<div class="chrono-item"><span class="date">2025-10-29</span> <span class="type">[poem]</span> <a href="/writing/word-spread-quickly.html">word spread quickly</a></div>
+<div class="chrono-item"><span class="date">2025-10-22</span> <span class="type">[song]</span> <a href="/songs/vulture-in-the-snow.html">vulture in the snow</a></div>
+<div class="chrono-item"><span class="date">2025-10-15</span> <span class="type">[song]</span> <a href="/songs/straight-and-narrow.html">straight and narrow</a></div>
+<div class="chrono-item"><span class="date">2025-10-08</span> <span class="type">[song]</span> <a href="/songs/frontal-lobe-fritz.html">frontal lobe fritz</a></div>
+<div class="chrono-item"><span class="date">2025-10-01</span> <span class="type">[song]</span> <a href="/songs/what-now.html">what now</a></div>
+<div class="chrono-item"><span class="date">2025-09-24</span> <span class="type">[song]</span> <a href="/songs/the-one-we-didnt-get-to-record-with-steve-albini.html">the one we didn't get to record with steve albini</a></div>
+<div class="chrono-item"><span class="date">2025-09-17</span> <span class="type">[song]</span> <a href="/songs/hard-hitter.html">hard hitter</a></div>
+<div class="chrono-item"><span class="date">2025-09-10</span> <span class="type">[song]</span> <a href="/songs/it-aint-pretty.html">it ain't pretty</a></div>
+<div class="chrono-item"><span class="date">2025-09-03</span> <span class="type">[song]</span> <a href="/songs/muriel.html">muriel</a></div>
+<div class="chrono-item"><span class="date">2025-08-27</span> <span class="type">[song]</span> <a href="/songs/rad-typo.html">rad typo</a></div>
+<div class="chrono-item"><span class="date">2025-08-20</span> <span class="type">[song]</span> <a href="/songs/birthday-cake.html">birthday cake</a></div>
+<div class="chrono-item"><span class="date">2025-08-13</span> <span class="type">[song]</span> <a href="/songs/whats-not-to-like.html">what's not to like</a></div>
+<div class="chrono-item"><span class="date">2025-08-06</span> <span class="type">[song]</span> <a href="/songs/bad-fortune.html">bad fortune</a></div>
+<div class="chrono-item"><span class="date">2022-08-01</span> <span class="type">[poem]</span> <a href="/writing/solar-boat.html">solar boat</a></div>
     </div>
 
-    <div class="section">
-        <div class="header">API & Data</div>
-        <div class="file-list">
-            <div class="file-item">
-                <div class="file-name"><a href="api/stats.json">api/stats.json</a></div>
-                <div class="file-info">Size: 794 | Modified: 2025-11-28 22:54</div>
-            </div>
-        </div>
+    <div class="stats">
+        songs: 14 | writing: 15 | size: 799M | generated: 2026-02-27 23:45
     </div>
 
-    <div class="section">
-        <div class="header">Site Statistics</div>
-        <div class="stats">
-            <div>Total files: 295</div>
-            <div>Total size: 778M</div>
-            <div>Songs available: 0</div>
-            <div>Last updated: Fri 28 Nov 22:55:01 GMT 2025</div>
-            <div>Constraint status: TRANSPARENT</div>
-        </div>
-    </div>
+    <footer class="footer">
+        <a href="/">← back</a> | <a href="/infrastructure.html">infrastructure</a>
+    </footer>
 
-    <div class="navigation">
-        <a href="/">← back to radtypo</a> | 
-        <a href="power.html">power monitoring</a> | 
-        <a href="weather.html">weather forecast</a>
-    </div>
-
-    <div style="margin-top: 30px; font-size: 0.9em; color: #666;">
-        <p>Auto-generated sitemap • Updates every 5 minutes</p>
-        <p>Celebrating infrastructure transparency</p>
-    </div>
+    <script>
+        function showView(view) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.toggle button').forEach(b => b.classList.remove('active'));
+            document.getElementById(view).classList.add('active');
+            document.getElementById('btn-' + view).classList.add('active');
+        }
+    </script>
 </body>
 </html>
