@@ -14,3 +14,4 @@ album-staging/
 *.log
 works-event/audio
 works-event/audio
+api/claude-proxy.php
