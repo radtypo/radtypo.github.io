@@ -638,7 +638,8 @@
                 circle.style.setProperty('--kp-color', colorData.color);
                 valueEl.textContent = kpDisplay;
                 tooltipEl.textContent = `KP ${kpDisplay} - ${colorData.label}`;
-                
+                try { sessionStorage.setItem('rt_kp', JSON.stringify({ value: kpDisplay, color: colorData.color, label: colorData.label })); } catch(e) {}
+
             } catch (error) {
                 console.log('KP index fetch failed:', error);
             }
@@ -673,6 +674,7 @@
                 if (data.thermal && data.thermal.cpu_temp) {
                     const temp = data.thermal.cpu_temp.replace('°C', '');
                     document.getElementById('cpu-temp').textContent = temp;
+                    try { sessionStorage.setItem('rt_cpu', JSON.stringify({ temp })); } catch(e) {}
                 }
             } catch (error) {
                 console.log('CPU temperature fetch failed (server constraint):', error);
@@ -702,12 +704,25 @@
                     else if (code >= 95) icon = '⛈️'; // thunderstorm
                     
                     document.getElementById('weather-icon').textContent = icon;
+                    try { sessionStorage.setItem('rt_weather', JSON.stringify({ temp, icon })); } catch(e) {}
                 }
             } catch (error) {
                 console.log('Weather fetch failed (server constraint):', error);
                 // Keep showing last known weather during constraints
             }
         }
+
+        // Restore status bar from cache instantly before fetching fresh data
+        (function() {
+            try {
+                const w = sessionStorage.getItem('rt_weather');
+                if (w) { const d = JSON.parse(w); document.getElementById('weather-temp').textContent = d.temp; document.getElementById('weather-icon').textContent = d.icon; }
+                const k = sessionStorage.getItem('rt_kp');
+                if (k) { const d = JSON.parse(k); document.querySelector('.kp-circle').style.setProperty('--kp-color', d.color); document.getElementById('kp-value').textContent = d.value; document.getElementById('kp-tooltip').textContent = `KP ${d.value} - ${d.label}`; }
+                const c = sessionStorage.getItem('rt_cpu');
+                if (c) { const d = JSON.parse(c); document.getElementById('cpu-temp').textContent = d.temp; }
+            } catch(e) {}
+        })();
 
         // Initialize and set update intervals
         updateCpuTemp();
