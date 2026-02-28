@@ -172,7 +172,7 @@
         function getWritingId() {
             let id = new URLSearchParams(window.location.search).get('id');
             if (!id) {
-                const match = window.location.pathname.match(/\/writing\/([^/]+)\.html$/);
+                const match = window.location.pathname.match(/\/poems\/([^/]+)\.html$/);
                 if (match) id = match[1];
             }
             return id;
@@ -183,7 +183,7 @@
         async function loadWriting() {
             if (!writingId) { showError('No writing specified'); return; }
             try {
-                const response = await fetch('/data/writing.json');
+                const response = await fetch('/data/poems.json');
                 const writings = await response.json();
                 const writing = writings[writingId];
                 if (!writing) { showError(`Writing "${writingId}" not found`); return; }
