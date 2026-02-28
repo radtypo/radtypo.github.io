@@ -292,7 +292,7 @@
 
         <ul class="item-list" id="items-list">
 
-<li class="item" data-type="poems" data-date="2026-03-04" style="color: #ccc;">
+<li class="item" data-type="poems" data-date="2026-03-04" data-pending="true" data-href="https://radtypo.com/poems/avoidant-choreography.html" style="color: #ccc;">
     <div class="item-info">
         <span class="item-date">2026-03-04</span>
         <span class="item-title">avoidant choreography</span>
@@ -566,6 +566,18 @@
             8: { color: '#8e44ad', label: 'Severe Storm' },
             9: { color: '#6c3483', label: 'Extreme Storm' }
         };
+
+        // Auto-activate pending entries on their publish date
+        const today = new Date().toISOString().slice(0, 10);
+        document.querySelectorAll('[data-pending="true"]').forEach(item => {
+            if (today >= item.getAttribute('data-date')) {
+                const href = item.getAttribute('data-href');
+                const titleSpan = item.querySelector('.item-title');
+                titleSpan.innerHTML = `<a href="${href}">${titleSpan.textContent}</a>`;
+                item.removeAttribute('style');
+                item.removeAttribute('data-pending');
+            }
+        });
 
         // Filter functionality
         const filterLinks = document.querySelectorAll('.filter-link');
