@@ -24,7 +24,7 @@
 
         h1, h2 { margin: 0; padding: 0; }
         h1 { font-size: 24px; margin-bottom: 24px; }
-        h2 { font-size: 16px; margin-bottom: 15px; font-weight: normal; }
+        h2 { font-size: 16px; margin-bottom: 20px; font-weight: bold; }
 
         a { color: var(--link-color); text-decoration: none; }
         a:hover { text-decoration: underline; }
@@ -61,10 +61,6 @@
             75% { content: '...'; }
         }
 
-        .track-name {
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
 
         .ctrl {
             background: none;
@@ -105,9 +101,7 @@
         </div>
     </header>
 
-    <h2>rad.io</h2>
-
-    <div class="track-name" id="trackName">—</div>
+    <h2 id="trackName">—</h2>
 
     <div>
         <button class="ctrl" id="playBtn">play</button>
