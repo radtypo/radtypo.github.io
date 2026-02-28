@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rad.typo</title>
+    <title>telemetry - rad.typo</title>
     <style>
         :root {
-            --bg-color: #fff;
-            --text-color: #000;
-            --link-color: #0000FF;
-            --secondary-color: #666;
+            --bg: #fff;
+            --text: #000;
+            --link: #0000FF;
+            --muted: #666;
+            --faint: #e8e8e8;
             --code-bg: #f5f5f5;
         }
 
@@ -19,49 +20,23 @@
             margin: 48px auto;
             padding: 24px;
             line-height: 1.6;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background: var(--bg);
+            color: var(--text);
         }
 
-        h1, h2 {
-            margin: 0;
-            padding: 0;
-        }
+        h1, h2 { margin: 0; padding: 0; }
+        h1 { font-size: 24px; margin-bottom: 24px; }
 
-        h1 {
-            font-size: 24px;
-            margin-bottom: 24px;
-        }
+        a { color: var(--link); text-decoration: none; }
+        a:hover { text-decoration: underline; }
 
-        h2 {
-            font-size: 16px;
-            margin-bottom: 15px;
-            font-weight: normal;
-        }
-
-        a {
-            color: var(--link-color);
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .header {
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        .back {
-            position: absolute;
-            top: 0;
-            right: 0;
-            font-size: 14px;
-        }
+        .header { margin-bottom: 30px; position: relative; }
+        .back { position: absolute; top: 0; right: 0; font-size: 14px; }
+        .site-title { color: inherit; text-decoration: none; }
+        .site-title:hover { text-decoration: none; }
 
         .status {
-            color: var(--secondary-color);
+            color: var(--muted);
             font-size: 14px;
             margin-bottom: 20px;
             display: flex;
@@ -71,11 +46,9 @@
         }
 
         .kp-circle {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
+            width: 12px; height: 12px; border-radius: 50%;
             background: var(--kp-color, #2ecc71);
-            transition: background 0.5s ease;
+            transition: background 0.5s;
             display: inline-block;
         }
 
@@ -83,7 +56,6 @@
             content: '';
             animation: breathe 4s infinite;
         }
-
         @keyframes breathe {
             0%, 100% { content: ''; }
             25% { content: '.'; }
@@ -91,126 +63,136 @@
             75% { content: '...'; }
         }
 
-        .card {
-            border: 1px solid var(--secondary-color);
-            border-radius: 4px;
-            padding: 20px;
+        /* Page heading */
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 36px;
+        }
+        .page-heading h2 { font-weight: bold; font-size: 16px; }
+        .last-updated { font-size: 11px; color: var(--muted); }
+
+        /* Section labels */
+        .section-label {
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 0.06em;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--faint);
+            margin: 44px 0 22px 0;
+        }
+        .section-label:first-of-type { margin-top: 0; }
+
+        /* Condition line */
+        .condition-line {
+            font-size: 13px;
+            color: var(--muted);
             margin-bottom: 20px;
         }
 
-        .card-header {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--secondary-color);
-        }
-
-        .weather-layout {
+        /* Metrics grid */
+        .metrics {
             display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 22px 16px;
+            margin-bottom: 28px;
         }
+        .metric-lbl { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+        .metric-val { font-size: 26px; font-weight: bold; line-height: 1; }
+        .metric-unit { font-size: 12px; color: var(--muted); font-weight: normal; }
+        .metric-md { font-size: 17px; font-weight: bold; line-height: 1.2; }
+        .metric-sm { font-size: 13px; font-weight: bold; line-height: 1.4; }
 
-        .metric-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-
-        .metric {
+        /* Resource bars */
+        .resource { margin-bottom: 14px; }
+        .resource-head {
             display: flex;
-            flex-direction: column;
-        }
-
-        .metric-label {
-            color: var(--secondary-color);
-            font-size: 13px;
+            justify-content: space-between;
+            font-size: 12px;
             margin-bottom: 5px;
         }
+        .resource-detail { color: var(--muted); }
+        .bar-track { background: var(--faint); height: 4px; }
+        .bar-fill { height: 4px; background: var(--text); transition: width 0.8s ease; }
 
-        .metric-value {
-            font-size: 24px;
-            font-weight: bold;
+        /* KP scale */
+        .kp-scale-row {
+            display: flex;
+            gap: 4px;
+            height: 36px;
+            align-items: flex-end;
+            margin: 14px 0 6px 0;
         }
-
-        .metric-unit {
-            font-size: 14px;
-            color: var(--secondary-color);
-            margin-left: 5px;
+        .kp-pip {
+            flex: 1;
+            border-radius: 1px;
+            transition: opacity 0.4s;
         }
-
-        .chart-container {
-            width: 100%;
-            height: 100%;
-            min-height: 180px;
-            position: relative;
+        .kp-pip-label {
+            display: flex;
+            justify-content: center;
+            font-size: 9px;
+            color: var(--muted);
+            margin-top: 4px;
         }
-
-        .chart-svg {
-            width: 100%;
-            height: 100%;
+        .kp-numbers {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 6px;
         }
+        .kp-num { flex: 1; font-size: 9px; color: var(--muted); text-align: center; }
 
-        .chart-line {
-            fill: none;
-            stroke: var(--text-color);
-            stroke-width: 2;
+        /* Notes */
+        .note { font-size: 12px; color: var(--muted); margin: 10px 0 20px 0; }
+
+        /* Data row */
+        .data-row {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: var(--muted);
+            margin: 12px 0;
         }
+        .data-row .hi { color: var(--text); font-weight: bold; }
+        .data-sep { color: var(--faint); }
 
-        .chart-area {
-            fill: var(--text-color);
-            opacity: 0.1;
-        }
+        /* Charts */
+        .chart-wrap { margin: 20px 0; }
+        .chart-lbl { font-size: 11px; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.05em; }
+        .chart-svg { width: 100%; display: block; overflow: visible; }
 
-        .chart-grid {
-            stroke: var(--secondary-color);
-            stroke-width: 0.5;
-            opacity: 0.3;
-        }
+        /* SVG classes */
+        .c-line { fill: none; stroke: var(--text); stroke-width: 1.5; }
+        .c-area { fill: var(--text); opacity: 0.06; }
+        .c-grid { stroke: var(--faint); stroke-width: 1; }
+        .c-now { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.5; }
+        .c-lbl { fill: var(--muted); font-size: 10px; font-family: monospace; }
 
-        .chart-label {
-            fill: var(--secondary-color);
-            font-size: 10px;
-            font-family: monospace;
-        }
-
+        /* Footer */
         .footer {
             margin-top: 60px;
             padding-top: 20px;
-            border-top: 1px solid var(--secondary-color);
+            border-top: 1px solid var(--muted);
             font-size: 14px;
-            color: var(--secondary-color);
+            color: var(--muted);
         }
-
-        .footer a {
-            color: var(--secondary-color);
-        }
+        .footer a { color: var(--muted); }
 
         @media (max-width: 600px) {
-            body { 
-                margin: 20px auto;
-                padding: 15px;
-            }
-
-            .weather-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .metric-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .chart-container {
-                min-height: 200px;
-            }
+            body { margin: 20px auto; padding: 15px; }
+            .metrics { grid-template-columns: repeat(2, 1fr); }
+            .data-row { flex-direction: column; gap: 4px; }
+            .data-sep { display: none; }
         }
     </style>
 </head>
 <body>
+
     <header class="header">
         <a href="/" class="back">← back</a>
-        <h1>rad.typo</h1>
+        <h1><a href="/" class="site-title">rad.typo</a></h1>
         <div class="status">
             derry: <span id="weather-temp">-</span>°C <span id="weather-icon">⛅</span> |
             kp: <span class="kp-circle"></span><span id="kp-value">-</span> |
@@ -218,439 +200,565 @@
         </div>
     </header>
 
-    <div class="card">
-        <div class="card-header">current weather conditions</div>
-        <div class="weather-layout">
-            <div class="metric-grid">
-                <div class="metric">
-                    <div class="metric-label">temperature</div>
-                    <div>
-                        <span class="metric-value" id="current-temp">--</span>
-                        <span class="metric-unit">°C</span>
-                    </div>
-                </div>
-                <div class="metric">
-                    <div class="metric-label">feels like</div>
-                    <div>
-                        <span class="metric-value" id="apparent-temp">--</span>
-                        <span class="metric-unit">°C</span>
-                    </div>
-                </div>
-                <div class="metric">
-                    <div class="metric-label">humidity</div>
-                    <div>
-                        <span class="metric-value" id="humidity">--</span>
-                        <span class="metric-unit">%</span>
-                    </div>
-                </div>
-                <div class="metric">
-                    <div class="metric-label">cloud cover</div>
-                    <div>
-                        <span class="metric-value" id="cloud-cover">--</span>
-                        <span class="metric-unit">%</span>
-                    </div>
-                </div>
-            </div>
-            <div class="chart-container">
-                <svg id="temp-chart" class="chart-svg" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid meet">
-                    <text x="200" y="90" text-anchor="middle" class="chart-label">loading chart...</text>
-                </svg>
-            </div>
+    <div class="page-heading">
+        <h2>telemetry</h2>
+        <div class="last-updated">updated <span id="last-updated">--</span></div>
+    </div>
+
+    <!-- ── ENVIRONMENT ───────────────────────────────────────── -->
+    <div class="section-label">environment · derry · 55.01°N 7.30°W</div>
+
+    <div class="condition-line">
+        <span id="condition-icon">--</span>&nbsp;<span id="condition-text">--</span>
+        &nbsp;·&nbsp;wind <span id="wind-speed">--</span> km/h <span id="wind-dir">--</span>
+    </div>
+
+    <div class="metrics">
+        <div>
+            <div class="metric-lbl">temperature</div>
+            <div><span class="metric-val" id="current-temp">--</span><span class="metric-unit"> °C</span></div>
+        </div>
+        <div>
+            <div class="metric-lbl">feels like</div>
+            <div><span class="metric-val" id="apparent-temp">--</span><span class="metric-unit"> °C</span></div>
+        </div>
+        <div>
+            <div class="metric-lbl">humidity</div>
+            <div><span class="metric-val" id="humidity">--</span><span class="metric-unit"> %</span></div>
+        </div>
+        <div>
+            <div class="metric-lbl">cloud cover</div>
+            <div><span class="metric-val" id="cloud-cover">--</span><span class="metric-unit"> %</span></div>
+        </div>
+        <div>
+            <div class="metric-lbl">solar radiation</div>
+            <div><span class="metric-val" id="solar-radiation">--</span><span class="metric-unit"> W/m²</span></div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header">solar & daylight</div>
-        <div class="metric-grid">
-            <div class="metric">
-                <div class="metric-label">sunrise</div>
-                <div>
-                    <span class="metric-value" id="sunrise">--</span>
-                </div>
-            </div>
-            <div class="metric">
-                <div class="metric-label">sunset</div>
-                <div>
-                    <span class="metric-value" id="sunset">--</span>
-                </div>
-            </div>
-            <div class="metric">
-                <div class="metric-label">daylight duration</div>
-                <div>
-                    <span class="metric-value" id="daylight">--</span>
-                    <span class="metric-unit">hrs</span>
-                </div>
-            </div>
-            <div class="metric">
-                <div class="metric-label">current solar radiation</div>
-                <div>
-                    <span class="metric-value" id="solar-radiation">--</span>
-                    <span class="metric-unit">W/m²</span>
-                </div>
-            </div>
+    <div class="chart-wrap">
+        <div class="chart-lbl">temperature · 48h</div>
+        <svg id="temp-chart" viewBox="0 0 600 120" preserveAspectRatio="xMidYMid meet" class="chart-svg" style="height:120px">
+            <text x="300" y="60" text-anchor="middle" class="c-lbl">loading...</text>
+        </svg>
+    </div>
+
+    <div class="chart-wrap">
+        <div class="chart-lbl" id="daylight-label">daylight</div>
+        <svg id="day-arc" viewBox="0 0 600 96" preserveAspectRatio="xMidYMid meet" class="chart-svg" style="height:96px">
+            <text x="300" y="48" text-anchor="middle" class="c-lbl">loading...</text>
+        </svg>
+    </div>
+
+    <!-- ── GEOMAGNETIC ───────────────────────────────────────── -->
+    <div class="section-label">geomagnetic · NOAA SWPC planetary K-index</div>
+
+    <div class="metrics" style="max-width: 300px;">
+        <div>
+            <div class="metric-lbl">Kp index</div>
+            <div><span class="metric-val" id="kp-display">--</span></div>
+        </div>
+        <div>
+            <div class="metric-lbl">activity</div>
+            <div class="metric-md" id="kp-label-display">--</div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header">system stats</div>
-        <div class="weather-layout">
-            <div class="metric-grid">
-                <div class="metric">
-                    <div class="metric-label">cpu temperature</div>
-                    <div>
-                        <span class="metric-value" id="cpu-temp-card">--</span>
-                        <span class="metric-unit">°C</span>
-                    </div>
-                </div>
-                <div class="metric">
-                    <div class="metric-label">memory usage</div>
-                    <div>
-                        <span class="metric-value" id="memory-usage">--</span>
-                        <span class="metric-unit">%</span>
-                    </div>
-                </div>
-                <div class="metric">
-                    <div class="metric-label">disk usage</div>
-                    <div>
-                        <span class="metric-value" id="disk-usage">--</span>
-                        <span class="metric-unit">%</span>
-                    </div>
-                </div>
-                <div class="metric">
-                    <div class="metric-label">uptime</div>
-                    <div>
-                        <span class="metric-value" id="uptime" style="font-size: 16px;">--</span>
-                    </div>
-                </div>
-            </div>
-            <div class="chart-container">
-                <svg id="cpu-chart" class="chart-svg" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid meet">
-                    <text x="200" y="90" text-anchor="middle" class="chart-label">loading chart...</text>
-                </svg>
-            </div>
+    <div class="kp-scale-row" id="kp-scale"></div>
+    <div class="kp-numbers" id="kp-numbers"></div>
+
+    <div class="note" id="aurora-note">--</div>
+
+    <div class="chart-wrap">
+        <div class="chart-lbl">Kp index · 24h</div>
+        <svg id="kp-chart" viewBox="0 0 600 80" preserveAspectRatio="xMidYMid meet" class="chart-svg" style="height:80px">
+            <text x="300" y="40" text-anchor="middle" class="c-lbl">loading...</text>
+        </svg>
+    </div>
+
+    <!-- ── SERVER ─────────────────────────────────────────────── -->
+    <div class="section-label">server · raspberry pi 3b+ · derry</div>
+
+    <div class="metrics">
+        <div>
+            <div class="metric-lbl">cpu</div>
+            <div><span class="metric-val" id="cpu-temp-main">--</span><span class="metric-unit"> °C</span></div>
         </div>
+        <div>
+            <div class="metric-lbl">gpu</div>
+            <div><span class="metric-val" id="gpu-temp">--</span><span class="metric-unit"> °C</span></div>
+        </div>
+        <div>
+            <div class="metric-lbl">load avg</div>
+            <div class="metric-sm" id="cpu-load">--</div>
+        </div>
+        <div>
+            <div class="metric-lbl">requests today</div>
+            <div><span class="metric-val" id="apache-requests">--</span></div>
+        </div>
+    </div>
+
+    <div class="resource">
+        <div class="resource-head">
+            <span>ram</span>
+            <span class="resource-detail" id="memory-detail">--</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" id="memory-bar" style="width:0%"></div></div>
+    </div>
+
+    <div class="resource">
+        <div class="resource-head">
+            <span>disk</span>
+            <span class="resource-detail" id="disk-detail">--</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" id="disk-bar" style="width:0%"></div></div>
+    </div>
+
+    <div class="data-row">
+        <span>↓ <span class="hi" id="net-down">--</span> MB received</span>
+        <span class="data-sep">·</span>
+        <span>↑ <span class="hi" id="net-up">--</span> MB sent</span>
+        <span class="data-sep">·</span>
+        <span><span class="hi" id="connections">--</span> connections</span>
+        <span class="data-sep">·</span>
+        <span><span class="hi" id="power-display">--</span></span>
+    </div>
+
+    <div class="data-row">
+        <span>uptime: <span class="hi" id="uptime">--</span></span>
+        <span class="data-sep" id="throttle-sep" style="display:none">·</span>
+        <span id="throttle-status"></span>
+    </div>
+
+    <div class="chart-wrap">
+        <div class="chart-lbl">cpu temperature · 24h</div>
+        <svg id="cpu-chart" viewBox="0 0 600 120" preserveAspectRatio="xMidYMid meet" class="chart-svg" style="height:120px">
+            <text x="300" y="60" text-anchor="middle" class="c-lbl">collecting data...</text>
+        </svg>
     </div>
 
     <footer class="footer">
-        └─ <a href="https://radtypo.com/infrastructure.html">infrastructure</a>
+        └─ <a href="/infrastructure.html">infrastructure</a>
     </footer>
 
     <script>
-        // ===================================================================
-        // WEATHER DATA
-        // ===================================================================
+        // ── KP COLORS ────────────────────────────────────────────
+        const KP_COLORS = {
+            0: { color: '#2ecc71', label: 'Quiet' },
+            1: { color: '#2ecc71', label: 'Quiet' },
+            2: { color: '#2ecc71', label: 'Quiet' },
+            3: { color: '#f1c40f', label: 'Unsettled' },
+            4: { color: '#f39c12', label: 'Active' },
+            5: { color: '#e67e22', label: 'Minor Storm' },
+            6: { color: '#e74c3c', label: 'Moderate Storm' },
+            7: { color: '#c0392b', label: 'Strong Storm' },
+            8: { color: '#8e44ad', label: 'Severe Storm' },
+            9: { color: '#6c3483', label: 'Extreme Storm' }
+        };
+
+        const WEATHER_CODES = {
+            0: 'clear sky', 1: 'mainly clear', 2: 'partly cloudy', 3: 'overcast',
+            45: 'fog', 48: 'freezing fog', 51: 'light drizzle', 53: 'moderate drizzle',
+            55: 'dense drizzle', 61: 'slight rain', 63: 'moderate rain', 65: 'heavy rain',
+            71: 'slight snow', 73: 'moderate snow', 75: 'heavy snow',
+            80: 'rain showers', 81: 'moderate showers', 82: 'violent showers',
+            95: 'thunderstorm', 99: 'thunderstorm with hail'
+        };
+
+        function weatherCondition(code) {
+            const keys = Object.keys(WEATHER_CODES).map(Number).sort((a,b) => a-b);
+            for (let i = keys.length - 1; i >= 0; i--) {
+                if (code >= keys[i]) return WEATHER_CODES[keys[i]];
+            }
+            return 'unknown';
+        }
+
+        function weatherIcon(code) {
+            if (code === 0) return '☀️';
+            if (code <= 3) return '⛅';
+            if (code <= 48) return '🌫️';
+            if (code <= 67) return '🌧️';
+            if (code <= 77) return '🌨️';
+            if (code <= 82) return '🌦️';
+            return '⛈️';
+        }
+
+        function windDir(deg) {
+            const dirs = ['N ↑','NE ↗','E →','SE ↘','S ↓','SW ↙','W ←','NW ↖'];
+            return dirs[Math.round(deg / 45) % 8];
+        }
+
+        function auroraNote(kp) {
+            if (kp >= 7) return `Kp ${kp.toFixed(1)}: strong geomagnetic storm — aurora visible to naked eye from derry in clear, dark skies.`;
+            if (kp >= 5) return `Kp ${kp.toFixed(1)}: minor storm — aurora may be visible from derry on a clear, dark night. look north.`;
+            if (kp >= 4) return `Kp ${kp.toFixed(1)}: active — faint aurora possible under ideal conditions at this latitude.`;
+            return `Kp ${kp.toFixed(1)}: geomagnetically quiet — aurora not visible from this latitude.`;
+        }
+
+        // ── WEATHER ──────────────────────────────────────────────
         async function updateWeatherData() {
             try {
-                const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=55.014935&longitude=-7.303231&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,cloud_cover,wind_speed_10m,wind_direction_10m&hourly=shortwave_radiation,temperature_2m&daily=sunrise,sunset,daylight_duration&timezone=Europe/London&forecast_days=1&past_days=1');
-                const data = await response.json();
-                
+                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=55.014935&longitude=-7.303231&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,cloud_cover,wind_speed_10m,wind_direction_10m&hourly=shortwave_radiation,temperature_2m&daily=sunrise,sunset,daylight_duration&timezone=Europe/London&forecast_days=1&past_days=1');
+                const data = await res.json();
+
                 if (data.current) {
-                    updateCurrentWeather(data.current);
+                    const c = data.current;
+                    const temp = Math.round(c.temperature_2m);
+                    const icon = weatherIcon(c.weather_code);
+
+                    document.getElementById('current-temp').textContent = temp;
+                    document.getElementById('apparent-temp').textContent = Math.round(c.apparent_temperature);
+                    document.getElementById('humidity').textContent = c.relative_humidity_2m;
+                    document.getElementById('cloud-cover').textContent = c.cloud_cover;
+                    document.getElementById('wind-speed').textContent = Math.round(c.wind_speed_10m);
+                    document.getElementById('wind-dir').textContent = windDir(c.wind_direction_10m);
+                    document.getElementById('condition-icon').textContent = icon;
+                    document.getElementById('condition-text').textContent = weatherCondition(c.weather_code);
+                    document.getElementById('weather-temp').textContent = temp;
+                    document.getElementById('weather-icon').textContent = icon;
+                    try { sessionStorage.setItem('rt_weather', JSON.stringify({ temp: String(temp), icon })); } catch(e) {}
                 }
-                
+
                 if (data.daily) {
-                    updateSolarData(data.daily);
+                    // index [1] = today (index [0] = yesterday, because past_days=1)
+                    const todayIdx = data.daily.time ? data.daily.time.findIndex(t => t === new Date().toISOString().slice(0,10)) : 1;
+                    const idx = todayIdx >= 0 ? todayIdx : 1;
+                    const sunrise = data.daily.sunrise[idx];
+                    const sunset  = data.daily.sunset[idx];
+                    const daylightHrs = (data.daily.daylight_duration[idx] / 3600).toFixed(1);
+
+                    document.getElementById('daylight-label').textContent =
+                        `daylight · ${sunrise?.split('T')[1] || '--'} → ${sunset?.split('T')[1] || '--'} · ${daylightHrs}h`;
+
+                    drawDayArc(sunrise, sunset, daylightHrs);
                 }
-                
+
                 if (data.hourly) {
-                    updateSolarRadiation(data.hourly);
+                    // Find current hour's solar radiation by matching time string
+                    const nowHour = new Date().toISOString().slice(0, 13) + ':00';
+                    const radIdx = data.hourly.time.findIndex(t => t === nowHour);
+                    const radiation = radIdx >= 0 ? data.hourly.shortwave_radiation[radIdx] : 0;
+                    document.getElementById('solar-radiation').textContent = Math.round(radiation || 0);
+
                     drawTemperatureChart(data.hourly.time, data.hourly.temperature_2m);
                 }
-            } catch (error) {
-                console.log('Weather data fetch failed:', error);
-            }
+
+                document.getElementById('last-updated').textContent = new Date().toLocaleTimeString('en-GB');
+            } catch(e) { console.log('Weather fetch failed:', e); }
         }
 
-        function updateCurrentWeather(current) {
-            document.getElementById('current-temp').textContent = Math.round(current.temperature_2m);
-            document.getElementById('apparent-temp').textContent = Math.round(current.apparent_temperature);
-            document.getElementById('humidity').textContent = current.relative_humidity_2m;
-            document.getElementById('cloud-cover').textContent = current.cloud_cover;
-            document.getElementById('weather-temp').textContent = Math.round(current.temperature_2m);
-            
-            const weatherIcons = {
-                0: '☀️', 3: '☁️', 48: '🌫️', 67: '🌧️', 
-                77: '🌨️', 82: '🌦️', 99: '⛈️'
-            };
-            
-            const code = current.weather_code;
-            let icon = '☁️';
-            
-            for (const [threshold, emoji] of Object.entries(weatherIcons)) {
-                if (code <= parseInt(threshold)) {
-                    icon = emoji;
-                    break;
-                }
-            }
-            
-            document.getElementById('weather-icon').textContent = icon;
-            try { sessionStorage.setItem('rt_weather', JSON.stringify({ temp: document.getElementById('weather-temp').textContent, icon })); } catch(e) {}
-        }
-
-        function updateSolarData(daily) {
-            const sunrise = new Date(daily.sunrise[0]);
-            const sunset = new Date(daily.sunset[0]);
-            
-            document.getElementById('sunrise').textContent = sunrise.toLocaleTimeString('en-GB', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-            
-            document.getElementById('sunset').textContent = sunset.toLocaleTimeString('en-GB', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-            
-            const daylightHours = (daily.daylight_duration[0] / 3600).toFixed(1);
-            document.getElementById('daylight').textContent = daylightHours;
-        }
-
-        function updateSolarRadiation(hourly) {
-            if (hourly.shortwave_radiation) {
-                const now = new Date();
-                const currentHourIndex = now.getHours();
-                const radiation = hourly.shortwave_radiation[currentHourIndex] || 0;
-                document.getElementById('solar-radiation').textContent = Math.round(radiation);
-            }
-        }
-
-        // ===================================================================
-        // SYSTEM STATS
-        // ===================================================================
+        // ── SYSTEM STATS ──────────────────────────────────────────
         async function updateSystemStats() {
             try {
-                const response = await fetch('/api/stats.json');
-                const data = await response.json();
-                
-                if (data.thermal && data.thermal.cpu_temp) {
-                    const temp = data.thermal.cpu_temp.replace('°C', '');
-                    const tempValue = parseFloat(temp);
-                    
+                const res = await fetch('/api/stats.json');
+                const data = await res.json();
+
+                if (data.thermal?.cpu_temp) {
+                    const temp = Math.round(parseFloat(data.thermal.cpu_temp));
                     document.getElementById('cpu-temp').textContent = temp;
-                    document.getElementById('cpu-temp-card').textContent = temp;
+                    document.getElementById('cpu-temp-main').textContent = temp;
                     try { sessionStorage.setItem('rt_cpu', JSON.stringify({ temp })); } catch(e) {}
-                    
-                    storeCpuReading(tempValue);
+                    storeCpuReading(temp);
                     drawCpuChart();
                 }
-                
+
+                if (data.thermal?.gpu_temp) {
+                    document.getElementById('gpu-temp').textContent = Math.round(parseFloat(data.thermal.gpu_temp));
+                }
+
                 if (data.resources) {
-                    const memoryMatch = data.resources.memory.match(/\((\d+)%\)/);
-                    if (memoryMatch) {
-                        document.getElementById('memory-usage').textContent = memoryMatch[1];
+                    const memM = data.resources.memory.match(/(\d+)MB.*?(\d+)MB.*?(\d+)%/);
+                    if (memM) {
+                        document.getElementById('memory-detail').textContent = `${memM[1]} / ${memM[2]} MB (${memM[3]}%)`;
+                        document.getElementById('memory-bar').style.width = memM[3] + '%';
                     }
-                    
-                    const diskMatch = data.resources.disk.match(/\((\d+)%\)/);
-                    if (diskMatch) {
-                        document.getElementById('disk-usage').textContent = diskMatch[1];
+                    const diskM = data.resources.disk.match(/([\d.]+)G.*?([\d.]+)G.*?(\d+)%/);
+                    if (diskM) {
+                        document.getElementById('disk-detail').textContent = `${diskM[1]} / ${diskM[2]} GB (${diskM[3]}%)`;
+                        document.getElementById('disk-bar').style.width = diskM[3] + '%';
+                    }
+                    if (data.resources.cpu_load) {
+                        document.getElementById('cpu-load').textContent = data.resources.cpu_load;
                     }
                 }
-                
-                if (data.uptime) {
-                    document.getElementById('uptime').textContent = data.uptime;
+
+                if (data.network?.interface_stats) {
+                    const netM = data.network.interface_stats.match(/↓ (\d+)MB.*?↑ (\d+)MB/);
+                    if (netM) {
+                        document.getElementById('net-down').textContent = parseInt(netM[1]).toLocaleString();
+                        document.getElementById('net-up').textContent = parseInt(netM[2]).toLocaleString();
+                    }
+                    const connM = data.network.connections?.match(/Total: (\d+)/);
+                    if (connM) document.getElementById('connections').textContent = connM[1];
                 }
-            } catch (error) {
-                console.log('System stats fetch failed:', error);
+
+                if (data.services?.apache) {
+                    const reqM = data.services.apache.match(/(\d+) requests/);
+                    if (reqM) document.getElementById('apache-requests').textContent = parseInt(reqM[1]).toLocaleString();
+                }
+
+                if (data.uptime) document.getElementById('uptime').textContent = data.uptime;
+
+                if (data.power?.estimated_consumption) {
+                    const pwM = data.power.estimated_consumption.match(/(~[\d.]+W)/);
+                    if (pwM) document.getElementById('power-display').textContent = pwM[1] + ' estimated';
+                }
+
+                if (data.thermal?.throttling && data.thermal.throttling.includes('THROTTLED')) {
+                    document.getElementById('throttle-status').textContent = '⚠ throttling';
+                    document.getElementById('throttle-sep').style.display = '';
+                }
+
+                document.getElementById('last-updated').textContent = new Date().toLocaleTimeString('en-GB');
+            } catch(e) { console.log('Stats fetch failed:', e); }
+        }
+
+        // ── KP INDEX ──────────────────────────────────────────────
+        async function updateKPIndex() {
+            try {
+                const res = await fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json');
+                const data = await res.json();
+                const kpValue = parseFloat(data[data.length - 1][1]);
+                const kpClamped = Math.min(9, Math.max(0, kpValue));
+                const kpRounded = Math.round(kpClamped);
+                const colorData = KP_COLORS[kpRounded];
+
+                document.querySelector('.kp-circle').style.setProperty('--kp-color', colorData.color);
+                document.getElementById('kp-value').textContent = kpClamped.toFixed(1);
+                document.getElementById('kp-display').textContent = kpClamped.toFixed(1);
+                document.getElementById('kp-label-display').textContent = colorData.label;
+                document.getElementById('aurora-note').textContent = auroraNote(kpClamped);
+
+                renderKPScale(kpClamped);
+                drawKPHistory(data);
+
+                try { sessionStorage.setItem('rt_kp', JSON.stringify({ value: kpClamped.toFixed(1), color: colorData.color, label: colorData.label })); } catch(e) {}
+            } catch(e) { console.log('KP fetch failed:', e); }
+        }
+
+        function renderKPScale(kpValue) {
+            const kpRounded = Math.round(kpValue);
+            const scale = document.getElementById('kp-scale');
+            const nums = document.getElementById('kp-numbers');
+
+            scale.innerHTML = Array.from({length: 10}, (_, i) => {
+                const h = 6 + (i / 9) * 30;
+                const active = i <= kpRounded;
+                return `<div class="kp-pip" title="Kp ${i}: ${KP_COLORS[i].label}" style="height:${h}px;background:${KP_COLORS[i].color};opacity:${active ? 1 : 0.15}"></div>`;
+            }).join('');
+
+            nums.innerHTML = Array.from({length: 10}, (_, i) =>
+                `<div class="kp-num">${i}</div>`
+            ).join('');
+        }
+
+        // ── CHARTS ────────────────────────────────────────────────
+        function drawTemperatureChart(times, temps) {
+            const svg = document.getElementById('temp-chart');
+            const valid = times.map((t, i) => ({ time: new Date(t), temp: temps[i] })).filter(d => d.temp !== null);
+            if (valid.length < 2) { svg.innerHTML = '<text x="300" y="60" text-anchor="middle" class="c-lbl">collecting data...</text>'; return; }
+
+            const W = 600, H = 120;
+            const P = { t: 15, r: 15, b: 25, l: 35 };
+            const cW = W - P.l - P.r, cH = H - P.t - P.b;
+            const minT = Math.min(...valid.map(d => d.temp));
+            const maxT = Math.max(...valid.map(d => d.temp));
+            const range = maxT - minT || 2;
+            const toX = i => P.l + (i / (valid.length - 1)) * cW;
+            const toY = t => P.t + cH - ((t - minT) / range * cH);
+
+            let s = '';
+
+            // Grid
+            for (let i = 0; i <= 4; i++) {
+                const v = minT + (range / 4) * i;
+                const y = toY(v);
+                s += `<line x1="${P.l}" y1="${y}" x2="${W - P.r}" y2="${y}" class="c-grid"/>`;
+                if (i === 0 || i === 4) s += `<text x="${P.l - 4}" y="${y + 3}" text-anchor="end" class="c-lbl">${Math.round(v)}°</text>`;
             }
+
+            // Midnight verticals
+            valid.forEach((d, i) => {
+                if (d.time.getHours() === 0 && d.time.getMinutes() === 0) {
+                    const x = toX(i);
+                    s += `<line x1="${x}" y1="${P.t}" x2="${x}" y2="${H - P.b}" stroke="#ddd" stroke-width="1"/>`;
+                    s += `<text x="${x + 2}" y="${H - P.b + 12}" class="c-lbl">${d.time.toLocaleDateString('en-GB', {weekday:'short'})}</text>`;
+                }
+            });
+
+            // Now line
+            const now = new Date();
+            const nowIdx = valid.findIndex(d => d.time >= now);
+            if (nowIdx > 0) {
+                const nx = toX(nowIdx);
+                s += `<line x1="${nx}" y1="${P.t}" x2="${nx}" y2="${H - P.b}" class="c-now"/>`;
+                s += `<text x="${nx + 2}" y="${P.t + 8}" class="c-lbl">now</text>`;
+            }
+
+            // Area + line
+            let ld = '', ad = '';
+            valid.forEach((d, i) => {
+                const x = toX(i), y = toY(d.temp);
+                if (i === 0) { ld += `M ${x} ${y}`; ad += `M ${x} ${H - P.b} L ${x} ${y}`; }
+                else { ld += ` L ${x} ${y}`; ad += ` L ${x} ${y}`; }
+            });
+            ad += ` L ${toX(valid.length - 1)} ${H - P.b} Z`;
+            s += `<path d="${ad}" class="c-area"/>`;
+            s += `<path d="${ld}" class="c-line"/>`;
+
+            // X-axis endpoints
+            const fmt = d => d.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+            s += `<text x="${P.l}" y="${H - P.b + 12}" text-anchor="start" class="c-lbl">${fmt(valid[0].time)}</text>`;
+            s += `<text x="${W - P.r}" y="${H - P.b + 12}" text-anchor="end" class="c-lbl">${fmt(valid[valid.length-1].time)}</text>`;
+
+            svg.innerHTML = s;
+        }
+
+        function drawDayArc(sunriseStr, sunsetStr, daylightHrs) {
+            const svg = document.getElementById('day-arc');
+            if (!sunriseStr || !sunsetStr) return;
+
+            const W = 600, H = 96;
+            const cx = 300, cy = 80, rx = 250, ry = 65;
+
+            const sunrise = new Date(sunriseStr);
+            const sunset  = new Date(sunsetStr);
+            const now = new Date();
+
+            let progress = 0, isDay = true;
+            if (now <= sunrise) { isDay = false; progress = 0; }
+            else if (now >= sunset) { isDay = false; progress = 1; }
+            else progress = (now - sunrise) / (sunset - sunrise);
+
+            const angle = Math.PI * progress;
+            const sunX = cx - rx * Math.cos(angle);
+            const sunY = cy - ry * Math.sin(angle);
+            const fmt = d => d.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+
+            let s = '';
+
+            // Horizon
+            s += `<line x1="${cx - rx - 10}" y1="${cy}" x2="${cx + rx + 10}" y2="${cy}" stroke="${'#e8e8e8'}" stroke-width="1"/>`;
+
+            // Full arc background — sweep-flag 0 = counter-clockwise = upward
+            s += `<path d="M ${cx-rx} ${cy} A ${rx} ${ry} 0 0 0 ${cx+rx} ${cy}" fill="none" stroke="#e0e0e0" stroke-width="1.5"/>`;
+
+            // Traveled arc
+            if (isDay && progress > 0.01) {
+                const largeArc = progress > 0.5 ? 1 : 0;
+                s += `<path d="M ${cx-rx} ${cy} A ${rx} ${ry} 0 ${largeArc} 0 ${sunX} ${sunY}" fill="none" stroke="#999" stroke-width="1.5"/>`;
+            }
+
+            // Sun dot
+            if (isDay) {
+                s += `<circle cx="${sunX}" cy="${sunY}" r="5" fill="#000"/>`;
+                const lblY = Math.max(18, sunY - 10);
+                s += `<text x="${sunX}" y="${lblY}" text-anchor="middle" class="c-lbl">${fmt(now)}</text>`;
+            } else {
+                // Night: show moon dot on horizon
+                s += `<circle cx="${cx}" cy="${cy}" r="4" fill="none" stroke="#ccc" stroke-width="1.5"/>`;
+            }
+
+            // Sunrise / sunset / daylight labels
+            s += `<text x="${cx - rx}" y="${cy + 14}" text-anchor="middle" class="c-lbl">${fmt(sunrise)}</text>`;
+            s += `<text x="${cx + rx}" y="${cy + 14}" text-anchor="middle" class="c-lbl">${fmt(sunset)}</text>`;
+            s += `<text x="${cx}" y="${cy + 14}" text-anchor="middle" class="c-lbl">${daylightHrs}h</text>`;
+
+            svg.innerHTML = s;
+        }
+
+        function drawKPHistory(rawData) {
+            const svg = document.getElementById('kp-chart');
+            // skip header row (index 0), take last 24 entries (~72h at 3h intervals)
+            const readings = rawData.slice(1).slice(-24);
+            if (readings.length < 2) return;
+
+            const W = 600, H = 80;
+            const P = { t: 8, r: 10, b: 20, l: 28 };
+            const cW = W - P.l - P.r, cH = H - P.t - P.b;
+            const barW = cW / readings.length;
+
+            let s = '';
+
+            // Grid lines at Kp 3, 6, 9
+            [3, 6, 9].forEach(kp => {
+                const y = P.t + cH - (kp / 9 * cH);
+                s += `<line x1="${P.l}" y1="${y}" x2="${W - P.r}" y2="${y}" stroke="#f0f0f0" stroke-width="1"/>`;
+                s += `<text x="${P.l - 4}" y="${y + 3}" text-anchor="end" class="c-lbl">${kp}</text>`;
+            });
+
+            // Bars
+            readings.forEach((row, i) => {
+                const kp = parseFloat(row[1]);
+                const kpClamped = Math.min(9, Math.max(0, kp));
+                const bH = Math.max(1, (kpClamped / 9) * cH);
+                const x = P.l + i * barW;
+                const y = P.t + cH - bH;
+                const color = KP_COLORS[Math.round(kpClamped)].color;
+                s += `<rect x="${x + 0.5}" y="${y}" width="${barW - 1}" height="${bH}" fill="${color}" opacity="0.85"/>`;
+            });
+
+            // Time labels: first, middle, last
+            [0, Math.floor(readings.length / 2), readings.length - 1].forEach(i => {
+                const ts = readings[i][0];
+                const hm = ts.split(' ')[1]?.slice(0, 5) || '';
+                const x = P.l + i * barW + barW / 2;
+                s += `<text x="${x}" y="${H - 4}" text-anchor="middle" class="c-lbl">${hm}</text>`;
+            });
+
+            svg.innerHTML = s;
         }
 
         function storeCpuReading(temp) {
             const now = Date.now();
             let readings = JSON.parse(localStorage.getItem('cpuReadings') || '[]');
-            
-            readings.push({ time: now, temp: temp });
-            
-            const oneDayAgo = now - (24 * 60 * 60 * 1000);
-            readings = readings.filter(r => r.time > oneDayAgo);
-            
+            readings.push({ time: now, temp });
+            readings = readings.filter(r => r.time > now - 86400000);
             localStorage.setItem('cpuReadings', JSON.stringify(readings));
-        }
-
-        // ===================================================================
-        // CHART RENDERING
-        // ===================================================================
-        function drawTemperatureChart(times, temps) {
-            const svg = document.getElementById('temp-chart');
-            
-            if (!temps || temps.length < 2) return;
-            
-            // Store weather readings with timestamps for consistent time-based display
-            const now = Date.now();
-            let weatherReadings = JSON.parse(localStorage.getItem('weatherReadings') || '[]');
-            
-            // Add current batch of readings
-            times.forEach((time, i) => {
-                const timestamp = new Date(time).getTime();
-                // Avoid duplicates
-                if (!weatherReadings.find(r => r.time === timestamp)) {
-                    weatherReadings.push({ time: timestamp, temp: temps[i] });
-                }
-            });
-            
-            // Remove old readings and keep last 24 hours
-            const oneDayAgo = now - (24 * 60 * 60 * 1000);
-            weatherReadings = weatherReadings
-                .filter(r => r.time > oneDayAgo)
-                .sort((a, b) => a.time - b.time);
-            
-            localStorage.setItem('weatherReadings', JSON.stringify(weatherReadings));
-            
-            // Use stored readings for chart (minimum 2 points)
-            if (weatherReadings.length < 2) {
-                svg.innerHTML = '<text x="200" y="90" text-anchor="middle" class="chart-label">collecting data...</text>';
-                return;
-            }
-            
-            const chartTemps = weatherReadings.map(r => r.temp);
-            const minTemp = Math.min(...chartTemps);
-            const maxTemp = Math.max(...chartTemps);
-            const tempRange = maxTemp - minTemp || 1;
-            
-            const config = {
-                width: 400,
-                height: 180,
-                padding: { top: 20, right: 20, bottom: 30, left: 40 }
-            };
-            
-            const chartWidth = config.width - config.padding.left - config.padding.right;
-            const chartHeight = config.height - config.padding.top - config.padding.bottom;
-            
-            let svgContent = renderGrid(config, chartHeight, 4);
-            const { pathData, areaData } = generatePaths(chartTemps, minTemp, tempRange, config, chartWidth, chartHeight);
-            
-            svgContent += `<path d="${areaData}" class="chart-area"/>`;
-            svgContent += `<path d="${pathData}" class="chart-line"/>`;
-            svgContent += renderYAxisLabels(minTemp, maxTemp, config, chartHeight, 4);
-            svgContent += renderTimeLabels(weatherReadings, config, chartWidth);
-            
-            svg.innerHTML = svgContent;
         }
 
         function drawCpuChart() {
             const readings = JSON.parse(localStorage.getItem('cpuReadings') || '[]');
-            
             if (readings.length < 2) return;
-            
             const svg = document.getElementById('cpu-chart');
+
+            const W = 600, H = 120;
+            const P = { t: 15, r: 15, b: 25, l: 35 };
+            const cW = W - P.l - P.r, cH = H - P.t - P.b;
             const temps = readings.map(r => r.temp);
-            const minTemp = Math.floor(Math.min(...temps) / 5) * 5;
-            const maxTemp = Math.ceil(Math.max(...temps) / 5) * 5;
-            const tempRange = maxTemp - minTemp;
-            
-            const config = {
-                width: 400,
-                height: 180,
-                padding: { top: 20, right: 20, bottom: 30, left: 40 }
-            };
-            
-            const chartWidth = config.width - config.padding.left - config.padding.right;
-            const chartHeight = config.height - config.padding.top - config.padding.bottom;
-            
-            let svgContent = renderGrid(config, chartHeight, 4);
-            const { pathData, areaData } = generatePaths(temps, minTemp, tempRange, config, chartWidth, chartHeight);
-            
-            svgContent += `<path d="${areaData}" class="chart-area"/>`;
-            svgContent += `<path d="${pathData}" class="chart-line"/>`;
-            svgContent += renderYAxisLabels(minTemp, maxTemp, config, chartHeight, 4);
-            svgContent += renderTimeLabels(readings, config, chartWidth);
-            
-            svg.innerHTML = svgContent;
-        }
+            const minT = Math.floor(Math.min(...temps) / 5) * 5;
+            const maxT = Math.ceil(Math.max(...temps) / 5) * 5;
+            const range = maxT - minT || 5;
+            const toX = i => P.l + (i / (readings.length - 1)) * cW;
+            const toY = t => P.t + cH - ((t - minT) / range * cH);
 
-        // ===================================================================
-        // CHART UTILITIES
-        // ===================================================================
-        function renderGrid(config, chartHeight, divisions) {
-            let grid = '';
-            for (let i = 0; i <= divisions; i++) {
-                const y = config.padding.top + (chartHeight / divisions) * i;
-                grid += `<line x1="${config.padding.left}" y1="${y}" x2="${config.width - config.padding.right}" y2="${y}" class="chart-grid"/>`;
+            let s = '';
+
+            for (let i = 0; i <= 4; i++) {
+                const v = minT + (range / 4) * i;
+                const y = toY(v);
+                s += `<line x1="${P.l}" y1="${y}" x2="${W - P.r}" y2="${y}" class="c-grid"/>`;
+                if (i === 0 || i === 4) s += `<text x="${P.l - 4}" y="${y + 3}" text-anchor="end" class="c-lbl">${Math.round(v)}°</text>`;
             }
-            return grid;
-        }
 
-        function generatePaths(data, minValue, range, config, chartWidth, chartHeight) {
-            let pathData = '';
-            let areaData = '';
-            
-            for (let i = 0; i < data.length; i++) {
-                const x = config.padding.left + (chartWidth / (data.length - 1)) * i;
-                const normalizedValue = (data[i] - minValue) / range;
-                const y = config.padding.top + chartHeight - (normalizedValue * chartHeight);
-                
-                if (i === 0) {
-                    pathData += `M ${x} ${y}`;
-                    areaData += `M ${x} ${config.height - config.padding.bottom} L ${x} ${y}`;
-                } else {
-                    pathData += ` L ${x} ${y}`;
-                    areaData += ` L ${x} ${y}`;
-                }
-            }
-            
-            areaData += ` L ${config.width - config.padding.right} ${config.height - config.padding.bottom} Z`;
-            
-            return { pathData, areaData };
-        }
-
-        function renderYAxisLabels(minValue, maxValue, config, chartHeight, divisions) {
-            let labels = '';
-            const range = maxValue - minValue;
-            
-            for (let i = 0; i <= divisions; i++) {
-                const value = minValue + (range / divisions) * (divisions - i);
-                const y = config.padding.top + (chartHeight / divisions) * i;
-                labels += `<text x="${config.padding.left - 5}" y="${y + 4}" text-anchor="end" class="chart-label">${Math.round(value)}°</text>`;
-            }
-            
-            return labels;
-        }
-
-        function renderTimeLabels(readings, config, chartWidth) {
-            if (readings.length < 2) return '';
-            
-            const firstTime = new Date(readings[0].time);
-            const lastTime = new Date(readings[readings.length - 1].time);
-            const midTime = new Date((readings[0].time + readings[readings.length - 1].time) / 2);
-            
-            const formatTime = (date) => date.toLocaleTimeString('en-GB', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
+            let ld = '', ad = '';
+            readings.forEach((r, i) => {
+                const x = toX(i), y = toY(r.temp);
+                if (i === 0) { ld += `M ${x} ${y}`; ad += `M ${x} ${H - P.b} L ${x} ${y}`; }
+                else { ld += ` L ${x} ${y}`; ad += ` L ${x} ${y}`; }
             });
-            
-            return `
-                <text x="${config.padding.left}" y="${config.height - config.padding.bottom + 15}" text-anchor="start" class="chart-label">${formatTime(firstTime)}</text>
-                <text x="${config.width / 2}" y="${config.height - config.padding.bottom + 15}" text-anchor="middle" class="chart-label">${formatTime(midTime)}</text>
-                <text x="${config.width - config.padding.right}" y="${config.height - config.padding.bottom + 15}" text-anchor="end" class="chart-label">${formatTime(lastTime)}</text>
-            `;
+            ad += ` L ${toX(readings.length - 1)} ${H - P.b} Z`;
+            s += `<path d="${ad}" class="c-area"/>`;
+            s += `<path d="${ld}" class="c-line"/>`;
+
+            const fmt = ts => new Date(ts).toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+            s += `<text x="${P.l}" y="${H - P.b + 12}" text-anchor="start" class="c-lbl">${fmt(readings[0].time)}</text>`;
+            s += `<text x="${W - P.r}" y="${H - P.b + 12}" text-anchor="end" class="c-lbl">${fmt(readings[readings.length-1].time)}</text>`;
+
+            svg.innerHTML = s;
         }
 
-        // ===================================================================
-        // KP INDEX
-        // ===================================================================
-        const KP_COLORS = {
-            0: { color: '#2ecc71', label: 'Quiet' }, 1: { color: '#2ecc71', label: 'Quiet' },
-            2: { color: '#2ecc71', label: 'Quiet' }, 3: { color: '#f1c40f', label: 'Unsettled' },
-            4: { color: '#f39c12', label: 'Active' }, 5: { color: '#e67e22', label: 'Minor Storm' },
-            6: { color: '#e74c3c', label: 'Moderate Storm' }, 7: { color: '#c0392b', label: 'Strong Storm' },
-            8: { color: '#8e44ad', label: 'Severe Storm' }, 9: { color: '#6c3483', label: 'Extreme Storm' }
-        };
-
-        async function updateKPIndex() {
-            try {
-                const response = await fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json');
-                const data = await response.json();
-                const kpValue = parseFloat(data[data.length - 1][1]);
-                const kpClamped = Math.min(9, Math.max(0, kpValue));
-                const colorData = KP_COLORS[Math.round(kpClamped)];
-                document.querySelector('.kp-circle').style.setProperty('--kp-color', colorData.color);
-                document.getElementById('kp-value').textContent = kpClamped.toFixed(1);
-                try { sessionStorage.setItem('rt_kp', JSON.stringify({ value: kpClamped.toFixed(1), color: colorData.color, label: colorData.label })); } catch(e) {}
-            } catch (error) { console.log('KP fetch failed:', error); }
-        }
-
-        // ===================================================================
-        // INITIALIZATION
-        // ===================================================================
+        // ── INIT ──────────────────────────────────────────────────
         (function() {
             try {
                 const w = sessionStorage.getItem('rt_weather');
