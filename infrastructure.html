@@ -410,6 +410,7 @@
                     else if (code >= 95) icon = '⛈️';
                     
                     document.getElementById('weather-icon').textContent = icon;
+                    try { sessionStorage.setItem('rt_weather', JSON.stringify({ temp: document.getElementById('weather-temp').textContent, icon })); } catch(e) {}
                 }
             } catch (error) {
                 console.log('Weather fetch failed (server constraint):', error);
@@ -424,11 +425,22 @@
                 if (data.thermal && data.thermal.cpu_temp) {
                     const temp = data.thermal.cpu_temp.replace('°C', '');
                     document.getElementById('header-cpu-temp').textContent = temp;
+                    try { sessionStorage.setItem('rt_cpu', JSON.stringify({ temp })); } catch(e) {}
                 }
             } catch (error) {
                 console.log('Stats fetch failed (server constraint):', error);
             }
         }
+
+        // Restore status bar from cache instantly before fetching fresh data
+        (function() {
+            try {
+                const w = sessionStorage.getItem('rt_weather');
+                if (w) { const d = JSON.parse(w); document.getElementById('weather-temp').textContent = d.temp; document.getElementById('weather-icon').textContent = d.icon; }
+                const c = sessionStorage.getItem('rt_cpu');
+                if (c) { const d = JSON.parse(c); document.getElementById('header-cpu-temp').textContent = d.temp; }
+            } catch(e) {}
+        })();
 
         // Update immediately and then on intervals
         updateWeather();

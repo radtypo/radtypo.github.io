@@ -720,7 +720,9 @@
                             95: '⛈️', 96: '⛈️', 99: '⛈️'
                         };
                         
-                        document.getElementById('weather-icon').textContent = iconMap[data.current.weather_code] || '☁️';
+                        const icon = iconMap[data.current.weather_code] || '☁️';
+                        document.getElementById('weather-icon').textContent = icon;
+                        try { sessionStorage.setItem('rt_weather', JSON.stringify({ temp: document.getElementById('weather-temp').textContent, icon })); } catch(e) {}
                     }
                 } catch (error) {
                     console.log('Weather update failed:', error);
@@ -735,6 +737,7 @@
                     if (data.thermal?.cpu_temp) {
                         const temp = data.thermal.cpu_temp.replace('°C', '');
                         document.getElementById('cpu-temp').textContent = temp;
+                        try { sessionStorage.setItem('rt_cpu', JSON.stringify({ temp })); } catch(e) {}
                     }
                 } catch (error) {
                     console.log('CPU temperature update failed:', error);
@@ -765,6 +768,16 @@
                 toggle.textContent = '[ - ]';
             }
         }
+
+        // Restore status bar from cache instantly before fetching fresh data
+        (function() {
+            try {
+                const w = sessionStorage.getItem('rt_weather');
+                if (w) { const d = JSON.parse(w); document.getElementById('weather-temp').textContent = d.temp; document.getElementById('weather-icon').textContent = d.icon; }
+                const c = sessionStorage.getItem('rt_cpu');
+                if (c) { const d = JSON.parse(c); document.getElementById('cpu-temp').textContent = d.temp; }
+            } catch(e) {}
+        })();
 
         // Initialize the radio player
         new RadioPlayer();

@@ -397,6 +397,7 @@
                     document.getElementById('cpu-temp').textContent = Math.round(temp);
                     const status = getCpuStatus(temp);
                     document.getElementById('cpu-tooltip').textContent = status.desc;
+                    try { sessionStorage.setItem('rt_cpu', JSON.stringify({ temp: Math.round(temp) })); } catch(e) {}
                 }
             } catch (error) { console.log('CPU fetch failed:', error); }
         }
@@ -418,9 +419,10 @@
                     else if (code <= 82) icon = '🌦️';
                     else if (code >= 95) icon = '⛈️';
                     document.getElementById('weather-icon').textContent = icon;
-                    
+
                     const description = WEATHER_CODES[code] || 'Unknown';
                     document.getElementById('weather-tooltip').textContent = `${description} in Derry`;
+                    try { sessionStorage.setItem('rt_weather', JSON.stringify({ temp: document.getElementById('weather-temp').textContent, icon })); } catch(e) {}
                 }
             } catch (error) { console.log('Weather fetch failed:', error); }
         }
@@ -437,8 +439,21 @@
                 document.querySelector('.kp-circle').style.setProperty('--kp-color', colorData.color);
                 document.getElementById('kp-value').textContent = kpClamped.toFixed(1);
                 document.getElementById('kp-tooltip').textContent = `KP ${kpClamped.toFixed(1)} - ${colorData.label}`;
+                try { sessionStorage.setItem('rt_kp', JSON.stringify({ value: kpClamped.toFixed(1), color: colorData.color, label: colorData.label })); } catch(e) {}
             } catch (error) { console.log('KP fetch failed:', error); }
         }
+
+        // Restore status bar from cache instantly before fetching fresh data
+        (function() {
+            try {
+                const w = sessionStorage.getItem('rt_weather');
+                if (w) { const d = JSON.parse(w); document.getElementById('weather-temp').textContent = d.temp; document.getElementById('weather-icon').textContent = d.icon; }
+                const k = sessionStorage.getItem('rt_kp');
+                if (k) { const d = JSON.parse(k); document.querySelector('.kp-circle').style.setProperty('--kp-color', d.color); document.getElementById('kp-value').textContent = d.value; document.getElementById('kp-tooltip').textContent = `KP ${d.value} - ${d.label}`; }
+                const c = sessionStorage.getItem('rt_cpu');
+                if (c) { const d = JSON.parse(c); document.getElementById('cpu-temp').textContent = d.temp; }
+            } catch(e) {}
+        })();
 
         // Initialize
         loadSong();
