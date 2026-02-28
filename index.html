@@ -71,14 +71,6 @@
             100% { content: ''; }
         }
 
-        .kp-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            cursor: help;
-            position: relative;
-        }
-
         .kp-circle {
             width: 12px;
             height: 12px;
@@ -86,34 +78,6 @@
             background: var(--kp-color, #2ecc71);
             transition: background 0.5s ease;
             display: inline-block;
-        }
-
-        .kp-value {
-            font-size: 14px;
-            color: var(--secondary-color);
-        }
-
-        .kp-indicator:hover .kp-tooltip {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .kp-tooltip {
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--text-color);
-            color: var(--bg-color);
-            padding: 4px 8px;
-            border-radius: 3px;
-            white-space: nowrap;
-            font-size: 12px;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s;
-            margin-bottom: 5px;
-            pointer-events: none;
         }
 
         .nav a {
@@ -316,12 +280,9 @@
     <header class="header">
         <h1>rad.typo</h1>
         <div class="status">
-            derry: <span id="weather-temp">15</span>°C <span id="weather-icon">⛅</span> | 
-            <span class="kp-indicator">
-                kp: <span class="kp-circle"></span><span class="kp-value" id="kp-value">-</span>
-                <span class="kp-tooltip" id="kp-tooltip">Loading...</span>
-            </span> | 
-            cpu: <span id="cpu-temp">54</span>°C<span class="breathing-dots"></span>
+            derry: <span id="weather-temp">-</span>°C <span id="weather-icon">⛅</span> |
+            kp: <span class="kp-circle"></span><span id="kp-value">-</span> |
+            cpu: <span id="cpu-temp">-</span>°C<span class="breathing-dots"></span>
         </div>
     </header>
 
@@ -630,14 +591,8 @@
                 const kpRounded = Math.round(kpClamped); // For color lookup
                 const colorData = KP_COLORS[kpRounded];
                 
-                // Update the display
-                const circle = document.querySelector('.kp-circle');
-                const valueEl = document.getElementById('kp-value');
-                const tooltipEl = document.getElementById('kp-tooltip');
-                
-                circle.style.setProperty('--kp-color', colorData.color);
-                valueEl.textContent = kpDisplay;
-                tooltipEl.textContent = `KP ${kpDisplay} - ${colorData.label}`;
+                document.querySelector('.kp-circle').style.setProperty('--kp-color', colorData.color);
+                document.getElementById('kp-value').textContent = kpDisplay;
                 try { sessionStorage.setItem('rt_kp', JSON.stringify({ value: kpDisplay, color: colorData.color, label: colorData.label })); } catch(e) {}
 
             } catch (error) {
@@ -718,7 +673,7 @@
                 const w = sessionStorage.getItem('rt_weather');
                 if (w) { const d = JSON.parse(w); document.getElementById('weather-temp').textContent = d.temp; document.getElementById('weather-icon').textContent = d.icon; }
                 const k = sessionStorage.getItem('rt_kp');
-                if (k) { const d = JSON.parse(k); document.querySelector('.kp-circle').style.setProperty('--kp-color', d.color); document.getElementById('kp-value').textContent = d.value; document.getElementById('kp-tooltip').textContent = `KP ${d.value} - ${d.label}`; }
+                if (k) { const d = JSON.parse(k); document.querySelector('.kp-circle').style.setProperty('--kp-color', d.color); document.getElementById('kp-value').textContent = d.value; }
                 const c = sessionStorage.getItem('rt_cpu');
                 if (c) { const d = JSON.parse(c); document.getElementById('cpu-temp').textContent = d.temp; }
             } catch(e) {}
