@@ -14,10 +14,6 @@
             --code-bg: #f5f5f5;
         }
 
-        * {
-            box-sizing: border-box;
-        }
-
         body {
             font-family: monospace;
             max-width: 800px;
@@ -59,6 +55,9 @@
             font-size: 14px;
         }
 
+        .site-title { color: inherit; text-decoration: none; }
+        .site-title:hover { text-decoration: none; }
+
         .status {
             color: var(--secondary-color);
             font-size: 14px;
@@ -79,6 +78,13 @@
             25% { content: '.'; }
             50% { content: '..'; }
             75% { content: '...'; }
+        }
+
+        .kp-circle {
+            width: 12px; height: 12px; border-radius: 50%;
+            background: var(--kp-color, #2ecc71);
+            transition: background 0.5s ease;
+            display: inline-block;
         }
 
         .album-info {
@@ -330,7 +336,9 @@
         }
 
         .footer {
-            margin-top: 40px;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--secondary-color);
             font-size: 14px;
             color: var(--secondary-color);
         }
@@ -364,9 +372,13 @@
 </head>
 <body>
     <header class="header">
-        <a href="../" class="back">← back</a>
-        <h1>rad.typo</h1>
-        <div class="status">derry: <span id="weather-temp">18</span>°C <span id="weather-icon">🌧️</span> | cpu: <span id="cpu-temp">54</span>°C<span class="breathing-dots"></span></div>
+        <a href="/" class="back">← back</a>
+        <h1><a href="/" class="site-title">rad.typo</a></h1>
+        <div class="status">
+            derry: <span id="weather-temp">-</span>°C <span id="weather-icon">⛅</span> |
+            kp: <span class="kp-circle"></span><span id="kp-value">-</span> |
+            cpu: <span id="cpu-temp">-</span>°C<span class="breathing-dots"></span>
+        </div>
     </header>
 
     <div class="album-info">
@@ -503,7 +515,7 @@
     </section>
 
     <footer class="footer">
-        └─ <a href="../infrastructure.html">infrastructure</a> | <a href="../telemetry.html">telemetry</a>
+        └─ <a href="/infrastructure.html">infrastructure</a> | <a href="/telemetry.html">telemetry</a>
     </footer>
 
     <script>
@@ -542,6 +554,19 @@
             });
         }
 
+        const KP_COLORS = {
+            0: { color: '#2ecc71', label: 'Quiet' },
+            1: { color: '#2ecc71', label: 'Quiet' },
+            2: { color: '#2ecc71', label: 'Quiet' },
+            3: { color: '#f1c40f', label: 'Unsettled' },
+            4: { color: '#f39c12', label: 'Active' },
+            5: { color: '#e67e22', label: 'Minor Storm' },
+            6: { color: '#e74c3c', label: 'Moderate Storm' },
+            7: { color: '#c0392b', label: 'Strong Storm' },
+            8: { color: '#8e44ad', label: 'Severe Storm' },
+            9: { color: '#6c3483', label: 'Extreme Storm' }
+        };
+
         async function fetchJSON(url) {
             try {
                 const response = await fetch(url);
@@ -555,23 +580,40 @@
         async function updateCpuTemp() {
             const data = await fetchJSON('/api/stats.json');
             if (data?.thermal?.cpu_temp) {
-                document.getElementById('cpu-temp').textContent = data.thermal.cpu_temp.replace('°C', '');
+                const temp = Math.round(parseFloat(data.thermal.cpu_temp.replace('°C', '')));
+                document.getElementById('cpu-temp').textContent = temp;
+                try { sessionStorage.setItem('rt_cpu', JSON.stringify({ temp })); } catch(e) {}
             }
         }
 
         async function updateWeather() {
             const data = await fetchJSON('https://api.open-meteo.com/v1/forecast?latitude=55.014662&longitude=-7.302903&current=temperature_2m,weather_code&timezone=Europe%2FLondon');
             if (!data?.current) return;
-            
-            document.getElementById('weather-temp').textContent = Math.round(data.current.temperature_2m);
-            
+
+            const temp = Math.round(data.current.temperature_2m);
+            document.getElementById('weather-temp').textContent = temp;
+
             const iconMap = {
-                0: '☀️', 3: '⛅', 48: '🌫️', 67: '🌧️', 
+                0: '☀️', 3: '⛅', 48: '🌫️', 67: '🌧️',
                 77: '🌨️', 82: '🌦️', 95: '⛈️'
             };
             const code = data.current.weather_code;
             const icon = Object.keys(iconMap).reverse().find(k => code >= k);
-            document.getElementById('weather-icon').textContent = iconMap[icon] || '⛅';
+            const iconText = iconMap[icon] || '⛅';
+            document.getElementById('weather-icon').textContent = iconText;
+            try { sessionStorage.setItem('rt_weather', JSON.stringify({ temp: String(temp), icon: iconText })); } catch(e) {}
+        }
+
+        async function updateKPIndex() {
+            const data = await fetchJSON('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json');
+            if (!data) return;
+            const kpValue = parseFloat(data[data.length - 1][1]);
+            const kpClamped = Math.min(9, Math.max(0, kpValue));
+            const kpRounded = Math.round(kpClamped);
+            const colorData = KP_COLORS[kpRounded];
+            document.querySelector('.kp-circle').style.setProperty('--kp-color', colorData.color);
+            document.getElementById('kp-value').textContent = kpClamped.toFixed(1);
+            try { sessionStorage.setItem('rt_kp', JSON.stringify({ value: kpClamped.toFixed(1), color: colorData.color, label: colorData.label })); } catch(e) {}
         }
 
         function updateTotal() {
@@ -593,14 +635,28 @@
             document.body.removeChild(link);
         }
 
+        // Restore status bar from cache instantly before fetching fresh data
+        (function() {
+            try {
+                const w = sessionStorage.getItem('rt_weather');
+                if (w) { const d = JSON.parse(w); document.getElementById('weather-temp').textContent = d.temp; document.getElementById('weather-icon').textContent = d.icon; }
+                const k = sessionStorage.getItem('rt_kp');
+                if (k) { const d = JSON.parse(k); document.querySelector('.kp-circle').style.setProperty('--kp-color', d.color); document.getElementById('kp-value').textContent = d.value; }
+                const c = sessionStorage.getItem('rt_cpu');
+                if (c) { const d = JSON.parse(c); document.getElementById('cpu-temp').textContent = d.temp; }
+            } catch(e) {}
+        })();
+
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('input[name="shipping"]').forEach(input => {
                 input.addEventListener('change', updateTotal);
             });
             updateCpuTemp();
             updateWeather();
+            updateKPIndex();
             setInterval(updateCpuTemp, 30000);
             setInterval(updateWeather, 300000);
+            setInterval(updateKPIndex, 300000);
         });
     </script>
 </body>
