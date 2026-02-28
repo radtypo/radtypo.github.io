@@ -12,44 +12,74 @@ There is no `npm`, `make`, `build`, or test command. Edit files directly and the
 
 ## Architecture
 
-The site recently migrated from individual HTML files to a **JSON + template system**:
+The site uses a **JSON + template system**:
 
 - **`data/songs.json`** — single source of truth for all song metadata (title, date, lyrics, artwork filename, audio filename, equipment, credits, resources)
-- **`data/writing.json`** — same for poetry/written works
+- **`data/poems.json`** — same for poetry/written works
 - **`song-template.html`** — single HTML file that serves all song pages; reads the song ID from the URL path/query param, fetches `songs.json`, and renders content client-side
-- **`writing-template.html`** — same pattern for writing pages
-- **`index.html`** — homepage; fetches both JSON files and renders a unified chronological list of all songs and writing
+- **`poems-template.html`** — same pattern for poem pages
+- **`index.html`** — homepage; fetches both JSON files and renders a unified chronological list with filter buttons (songs / poems / releases)
 
-URL routing for templates is handled via `.htaccess` Apache rewrite rules.
+URL routing for templates is handled via `.htaccess` Apache rewrite rules. 301 redirects are in place for old paths: `/writing/` → `/poems/`, `/albums/` → `/releases/`.
 
 ## Adding Content
 
-**New song:** Add an entry to `data/songs.json`, place the audio file in `audio/`, and place artwork in `images/`. The song will automatically appear on the homepage and be accessible via its key as the URL slug.
+**New song:** Add an entry to `data/songs.json`, place the audio file in `audio/`, and place artwork in `images/`. The song will automatically appear on the homepage.
 
-**New writing:** Same pattern using `data/writing.json`.
+**New poem:** Same pattern using `data/poems.json`.
 
-## Dynamic Features in Templates
+**New release:** Add a standalone HTML page in `releases/` and add it to `sitemap.html` manually (tree view + chrono list + stats line).
 
-Each template page shows a live status bar fetching:
-- **Weather** — Open-Meteo API (Derry coordinates)
-- **KP Index** — NOAA API (geomagnetic activity, color-coded)
-- **CPU temperature** — local `/api/stats.json` from the Raspberry Pi
+After adding content, update `sitemap.html` (tree view, chrono list, stats count/date).
 
-These are best-effort fetches; failures are handled gracefully.
+## Consistent Page Structure
+
+All content pages share the same header/footer/status-bar pattern:
+
+**Header:**
+```html
+<header class="header">
+    <a href="/" class="back">← back</a>
+    <h1><a href="/" class="site-title">rad.typo</a></h1>
+    <div class="status">
+        derry: <span id="weather-temp">-</span>°C <span id="weather-icon">⛅</span> |
+        kp: <span class="kp-circle"></span><span id="kp-value">-</span> |
+        cpu: <span id="cpu-temp">-</span>°C<span class="breathing-dots"></span>
+    </div>
+</header>
+```
+
+**Footer:**
+```html
+<footer class="footer">
+    └─ <a href="/infrastructure.html">infrastructure</a> | <a href="/telemetry.html">telemetry</a>
+</footer>
+```
+
+**Status bar JS** — all pages include `KP_COLORS`, `updateCpuTemp()`, `updateWeather()`, `updateKPIndex()`, a sessionStorage restore IIFE (runs immediately, keys: `rt_weather`, `rt_kp`, `rt_cpu`), and polling intervals (CPU: 30s, weather/KP: 5min). The IIFE restores cached values synchronously on load for smooth transitions between pages.
+
+When adding or auditing a page, verify it matches this structure exactly — use `poems-template.html` as the reference.
+
+## Radio Player
+
+`radio.html` is a minimal shuffle-only music player (Fisher-Yates queue, play/pause + skip, no persistence). `radio-archive.html` is the original full-featured player (progress bar, playlist, artwork, shuffle/loop toggles), accessible from the radio page.
 
 ## Key Files
 
 | File | Purpose |
 |------|---------|
 | `data/songs.json` | All song metadata |
-| `data/writing.json` | All writing/poetry metadata |
+| `data/poems.json` | All poem metadata |
 | `song-template.html` | Song page template |
-| `writing-template.html` | Writing page template |
-| `index.html` | Homepage (chronological feed) |
-| `.htaccess` | Apache routing/rewrites |
-| `subscribe.php` | Email list subscription (PHP, file-based) |
+| `poems-template.html` | Poem page template |
+| `index.html` | Homepage (chronological feed with filters) |
+| `sitemap.html` | Full site map (tree + chrono views) — update manually when adding content |
+| `radio.html` | Minimal shuffle player |
+| `radio-archive.html` | Full-featured player (legacy) |
+| `releases/` | Standalone release pages (e.g. hard-hitter.html) |
+| `.htaccess` | Apache routing/rewrites + 301 redirects |
 | `api/stats.json` | Raspberry Pi server stats (CPU temp, uptime, etc.) |
 
 ## Design Constraints (Intentional)
 
-The project philosophy embraces constraints: no JS frameworks, no database, no build pipeline, monospace typography, and self-hosted on low-power hardware. Avoid introducing dependencies or build steps — keep it static and vanilla.
+No JS frameworks, no database, no build pipeline, monospace typography, self-hosted on low-power hardware. Avoid introducing dependencies or build steps — keep it static and vanilla. Use sed or Python for bulk text replacements when needed (note: sed fails on multi-byte UTF-8 characters like `└──` — use Python instead).
