@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rad.typo</title>
+    <style>
+        :root {
+            --bg: #fff;
+            --fg: #000;
+            --dim: #666;
+            --link: #0000FF;
+        }
+
+        body {
+            font-family: monospace;
+            max-width: 800px;
+            margin: 48px auto;
+            padding: 24px;
+            line-height: 1.6;
+            background: var(--bg);
+            color: var(--fg);
+        }
+
+        h1 { font-size: 24px; margin: 0 0 24px; padding: 0; }
+
+        a { color: var(--link); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .header { margin-bottom: 30px; position: relative; }
+        .back { position: absolute; top: 0; right: 0; font-size: 14px; }
+        .site-title { color: inherit; text-decoration: none; }
+        .site-title:hover { text-decoration: none; }
+
+        .status {
+            color: var(--dim);
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .breathing-dots::after {
+            content: '';
+            animation: breathe 4s infinite;
+        }
+        @keyframes breathe {
+            0%, 100% { content: ''; }
+            25%  { content: '.'; }
+            50%  { content: '..'; }
+            75%  { content: '...'; }
+        }
+
+        .kp-circle {
+            width: 12px; height: 12px; border-radius: 50%;
+            background: var(--kp-color, #2ecc71);
+            transition: background 0.5s;
+            display: inline-block;
+        }
+
+        /* oracle */
+        #oracle {
+            margin: 60px 0 80px;
+        }
+
+        #input-wrap {
+            position: relative;
+        }
+
+        #q {
+            font-family: monospace;
+            font-size: 16px;
+            line-height: 1.6;
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--fg);
+            outline: none;
+            resize: none;
+            padding: 0 20px 4px 0;
+            box-sizing: border-box;
+            overflow: hidden;
+            min-height: 28px;
+            display: block;
+        }
+
+        #q:disabled {
+            opacity: 0.35;
+            cursor: default;
+        }
+
+        #attach-btn {
+            position: absolute;
+            bottom: 7px;
+            right: 0;
+            font-size: 14px;
+            color: var(--dim);
+            cursor: pointer;
+            line-height: 1;
+            user-select: none;
+            font-family: monospace;
+        }
+        #attach-btn:hover { color: var(--fg); }
+
+        #img-preview {
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--dim);
+            cursor: pointer;
+            user-select: none;
+        }
+        #img-preview:hover { text-decoration: line-through; }
+
+        #a {
+            display: none;
+            font-family: monospace;
+            font-size: 16px;
+            line-height: 1.8;
+            white-space: pre-line;
+            cursor: text;
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--dim);
+            font-size: 14px;
+            color: var(--dim);
+        }
+        .footer a { color: var(--dim); }
+
+        @media (max-width: 600px) {
+            body { margin: 20px auto; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="back">← back</a>
+        <h1><a href="/" class="site-title">rad.typo</a></h1>
+        <div class="status">
+            derry: <span id="weather-temp">-</span>°C <span id="weather-icon">⛅</span> |
+            kp: <span class="kp-circle"></span><span id="kp-value">-</span> |
+            cpu: <span id="cpu-temp">-</span>°C<span class="breathing-dots"></span>
+        </div>
+    </header>
+
+    <div id="oracle">
+        <div id="input-wrap">
+            <textarea id="q" rows="1" autofocus spellcheck="false" autocomplete="off"></textarea>
+            <span id="attach-btn" title="attach image">+</span>
+            <input type="file" id="file-input" accept="image/*" style="display:none">
+            <div id="img-preview"></div>
+        </div>
+        <div id="a"></div>
+    </div>
+
+    <footer class="footer">
+        └─ <a href="/infrastructure.html">infrastructure</a> | <a href="/telemetry.html">telemetry</a>
+    </footer>
+
+    <script>
+        const KP_COLORS = {
+            0: { color: '#2ecc71', label: 'Quiet' },
+            1: { color: '#2ecc71', label: 'Quiet' },
+            2: { color: '#2ecc71', label: 'Quiet' },
+            3: { color: '#f1c40f', label: 'Unsettled' },
+            4: { color: '#f39c12', label: 'Active' },
+            5: { color: '#e67e22', label: 'Minor Storm' },
+            6: { color: '#e74c3c', label: 'Moderate Storm' },
+            7: { color: '#c0392b', label: 'Strong Storm' },
+            8: { color: '#8e44ad', label: 'Severe Storm' },
+            9: { color: '#6c3483', label: 'Extreme Storm' }
+        };
+
+        // --- Oracle ---
+
+        let mode     = 'input'; // 'input' | 'waiting' | 'response'
+        let attached = null;    // { data, type, name }
+
+        const q           = document.getElementById('q');
+        const a           = document.getElementById('a');
+        const inputWrap   = document.getElementById('input-wrap');
+        const imgPreview  = document.getElementById('img-preview');
+        const fileInput   = document.getElementById('file-input');
+        const attachBtn   = document.getElementById('attach-btn');
+
+        // Auto-resize textarea
+        q.addEventListener('input', resize);
+        function resize() {
+            q.style.height = 'auto';
+            q.style.height = q.scrollHeight + 'px';
+        }
+
+        // Enter submits; Shift+Enter inserts newline
+        q.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submit();
+            }
+        });
+
+        // File attachment via button
+        attachBtn.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files[0]) setImage(fileInput.files[0]);
+        });
+
+        // Drag-and-drop onto input
+        q.addEventListener('dragover', e => e.preventDefault());
+        q.addEventListener('drop', e => {
+            e.preventDefault();
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) setImage(file);
+        });
+
+        // Paste image from clipboard
+        document.addEventListener('paste', e => {
+            if (mode !== 'input') return;
+            const item = Array.from(e.clipboardData.items).find(i => i.type.startsWith('image/'));
+            if (item) {
+                e.preventDefault();
+                setImage(item.getAsFile());
+            }
+        });
+
+        function setImage(file) {
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const url   = ev.target.result;
+                const comma = url.indexOf(',');
+                attached = {
+                    data: url.slice(comma + 1),
+                    type: file.type || 'image/jpeg',
+                    name: file.name || 'image',
+                };
+                imgPreview.textContent = attached.name;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Click preview to clear attachment
+        imgPreview.addEventListener('click', () => {
+            attached = null;
+            imgPreview.textContent = '';
+            fileInput.value = '';
+        });
+
+        async function submit() {
+            if (mode !== 'input') return;
+            const text = q.value.trim();
+            if (!text && !attached) return;
+
+            mode = 'waiting';
+            q.disabled = true;
+
+            const body = {};
+            if (text)     body.text  = text;
+            if (attached) body.image = { data: attached.data, type: attached.type };
+
+            try {
+                const res  = await fetch('/g.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body),
+                });
+                const json = await res.json();
+                if (json.response) {
+                    showResponse(json.response);
+                } else {
+                    resetInput();
+                }
+            } catch (_) {
+                resetInput();
+            }
+        }
+
+        function showResponse(text) {
+            mode = 'response';
+            inputWrap.style.display = 'none';
+            a.style.display = 'block';
+            a.textContent   = text;
+        }
+
+        function resetInput() {
+            mode = 'input';
+            q.disabled               = false;
+            q.value                  = '';
+            q.style.height           = 'auto';
+            attached                 = null;
+            imgPreview.textContent   = '';
+            fileInput.value          = '';
+            inputWrap.style.display  = 'block';
+            a.style.display          = 'none';
+            a.textContent            = '';
+            q.focus();
+        }
+
+        // Click response or any key to return to input
+        a.addEventListener('click', resetInput);
+        document.addEventListener('keydown', e => {
+            if (mode === 'response' && !e.metaKey && !e.ctrlKey && e.key !== 'Tab') {
+                resetInput();
+            }
+        });
+
+        // --- Status bar ---
+
+        async function updateCpuTemp() {
+            try {
+                const res  = await fetch('/api/stats.json');
+                const data = await res.json();
+                if (data.thermal?.cpu_temp) {
+                    const temp = parseFloat(data.thermal.cpu_temp.replace('°C', ''));
+                    document.getElementById('cpu-temp').textContent = Math.round(temp);
+                    try { sessionStorage.setItem('rt_cpu', JSON.stringify({ temp: Math.round(temp) })); } catch(e) {}
+                }
+            } catch (_) {}
+        }
+
+        async function updateWeather() {
+            try {
+                const res  = await fetch('https://api.open-meteo.com/v1/forecast?latitude=55.014662&longitude=-7.302903&current=temperature_2m,weather_code&timezone=Europe%2FLondon');
+                const data = await res.json();
+                if (data.current) {
+                    const temp = Math.round(data.current.temperature_2m);
+                    const code = data.current.weather_code;
+                    let icon = '⛅';
+                    if (code === 0)       icon = '☀️';
+                    else if (code <= 3)   icon = '⛅';
+                    else if (code <= 48)  icon = '🌫️';
+                    else if (code <= 67)  icon = '🌧️';
+                    else if (code <= 77)  icon = '🌨️';
+                    else if (code <= 82)  icon = '🌦️';
+                    else if (code >= 95)  icon = '⛈️';
+                    document.getElementById('weather-temp').textContent = temp;
+                    document.getElementById('weather-icon').textContent = icon;
+                    try { sessionStorage.setItem('rt_weather', JSON.stringify({ temp, icon })); } catch(e) {}
+                }
+            } catch (_) {}
+        }
+
+        async function updateKPIndex() {
+            try {
+                const res  = await fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json');
+                const data = await res.json();
+                const kpValue   = parseFloat(data[data.length - 1][1]);
+                const kpClamped = Math.min(9, Math.max(0, kpValue));
+                const kpRounded = Math.round(kpClamped);
+                const colorData = KP_COLORS[kpRounded];
+                document.querySelector('.kp-circle').style.setProperty('--kp-color', colorData.color);
+                document.getElementById('kp-value').textContent = kpClamped.toFixed(1);
+                try { sessionStorage.setItem('rt_kp', JSON.stringify({ value: kpClamped.toFixed(1), color: colorData.color, label: colorData.label })); } catch(e) {}
+            } catch (_) {}
+        }
+
+        // Restore status bar from cache before fresh data arrives
+        (function() {
+            try {
+                const w = sessionStorage.getItem('rt_weather');
+                if (w) { const d = JSON.parse(w); document.getElementById('weather-temp').textContent = d.temp; document.getElementById('weather-icon').textContent = d.icon; }
+                const k = sessionStorage.getItem('rt_kp');
+                if (k) { const d = JSON.parse(k); document.querySelector('.kp-circle').style.setProperty('--kp-color', d.color); document.getElementById('kp-value').textContent = d.value; }
+                const c = sessionStorage.getItem('rt_cpu');
+                if (c) { const d = JSON.parse(c); document.getElementById('cpu-temp').textContent = d.temp; }
+            } catch(e) {}
+        })();
+
+        updateCpuTemp();
+        updateWeather();
+        updateKPIndex();
+        setInterval(updateCpuTemp, 30000);
+        setInterval(updateWeather, 300000);
+        setInterval(updateKPIndex, 300000);
+    </script>
+</body>
+</html>
