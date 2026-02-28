@@ -3,6 +3,9 @@ RewriteEngine On
 # Redirect old /writing/ URLs to /poems/
 RewriteRule ^writing/(.*)$ /poems/$1 [R=301,L]
 
+# Redirect old /albums/ URLs to /releases/
+RewriteRule ^albums/(.*)$ /releases/$1 [R=301,L]
+
 # Poem pages: /poems/works-event.html -> /poems-template.html?id=works-event
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^poems/([^/]+)\.html$ /poems-template.html?id=$1 [L,QSA]
