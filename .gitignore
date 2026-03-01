@@ -7,9 +7,6 @@ videos/it-aint-pretty.mp4
 *-backup.html
 *.backup.*
 
-# Staging/WIP (don't publish unreleased work)
-album-staging/
-
 # System files
 .DS_Store
 *.log
@@ -21,6 +18,5 @@ g-config.php
 works-event/
 
 # Internal-only tools (not part of the site)
-album-maker.html
 claude-test.html
 server-status.html
