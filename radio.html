@@ -26,7 +26,9 @@
             overflow: hidden;
         }
 
-        h1 { margin: 0; padding: 0; font-size: 24px; margin-bottom: 24px; }
+        h1, h2 { margin: 0; padding: 0; }
+        h1 { font-size: 24px; margin-bottom: 24px; }
+        h2 { font-size: 16px; margin-bottom: 20px; font-weight: bold; }
 
         a { color: var(--link-color); text-decoration: none; }
         a:hover { text-decoration: underline; }
@@ -66,12 +68,7 @@
         /* Player */
         .player { margin-bottom: 20px; flex-shrink: 0; }
 
-        #track-name {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 16px;
-            min-height: 25px;
-        }
+        #track-name { margin-bottom: 20px; }
 
         .progress-row {
             display: flex;
@@ -196,7 +193,7 @@
     </header>
 
     <div class="player">
-        <div id="track-name">—</div>
+        <h2 id="track-name">—</h2>
         <div class="progress-row">
             <span class="time" id="elapsed">0:00</span>
             <input type="range" id="progress" min="0" max="100" value="0" step="0.1">
