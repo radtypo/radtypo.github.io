@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rad.io - rad.typo</title>
+    <title>radio - rad.typo</title>
     <style>
         :root {
             --bg-color: #fff;
@@ -22,9 +22,7 @@
             color: var(--text-color);
         }
 
-        h1, h2 { margin: 0; padding: 0; }
-        h1 { font-size: 24px; margin-bottom: 24px; }
-        h2 { font-size: 16px; margin-bottom: 20px; font-weight: bold; }
+        h1 { margin: 0; padding: 0; font-size: 24px; margin-bottom: 24px; }
 
         a { color: var(--link-color); text-decoration: none; }
         a:hover { text-decoration: underline; }
@@ -61,6 +59,63 @@
             75% { content: '...'; }
         }
 
+        /* Player */
+        .player { margin-bottom: 20px; }
+
+        #track-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            min-height: 25px;
+        }
+
+        .progress-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .time {
+            font-size: 12px;
+            color: var(--secondary-color);
+            min-width: 36px;
+            white-space: nowrap;
+        }
+        .time.right { text-align: right; }
+
+        #progress {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 3px;
+            background: #ddd;
+            border-radius: 2px;
+            cursor: pointer;
+            outline: none;
+        }
+        #progress::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: var(--text-color);
+            cursor: pointer;
+        }
+        #progress::-moz-range-thumb {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: var(--text-color);
+            cursor: pointer;
+            border: none;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
 
         .ctrl {
             background: none;
@@ -70,11 +125,41 @@
             padding: 0;
             cursor: pointer;
             color: var(--secondary-color);
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
         }
         .ctrl:hover { color: var(--text-color); text-decoration: underline; }
         .ctrl.active { color: var(--text-color); }
 
-        .sep { color: var(--secondary-color); }
+        /* Playlist */
+        .playlist {
+            border-top: 1px solid #ddd;
+            max-height: 420px;
+            overflow-y: auto;
+        }
+
+        .track-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 0;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--secondary-color);
+            user-select: none;
+        }
+        .track-item:last-child { border-bottom: none; }
+        .track-item:hover { color: var(--text-color); }
+        .track-item.active { color: var(--text-color); font-weight: bold; }
+
+        .track-num {
+            min-width: 28px;
+            font-size: 12px;
+            text-align: right;
+            flex-shrink: 0;
+        }
 
         .footer {
             margin-top: 60px;
@@ -87,6 +172,10 @@
 
         @media (max-width: 600px) {
             body { margin: 20px auto; padding: 15px; }
+            .playlist { max-height: 320px; }
+            .track-item { padding: 11px 0; }
+            .ctrl { min-height: 48px; }
+            #progress::-webkit-slider-thumb { width: 18px; height: 18px; }
         }
     </style>
 </head>
@@ -101,13 +190,22 @@
         </div>
     </header>
 
-    <h2 id="trackName">—</h2>
-
-    <div>
-        <button class="ctrl" id="playBtn">play</button>
-        <span class="sep"> | </span>
-        <button class="ctrl" id="skipBtn">skip</button>
+    <div class="player">
+        <div id="track-name">—</div>
+        <div class="progress-row">
+            <span class="time" id="elapsed">0:00</span>
+            <input type="range" id="progress" min="0" max="100" value="0" step="0.1">
+            <span class="time right" id="duration">—</span>
+        </div>
+        <div class="controls">
+            <button class="ctrl" id="prevBtn">prev</button>
+            <button class="ctrl" id="playBtn">play</button>
+            <button class="ctrl" id="nextBtn">next</button>
+            <button class="ctrl" id="shuffleBtn">shuffle</button>
+        </div>
     </div>
+
+    <div class="playlist" id="playlist"></div>
 
     <footer class="footer">
         └─ <a href="/infrastructure.html">infrastructure</a> | <a href="/telemetry.html">telemetry</a>
@@ -125,23 +223,44 @@
         };
 
         const SONGS = [
-            { title: "vulture in the snow",       file: "vulture-in-the-snow.mp3",       artwork: "images/vulture-in-the-snow-single-artwork.jpg" },
-            { title: "straight and narrow",        file: "straight-and-narrow.mp3",        artwork: "images/straight-and-narrow-single-artwork.jpg" },
-            { title: "frontal lobe fritz",          file: "frontal-lobe-fritz.mp3",          artwork: "images/frontal-lobe-fritz-single-artwork.jpg" },
-            { title: "what now",                    file: "what-now.mp3",                    artwork: "images/what-now-single-artwork.jpg" },
-            { title: "the one we didn't get to record with steve albini", file: "the-one-we-didnt-get-to-record-with-steve-albini.mp3", artwork: "images/the-one-we-didnt-get-to-record-with-steve-albini-single-artwork.jpg" },
-            { title: "hard hitter",                 file: "hard-hitter.mp3",                 artwork: "images/hard-hitter-single-artwork.jpg" },
-            { title: "it ain't pretty",             file: "it-aint-pretty.mp3",              artwork: "images/it-aint-pretty-artwork.jpg" },
-            { title: "muriel",                      file: "muriel.mp3",                      artwork: "images/muriel-artwork.jpg" },
-            { title: "rad typo",                    file: "rad-typo.mp3",                    artwork: "images/rad-typo-artwork.jpg" },
-            { title: "birthday cake",               file: "birthday-cake.mp3",               artwork: "images/birthday-cake-artwork.jpg" },
-            { title: "what's not to like",          file: "whats-not-to-like.mp3",           artwork: "images/whats-not-to-like-artwork.jpg" },
-            { title: "bad fortune",                 file: "bad-fortune.mp3",                 artwork: "images/bad-fortune-artwork.jpg" }
+            { title: "bad fortune",                                                    file: "bad-fortune.mp3" },
+            { title: "what's not to like",                                             file: "whats-not-to-like.mp3" },
+            { title: "birthday cake",                                                  file: "birthday-cake.mp3" },
+            { title: "rad typo",                                                       file: "rad-typo.mp3" },
+            { title: "muriel",                                                         file: "muriel.mp3" },
+            { title: "it ain't pretty",                                                file: "it-aint-pretty.mp3" },
+            { title: "hard hitter",                                                    file: "hard-hitter.mp3" },
+            { title: "the one we didn't get to record with steve albini",              file: "the-one-we-didnt-get-to-record-with-steve-albini.mp3" },
+            { title: "what now",                                                       file: "what-now.mp3" },
+            { title: "frontal lobe fritz",                                             file: "frontal-lobe-fritz.mp3" },
+            { title: "straight and narrow",                                            file: "straight-and-narrow.mp3" },
+            { title: "vulture in the snow",                                            file: "vulture-in-the-snow.mp3" },
+            { title: "the most generic experience ever",                               file: "the-most-generic-experience-ever.mp3" },
+            { title: "old enough to handle it",                                        file: "old-enough-to-handle-it.mp3" },
         ];
 
-        // Shuffle once on load, reshuffle when the queue runs out
-        function shuffle(arr) {
-            const a = arr.slice();
+        // State
+        let currentIdx = 0;
+        let isPlaying = false;
+        let shuffleOn = false;
+        let shuffleQueue = [];
+        let shufflePos = 0;
+        let playHistory = [0];
+        let historyPos = 0;
+        let scrubbing = false;
+
+        const audio       = document.getElementById('audio');
+        const trackName   = document.getElementById('track-name');
+        const playBtn     = document.getElementById('playBtn');
+        const prevBtn     = document.getElementById('prevBtn');
+        const nextBtn     = document.getElementById('nextBtn');
+        const shuffleBtn  = document.getElementById('shuffleBtn');
+        const progressBar = document.getElementById('progress');
+        const elapsedEl   = document.getElementById('elapsed');
+        const durationEl  = document.getElementById('duration');
+
+        function makeShuffle(n) {
+            const a = Array.from({ length: n }, (_, i) => i);
             for (let i = a.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [a[i], a[j]] = [a[j], a[i]];
@@ -149,75 +268,184 @@
             return a;
         }
 
-        let queue = shuffle(SONGS);
-        let queueIndex = 0;
-        let isPlaying = false;
-
-        const audio    = document.getElementById('audio');
-        const trackName = document.getElementById('trackName');
-        const playBtn  = document.getElementById('playBtn');
-        const skipBtn  = document.getElementById('skipBtn');
-
-        function loadTrack(autoPlay) {
-            if (queueIndex >= queue.length) {
-                queue = shuffle(SONGS);
-                queueIndex = 0;
-            }
-            const song = queue[queueIndex];
-            trackName.textContent = song.title;
-            audio.src = `audio/${song.file}`;
-            updateMediaSession(song);
-            if (autoPlay) {
-                audio.play().then(() => {
-                    isPlaying = true;
-                    playBtn.textContent = 'pause';
-                    playBtn.classList.add('active');
-                }).catch(console.error);
-            }
+        function fmtTime(sec) {
+            if (!isFinite(sec) || isNaN(sec) || sec < 0) return '0:00';
+            const m = Math.floor(sec / 60);
+            const s = Math.floor(sec % 60);
+            return `${m}:${s.toString().padStart(2, '0')}`;
         }
 
-        function togglePlay() {
-            if (isPlaying) {
-                audio.pause();
-                isPlaying = false;
-                playBtn.textContent = 'play';
-                playBtn.classList.remove('active');
-            } else {
-                audio.play().then(() => {
-                    isPlaying = true;
-                    playBtn.textContent = 'pause';
-                    playBtn.classList.add('active');
-                }).catch(console.error);
-            }
+        function setProgressFill(pct) {
+            progressBar.style.background =
+                `linear-gradient(to right, var(--text-color) ${pct}%, #ddd ${pct}%)`;
         }
 
-        function skip() {
-            queueIndex++;
-            loadTrack(isPlaying);
+        function updatePlayBtn() {
+            playBtn.textContent = isPlaying ? 'pause' : 'play';
+            playBtn.classList.toggle('active', isPlaying);
         }
 
-        playBtn.addEventListener('click', togglePlay);
-        skipBtn.addEventListener('click', skip);
-        audio.addEventListener('ended', () => { queueIndex++; loadTrack(true); });
+        function updatePlaylistHighlight() {
+            document.querySelectorAll('.track-item').forEach(item => {
+                const idx = parseInt(item.dataset.idx);
+                const active = idx === currentIdx;
+                item.classList.toggle('active', active);
+                item.querySelector('.track-num').textContent = active ? '▶' : `${idx + 1}.`;
+            });
+        }
+
+        function scrollToActive() {
+            const active = document.querySelector('.track-item.active');
+            if (active) active.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
 
         function updateMediaSession(song) {
             if (!('mediaSession' in navigator)) return;
             navigator.mediaSession.metadata = new MediaMetadata({
                 title: song.title,
                 artist: 'rad.typo',
-                album: 'rad.io',
-                artwork: [{ src: song.artwork, sizes: '512x512', type: 'image/jpeg' }]
+                album: 'radio',
             });
         }
 
-        if ('mediaSession' in navigator) {
-            navigator.mediaSession.setActionHandler('play', () => { if (!isPlaying) togglePlay(); });
-            navigator.mediaSession.setActionHandler('pause', () => { if (isPlaying) togglePlay(); });
-            navigator.mediaSession.setActionHandler('nexttrack', skip);
+        function loadSong(idx) {
+            currentIdx = idx;
+            const song = SONGS[idx];
+            trackName.textContent = song.title;
+            audio.src = `audio/${song.file}`;
+            progressBar.value = 0;
+            setProgressFill(0);
+            elapsedEl.textContent = '0:00';
+            durationEl.textContent = '—';
+            updatePlaylistHighlight();
+            updateMediaSession(song);
+            scrollToActive();
         }
 
-        // Start the queue — show first track, wait for user to press play
-        loadTrack(false);
+        function playSong(idx) {
+            playHistory = playHistory.slice(0, historyPos + 1);
+            playHistory.push(idx);
+            historyPos = playHistory.length - 1;
+            loadSong(idx);
+            audio.play().then(() => {
+                isPlaying = true;
+                updatePlayBtn();
+            }).catch(console.error);
+        }
+
+        function togglePlay() {
+            if (isPlaying) {
+                audio.pause();
+                isPlaying = false;
+                updatePlayBtn();
+            } else {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    updatePlayBtn();
+                }).catch(console.error);
+            }
+        }
+
+        function playNext() {
+            if (historyPos < playHistory.length - 1) {
+                historyPos++;
+                loadSong(playHistory[historyPos]);
+                if (isPlaying) audio.play().catch(console.error);
+                return;
+            }
+
+            let nextIdx;
+            if (shuffleOn) {
+                shufflePos++;
+                if (shufflePos >= shuffleQueue.length) {
+                    shuffleQueue = makeShuffle(SONGS.length);
+                    shufflePos = 0;
+                }
+                nextIdx = shuffleQueue[shufflePos];
+            } else {
+                nextIdx = (currentIdx + 1) % SONGS.length;
+            }
+
+            playHistory.push(nextIdx);
+            historyPos++;
+            loadSong(nextIdx);
+            if (isPlaying) audio.play().catch(console.error);
+        }
+
+        function playPrev() {
+            if (audio.currentTime > 3) {
+                audio.currentTime = 0;
+                return;
+            }
+            if (historyPos > 0) {
+                historyPos--;
+                loadSong(playHistory[historyPos]);
+                if (isPlaying) audio.play().catch(console.error);
+            } else {
+                audio.currentTime = 0;
+            }
+        }
+
+        function buildPlaylist() {
+            const container = document.getElementById('playlist');
+            SONGS.forEach((song, idx) => {
+                const item = document.createElement('div');
+                item.className = 'track-item';
+                item.dataset.idx = idx;
+                item.innerHTML = `<span class="track-num">${idx + 1}.</span><span>${song.title}</span>`;
+                item.addEventListener('click', () => playSong(idx));
+                container.appendChild(item);
+            });
+        }
+
+        // Audio events
+        audio.addEventListener('timeupdate', () => {
+            if (scrubbing || !audio.duration) return;
+            const pct = (audio.currentTime / audio.duration) * 100;
+            progressBar.value = pct;
+            setProgressFill(pct);
+            elapsedEl.textContent = fmtTime(audio.currentTime);
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            durationEl.textContent = fmtTime(audio.duration);
+        });
+
+        audio.addEventListener('ended', () => { playNext(); });
+
+        progressBar.addEventListener('mousedown', () => { scrubbing = true; });
+        progressBar.addEventListener('touchstart', () => { scrubbing = true; }, { passive: true });
+        progressBar.addEventListener('input', () => {
+            if (!audio.duration) return;
+            const t = (progressBar.value / 100) * audio.duration;
+            audio.currentTime = t;
+            elapsedEl.textContent = fmtTime(t);
+            setProgressFill(progressBar.value);
+        });
+        progressBar.addEventListener('mouseup', () => { scrubbing = false; });
+        progressBar.addEventListener('touchend', () => { scrubbing = false; });
+
+        // Controls
+        playBtn.addEventListener('click', togglePlay);
+        prevBtn.addEventListener('click', playPrev);
+        nextBtn.addEventListener('click', playNext);
+        shuffleBtn.addEventListener('click', () => {
+            shuffleOn = !shuffleOn;
+            if (shuffleOn) {
+                shuffleQueue = makeShuffle(SONGS.length);
+                shufflePos = shuffleQueue.indexOf(currentIdx);
+                if (shufflePos === -1) shufflePos = 0;
+            }
+            shuffleBtn.classList.toggle('active', shuffleOn);
+        });
+
+        // Media Session
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.setActionHandler('play',          () => { if (!isPlaying) togglePlay(); });
+            navigator.mediaSession.setActionHandler('pause',         () => { if (isPlaying) togglePlay(); });
+            navigator.mediaSession.setActionHandler('nexttrack',     playNext);
+            navigator.mediaSession.setActionHandler('previoustrack', playPrev);
+        }
 
         // Status bar
         async function updateWeather() {
@@ -278,6 +506,9 @@
             } catch(e) {}
         })();
 
+        // Init
+        buildPlaylist();
+        loadSong(0);
         updateWeather();
         updateKPIndex();
         updateCpuTemp();
