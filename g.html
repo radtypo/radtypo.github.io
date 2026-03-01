@@ -6,10 +6,10 @@
     <title>rad.typo</title>
     <style>
         :root {
-            --bg: #fff;
-            --fg: #000;
-            --dim: #666;
-            --link: #0000FF;
+            --bg-color: #fff;
+            --text-color: #000;
+            --secondary-color: #666;
+            --link-color: #0000FF;
         }
 
         body {
@@ -18,13 +18,13 @@
             margin: 48px auto;
             padding: 24px;
             line-height: 1.6;
-            background: var(--bg);
-            color: var(--fg);
+            background: var(--bg-color);
+            color: var(--text-color);
         }
 
         h1 { font-size: 24px; margin: 0 0 24px; padding: 0; }
 
-        a { color: var(--link); text-decoration: none; }
+        a { color: var(--link-color); text-decoration: none; }
         a:hover { text-decoration: underline; }
 
         .header { margin-bottom: 30px; position: relative; }
@@ -33,7 +33,7 @@
         .site-title:hover { text-decoration: none; }
 
         .status {
-            color: var(--dim);
+            color: var(--secondary-color);
             font-size: 14px;
             margin-bottom: 20px;
             display: flex;
@@ -76,7 +76,7 @@
             width: 100%;
             background: transparent;
             border: none;
-            border-bottom: 1px solid var(--fg);
+            border-bottom: 1px solid var(--text-color);
             outline: none;
             resize: none;
             padding: 0 20px 4px 0;
@@ -96,18 +96,18 @@
             bottom: 7px;
             right: 0;
             font-size: 14px;
-            color: var(--dim);
+            color: var(--secondary-color);
             cursor: pointer;
             line-height: 1;
             user-select: none;
             font-family: monospace;
         }
-        #attach-btn:hover { color: var(--fg); }
+        #attach-btn:hover { color: var(--text-color); }
 
         #img-preview {
             margin-top: 6px;
             font-size: 12px;
-            color: var(--dim);
+            color: var(--secondary-color);
             cursor: pointer;
             user-select: none;
         }
@@ -125,11 +125,11 @@
         .footer {
             margin-top: 60px;
             padding-top: 20px;
-            border-top: 1px solid var(--dim);
+            border-top: 1px solid var(--secondary-color);
             font-size: 14px;
-            color: var(--dim);
+            color: var(--secondary-color);
         }
-        .footer a { color: var(--dim); }
+        .footer a { color: var(--secondary-color); }
 
         @media (max-width: 600px) {
             body { margin: 20px auto; padding: 15px; }
