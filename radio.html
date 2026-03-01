@@ -15,13 +15,12 @@
         body {
             font-family: monospace;
             max-width: 800px;
-            margin: 0 auto;
-            padding: 48px 24px 24px;
-            box-sizing: border-box;
+            margin: 48px auto;
+            padding: 24px;
             line-height: 1.6;
             background-color: var(--bg-color);
             color: var(--text-color);
-            height: 100vh;
+            height: calc(100vh - 144px); /* 100vh - 96px margins - 48px padding */
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -178,7 +177,7 @@
         .footer a { color: var(--secondary-color); }
 
         @media (max-width: 600px) {
-            body { padding: 20px 15px 15px; }
+            body { margin: 20px auto; padding: 15px; height: calc(100vh - 70px); } /* 100vh - 40px margins - 30px padding */
             .track-item { padding: 11px 0; }
             .ctrl { min-height: 48px; }
             #progress::-webkit-slider-thumb { width: 18px; height: 18px; }
