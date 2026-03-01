@@ -5,6 +5,7 @@ videos/it-aint-pretty.mp4
 *.backup
 *.save
 *-backup.html
+*.backup.*
 
 # Staging/WIP (don't publish unreleased work)
 album-staging/
@@ -12,7 +13,14 @@ album-staging/
 # System files
 .DS_Store
 *.log
-works-event/audio
-works-event/audio
+
+# Pi-specific / server-only files
+api/stats.json
 api/claude-proxy.php
 g-config.php
+works-event/
+
+# Internal-only tools (not part of the site)
+album-maker.html
+claude-test.html
+server-status.html

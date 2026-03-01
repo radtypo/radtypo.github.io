@@ -6,10 +6,10 @@
     <title>telemetry - rad.typo</title>
     <style>
         :root {
-            --bg: #fff;
-            --text: #000;
-            --link: #0000FF;
-            --muted: #666;
+            --bg-color: #fff;
+            --text-color: #000;
+            --link-color: #0000FF;
+            --secondary-color: #666;
             --faint: #e8e8e8;
             --code-bg: #f5f5f5;
         }
@@ -20,14 +20,14 @@
             margin: 48px auto;
             padding: 24px;
             line-height: 1.6;
-            background: var(--bg);
-            color: var(--text);
+            background: var(--bg-color);
+            color: var(--text-color);
         }
 
         h1, h2 { margin: 0; padding: 0; }
         h1 { font-size: 24px; margin-bottom: 24px; }
 
-        a { color: var(--link); text-decoration: none; }
+        a { color: var(--link-color); text-decoration: none; }
         a:hover { text-decoration: underline; }
 
         .header { margin-bottom: 30px; position: relative; }
@@ -36,7 +36,7 @@
         .site-title:hover { text-decoration: none; }
 
         .status {
-            color: var(--muted);
+            color: var(--secondary-color);
             font-size: 14px;
             margin-bottom: 20px;
             display: flex;
@@ -71,11 +71,11 @@
             margin-bottom: 36px;
         }
         .page-heading h2 { font-weight: bold; font-size: 16px; }
-        .last-updated { font-size: 11px; color: var(--muted); }
+        .last-updated { font-size: 11px; color: var(--secondary-color); }
 
         /* Section labels */
         .section-label {
-            color: var(--muted);
+            color: var(--secondary-color);
             font-size: 11px;
             letter-spacing: 0.06em;
             padding-bottom: 8px;
@@ -87,7 +87,7 @@
         /* Condition line */
         .condition-line {
             font-size: 13px;
-            color: var(--muted);
+            color: var(--secondary-color);
             margin-bottom: 20px;
         }
 
@@ -98,9 +98,9 @@
             gap: 22px 16px;
             margin-bottom: 28px;
         }
-        .metric-lbl { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+        .metric-lbl { font-size: 11px; color: var(--secondary-color); margin-bottom: 3px; }
         .metric-val { font-size: 26px; font-weight: bold; line-height: 1; }
-        .metric-unit { font-size: 12px; color: var(--muted); font-weight: normal; }
+        .metric-unit { font-size: 12px; color: var(--secondary-color); font-weight: normal; }
         .metric-md { font-size: 17px; font-weight: bold; line-height: 1.2; }
         .metric-sm { font-size: 13px; font-weight: bold; line-height: 1.4; }
 
@@ -112,9 +112,9 @@
             font-size: 12px;
             margin-bottom: 5px;
         }
-        .resource-detail { color: var(--muted); }
+        .resource-detail { color: var(--secondary-color); }
         .bar-track { background: var(--faint); height: 4px; }
-        .bar-fill { height: 4px; background: var(--text); transition: width 0.8s ease; }
+        .bar-fill { height: 4px; background: var(--text-color); transition: width 0.8s ease; }
 
         /* KP scale */
         .kp-scale-row {
@@ -133,7 +133,7 @@
             display: flex;
             justify-content: center;
             font-size: 9px;
-            color: var(--muted);
+            color: var(--secondary-color);
             margin-top: 4px;
         }
         .kp-numbers {
@@ -141,10 +141,10 @@
             gap: 4px;
             margin-bottom: 6px;
         }
-        .kp-num { flex: 1; font-size: 9px; color: var(--muted); text-align: center; }
+        .kp-num { flex: 1; font-size: 9px; color: var(--secondary-color); text-align: center; }
 
         /* Notes */
-        .note { font-size: 12px; color: var(--muted); margin: 10px 0 20px 0; }
+        .note { font-size: 12px; color: var(--secondary-color); margin: 10px 0 20px 0; }
 
         /* Data row */
         .data-row {
@@ -152,33 +152,33 @@
             gap: 6px;
             flex-wrap: wrap;
             font-size: 12px;
-            color: var(--muted);
+            color: var(--secondary-color);
             margin: 12px 0;
         }
-        .data-row .hi { color: var(--text); font-weight: bold; }
+        .data-row .hi { color: var(--text-color); font-weight: bold; }
         .data-sep { color: var(--faint); }
 
         /* Charts */
         .chart-wrap { margin: 20px 0; }
-        .chart-lbl { font-size: 11px; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.05em; }
+        .chart-lbl { font-size: 11px; color: var(--secondary-color); margin-bottom: 6px; letter-spacing: 0.05em; }
         .chart-svg { width: 100%; display: block; overflow: visible; }
 
         /* SVG classes */
-        .c-line { fill: none; stroke: var(--text); stroke-width: 1.5; }
-        .c-area { fill: var(--text); opacity: 0.06; }
+        .c-line { fill: none; stroke: var(--text-color); stroke-width: 1.5; }
+        .c-area { fill: var(--text-color); opacity: 0.06; }
         .c-grid { stroke: var(--faint); stroke-width: 1; }
-        .c-now { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.5; }
-        .c-lbl { fill: var(--muted); font-size: 10px; font-family: monospace; }
+        .c-now { stroke: var(--secondary-color); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.5; }
+        .c-lbl { fill: var(--secondary-color); font-size: 10px; font-family: monospace; }
 
         /* Footer */
         .footer {
             margin-top: 60px;
             padding-top: 20px;
-            border-top: 1px solid var(--muted);
+            border-top: 1px solid var(--secondary-color);
             font-size: 14px;
-            color: var(--muted);
+            color: var(--secondary-color);
         }
-        .footer a { color: var(--muted); }
+        .footer a { color: var(--secondary-color); }
 
         @media (max-width: 600px) {
             body { margin: 20px auto; padding: 15px; }
