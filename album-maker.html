@@ -324,53 +324,40 @@
             playing: false
         };
 
-        // Load MP3 files from folder
-        async function loadSongs() {
-            try {
-                const response = await fetch(AUDIO_FOLDER);
-                const html = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const links = doc.querySelectorAll('a');
-                
-                for (let link of links) {
-                    const href = link.getAttribute('href');
-                    if (href && href.endsWith('.mp3')) {
-                        const fullPath = AUDIO_FOLDER + href;
-                        await loadSongMetadata(href, fullPath);
-                    }
-                }
-                
-                renderPool();
-            } catch (error) {
-                console.error('Error loading songs:', error);
-                document.getElementById('pool-list').innerHTML = 
-                    '<li style="padding: 10px; color: red;">Error loading songs. Check console.</li>';
-            }
-        }
+        const SONG_FILES = [
+            { file: 'Force Of Habit - Mix 1 - 301025.mp3',                          name: 'force of habit' },
+            { file: 'Fullness of Time - Test - Nov 2025_1.mp3',                     name: 'fullness of time' },
+            { file: 'Happiness is Not Held by Others - Mix Test 091025.mp3',        name: 'happiness is not held by others' },
+            { file: 'Liminal Depths - Mix 1 150925 [Loud].mp3',                     name: 'liminal depths' },
+            { file: 'Think Of A Colour - Mix 1 161125.mp3',                         name: 'think of a colour' },
+            { file: 'Unholy Communion - Mix 1 - 121125.mp3',                        name: 'unholy communion' },
+            { file: 'You Do You - Mix 1 170925.mp3',                                name: 'you do you' },
+        ];
 
-        async function loadSongMetadata(filename, path) {
-            return new Promise((resolve) => {
-                const tempAudio = new Audio(path);
-                tempAudio.addEventListener('loadedmetadata', () => {
-                    // Decode URL encoding and clean up filename
-                    let cleanName = decodeURIComponent(filename.replace('.mp3', ''));
-                    cleanName = cleanName.replace(/[-_]+/g, ' ');
-                    cleanName = cleanName.replace(/\d{8}/g, '');
-                    cleanName = cleanName.replace(/\s+/g, ' ').trim();
-                    
-                    allSongs.push({
-                        name: cleanName,
-                        path: path,
-                        duration: tempAudio.duration
+        async function loadSongs() {
+            const promises = SONG_FILES.map(({ file, name }) => {
+                return new Promise((resolve) => {
+                    const path = AUDIO_FOLDER + encodeURIComponent(file);
+                    const tempAudio = new Audio(path);
+                    tempAudio.addEventListener('loadedmetadata', () => {
+                        allSongs.push({ name, path, duration: tempAudio.duration });
+                        resolve();
                     });
-                    resolve();
-                });
-                tempAudio.addEventListener('error', () => {
-                    console.error('Failed to load:', filename);
-                    resolve();
+                    tempAudio.addEventListener('error', () => {
+                        // Still add the song, duration unknown
+                        allSongs.push({ name, path, duration: 0 });
+                        resolve();
+                    });
                 });
             });
+            await Promise.all(promises);
+            // Sort to match SONG_FILES order
+            allSongs.sort((a, b) => {
+                const ai = SONG_FILES.findIndex(s => s.name === a.name);
+                const bi = SONG_FILES.findIndex(s => s.name === b.name);
+                return ai - bi;
+            });
+            renderPool();
         }
 
         function formatTime(seconds) {
