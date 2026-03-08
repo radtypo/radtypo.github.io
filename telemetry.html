@@ -341,35 +341,29 @@
         └─ <a href="/infrastructure.html">infrastructure</a>
     </footer>
 
+    <script src="/js/status.js"></script>
     <script>
-        // ── KP COLORS ────────────────────────────────────────────
-        const KP_COLORS = {
-            0: { color: '#2ecc71', label: 'Quiet' },
-            1: { color: '#2ecc71', label: 'Quiet' },
-            2: { color: '#2ecc71', label: 'Quiet' },
-            3: { color: '#f1c40f', label: 'Unsettled' },
-            4: { color: '#f39c12', label: 'Active' },
-            5: { color: '#e67e22', label: 'Minor Storm' },
-            6: { color: '#e74c3c', label: 'Moderate Storm' },
-            7: { color: '#c0392b', label: 'Strong Storm' },
-            8: { color: '#8e44ad', label: 'Severe Storm' },
-            9: { color: '#6c3483', label: 'Extreme Storm' }
-        };
-
-        const WEATHER_CODES = {
-            0: 'clear sky', 1: 'mainly clear', 2: 'partly cloudy', 3: 'overcast',
-            45: 'fog', 48: 'freezing fog', 51: 'light drizzle', 53: 'moderate drizzle',
-            55: 'dense drizzle', 61: 'slight rain', 63: 'moderate rain', 65: 'heavy rain',
-            71: 'slight snow', 73: 'moderate snow', 75: 'heavy snow',
-            80: 'rain showers', 81: 'moderate showers', 82: 'violent showers',
-            95: 'thunderstorm', 99: 'thunderstorm with hail'
-        };
-
         function weatherCondition(code) {
-            const keys = Object.keys(WEATHER_CODES).map(Number).sort((a,b) => a-b);
-            for (let i = keys.length - 1; i >= 0; i--) {
-                if (code >= keys[i]) return WEATHER_CODES[keys[i]];
-            }
+            if (code >= 99) return 'thunderstorm with hail';
+            if (code >= 95) return 'thunderstorm';
+            if (code >= 82) return 'violent showers';
+            if (code >= 81) return 'moderate showers';
+            if (code >= 80) return 'rain showers';
+            if (code >= 75) return 'heavy snow';
+            if (code >= 73) return 'moderate snow';
+            if (code >= 71) return 'slight snow';
+            if (code >= 65) return 'heavy rain';
+            if (code >= 63) return 'moderate rain';
+            if (code >= 61) return 'slight rain';
+            if (code >= 55) return 'dense drizzle';
+            if (code >= 53) return 'moderate drizzle';
+            if (code >= 51) return 'light drizzle';
+            if (code >= 48) return 'freezing fog';
+            if (code >= 45) return 'fog';
+            if (code >= 3) return 'overcast';
+            if (code >= 2) return 'partly cloudy';
+            if (code >= 1) return 'mainly clear';
+            if (code === 0) return 'clear sky';
             return 'unknown';
         }
 
@@ -513,8 +507,8 @@
             } catch(e) { console.log('Stats fetch failed:', e); }
         }
 
-        // ── KP INDEX ──────────────────────────────────────────────
-        async function updateKPIndex() {
+        // ── KP INDEX (detailed telemetry version) ─────────────────
+        async function updateKPDetailed() {
             try {
                 const res = await fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json');
                 const data = await res.json();
@@ -759,24 +753,13 @@
         }
 
         // ── INIT ──────────────────────────────────────────────────
-        (function() {
-            try {
-                const w = sessionStorage.getItem('rt_weather');
-                if (w) { const d = JSON.parse(w); document.getElementById('weather-temp').textContent = d.temp; document.getElementById('weather-icon').textContent = d.icon; }
-                const k = sessionStorage.getItem('rt_kp');
-                if (k) { const d = JSON.parse(k); document.querySelector('.kp-circle').style.setProperty('--kp-color', d.color); document.getElementById('kp-value').textContent = d.value; }
-                const c = sessionStorage.getItem('rt_cpu');
-                if (c) { const d = JSON.parse(c); document.getElementById('cpu-temp').textContent = d.temp; }
-            } catch(e) {}
-        })();
-
         updateWeatherData();
         updateSystemStats();
-        updateKPIndex();
+        updateKPDetailed();
 
         setInterval(updateSystemStats, 30000);
         setInterval(updateWeatherData, 300000);
-        setInterval(updateKPIndex, 300000);
+        setInterval(updateKPDetailed, 300000);
     </script>
 </body>
 </html>
