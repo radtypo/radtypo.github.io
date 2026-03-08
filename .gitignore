@@ -20,3 +20,4 @@ works-event/
 # Internal-only tools (not part of the site)
 claude-test.html
 server-status.html
+book-builder.html
