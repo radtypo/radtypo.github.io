@@ -215,30 +215,23 @@
 
     <audio id="audio" preload="none"></audio>
 
+    <script src="/js/status.js"></script>
     <script>
-        const KP_COLORS = {
-            0: { color: '#2ecc71', label: 'Quiet' }, 1: { color: '#2ecc71', label: 'Quiet' },
-            2: { color: '#2ecc71', label: 'Quiet' }, 3: { color: '#f1c40f', label: 'Unsettled' },
-            4: { color: '#f39c12', label: 'Active' }, 5: { color: '#e67e22', label: 'Minor Storm' },
-            6: { color: '#e74c3c', label: 'Moderate Storm' }, 7: { color: '#c0392b', label: 'Strong Storm' },
-            8: { color: '#8e44ad', label: 'Severe Storm' }, 9: { color: '#6c3483', label: 'Extreme Storm' }
-        };
-
         const SONGS = [
-            { title: "bad fortune",                                                    file: "bad-fortune.mp3" },
-            { title: "what's not to like",                                             file: "whats-not-to-like.mp3" },
-            { title: "birthday cake",                                                  file: "birthday-cake.mp3" },
-            { title: "rad typo",                                                       file: "rad-typo.mp3" },
-            { title: "muriel",                                                         file: "muriel.mp3" },
-            { title: "it ain't pretty",                                                file: "it-aint-pretty.mp3" },
-            { title: "hard hitter",                                                    file: "hard-hitter.mp3" },
-            { title: "the one we didn't get to record with steve albini",              file: "the-one-we-didnt-get-to-record-with-steve-albini.mp3" },
-            { title: "what now",                                                       file: "what-now.mp3" },
-            { title: "frontal lobe fritz",                                             file: "frontal-lobe-fritz.mp3" },
-            { title: "straight and narrow",                                            file: "straight-and-narrow.mp3" },
-            { title: "vulture in the snow",                                            file: "vulture-in-the-snow.mp3" },
-            { title: "the most generic experience ever",                               file: "the-most-generic-experience-ever.mp3" },
-            { title: "old enough to handle it",                                        file: "old-enough-to-handle-it.mp3" },
+            { title: "bad fortune",                                                    file: "bad-fortune.mp3",                                                    artwork: "bad-fortune-artwork.jpg" },
+            { title: "what's not to like",                                             file: "whats-not-to-like.mp3",                                              artwork: "whats-not-to-like-artwork.jpg" },
+            { title: "birthday cake",                                                  file: "birthday-cake.mp3",                                                  artwork: "birthday-cake-artwork.jpg" },
+            { title: "rad typo",                                                       file: "rad-typo.mp3",                                                       artwork: "rad-typo-artwork.jpg" },
+            { title: "muriel",                                                         file: "muriel.mp3",                                                         artwork: "muriel-artwork.jpg" },
+            { title: "it ain't pretty",                                                file: "it-aint-pretty.mp3",                                                 artwork: "it-aint-pretty-artwork.jpg" },
+            { title: "hard hitter",                                                    file: "hard-hitter.mp3",                                                    artwork: "hard-hitter-single-artwork.jpg" },
+            { title: "the one we didn't get to record with steve albini",              file: "the-one-we-didnt-get-to-record-with-steve-albini.mp3",               artwork: "the-one-we-didnt-get-to-record-with-steve-albini-single-artwork.jpg" },
+            { title: "what now",                                                       file: "what-now.mp3",                                                       artwork: "what-now-single-artwork.jpg" },
+            { title: "frontal lobe fritz",                                             file: "frontal-lobe-fritz.mp3",                                              artwork: "frontal-lobe-fritz-single-artwork.jpg" },
+            { title: "straight and narrow",                                            file: "straight-and-narrow.mp3",                                             artwork: "straight-and-narrow-single-artwork.jpg" },
+            { title: "vulture in the snow",                                            file: "vulture-in-the-snow.mp3",                                             artwork: "vulture-in-the-snow-single-artwork.jpg" },
+            { title: "the most generic experience ever",                               file: "the-most-generic-experience-ever.mp3",                                artwork: "the-most-generic-experience-ever-artwork.jpg" },
+            { title: "old enough to handle it",                                        file: "old-enough-to-handle-it.mp3",                                         artwork: "old-enough-to-handle-it-artwork.jpg" },
         ];
 
         // State
@@ -303,10 +296,17 @@
 
         function updateMediaSession(song) {
             if (!('mediaSession' in navigator)) return;
+            const src = `/images/${song.artwork}`;
+            const type = song.artwork.endsWith('.png') ? 'image/png' : 'image/jpeg';
             navigator.mediaSession.metadata = new MediaMetadata({
                 title: song.title,
                 artist: 'rad.typo',
                 album: 'radio',
+                artwork: [
+                    { src, sizes: '96x96', type },
+                    { src, sizes: '128x128', type },
+                    { src, sizes: '512x512', type },
+                ],
             });
         }
 
@@ -449,74 +449,9 @@
             navigator.mediaSession.setActionHandler('previoustrack', playPrev);
         }
 
-        // Status bar
-        async function updateWeather() {
-            try {
-                const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=55.014662&longitude=-7.302903&current=temperature_2m,weather_code&timezone=Europe%2FLondon');
-                const data = await r.json();
-                if (data.current) {
-                    const temp = Math.round(data.current.temperature_2m);
-                    document.getElementById('weather-temp').textContent = temp;
-                    const code = data.current.weather_code;
-                    let icon = '⛅';
-                    if (code === 0) icon = '☀️';
-                    else if (code <= 3) icon = '⛅';
-                    else if (code <= 48) icon = '🌫️';
-                    else if (code <= 67) icon = '🌧️';
-                    else if (code <= 77) icon = '🌨️';
-                    else if (code <= 82) icon = '🌦️';
-                    else if (code >= 95) icon = '⛈️';
-                    document.getElementById('weather-icon').textContent = icon;
-                    try { sessionStorage.setItem('rt_weather', JSON.stringify({ temp, icon })); } catch(e) {}
-                }
-            } catch(e) {}
-        }
-
-        async function updateKPIndex() {
-            try {
-                const r = await fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json');
-                const data = await r.json();
-                const kpValue = parseFloat(data[data.length - 1][1]);
-                const kpClamped = Math.min(9, Math.max(0, kpValue));
-                const colorData = KP_COLORS[Math.round(kpClamped)];
-                document.querySelector('.kp-circle').style.setProperty('--kp-color', colorData.color);
-                document.getElementById('kp-value').textContent = kpClamped.toFixed(1);
-                try { sessionStorage.setItem('rt_kp', JSON.stringify({ value: kpClamped.toFixed(1), color: colorData.color, label: colorData.label })); } catch(e) {}
-            } catch(e) {}
-        }
-
-        async function updateCpuTemp() {
-            try {
-                const r = await fetch('/api/stats.json');
-                const data = await r.json();
-                if (data.thermal?.cpu_temp) {
-                    const temp = Math.round(parseFloat(data.thermal.cpu_temp.replace('°C', '')));
-                    document.getElementById('cpu-temp').textContent = temp;
-                    try { sessionStorage.setItem('rt_cpu', JSON.stringify({ temp })); } catch(e) {}
-                }
-            } catch(e) {}
-        }
-
-        (function() {
-            try {
-                const w = sessionStorage.getItem('rt_weather');
-                if (w) { const d = JSON.parse(w); document.getElementById('weather-temp').textContent = d.temp; document.getElementById('weather-icon').textContent = d.icon; }
-                const k = sessionStorage.getItem('rt_kp');
-                if (k) { const d = JSON.parse(k); document.querySelector('.kp-circle').style.setProperty('--kp-color', d.color); document.getElementById('kp-value').textContent = d.value; }
-                const c = sessionStorage.getItem('rt_cpu');
-                if (c) { const d = JSON.parse(c); document.getElementById('cpu-temp').textContent = d.temp; }
-            } catch(e) {}
-        })();
-
         // Init
         buildPlaylist();
         loadSong(0);
-        updateWeather();
-        updateKPIndex();
-        updateCpuTemp();
-        setInterval(updateCpuTemp, 30000);
-        setInterval(updateWeather, 300000);
-        setInterval(updateKPIndex, 300000);
     </script>
 </body>
 </html>
