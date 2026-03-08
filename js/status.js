@@ -27,7 +27,10 @@ async function updateCpuTemp() {
 
 async function updateWeather() {
     try {
-        const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=55.014662&longitude=-7.302903&current=temperature_2m,weather_code&timezone=Europe%2FLondon');
+        const response = await Promise.race([
+            fetch('https://api.open-meteo.com/v1/forecast?latitude=55.014662&longitude=-7.302903&current=temperature_2m,weather_code&timezone=Europe%2FLondon'),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
+        ]);
         const data = await response.json();
         if (data.current) {
             const temp = Math.round(data.current.temperature_2m);
@@ -49,7 +52,10 @@ async function updateWeather() {
 
 async function updateKPIndex() {
     try {
-        const response = await fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json');
+        const response = await Promise.race([
+            fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json'),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
+        ]);
         const data = await response.json();
         const kpValue = parseFloat(data[data.length - 1][1]);
         const kpClamped = Math.min(9, Math.max(0, kpValue));

@@ -3,7 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="a track by rad.typo">
     <title id="page-title">loading... - rad.typo</title>
+    <meta property="og:title" content="rad.typo">
+    <meta property="og:description" content="a track by rad.typo">
+    <meta property="og:image" content="">
+    <meta property="og:url" content="">
+    <meta property="og:type" content="music.song">
+    <meta property="og:site_name" content="rad.typo">
+    <link rel="canonical" href="">
     <style>
         :root {
             --bg-color: #fff;
@@ -172,6 +180,11 @@
 
         function renderSong(song) {
             document.getElementById('page-title').textContent = `${song.title} - rad.typo`;
+            document.querySelector('meta[property="og:title"]').setAttribute('content', song.title);
+            document.querySelector('meta[property="og:image"]').setAttribute('content', `https://radtypo.com/images/${song.artwork}`);
+            document.querySelector('meta[property="og:url"]').setAttribute('content', window.location.href);
+            document.querySelector('meta[name="description"]').setAttribute('content', `${song.title} by rad.typo`);
+            document.querySelector('link[rel="canonical"]').setAttribute('href', `https://radtypo.com/songs/${songId}.html`);
             let resourcesHtml = '';
             if (song.resources?.length > 0) {
                 song.resources.forEach(r => {
