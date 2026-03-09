@@ -189,6 +189,16 @@
             text-decoration: none !important;
         }
 
+        .item.upcoming {
+            opacity: 0.4;
+        }
+
+        .item.upcoming:hover {
+            background-color: transparent;
+            margin: 0;
+            padding: 12px 0;
+        }
+
         .footer {
             margin-top: 30px;
             padding-top: 15px;
@@ -240,6 +250,10 @@
             .item:hover, .album-item:hover {
                 padding: 8px 10px;
             }
+
+            .item.upcoming:hover {
+                padding: 8px 0;
+            }
             
             .item-info {
                 flex-direction: row;
@@ -268,6 +282,27 @@
 <h2><span class="filter-link active" data-filter="all">all</span> | <span class="filter-link" data-filter="songs">songs</span> | <span class="filter-link" data-filter="poems">poems</span> | <span class="filter-link" data-filter="releases">releases</span> | <a href="/radio.html" class="external-link">rad.io</a></h2>
 
         <ul class="item-list" id="items-list">
+
+<li class="item upcoming" data-type="poems" data-date="2026-03-18">
+    <div class="item-info">
+        <span class="item-date">2026-03-18</span>
+        <span class="item-title">kettled</span>
+    </div>
+</li>
+
+<li class="item upcoming" data-type="poems" data-date="2026-03-11">
+    <div class="item-info">
+        <span class="item-date">2026-03-11</span>
+        <span class="item-title">visiting the midden</span>
+    </div>
+</li>
+
+<li class="item" data-type="poems" data-date="2026-03-04">
+    <div class="item-info">
+        <span class="item-date">2026-03-04</span>
+        <span class="item-title"><a href="/poems/the-first-and-last-day-i-played-football.html">the first and last day i played football</a></span>
+    </div>
+</li>
 
 <li class="item" data-type="poems" data-date="2026-02-25">
     <div class="item-info">
