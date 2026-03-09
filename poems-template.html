@@ -184,7 +184,7 @@
                 </div>
 
                 <div class="section">
-                    <div class="section-header" onclick="toggleSection('text')">
+                    <div class="section-header" role="button" tabindex="0" onclick="toggleSection('text')">
                         <span>${writing.type}</span>
                         <span class="toggle" id="text-toggle">[ - ]</span>
                     </div>
@@ -194,7 +194,7 @@
                 </div>
 
                 <div class="section">
-                    <div class="section-header" onclick="toggleSection('details')">
+                    <div class="section-header" role="button" tabindex="0" onclick="toggleSection('details')">
                         <span>details</span>
                         <span class="toggle" id="details-toggle">[ + ]</span>
                     </div>
@@ -216,8 +216,19 @@
             toggle.textContent = content.classList.contains('open') ? '[ - ]' : '[ + ]';
         }
 
+        function bindSectionKeyboard() {
+            document.querySelectorAll('.section-header').forEach(el => {
+                el.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        el.click();
+                    }
+                });
+            });
+        }
+
         // Initialize
-        loadWriting();
+        loadWriting().then(bindSectionKeyboard);
     </script>
 </body>
 </html>

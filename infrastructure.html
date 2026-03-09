@@ -278,7 +278,7 @@
     </div>
 
     <div class="section">
-        <div class="section-header" onclick="toggleSection('hardware')">
+        <div class="section-header" role="button" tabindex="0" onclick="toggleSection('hardware')">
             <span>hardware specifications</span>
             <span class="toggle" id="hardware-toggle">[ + ]</span>
         </div>
@@ -301,7 +301,7 @@
     </div>
 
     <div class="section">
-        <div class="section-header" onclick="toggleSection('software')">
+        <div class="section-header" role="button" tabindex="0" onclick="toggleSection('software')">
             <span>software stack</span>
             <span class="toggle" id="software-toggle">[ + ]</span>
         </div>
@@ -340,7 +340,7 @@
     </div>
 
     <div class="section">
-        <div class="section-header" onclick="toggleSection('apis')">
+        <div class="section-header" role="button" tabindex="0" onclick="toggleSection('apis')">
             <span>external APIs</span>
             <span class="toggle" id="apis-toggle">[ + ]</span>
         </div>
@@ -359,7 +359,7 @@
     </div>
 
     <div class="section">
-        <div class="section-header" onclick="toggleSection('decisions')">
+        <div class="section-header" role="button" tabindex="0" onclick="toggleSection('decisions')">
             <span>technical decisions</span>
             <span class="toggle" id="decisions-toggle">[ + ]</span>
         </div>
@@ -409,7 +409,7 @@
     </div>
 
     <div class="section">
-        <div class="section-header" onclick="toggleSection('philosophy')">
+        <div class="section-header" role="button" tabindex="0" onclick="toggleSection('philosophy')">
             <span>design philosophy</span>
             <span class="toggle" id="philosophy-toggle">[ + ]</span>
         </div>
@@ -434,7 +434,7 @@
     </div>
 
     <div class="section">
-        <div class="section-header" onclick="toggleSection('inspiration')">
+        <div class="section-header" role="button" tabindex="0" onclick="toggleSection('inspiration')">
             <span>inspiration</span>
             <span class="toggle" id="inspiration-toggle">[ + ]</span>
         </div>
@@ -459,6 +459,14 @@
             toggle.textContent = content.classList.contains('open') ? '[ - ]' : '[ + ]';
         }
 
+        document.querySelectorAll('.section-header').forEach(el => {
+            el.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    el.click();
+                }
+            });
+        });
     </script>
 </body>
 </html>
