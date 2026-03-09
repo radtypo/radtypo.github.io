@@ -1,4 +1,37 @@
 {
+"the-first-and-last-day-i-played-football": {
+    "title": "the first and last day i played football",
+    "type": "poem",
+    "date": "2026-03-04",
+    "artwork": "the-first-and-last-day-i-played-football-artwork.jpg",
+    "text": "i laced new orange boots\nand took to a field\nof middle aged\nauthority figures\ni didn't get a single touch\nand was never asked back",
+    "details": {
+      "composition_date": "november 15, 2024",
+      "publication_date": "march 4, 2026"
+    }
+  },
+  "visiting-the-midden": {
+    "title": "visiting the midden",
+    "type": "poem",
+    "date": "2026-03-11",
+    "artwork": "visiting-the-midden-artwork.jpg",
+    "text": "there were sea shells crushed into coquina\nstrange and beautiful",
+    "details": {
+      "composition_date": "december 25, 2006",
+      "publication_date": "march 11, 2026"
+    }
+  },
+  "kettled": {
+    "title": "kettled",
+    "type": "poem",
+    "date": "2026-03-18",
+    "artwork": "kettled-artwork.jpg",
+    "text": "the last light of protest\nis the backroom stage\nten at the door\neight for a can\n\na political rage\n<em>\"you think this shit\ndropped out of the sky?\"</em>\n\ni don't march anymore\nin case my face gets flagged\nby a lens\nor someone in hr\n\nkettled in the square\nkettled in the feed\nevery exit blocked\nevery angle seen\n\npull a trigger\nor shout \"cut\"?\nevery hand holds a phone\nbut no one gets the shot",
+    "details": {
+      "composition_date": "march 10, 2024",
+      "publication_date": "march 18, 2026"
+    }
+  },
 "avoidant-choreography": {
     "title": "avoidant choreography",
     "type": "poem",
