@@ -331,7 +331,7 @@
     </div>
 
     <div class="section">
-        <div class="section-header" onclick="toggleSection('artwork')">
+        <div class="section-header" role="button" tabindex="0" onclick="toggleSection('artwork')">
             <span>artwork</span>
             <span class="toggle" id="artwork-toggle">[ + ]</span>
         </div>
@@ -344,7 +344,7 @@
     </div>
 
     <div class="section">
-        <div class="section-header" onclick="toggleSection('playlist')">
+        <div class="section-header" role="button" tabindex="0" onclick="toggleSection('playlist')">
             <span>songs</span>
             <span class="toggle" id="playlist-toggle">[ + ]</span>
         </div>
@@ -354,7 +354,7 @@
     </div>
 
     <footer class="footer">
-        └─ <a href="infrastructure.html">infrastructure</a> | <a href="telemetry.html">telemetry</a>
+        └─ <a href="/infrastructure.html">infrastructure</a> | <a href="/telemetry.html">telemetry</a>
     </footer>
 
     <audio id="audioPlayer" preload="none"></audio>
@@ -714,7 +714,7 @@
         function toggleSection(id) {
             const content = document.getElementById(id);
             const toggle = document.getElementById(id + '-toggle');
-            
+
             if (content.classList.contains('open')) {
                 content.classList.remove('open');
                 toggle.textContent = '[ + ]';
@@ -723,6 +723,15 @@
                 toggle.textContent = '[ - ]';
             }
         }
+
+        document.querySelectorAll('.section-header').forEach(el => {
+            el.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    el.click();
+                }
+            });
+        });
 
         // Initialize the radio player
         new RadioPlayer();

@@ -206,7 +206,7 @@
                     </audio>
                 </div>
                 <div class="section">
-                    <div class="section-header" onclick="toggleSection('lyrics')">
+                    <div class="section-header" role="button" tabindex="0" onclick="toggleSection('lyrics')">
                         <span>lyrics</span>
                         <span class="toggle" id="lyrics-toggle">[ - ]</span>
                     </div>
@@ -215,7 +215,7 @@
                     </div>
                 </div>
                 <div class="section">
-                    <div class="section-header" onclick="toggleSection('details')">
+                    <div class="section-header" role="button" tabindex="0" onclick="toggleSection('details')">
                         <span>details</span>
                         <span class="toggle" id="details-toggle">[ + ]</span>
                     </div>
@@ -232,7 +232,7 @@
                     </div>
                 </div>
                 <div class="section">
-                    <div class="section-header" onclick="toggleSection('resources')">
+                    <div class="section-header" role="button" tabindex="0" onclick="toggleSection('resources')">
                         <span>resources</span>
                         <span class="toggle" id="resources-toggle">[ + ]</span>
                     </div>
@@ -319,8 +319,19 @@
             toggle.textContent = content.classList.contains('open') ? '[ - ]' : '[ + ]';
         }
 
+        function bindSectionKeyboard() {
+            document.querySelectorAll('.section-header').forEach(el => {
+                el.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        el.click();
+                    }
+                });
+            });
+        }
+
         // Initialize
-        loadSong();
+        loadSong().then(bindSectionKeyboard);
     </script>
 </body>
 </html>
