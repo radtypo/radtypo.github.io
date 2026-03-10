@@ -41,6 +41,15 @@ if (!poemsPath && !songsPath) {
 console.log(`poems: ${poemsPath || '(not found)'}`);
 console.log(`songs: ${songsPath || '(not found)'}`);
 
+// --- Migrate legacy backup ---
+const legacyBackup = '/var/www/html/data/writing.json.backup';
+const backupDir = path.join(__dirname, 'backups');
+if (fs.existsSync(legacyBackup)) {
+  if (!fs.existsSync(backupDir)) fs.mkdirSync(backupDir);
+  fs.renameSync(legacyBackup, path.join(backupDir, 'writing.json.backup'));
+  console.log('migrated legacy backup from /var/www/html/data/');
+}
+
 // --- Routes ---
 
 app.get('/admin', (req, res) => {
@@ -65,6 +74,15 @@ app.post('/api/content', (req, res) => {
   if (!fs.existsSync(backupDir)) fs.mkdirSync(backupDir);
   const ts = new Date().toISOString().replace(/[:.]/g, '-');
   fs.copyFileSync(target, path.join(backupDir, `${type}-${ts}.json`));
+
+  // prune old backups — keep only 5 most recent per type
+  const backups = fs.readdirSync(backupDir)
+    .filter(f => f.startsWith(`${type}-`) && f.endsWith('.json'))
+    .sort()
+    .reverse();
+  for (const old of backups.slice(5)) {
+    fs.unlinkSync(path.join(backupDir, old));
+  }
 
   fs.writeFileSync(target, JSON.stringify(data, null, 2) + '\n', 'utf8');
   res.json({ ok: true, backup: `${type}-${ts}.json` });
