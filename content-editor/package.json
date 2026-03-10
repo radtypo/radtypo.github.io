@@ -1,0 +1,12 @@
+{
+  "name": "radtypo-content-editor",
+  "version": "1.0.0",
+  "description": "local JSON content editor for radtypo.com",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}
