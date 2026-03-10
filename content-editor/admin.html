@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>rad.typo content editor</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0a;
+  --bg-raised: #141414;
+  --bg-input: #1a1a1a;
+  --border: #2a2a2a;
+  --border-focus: #555;
+  --text: #ccc;
+  --text-dim: #666;
+  --text-bright: #eee;
+  --accent-poem: #e74c3c;
+  --accent-song: #3498db;
+  --accent-save: #2ecc71;
+  --danger: #e74c3c;
+  --font: 'SF Mono', 'Cascadia Code', 'Fira Code', Consolas, monospace;
+}
+
+html, body { height: 100%; }
+
+body {
+  font-family: var(--font);
+  font-size: 13px;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* --- TOP BAR --- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  flex-shrink: 0;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.topbar h1 {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-bright);
+}
+
+.topbar h1 span { color: var(--text-dim); font-weight: 400; }
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toast {
+  font-size: 11px;
+  color: var(--accent-save);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.toast.visible { opacity: 1; }
+
+/* --- LAYOUT --- */
+.layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+  width: 280px;
+  min-width: 280px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.sidebar-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.sidebar-tab {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+}
+
+.sidebar-tab:hover { color: var(--text); }
+.sidebar-tab.active[data-tab="poems"] { color: var(--accent-poem); border-bottom-color: var(--accent-poem); }
+.sidebar-tab.active[data-tab="songs"] { color: var(--accent-song); border-bottom-color: var(--accent-song); }
+
+.search-box {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.search-box input {
+  width: 100%;
+  font-family: var(--font);
+  font-size: 12px;
+  padding: 6px 8px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text);
+  outline: none;
+}
+
+.search-box input::placeholder { color: var(--text-dim); }
+.search-box input:focus { border-color: var(--border-focus); }
+
+.item-list {
+  flex: 1;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.item-list li {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.1s;
+}
+
+.item-list li:hover { background: var(--bg-raised); }
+.item-list li.selected { background: var(--bg-input); border-left: 3px solid var(--text-dim); }
+.item-list li.selected[data-type="poems"] { border-left-color: var(--accent-poem); }
+.item-list li.selected[data-type="songs"] { border-left-color: var(--accent-song); }
+
+.item-list .item-date {
+  color: var(--text-dim);
+  font-size: 11px;
+  min-width: 72px;
+  flex-shrink: 0;
+}
+
+.item-list .item-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-list .item-badge {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 1px 4px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.item-badge.poem { color: var(--accent-poem); border: 1px solid var(--accent-poem); }
+.item-badge.song { color: var(--accent-song); border: 1px solid var(--accent-song); }
+
+.item-count {
+  padding: 6px 12px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+/* --- MAIN --- */
+.main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.editor-pane, .preview-pane {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+}
+
+.editor-pane {
+  border-right: 1px solid var(--border);
+}
+
+.preview-pane {
+  background: var(--bg-raised);
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-dim);
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+/* --- EDITOR FIELDS --- */
+.editor-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.editor-header h2 {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-bright);
+}
+
+.editor-header .type-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 6px;
+}
+
+.type-badge.poem { color: var(--accent-poem); border: 1px solid var(--accent-poem); }
+.type-badge.song { color: var(--accent-song); border: 1px solid var(--accent-song); }
+
+.field-group {
+  margin-bottom: 16px;
+}
+
+.field-group label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+
+.field-group input,
+.field-group textarea {
+  width: 100%;
+  font-family: var(--font);
+  font-size: 13px;
+  padding: 8px 10px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.field-group input:focus,
+.field-group textarea:focus {
+  border-color: var(--border-focus);
+}
+
+.field-group textarea {
+  resize: vertical;
+  min-height: 200px;
+  line-height: 1.7;
+}
+
+.field-group textarea.body-field {
+  min-height: 350px;
+}
+
+.field-row {
+  display: flex;
+  gap: 12px;
+}
+
+.field-row .field-group { flex: 1; }
+
+.section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin: 24px 0 12px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* --- SAVE BUTTON --- */
+.save-btn {
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 8px 20px;
+  background: none;
+  border: 1px solid var(--accent-save);
+  color: var(--accent-save);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.save-btn:hover {
+  background: var(--accent-save);
+  color: var(--bg);
+}
+
+.save-btn.dirty {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.save-btn.dirty:hover {
+  background: var(--danger);
+  color: var(--bg);
+}
+
+/* --- PREVIEW --- */
+.preview-pane h3 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+
+.preview-content {
+  max-width: 600px;
+}
+
+.preview-content .preview-title {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-bright);
+  margin-bottom: 4px;
+}
+
+.preview-content .preview-date {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+}
+
+.preview-content .preview-body {
+  white-space: pre-line;
+  line-height: 1.8;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.preview-content .preview-body em { font-style: italic; }
+.preview-content .preview-body strong { font-weight: 700; }
+
+.preview-meta {
+  margin-top: 24px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.preview-meta dt {
+  font-weight: 700;
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 10px;
+}
+
+.preview-meta dd {
+  margin-left: 0;
+  color: var(--text);
+}
+
+/* --- SCROLLBAR --- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); }
+::-webkit-scrollbar-thumb:hover { background: var(--border-focus); }
+
+/* --- DIRTY INDICATOR --- */
+.topbar .dirty-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--danger);
+  display: none;
+}
+
+.topbar .dirty-dot.visible { display: inline-block; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <h1>rad.typo <span>/ editor</span></h1>
+    <span class="dirty-dot" id="dirty-dot"></span>
+  </div>
+  <div class="topbar-actions">
+    <span class="toast" id="toast"></span>
+    <button class="save-btn" id="save-btn" onclick="save()">save (&#8984;S)</button>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-tabs">
+      <button class="sidebar-tab active" data-tab="poems" onclick="switchTab('poems')">poems</button>
+      <button class="sidebar-tab" data-tab="songs" onclick="switchTab('songs')">songs</button>
+    </div>
+    <div class="search-box">
+      <input type="text" id="search" placeholder="filter..." oninput="renderList()">
+    </div>
+    <ul class="item-list" id="item-list"></ul>
+    <div class="item-count" id="item-count"></div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="editor-pane" id="editor-pane">
+      <div class="empty-state" id="editor-empty">select an item to edit</div>
+      <div id="editor-fields" style="display:none"></div>
+    </div>
+    <div class="preview-pane" id="preview-pane">
+      <div class="empty-state" id="preview-empty">preview</div>
+      <div id="preview-content" style="display:none">
+        <h3>preview</h3>
+        <div class="preview-content" id="preview-inner"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// --- State ---
+let allData = {};       // { poems: {...}, songs: {...} }
+let currentTab = 'poems';
+let currentSlug = null;
+let currentType = null;
+let dirty = false;
+
+// --- Load ---
+async function load() {
+  const res = await fetch('/api/content');
+  allData = await res.json();
+  delete allData._paths;
+  renderList();
+}
+
+// --- Tab switching ---
+function switchTab(tab) {
+  if (dirty && !confirmDiscard()) return;
+  currentTab = tab;
+  currentSlug = null;
+  currentType = null;
+  dirty = false;
+  document.querySelectorAll('.sidebar-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === tab);
+  });
+  renderList();
+  showEmpty();
+}
+
+// --- Render sidebar list ---
+function renderList() {
+  const list = document.getElementById('item-list');
+  const filter = document.getElementById('search').value.toLowerCase();
+  const data = allData[currentTab] || {};
+
+  // Sort by date descending
+  const entries = Object.entries(data).sort((a, b) => {
+    return (b[1].date || '').localeCompare(a[1].date || '');
+  });
+
+  let html = '';
+  let count = 0;
+  for (const [slug, item] of entries) {
+    const title = item.title || slug;
+    if (filter && !title.toLowerCase().includes(filter) && !slug.includes(filter)) continue;
+    count++;
+    const sel = (slug === currentSlug && currentTab === currentType) ? 'selected' : '';
+    const typeCls = currentTab === 'poems' ? 'poems' : 'songs';
+    const badge = currentTab === 'poems' ? 'poem' : 'song';
+    html += `<li class="${sel}" data-type="${typeCls}" data-slug="${slug}" onclick="selectItem('${currentTab}','${slug}')">
+      <span class="item-date">${item.date || ''}</span>
+      <span class="item-title">${esc(title)}</span>
+      <span class="item-badge ${badge}">${badge}</span>
+    </li>`;
+  }
+  list.innerHTML = html;
+  document.getElementById('item-count').textContent = `${count} ${currentTab}`;
+}
+
+// --- Select item ---
+function selectItem(type, slug) {
+  if (dirty && !confirmDiscard()) return;
+  currentType = type;
+  currentSlug = slug;
+  dirty = false;
+  updateDirty();
+  renderList();
+  renderEditor();
+  renderPreview();
+}
+
+// --- Render editor ---
+function renderEditor() {
+  const item = allData[currentType]?.[currentSlug];
+  if (!item) return showEmpty();
+
+  document.getElementById('editor-empty').style.display = 'none';
+  const fields = document.getElementById('editor-fields');
+  fields.style.display = 'block';
+
+  const isPoem = currentType === 'poems';
+  const bodyKey = isPoem ? 'text' : 'lyrics';
+  const typeBadge = isPoem ? 'poem' : 'song';
+  const badgeCls = isPoem ? 'poem' : 'song';
+
+  let html = `
+    <div class="editor-header">
+      <h2>${esc(item.title || currentSlug)}</h2>
+      <span class="type-badge ${badgeCls}">${typeBadge}</span>
+    </div>
+
+    <div class="field-row">
+      <div class="field-group">
+        <label>title</label>
+        <input type="text" data-key="title" value="${attr(item.title || '')}" oninput="onFieldChange(this)">
+      </div>
+      <div class="field-group">
+        <label>date</label>
+        <input type="text" data-key="date" value="${attr(item.date || '')}" oninput="onFieldChange(this)">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-group">
+        <label>artwork</label>
+        <input type="text" data-key="artwork" value="${attr(item.artwork || '')}" oninput="onFieldChange(this)">
+      </div>
+      ${!isPoem ? `<div class="field-group">
+        <label>audio</label>
+        <input type="text" data-key="audio" value="${attr(item.audio || '')}" oninput="onFieldChange(this)">
+      </div>` : ''}
+    </div>
+
+    <div class="field-group">
+      <label>${isPoem ? 'poem text' : 'lyrics'}</label>
+      <textarea class="body-field" data-key="${bodyKey}" oninput="onFieldChange(this)">${esc(item[bodyKey] || '')}</textarea>
+    </div>
+  `;
+
+  // Details section — render flat detail fields
+  if (item.details) {
+    html += `<div class="section-label">details</div>`;
+    html += renderDetailsFields(item.details, 'details');
+  }
+
+  fields.innerHTML = html;
+}
+
+function renderDetailsFields(obj, prefix) {
+  let html = '';
+  for (const [key, val] of Object.entries(obj)) {
+    if (typeof val === 'string') {
+      html += `<div class="field-group">
+        <label>${key.replace(/_/g, ' ')}</label>
+        <input type="text" data-nested="${prefix}.${key}" value="${attr(val)}" oninput="onFieldChange(this)">
+      </div>`;
+    } else if (typeof val === 'object' && !Array.isArray(val)) {
+      html += `<div class="section-label" style="margin-top:16px">${key.replace(/_/g, ' ')}</div>`;
+      html += renderDetailsFields(val, `${prefix}.${key}`);
+    } else if (Array.isArray(val)) {
+      // Arrays rendered as multiline textarea
+      const isObjArray = val.length > 0 && typeof val[0] === 'object';
+      if (!isObjArray) {
+        html += `<div class="field-group">
+          <label>${key.replace(/_/g, ' ')}</label>
+          <textarea data-array="${prefix}.${key}" oninput="onFieldChange(this)">${esc(val.join('\n'))}</textarea>
+        </div>`;
+      } else {
+        // Object arrays (like resources) — render as JSON
+        html += `<div class="field-group">
+          <label>${key.replace(/_/g, ' ')} (json)</label>
+          <textarea data-json-array="${prefix}.${key}" oninput="onFieldChange(this)">${esc(JSON.stringify(val, null, 2))}</textarea>
+        </div>`;
+      }
+    }
+  }
+  return html;
+}
+
+// --- Field change handler ---
+function onFieldChange(el) {
+  if (!currentSlug || !currentType) return;
+  const item = allData[currentType][currentSlug];
+
+  if (el.dataset.key) {
+    item[el.dataset.key] = el.value;
+  } else if (el.dataset.nested) {
+    setNested(item, el.dataset.nested, el.value);
+  } else if (el.dataset.array) {
+    setNested(item, el.dataset.array, el.value.split('\n'));
+  } else if (el.dataset.jsonArray) {
+    try {
+      setNested(item, el.dataset.jsonArray, JSON.parse(el.value));
+    } catch (e) { /* ignore parse errors while typing */ }
+  }
+
+  dirty = true;
+  updateDirty();
+  renderPreview();
+}
+
+function setNested(obj, path, value) {
+  const parts = path.split('.');
+  let target = obj;
+  for (let i = 0; i < parts.length - 1; i++) {
+    if (!target[parts[i]]) target[parts[i]] = {};
+    target = target[parts[i]];
+  }
+  target[parts[parts.length - 1]] = value;
+}
+
+// --- Preview ---
+function renderPreview() {
+  const item = allData[currentType]?.[currentSlug];
+  if (!item) return;
+
+  document.getElementById('preview-empty').style.display = 'none';
+  const container = document.getElementById('preview-content');
+  container.style.display = 'block';
+
+  const isPoem = currentType === 'poems';
+  const bodyKey = isPoem ? 'text' : 'lyrics';
+  const bodyText = item[bodyKey] || '';
+
+  let metaHtml = '';
+  if (item.details) {
+    metaHtml = '<dl class="preview-meta">';
+    metaHtml += renderPreviewMeta(item.details);
+    metaHtml += '</dl>';
+  }
+
+  document.getElementById('preview-inner').innerHTML = `
+    <div class="preview-title">${esc(item.title || '')}</div>
+    <div class="preview-date">${esc(item.date || '')}</div>
+    <div class="preview-body">${renderBody(bodyText)}</div>
+    ${metaHtml}
+  `;
+}
+
+function renderPreviewMeta(obj, depth) {
+  depth = depth || 0;
+  let html = '';
+  for (const [key, val] of Object.entries(obj)) {
+    if (typeof val === 'string') {
+      html += `<dt>${esc(key.replace(/_/g, ' '))}</dt><dd>${esc(val)}</dd>`;
+    } else if (Array.isArray(val)) {
+      const display = val.map(v => typeof v === 'object' ? JSON.stringify(v) : v).join(', ');
+      html += `<dt>${esc(key.replace(/_/g, ' '))}</dt><dd>${esc(display)}</dd>`;
+    } else if (typeof val === 'object') {
+      html += `<dt style="margin-top:12px;font-size:10px;color:var(--text-dim)">${esc(key.replace(/_/g, ' '))}</dt>`;
+      html += renderPreviewMeta(val, depth + 1);
+    }
+  }
+  return html;
+}
+
+function renderBody(text) {
+  // Allow <em> and <strong> tags through, escape everything else
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/&lt;em&gt;/g, '<em>')
+    .replace(/&lt;\/em&gt;/g, '</em>')
+    .replace(/&lt;strong&gt;/g, '<strong>')
+    .replace(/&lt;\/strong&gt;/g, '</strong>');
+}
+
+// --- Save ---
+async function save() {
+  if (!currentType || !dirty) return;
+
+  const btn = document.getElementById('save-btn');
+  btn.textContent = 'saving...';
+
+  const res = await fetch('/api/content', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: currentType, data: allData[currentType] })
+  });
+
+  const result = await res.json();
+  if (result.ok) {
+    dirty = false;
+    updateDirty();
+    showToast('saved — backup: ' + result.backup);
+  } else {
+    showToast('error: ' + (result.error || 'unknown'));
+  }
+  btn.textContent = 'save (\u2318S)';
+}
+
+// --- Helpers ---
+function esc(s) {
+  const div = document.createElement('div');
+  div.textContent = s;
+  return div.innerHTML;
+}
+
+function attr(s) {
+  return s.replace(/"/g, '&quot;').replace(/&/g, '&amp;');
+}
+
+function showEmpty() {
+  document.getElementById('editor-empty').style.display = '';
+  document.getElementById('editor-fields').style.display = 'none';
+  document.getElementById('preview-empty').style.display = '';
+  document.getElementById('preview-content').style.display = 'none';
+}
+
+function updateDirty() {
+  document.getElementById('dirty-dot').classList.toggle('visible', dirty);
+  document.getElementById('save-btn').classList.toggle('dirty', dirty);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('visible');
+  setTimeout(() => t.classList.remove('visible'), 3000);
+}
+
+function confirmDiscard() {
+  return confirm('you have unsaved changes — discard?');
+}
+
+// --- Keyboard shortcut ---
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+    e.preventDefault();
+    save();
+  }
+});
+
+// --- Unsaved changes warning ---
+window.addEventListener('beforeunload', e => {
+  if (dirty) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
+
+// --- Init ---
+load();
+</script>
+</body>
+</html>
