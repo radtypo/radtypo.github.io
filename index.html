@@ -559,26 +559,29 @@
         const filterLinks = document.querySelectorAll('.filter-link');
         const items = document.querySelectorAll('#items-list li');
 
+        function applyFilter(filter) {
+            filterLinks.forEach(l => l.classList.remove('active'));
+            const activeLink = document.querySelector(`.filter-link[data-filter="${filter}"]`);
+            if (activeLink) activeLink.classList.add('active');
+            items.forEach(item => {
+                const itemType = item.getAttribute('data-type');
+                item.style.display = (filter === 'all' || itemType === filter) ? '' : 'none';
+            });
+        }
+
         filterLinks.forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 const filter = this.getAttribute('data-filter');
-                
-                // Update active state
-                filterLinks.forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-                
-                // Filter items
-                items.forEach(item => {
-                    const itemType = item.getAttribute('data-type');
-                    if (filter === 'all' || itemType === filter) {
-                        item.style.display = '';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
+                applyFilter(filter);
             });
         });
+
+        // Activate filter from URL hash (e.g. index.html#songs)
+        const hashFilter = location.hash.slice(1);
+        if (hashFilter && ['songs', 'poems', 'releases'].includes(hashFilter)) {
+            applyFilter(hashFilter);
+        }
 
         function downloadSong(url) {
             const link = document.createElement('a');
