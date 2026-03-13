@@ -80,10 +80,6 @@
             display: inline-block;
         }
 
-        .nav a, .nav .filter-link {
-            font-size: 16px;
-        }
-
         .filter-link {
             cursor: pointer;
             color: var(--secondary-color);
@@ -99,17 +95,9 @@
             font-weight: bold;
         }
 
-        .external-link {
-            color: var(--link-color);
-        }
-
-        .external-link:hover {
-            text-decoration: underline;
-        }
-
         /* Player */
         .player {
-            margin-bottom: 24px;
+            margin: 20px 0;
             border: 1px solid var(--secondary-color);
             border-radius: 4px;
             padding: 15px;
@@ -117,14 +105,14 @@
 
         #track-title {
             font-family: monospace;
-            font-size: 20px;
+            font-size: 16px;
             font-weight: bold;
-            margin: 0 0 16px 0;
+            margin: 0 0 15px 0;
         }
 
         #player-audio {
             width: 100%;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .controls {
@@ -159,14 +147,16 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 6px 0;
+            padding: 12px 0;
             border-bottom: 1px solid var(--code-bg);
             cursor: pointer;
             font-size: 14px;
         }
 
         .tracklist li:hover {
-            color: var(--text-color);
+            background-color: var(--code-bg);
+            margin: 0 -10px;
+            padding: 12px 10px;
         }
 
         .track-name {
@@ -197,10 +187,6 @@
                 padding: 15px;
             }
 
-            .controls {
-                gap: 24px;
-            }
-
             .ctrl {
                 min-height: 44px;
                 display: inline-flex;
@@ -209,6 +195,10 @@
 
             .tracklist li {
                 padding: 8px 0;
+            }
+
+            .tracklist li:hover {
+                padding: 8px 10px;
             }
         }
     </style>
