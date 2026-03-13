@@ -110,6 +110,9 @@
         /* Player */
         .player {
             margin-bottom: 24px;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+            padding: 15px;
         }
 
         #track-title {
@@ -156,16 +159,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
+            padding: 6px 0;
             border-bottom: 1px solid var(--code-bg);
             cursor: pointer;
             font-size: 14px;
         }
 
         .tracklist li:hover {
-            background-color: var(--code-bg);
-            margin: 0 -10px;
-            padding: 10px 10px;
+            color: var(--text-color);
         }
 
         .track-name {
@@ -207,11 +208,7 @@
             }
 
             .tracklist li {
-                padding: 12px 0;
-            }
-
-            .tracklist li:hover {
-                padding: 12px 10px;
+                padding: 8px 0;
             }
         }
     </style>
