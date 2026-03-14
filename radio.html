@@ -341,12 +341,15 @@
         fetch('/data/songs.json')
             .then(r => r.json())
             .then(data => {
-                songs = Object.entries(data).map(([key, song]) => ({
-                    key,
-                    title: song.title,
-                    artwork: song.artwork,
-                    date: song.date,
-                }));
+                const hidden = ['old-enough-to-handle-it', 'the-most-generic-experience-ever'];
+                songs = Object.entries(data)
+                    .filter(([key]) => !hidden.includes(key))
+                    .map(([key, song]) => ({
+                        key,
+                        title: song.title,
+                        artwork: song.artwork,
+                        date: song.date,
+                    }));
 
                 // Sort by date descending (newest first)
                 songs.sort((a, b) => b.date.localeCompare(a.date));
