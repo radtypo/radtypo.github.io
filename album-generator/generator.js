@@ -1,13 +1,28 @@
 const Anthropic = require('@anthropic-ai/sdk');
 
 const MODEL = 'claude-sonnet-4-20250514';
+const BATCH_SIZE = 3;
+const BATCH_DELAY_MS = 5000;
 const client = new Anthropic();
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function extractJSON(text) {
+  const match = text.match(/```(?:json)?\s*([\s\S]*?)```/) || [null, text];
+  return JSON.parse(match[1].trim());
+}
+
+function extractText(response) {
+  return response.content.filter(b => b.type === 'text').map(b => b.text).join('');
+}
 
 // Continue a response if the server-side tool loop hit its iteration limit
 async function continueResponse(messages, tools, maxContinuations = 5) {
   let response = await client.messages.create({
     model: MODEL,
-    max_tokens: 16000,
+    max_tokens: 8000,
     tools,
     messages,
   });
@@ -21,7 +36,7 @@ async function continueResponse(messages, tools, maxContinuations = 5) {
     ];
     response = await client.messages.create({
       model: MODEL,
-      max_tokens: 16000,
+      max_tokens: 8000,
       tools,
       messages,
     });
@@ -55,27 +70,18 @@ Return your findings as a detailed summary. Be specific — cite actual songs, c
     tools,
   );
 
-  // Extract text from response
-  const textBlocks = response.content.filter(b => b.type === 'text');
-  return textBlocks.map(b => b.text).join('\n');
+  return extractText(response);
 }
 
-// Phase 2: generate the album using research + lyrics pool
-async function generateAlbumContent(params, research) {
-  const { albumName, artists, mood, songCount, lyricsMode, lyricsPool } = params;
-
-  let lyricsContext = '';
-  if (lyricsMode === 'existing' && lyricsPool.length > 0) {
-    lyricsContext = `\n\nEXISTING LYRICS POOL — draw from, remix, or reference these:\n${lyricsPool.map(s => `--- ${s.title} ---\n${s.lyrics}`).join('\n\n')}`;
-  } else if (lyricsMode === 'blend' && lyricsPool.length > 0) {
-    lyricsContext = `\n\nEXISTING LYRICS POOL — blend fragments from these with newly generated lyrics:\n${lyricsPool.map(s => `--- ${s.title} ---\n${s.lyrics}`).join('\n\n')}`;
-  }
+// Phase 2: plan the album outline (title + per-song skeleton)
+async function planAlbum(params, research) {
+  const { albumName, artists, mood, songCount } = params;
 
   const albumNameInstruction = albumName
     ? `Album title: "${albumName}"`
     : 'Generate an evocative album title that fits the mood and style.';
 
-  const prompt = `You are a songwriter and producer creating a complete album concept.
+  const prompt = `You are a songwriter and producer planning an album.
 
 REFERENCE ARTIST RESEARCH:
 ${research}
@@ -85,7 +91,6 @@ ${albumNameInstruction}
 Reference artist(s): ${artists}
 Stylistic mood: ${mood || 'not specified — infer from the reference artist research'}
 Number of songs: ${songCount}
-${lyricsContext}
 
 ALBUM ARC REQUIREMENTS:
 - Track 1: Mid-tempo opener, sets the tone, anthemic or inviting
@@ -99,56 +104,131 @@ ALBUM ARC REQUIREMENTS:
 
 Each song MUST differ in key, tempo, and feel. No two consecutive songs in the same key.
 
-For each song, output:
-- title
-- key (e.g. "E major", "D minor")
-- tempo (BPM as integer)
-- timeSignature (e.g. "4/4", "3/4", "6/8")
-- capo (integer, 0 if none)
-- moodNote (where this sits in the album arc, one sentence)
-- chords (array of chord objects with "name" and "voicing" fields, e.g. {"name": "Em7", "voicing": "022030"})
-- structure (array of section objects, each with "section" label like "Verse 1", "Chorus", etc., and "chords" as a string showing the chord progression for that section, and "strumming" note)
-- leadTab (ASCII guitar tab for the main riff/hook, as a multi-line string)
-- lyrics (full lyrics with [Verse 1], [Chorus], [Bridge] etc. labels)
-- suggestedLength (e.g. "3:45")
-
-Return ONLY valid JSON matching this exact structure:
+Return ONLY valid JSON with this structure:
 {
   "title": "album title",
   "artistReference": "${artists}",
-  "styleBrief": "the mood/style summary",
-  "songs": [ { ...song objects... } ]
+  "styleBrief": "one-sentence mood/style summary",
+  "songOutlines": [
+    {
+      "trackNumber": 1,
+      "title": "song title",
+      "key": "E major",
+      "tempo": 120,
+      "timeSignature": "4/4",
+      "capo": 0,
+      "moodNote": "one sentence describing this track's role in the album arc"
+    }
+  ]
 }`;
 
   const response = await client.messages.create({
     model: MODEL,
-    max_tokens: 16000,
+    max_tokens: 4000,
     messages: [{ role: 'user', content: prompt }],
   });
 
-  const textBlocks = response.content.filter(b => b.type === 'text');
-  const text = textBlocks.map(b => b.text).join('');
-
-  // Extract JSON from response (may be wrapped in markdown code fence)
-  const jsonMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/) || [null, text];
-  return JSON.parse(jsonMatch[1].trim());
+  return extractJSON(extractText(response));
 }
 
-async function generateAlbum(params) {
-  console.log('Phase 1: researching', params.artists);
+// Phase 3: generate a batch of full songs from their outlines
+async function generateSongBatch(outlines, albumPlan, research, params) {
+  const { artists, mood, lyricsMode, lyricsPool } = params;
+
+  let lyricsContext = '';
+  if (lyricsMode === 'existing' && lyricsPool.length > 0) {
+    lyricsContext = `\n\nEXISTING LYRICS POOL — draw from, remix, or reference these:\n${lyricsPool.map(s => `--- ${s.title} ---\n${s.lyrics}`).join('\n\n')}`;
+  } else if (lyricsMode === 'blend' && lyricsPool.length > 0) {
+    lyricsContext = `\n\nEXISTING LYRICS POOL — blend fragments from these with newly generated lyrics:\n${lyricsPool.map(s => `--- ${s.title} ---\n${s.lyrics}`).join('\n\n')}`;
+  }
+
+  const trackList = outlines.map(o =>
+    `Track ${o.trackNumber}: "${o.title}" — ${o.key}, ${o.tempo} bpm, ${o.timeSignature}, capo ${o.capo}, arc: ${o.moodNote}`
+  ).join('\n');
+
+  const prompt = `You are a songwriter and producer. Generate FULL song details for these ${outlines.length} tracks.
+
+REFERENCE ARTIST RESEARCH:
+${research}
+
+ALBUM: "${albumPlan.title}"
+Reference: ${artists}
+Style: ${mood || albumPlan.styleBrief}
+
+TRACKS TO GENERATE:
+${trackList}
+${lyricsContext}
+
+For each song, output ALL of:
+- title, key, tempo (integer), timeSignature, capo (integer), moodNote
+- chords: array of {"name": "Em7", "voicing": "022030"}
+- structure: array of {"section": "Verse 1", "chords": "Em - G - D - C", "strumming": "down-down-up-down-up"}
+- leadTab: ASCII guitar tab for main riff/hook (multi-line string)
+- lyrics: full lyrics with [Verse 1], [Chorus], [Bridge] labels
+- suggestedLength: e.g. "3:45"
+
+Return ONLY a valid JSON array of ${outlines.length} song objects. No wrapping object — just the array.`;
+
+  const response = await client.messages.create({
+    model: MODEL,
+    max_tokens: 8000,
+    messages: [{ role: 'user', content: prompt }],
+  });
+
+  return extractJSON(extractText(response));
+}
+
+// Main: generate album with batched song generation and progress callback
+async function generateAlbum(params, onProgress) {
+  onProgress && onProgress({ phase: 'research', message: 'researching reference artists...' });
   const research = await researchArtist(params.artists);
 
-  console.log('Phase 2: generating album');
-  const album = await generateAlbumContent(params, research);
+  onProgress && onProgress({ phase: 'plan', message: 'planning album outline...' });
+  await sleep(BATCH_DELAY_MS);
+  const albumPlan = await planAlbum(params, research);
 
-  return album;
+  const allSongs = [];
+  const outlines = albumPlan.songOutlines;
+
+  for (let i = 0; i < outlines.length; i += BATCH_SIZE) {
+    const batch = outlines.slice(i, i + BATCH_SIZE);
+    const batchNum = Math.floor(i / BATCH_SIZE) + 1;
+    const totalBatches = Math.ceil(outlines.length / BATCH_SIZE);
+
+    onProgress && onProgress({
+      phase: 'songs',
+      message: `generating songs ${i + 1}–${Math.min(i + BATCH_SIZE, outlines.length)} of ${outlines.length} (batch ${batchNum}/${totalBatches})...`,
+    });
+
+    if (i > 0) {
+      await sleep(BATCH_DELAY_MS);
+    }
+
+    const songs = await generateSongBatch(batch, albumPlan, research, params);
+    const songsArray = Array.isArray(songs) ? songs : [songs];
+
+    for (const song of songsArray) {
+      allSongs.push(song);
+      onProgress && onProgress({
+        phase: 'song-complete',
+        songIndex: allSongs.length - 1,
+        song,
+      });
+    }
+  }
+
+  return {
+    title: albumPlan.title,
+    artistReference: albumPlan.artistReference,
+    styleBrief: albumPlan.styleBrief,
+    songs: allSongs,
+  };
 }
 
 async function regenerateSong(params) {
-  const { album, songIndex, lyricsPool } = params;
+  const { album, songIndex } = params;
   const song = album.songs[songIndex];
 
-  // Get adjacent keys to avoid
   const prevKey = songIndex > 0 ? album.songs[songIndex - 1].key : null;
   const nextKey = songIndex < album.songs.length - 1 ? album.songs[songIndex + 1].key : null;
   const avoidKeys = [prevKey, nextKey].filter(Boolean);
@@ -175,10 +255,7 @@ ${JSON.stringify(song, null, 2)}`;
     messages: [{ role: 'user', content: prompt }],
   });
 
-  const textBlocks = response.content.filter(b => b.type === 'text');
-  const text = textBlocks.map(b => b.text).join('');
-  const jsonMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/) || [null, text];
-  return JSON.parse(jsonMatch[1].trim());
+  return extractJSON(extractText(response));
 }
 
 module.exports = { generateAlbum, regenerateSong };
