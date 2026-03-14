@@ -1,0 +1,14 @@
+{
+  "name": "radtypo-album-generator",
+  "version": "1.0.0",
+  "description": "album concept generator for rad.typo",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "express": "^4.21.0",
+    "dotenv": "^16.4.0"
+  }
+}

@@ -22,3 +22,8 @@ claude-test.html
 server-status.html
 book-builder.html
 sitemap.html
+
+# Album generator local files
+album-generator/.env
+album-generator/node_modules/
+album-generator/generated-albums/

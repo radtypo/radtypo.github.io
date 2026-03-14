@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>album generator - rad.typo</title>
+    <style>
+        :root {
+            --bg: #111;
+            --fg: #ccc;
+            --fg-dim: #666;
+            --fg-bright: #fff;
+            --border: #333;
+            --accent: #0066ff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: monospace;
+            background: var(--bg);
+            color: var(--fg);
+            max-width: 900px;
+            margin: 48px auto;
+            padding: 24px;
+            line-height: 1.6;
+        }
+
+        h1 { font-size: 24px; margin-bottom: 24px; color: var(--fg-bright); }
+        h2 { font-size: 16px; margin-bottom: 15px; color: var(--fg-bright); }
+        h3 { font-size: 14px; margin-bottom: 10px; color: var(--fg-bright); }
+
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .header { margin-bottom: 30px; }
+
+        /* Form */
+        .setup { margin-bottom: 30px; }
+
+        .field { margin-bottom: 15px; }
+
+        .field label {
+            display: block;
+            font-size: 12px;
+            color: var(--fg-dim);
+            margin-bottom: 4px;
+        }
+
+        .field input, .field select, .field textarea {
+            font-family: monospace;
+            font-size: 14px;
+            width: 100%;
+            padding: 8px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--fg);
+            outline: none;
+        }
+
+        .field input:focus, .field select:focus, .field textarea:focus {
+            border-color: var(--fg-dim);
+        }
+
+        .field textarea { resize: vertical; min-height: 60px; }
+        .field select { cursor: pointer; }
+        .field select option { background: var(--bg); }
+
+        .row { display: flex; gap: 15px; }
+        .row .field { flex: 1; }
+
+        .btn {
+            font-family: monospace;
+            font-size: 14px;
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid var(--fg-dim);
+            color: var(--fg);
+            cursor: pointer;
+        }
+        .btn:hover { border-color: var(--fg-bright); color: var(--fg-bright); }
+        .btn:disabled { opacity: 0.3; cursor: default; }
+        .btn:disabled:hover { border-color: var(--fg-dim); color: var(--fg); }
+
+        .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+        /* Status */
+        #status {
+            margin: 20px 0;
+            font-size: 14px;
+            color: var(--fg-dim);
+        }
+
+        /* Album output */
+        #album-output { display: none; }
+
+        .album-header {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .album-title { font-size: 20px; color: var(--fg-bright); margin-bottom: 4px; }
+        .album-meta { font-size: 12px; color: var(--fg-dim); }
+
+        /* Song card */
+        .song {
+            border: 1px solid var(--border);
+            margin-bottom: 15px;
+        }
+
+        .song-header {
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        .song-header:hover { background: #1a1a1a; }
+
+        .song-num { color: var(--fg-dim); min-width: 30px; }
+        .song-title-text { flex: 1; color: var(--fg-bright); }
+        .song-meta-brief { color: var(--fg-dim); font-size: 12px; }
+        .song-toggle { color: var(--fg-dim); margin-left: 15px; }
+
+        .song-body { display: none; padding: 0 15px 15px; }
+        .song-body.open { display: block; }
+
+        .song-meta {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 4px 20px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+        .song-meta dt { color: var(--fg-dim); }
+        .song-meta dd { color: var(--fg); }
+
+        .song-section { margin-bottom: 20px; }
+        .song-section h3 { border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+
+        .chord-chart {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .chord-box {
+            padding: 6px 8px;
+            border: 1px solid var(--border);
+            font-size: 13px;
+        }
+        .chord-name { color: var(--fg-bright); }
+        .chord-voicing { color: var(--fg-dim); font-size: 11px; }
+
+        .structure-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 13px; }
+        .structure-table th { text-align: left; color: var(--fg-dim); padding: 6px 0; border-bottom: 1px solid var(--border); }
+        .structure-table td { padding: 6px 0; border-bottom: 1px solid #1a1a1a; }
+        .structure-table td:first-child { color: var(--fg-bright); min-width: 100px; }
+
+        pre.tab {
+            background: #0a0a0a;
+            padding: 12px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.4;
+            border: 1px solid var(--border);
+            margin-top: 8px;
+            color: var(--fg-bright);
+        }
+
+        .lyrics-block {
+            white-space: pre-line;
+            line-height: 1.8;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .song-regen {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+            font-size: 14px;
+            color: var(--fg-dim);
+        }
+        .footer a { color: var(--fg-dim); }
+
+        @media (max-width: 600px) {
+            body { margin: 20px auto; padding: 15px; }
+            .row { flex-direction: column; gap: 0; }
+            .song-meta { grid-template-columns: 1fr; }
+        }
+
+        @media print {
+            body { background: #fff; color: #000; max-width: 100%; }
+            .btn, .song-regen, .setup, #status, .footer { display: none !important; }
+            .song { break-inside: avoid; border-color: #ccc; }
+            .song-body { display: block !important; }
+            pre.tab { background: #f5f5f5; border-color: #ccc; color: #000; }
+            .album-title, .song-title-text, h3, .chord-name, .song-meta dd { color: #000; }
+            .song-meta dt, .album-meta, .song-num, .song-meta-brief, .chord-voicing { color: #666; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>rad.typo</h1>
+    </header>
+
+    <h2>album generator</h2>
+
+    <div class="setup" id="setup">
+        <div class="field">
+            <label>album name (leave blank to auto-generate)</label>
+            <input type="text" id="album-name" placeholder="e.g. liminal depths">
+        </div>
+        <div class="field">
+            <label>reference artist(s)</label>
+            <input type="text" id="artists" placeholder="e.g. Jimmy Eat World, Bright Eyes, Rilo Kiley">
+        </div>
+        <div class="field">
+            <label>stylistic mood</label>
+            <textarea id="mood" placeholder="e.g. driving late night melancholy, raw acoustic urgency"></textarea>
+        </div>
+        <div class="row">
+            <div class="field">
+                <label>number of songs</label>
+                <input type="number" id="song-count" value="10" min="3" max="20">
+            </div>
+            <div class="field">
+                <label>lyrics mode</label>
+                <select id="lyrics-mode">
+                    <option value="new">generate new lyrics</option>
+                    <option value="existing">use existing lyrics pool</option>
+                    <option value="blend">blend both</option>
+                </select>
+            </div>
+        </div>
+        <div class="btn-row">
+            <button class="btn" id="btn-generate" onclick="generate()">generate album</button>
+        </div>
+    </div>
+
+    <div id="status"></div>
+
+    <div id="album-output">
+        <div class="album-header">
+            <div class="album-title" id="out-title"></div>
+            <div class="album-meta" id="out-meta"></div>
+        </div>
+        <div id="songs-list"></div>
+        <div class="btn-row">
+            <button class="btn" onclick="generate()">regenerate album</button>
+            <button class="btn" onclick="saveJSON()">save json</button>
+            <button class="btn" onclick="saveText()">save text</button>
+            <button class="btn" onclick="window.print()">print</button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        └─ <a href="/">back to site</a>
+    </footer>
+
+    <script>
+        let currentAlbum = null;
+
+        function setStatus(msg) {
+            document.getElementById('status').textContent = msg;
+        }
+
+        async function generate() {
+            const btn = document.getElementById('btn-generate');
+            btn.disabled = true;
+            setStatus('researching reference artists...');
+            document.getElementById('album-output').style.display = 'none';
+
+            const body = {
+                albumName: document.getElementById('album-name').value,
+                artists: document.getElementById('artists').value,
+                mood: document.getElementById('mood').value,
+                songCount: document.getElementById('song-count').value,
+                lyricsMode: document.getElementById('lyrics-mode').value,
+            };
+
+            try {
+                setStatus('generating album — this may take a minute...');
+                const res = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body),
+                });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.error || 'generation failed');
+                }
+
+                currentAlbum = await res.json();
+                renderAlbum(currentAlbum);
+                setStatus('');
+            } catch (err) {
+                setStatus('error: ' + err.message);
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function renderAlbum(album) {
+            document.getElementById('out-title').textContent = album.title;
+            document.getElementById('out-meta').textContent =
+                `reference: ${album.artistReference} · style: ${album.styleBrief}`;
+
+            const list = document.getElementById('songs-list');
+            list.innerHTML = '';
+
+            album.songs.forEach((song, idx) => {
+                list.appendChild(renderSong(song, idx));
+            });
+
+            document.getElementById('album-output').style.display = 'block';
+        }
+
+        function renderSong(song, idx) {
+            const el = document.createElement('div');
+            el.className = 'song';
+            el.dataset.idx = idx;
+
+            // Chord chart
+            let chordHtml = '';
+            if (song.chords && song.chords.length > 0) {
+                chordHtml = `<div class="song-section"><h3>chords</h3><div class="chord-chart">
+                    ${song.chords.map(c => `<div class="chord-box"><span class="chord-name">${c.name}</span> <span class="chord-voicing">${c.voicing || ''}</span></div>`).join('')}
+                </div></div>`;
+            }
+
+            // Structure
+            let structHtml = '';
+            if (song.structure && song.structure.length > 0) {
+                structHtml = `<div class="song-section"><h3>structure</h3>
+                <table class="structure-table">
+                    <tr><th>section</th><th>chords</th><th>strumming</th></tr>
+                    ${song.structure.map(s => `<tr><td>${s.section}</td><td>${s.chords || ''}</td><td>${s.strumming || ''}</td></tr>`).join('')}
+                </table></div>`;
+            }
+
+            // Lead tab
+            let tabHtml = '';
+            if (song.leadTab) {
+                tabHtml = `<div class="song-section"><h3>lead / riff</h3><pre class="tab">${escapeHtml(song.leadTab)}</pre></div>`;
+            }
+
+            // Lyrics
+            let lyricsHtml = '';
+            if (song.lyrics) {
+                lyricsHtml = `<div class="song-section"><h3>lyrics</h3><div class="lyrics-block">${escapeHtml(song.lyrics)}</div></div>`;
+            }
+
+            el.innerHTML = `
+                <div class="song-header" onclick="toggleSong(this)">
+                    <span class="song-num">${String(idx + 1).padStart(2, '0')}.</span>
+                    <span class="song-title-text">${escapeHtml(song.title)}</span>
+                    <span class="song-meta-brief">${song.key} · ${song.tempo} bpm · ${song.suggestedLength || ''}</span>
+                    <span class="song-toggle">[ + ]</span>
+                </div>
+                <div class="song-body">
+                    <dl class="song-meta">
+                        <dt>key</dt><dd>${escapeHtml(song.key)}</dd>
+                        <dt>tempo</dt><dd>${song.tempo} bpm</dd>
+                        <dt>time</dt><dd>${escapeHtml(song.timeSignature)}</dd>
+                        <dt>capo</dt><dd>${song.capo === 0 ? 'none' : 'fret ' + song.capo}</dd>
+                        <dt>length</dt><dd>${escapeHtml(song.suggestedLength || '—')}</dd>
+                        <dt>arc</dt><dd>${escapeHtml(song.moodNote)}</dd>
+                    </dl>
+                    ${chordHtml}
+                    ${structHtml}
+                    ${tabHtml}
+                    ${lyricsHtml}
+                    <div class="song-regen">
+                        <button class="btn" onclick="regenSong(${idx})">regenerate this song</button>
+                    </div>
+                </div>`;
+
+            return el;
+        }
+
+        function toggleSong(header) {
+            const body = header.nextElementSibling;
+            const toggle = header.querySelector('.song-toggle');
+            body.classList.toggle('open');
+            toggle.textContent = body.classList.contains('open') ? '[ - ]' : '[ + ]';
+        }
+
+        async function regenSong(idx) {
+            if (!currentAlbum) return;
+            setStatus(`regenerating song ${idx + 1}...`);
+
+            try {
+                const res = await fetch('/api/regenerate-song', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ album: currentAlbum, songIndex: idx }),
+                });
+
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.error || 'regeneration failed');
+                }
+
+                const newSong = await res.json();
+                currentAlbum.songs[idx] = newSong;
+
+                // Replace just that song element
+                const list = document.getElementById('songs-list');
+                const oldEl = list.children[idx];
+                const newEl = renderSong(newSong, idx);
+                // Open it automatically
+                newEl.querySelector('.song-body').classList.add('open');
+                newEl.querySelector('.song-toggle').textContent = '[ - ]';
+                list.replaceChild(newEl, oldEl);
+                setStatus('');
+            } catch (err) {
+                setStatus('error: ' + err.message);
+            }
+        }
+
+        async function saveJSON() {
+            if (!currentAlbum) return;
+            try {
+                const res = await fetch('/api/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ album: currentAlbum }),
+                });
+                const data = await res.json();
+                setStatus('saved: generated-albums/' + data.filename);
+            } catch (err) {
+                setStatus('save failed: ' + err.message);
+            }
+        }
+
+        function saveText() {
+            if (!currentAlbum) return;
+            let text = `${currentAlbum.title.toUpperCase()}\n`;
+            text += `Reference: ${currentAlbum.artistReference}\n`;
+            text += `Style: ${currentAlbum.styleBrief}\n`;
+            text += '='.repeat(60) + '\n\n';
+
+            currentAlbum.songs.forEach((song, idx) => {
+                text += `${String(idx + 1).padStart(2, '0')}. ${song.title.toUpperCase()}\n`;
+                text += '-'.repeat(40) + '\n';
+                text += `Key: ${song.key} | Tempo: ${song.tempo} bpm | Time: ${song.timeSignature}\n`;
+                text += `Capo: ${song.capo === 0 ? 'none' : 'fret ' + song.capo} | Length: ${song.suggestedLength || '—'}\n`;
+                text += `Arc: ${song.moodNote}\n\n`;
+
+                if (song.chords && song.chords.length > 0) {
+                    text += 'CHORDS:\n';
+                    song.chords.forEach(c => {
+                        text += `  ${c.name}${c.voicing ? ' (' + c.voicing + ')' : ''}\n`;
+                    });
+                    text += '\n';
+                }
+
+                if (song.structure && song.structure.length > 0) {
+                    text += 'STRUCTURE:\n';
+                    song.structure.forEach(s => {
+                        text += `  ${s.section}: ${s.chords || ''}`;
+                        if (s.strumming) text += ` [${s.strumming}]`;
+                        text += '\n';
+                    });
+                    text += '\n';
+                }
+
+                if (song.leadTab) {
+                    text += 'LEAD/RIFF:\n' + song.leadTab + '\n\n';
+                }
+
+                if (song.lyrics) {
+                    text += 'LYRICS:\n' + song.lyrics + '\n';
+                }
+
+                text += '\n' + '='.repeat(60) + '\n\n';
+            });
+
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const slug = (currentAlbum.title || 'album').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            a.href = url;
+            a.download = `${slug}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+    </script>
+</body>
+</html>
