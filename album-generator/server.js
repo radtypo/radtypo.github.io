@@ -22,24 +22,45 @@ function loadLyricsPool() {
   })).filter(s => s.lyrics);
 }
 
-// Generate album
+// Generate album via SSE (songs stream in as they complete)
 app.post('/api/generate', async (req, res) => {
   const { albumName, artists, mood, songCount, lyricsMode } = req.body;
   const lyricsPool = (lyricsMode !== 'new') ? loadLyricsPool() : [];
 
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders();
+
+  function send(event, data) {
+    res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+  }
+
   try {
-    const album = await generateAlbum({
-      albumName: albumName || '',
-      artists: artists || '',
-      mood: mood || '',
-      songCount: parseInt(songCount) || 10,
-      lyricsMode: lyricsMode || 'new',
-      lyricsPool,
-    });
-    res.json(album);
+    const album = await generateAlbum(
+      {
+        albumName: albumName || '',
+        artists: artists || '',
+        mood: mood || '',
+        songCount: parseInt(songCount) || 10,
+        lyricsMode: lyricsMode || 'new',
+        lyricsPool,
+      },
+      (progress) => {
+        if (progress.phase === 'song-complete') {
+          send('song', { songIndex: progress.songIndex, song: progress.song });
+        } else {
+          send('status', { message: progress.message });
+        }
+      },
+    );
+
+    send('done', { title: album.title, artistReference: album.artistReference, styleBrief: album.styleBrief });
+    res.end();
   } catch (err) {
     console.error('Generation error:', err);
-    res.status(500).json({ error: err.message });
+    send('error', { message: err.message });
+    res.end();
   }
 });
 
@@ -48,8 +69,7 @@ app.post('/api/regenerate-song', async (req, res) => {
   const { album, songIndex } = req.body;
 
   try {
-    const lyricsPool = loadLyricsPool();
-    const song = await regenerateSong({ album, songIndex, lyricsPool });
+    const song = await regenerateSong({ album, songIndex });
     res.json(song);
   } catch (err) {
     console.error('Regeneration error:', err);
