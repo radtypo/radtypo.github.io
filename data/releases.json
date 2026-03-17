@@ -1,0 +1,73 @@
+{
+  "hard-hitter": {
+    "title": "hard hitter",
+    "type": "release",
+    "date": "2025-10-01",
+    "format": "12\" • lathe cut",
+    "trackCount": 8,
+    "stock": { "total": 20, "remaining": 8 },
+    "binary": "□□□□□□□■",
+    "carousel": [
+      { "type": "image", "src": "/images/hard-hitter-artwork.jpg", "alt": "hard hitter album artwork" },
+      { "type": "image", "src": "/images/hard-hitter-tracklist.jpg", "alt": "hard hitter tracklist" },
+      { "type": "image", "src": "/images/hard-hitter-vinyl.jpg", "alt": "hard hitter vinyl record" },
+      { "type": "video", "poster": "/releases/hard-hitter-still.jpg", "small": "/releases/hard-hitter-small.mp4", "balanced": "/releases/hard-hitter-balanced.mp4", "alt": "actual lathe cutting • bandwidth warning" }
+    ],
+    "tracks": [
+      { "number": 1, "slug": "whats-not-to-like", "title": "what's not to like" },
+      { "number": 2, "slug": "birthday-cake", "title": "birthday cake" },
+      { "number": 3, "slug": "the-one-we-didnt-get-to-record-with-steve-albini", "title": "the one we didn't get to record with steve albini" },
+      { "number": 4, "slug": "rad-typo", "title": "rad typo" },
+      { "number": 5, "slug": "muriel", "title": "muriel" },
+      { "number": 6, "slug": "bad-fortune", "title": "bad fortune" },
+      { "number": 7, "slug": "it-aint-pretty", "title": "it ain't pretty" },
+      { "number": 8, "slug": "hard-hitter", "title": "hard hitter" }
+    ],
+    "download": { "path": "/releases/hard-hitter-album.zip", "size": "68MB" },
+    "price": 40,
+    "shipping": {
+      "uk-ireland": { "label": "uk & ireland", "cost": 5 },
+      "europe": { "label": "europe", "cost": 7 },
+      "rest-of-world": { "label": "rest of world", "cost": 10 }
+    },
+    "stripeLinks": {
+      "uk-ireland": "https://buy.stripe.com/aFa7sLcz81qn3Es9xL6Na00",
+      "europe": "https://buy.stripe.com/bJe14n7eO1qna2QdO16Na01",
+      "rest-of-world": "https://buy.stripe.com/fZuaEX6aK9WT5MAaBP6Na02"
+    }
+  },
+  "liminal-depths": {
+    "title": "liminal depths",
+    "type": "release",
+    "date": "2026",
+    "format": null,
+    "trackCount": 8,
+    "stock": { "total": null, "remaining": null },
+    "binary": "□□□□□□■□",
+    "carousel": [],
+    "tracks": [
+      { "number": 1, "slug": "method-to-her-madness", "title": "method to her madness" },
+      { "number": 2, "slug": "liminal-depths", "title": "liminal depths" },
+      { "number": 3, "slug": "think-of-a-colour", "title": "think of a colour" },
+      { "number": 4, "slug": "unholy-communion", "title": "unholy communion" },
+      { "number": 5, "slug": "force-of-habit", "title": "force of habit" },
+      { "number": 6, "slug": "my-happiness-is-not-held-by-others", "title": "my happiness is not held by others" },
+      { "number": 7, "slug": "you-do-you", "title": "you do you" },
+      { "number": 8, "slug": "let-the-making-be-enough", "title": "let the making be enough" },
+      { "number": 9, "slug": "fullness-of-time", "title": "fullness of time", "bonus": true },
+      { "number": 10, "slug": "second-sleep", "title": "second sleep", "bonus": true }
+    ],
+    "download": null,
+    "price": null,
+    "shipping": {
+      "uk-ireland": { "label": "uk & ireland", "cost": null },
+      "europe": { "label": "europe", "cost": null },
+      "rest-of-world": { "label": "rest of world", "cost": null }
+    },
+    "stripeLinks": {
+      "uk-ireland": null,
+      "europe": null,
+      "rest-of-world": null
+    }
+  }
+}

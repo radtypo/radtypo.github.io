@@ -42,3 +42,7 @@ RewriteRule ^poems/([^/]+)\.html$ /poems-template.html?id=$1 [L,QSA]
 # Song pages: /songs/bad-fortune.html -> /song-template.html?id=bad-fortune
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^songs/([^/]+)\.html$ /song-template.html?id=$1 [L,QSA]
+
+# Release pages: /releases/hard-hitter.html -> /release-template.html?id=hard-hitter
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^releases/([^/]+)\.html$ /release-template.html?id=$1 [L,QSA]
