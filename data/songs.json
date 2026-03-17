@@ -1,5 +1,5 @@
 {
-"old-enough-to-handle-it": {
+  "old-enough-to-handle-it": {
     "title": "old enough to handle it",
     "type": "song",
     "date": "2026-02-07",
@@ -90,7 +90,7 @@
       },
       "credits": {
         "engineering_production": "rad.typo",
-        "mixed_mastered": "caol\u00e1n austin"
+        "mixed_mastered": "caolán austin"
       }
     },
     "resources": [
@@ -179,7 +179,7 @@
       },
       "credits": {
         "engineering_production": "all composers",
-        "mixed_mastered": "caol\u00e1n austin"
+        "mixed_mastered": "caolán austin"
       }
     },
     "resources": [
@@ -277,7 +277,7 @@
       },
       "credits": {
         "engineering_production": "all composers",
-        "mixed_mastered": "caol\u00e1n austin"
+        "mixed_mastered": "caolán austin"
       }
     },
     "resources": [
@@ -375,7 +375,7 @@
       },
       "credits": {
         "engineering_production": "all composers",
-        "mixed_mastered": "caol\u00e1n austin"
+        "mixed_mastered": "caolán austin"
       }
     },
     "resources": [
@@ -455,7 +455,7 @@
       },
       "credits": {
         "engineering_production": "all composers",
-        "mixed_mastered": "caol\u00e1n austin"
+        "mixed_mastered": "caolán austin"
       }
     },
     "resources": [
@@ -623,7 +623,7 @@
       },
       "credits": {
         "engineering_production": "all composers",
-        "mixed_mastered": "caol\u00e1n austin"
+        "mixed_mastered": "caolán austin"
       }
     },
     "resources": [
@@ -701,7 +701,7 @@
       },
       "credits": {
         "engineering_production": "all composers",
-        "mixed_mastered": "caol\u00e1n austin"
+        "mixed_mastered": "caolán austin"
       }
     },
     "resources": [
@@ -787,7 +787,7 @@
       },
       "credits": {
         "engineering_production": "all composers",
-        "mixed_mastered": "caol\u00e1n austin"
+        "mixed_mastered": "caolán austin"
       }
     },
     "resources": [
@@ -801,8 +801,7 @@
       }
     ]
   },
-
-"the-most-generic-experience-ever": {
+  "the-most-generic-experience-ever": {
     "title": "the most generic experience ever",
     "date": "2026-01-21",
     "artwork": "the-most-generic-experience-ever-artwork.jpg",
@@ -843,27 +842,26 @@
         "mixed_mastered": "tbd"
       }
     },
-"resources": [
-    {
+    "resources": [
+      {
         "name": "mp3 (320kbps)",
         "url": "../audio/the-most-generic-experience-ever.mp3"
-    },
-    {
+      },
+      {
         "name": "chord sheet",
         "url": "../resources/the-most-generic-experience-ever-chords.pdf"
-    },
-    {
+      },
+      {
         "name": "recording information",
         "url": "../resources/the-most-generic-experience-ever-recording-information.txt"
-    },
-    {
+      },
+      {
         "name": "wav stems (24-bit)",
         "url": "https://rad-nas.eur9.ug.link/filemgr/share-download/?id=9de4d9021dbf4db59fd12ead3310f049",
         "filename": "radtypo-the-most-generic-experience-ever-stems.zip"
-    }
-]
+      }
+    ]
   },
-
   "vulture-in-the-snow": {
     "title": "vulture in the snow",
     "date": "2025-10-22",
@@ -947,7 +945,7 @@
       },
       "credits": {
         "engineering_production": "all composers",
-        "mixed_mastered": "caol\u00e1n austin"
+        "mixed_mastered": "caolán austin"
       }
     },
     "resources": [
@@ -1048,7 +1046,7 @@
       },
       "credits": {
         "engineering_production": "all composers",
-        "mixed_mastered": "caol\u00e1n austin"
+        "mixed_mastered": "caolán austin"
       }
     },
     "resources": [
@@ -1142,5 +1140,95 @@
         "url": "../resources/whats-not-to-like-recording-information.txt"
       }
     ]
+  },
+  "method-to-her-madness": {
+    "title": "method to her madness",
+    "type": "song",
+    "date": "2026",
+    "artwork": "method-to-her-madness-artwork.jpg",
+    "audio": "method-to-her-madness.mp3",
+    "lyrics": "there's a method to her madness\na logic i cannot shake\na stillness in her sadness\na smile that never breaks\nshe tied me to an oak tree\nand left me there to die\nthree wolves feasted upon me\nand kept my name alive",
+    "details": {}
+  },
+  "liminal-depths": {
+    "title": "liminal depths",
+    "type": "song",
+    "date": "2026",
+    "artwork": "liminal-depths-artwork.jpg",
+    "audio": "liminal-depths.mp3",
+    "lyrics": "grey green your eyes\ncheap milk what price\nhidden gems hidden gems\nat liminal depths\n\ntwenty times the animals\nstress to the teeth kept an all day\ntwenty times the animals\nstress to the teeth kept an all day\nthey're taking all the sand away\ndredging beneath our birthplace\nthey're taking all the sand away\ndredging beneath our birthplace\nour birthplace\n\ngrey green your eyes\ncheap milk what price\nhidden gems, hidden gems\nat liminal depths\n\ntwenty times the animals\nstressed to the teeth kept in all day\ntwenty times the animals\nstressed to the teeth kept in all day\nkept in all day\n\nthey're taking all the sand away\ndredging beneath our birthplace\ntaking all the sand away\ndredging beneath our birthplace\nour birthplace\n\ngrey green your eyes\ncheap milk what price\nhidden gems, hidden gems\nat liminal depths\n\none of the things i've been always taken by is the range and diversity of excuses\nthat water companies come up with\none of my favourites is, \"oh there's no need to worry, it's 95% rainwater\"\n\"we've just taken this out of the river\"\n\"drink a glass of this out of your 95% rainwater\"\n\"drink a glass of this, are you big enough, are you man enough?\"\ngrey green your eyes\ncheap milk what price\nhidden gems, hidden gems\nat liminal depths\nat liminal depths, at liminal depths, at liminal depths",
+    "details": {}
+  },
+  "think-of-a-colour": {
+    "title": "think of a colour",
+    "type": "song",
+    "date": "2026",
+    "artwork": "think-of-a-colour-artwork.jpg",
+    "audio": "think-of-a-colour.mp3",
+    "lyrics": "think of a new colour, better black or beetle butter red\nthink of any feeling that you never thought you'd ever have\ni am interested only if you say you're interested too\nlet's get out of here\ngo somewhere we can hide\npush past these alco-popping kids\nwhen there are no secrets left\nsome songs just write themselves\ncan you feel my melancholy\n\nthink of onion colour silver from a spider single thread\nthink of a new life extending from beginning to its bitter end\nthink of two new children falling from the fire of our fearless hands\nyou have work tomorrow\nand i have lots to do\nlike spending all my saturday\njust thinking of you\nwhen there are no secrets left\nsome songs just write themselves\ncan you feel my melancholy?\ndon't be scared\n\nwhen there are no secrets left\nsome songs just write themselves\ncan you feel my melancholy\n\nthere is glass on the ground, crunching under our boots\nin a space where we found, where no one can look\nbetween the old people's home and new pilots robe\ni am heels overhead for you\nthere is glass on the ground, crunching under our boots\nin the space where we found, where no one can look\nbetween the old people's home and new pilots row\ni am heels overhead for you\n\nlet's get out of here\ngo somewhere we can't hide\npush past these alco-popping kids\nwhen there are no secrets left\nsome songs just write themselves\ncan you feel my melancholy?\ndon't be scared\nwhen there are no secrets left\nsome songs just write themselves\ncan you feel my melancholy?\ncan you feel this melancholy\nlet's get out of here",
+    "details": {}
+  },
+  "unholy-communion": {
+    "title": "unholy communion",
+    "type": "song",
+    "date": "2026",
+    "artwork": "unholy-communion-artwork.jpg",
+    "audio": "unholy-communion.mp3",
+    "lyrics": "just throw me a life line\nyou knock me off my feet\ni need you to notice\nyou made me incomplete\n\nlike miraculous metals\nthat are thrown in the garden\ni'm a boxer who's beaten\nthere's no way of knowing which way i've landed\n\nthings i wish i had said\nnot so fast head down in the river\nthings i wish i'd said\nnot so fast divine retribution\nthings i wish i'd said\nnot so fast on holy communion\nkeep him away from me\ni'm not most men\n\nin mass pigeon-chested\ninline for enriched bread\nslapped my ass after gaelic\ndidn't feel so molested on my own\nGo dtaga do ríocht\ni bet that line chokes you\ni'm a boxer who's beaten\nthere's no way of knowing\njust how i'm spinnin'\n\nthings i wish i'd said\nnot so fast head down in the river\nthings i wish i'd said\nnot so fast, divine retribution\nthings i wish i'd said\nnot so fast, unholy communion\nkeep him away from me\ni'm not most men\n\nthings i wish i'd said\nnot so fast head down in the river\nthings i wish i'd said\nnot so fast, divine retribution\nthings i wish i'd said\nnot so fast, unholy communion\nkeep him away from me\ni'm not most men",
+    "details": {}
+  },
+  "force-of-habit": {
+    "title": "force of habit",
+    "type": "song",
+    "date": "2026",
+    "artwork": "force-of-habit-artwork.jpg",
+    "audio": "force-of-habit.mp3",
+    "lyrics": "simmer down, simmer down, simmer down, simmer down\ni've got a secret to tell\ni blame my parents for all of my failings\nbut that has not served me too well\ncheck me out, check me out, check me out\neach to their own would make three\nsouls to believe in\ni taped to the ceiling\nthe gift of the great mercury\n\nforce of habit\nforce of habit\n\nto be around the disavowed, the disavowed\nwith bomb-shattered glass on the stairs\ni still taste the remnants, the dust and the fragments\nthe lies they decided to tell\ncool me down, cool me down, cool me down\nand breathe with the planet as one\nfocus your lasers as lightning unconsciously strikes with the quietest sound\nthe quietest sound\n\nforce of habit\nforce of habit\nforce of habit\nforce of habit\n\nmake kinetic\neach and every betrayal\nwatch life spooling out\nthe rest of its sequence\nmake kinetic\neach and every betrayal\nwatch life spooling out\nunravel, unravel, unravel, unravel\n\nsimmer down, simmer down, simmer down, simmer down\ni've got a secret to tell (for some habit)\ni blame my parents for all of my failings\nbut that has not served me too well (for some habit)\nheaven, check me out, check me out, check me out\neach to their own way, force of heaven\nsouls to believe in, i take to the ceiling\nthe gift of the great mercury, the great mercury",
+    "details": {}
+  },
+  "my-happiness-is-not-held-by-others": {
+    "title": "my happiness is not held by others",
+    "type": "song",
+    "date": "2026",
+    "artwork": "my-happiness-is-not-held-by-others-artwork.jpg",
+    "audio": "my-happiness-is-not-held-by-others.mp3",
+    "lyrics": "showing up is hard\nthe core of bravery\ni've often avoided\nor been unavailable\nmore recently\ni've been around\ni've been checking in\na pain in the ass?\nam i wearing thin?\na pain in the ass?\n\nreality is hard\na warm distortion\na twisting plot\na complex variable\njoy is an actor\nin need of direction\nits courage is fleeting\ni was caught in the act\nof guilty rituals\ncaught in the act\n\ncreativity\nis the core of wisdom\nand wisdom makes itself known\nthrough sharing and smiling\npacing itself\nnew gratitude is formed\nby an appreciation of beauty\nmy love is back\na perfect strawberry\nmy love is back\n\ni was taken aback yesterday\nsomething good\nbecame something obsessive\nso much so\ni made me stop\nand then i realized\nmy happiness is not held\nby others\n\nshame is a cloak\nthat i have to shake off\nyou can give me a job\nbut i'm unavailable\nyou're just a joke\nthat i need to break from\nyou can take away hope\nbut i'm unassailable\n\nhappiness\nhappiness\nis not held by others",
+    "details": {}
+  },
+  "you-do-you": {
+    "title": "you do you",
+    "type": "song",
+    "date": "2026",
+    "artwork": "you-do-you-artwork.jpg",
+    "audio": "you-do-you.mp3",
+    "lyrics": "mamma's still a siren\nrestless all the time\nwon't give in or listen\nafraid to have a son\nthat's trying to connect and\ntrying hard to feel\nneeds the grip of drama\nto make her life seem real\n\nstories of the city\nmake me feel so small\ndon't make out you hate me\nthis graffiti can't be bought\ni wonder if we'll ever make it out of here\nwhile you do you like always\nlike you've always done",
+    "details": {}
+  },
+  "let-the-making-be-enough": {
+    "title": "let the making be enough",
+    "type": "song",
+    "date": "2026",
+    "artwork": "let-the-making-be-enough-artwork.jpg",
+    "audio": "let-the-making-be-enough.mp3",
+    "lyrics": "i've done the hard work\nhandsomely\ntearing through\nacres of new copper wire\nyou've done the hard yards\ncan't you see?\nslamming through\ninnocences\njury fires\n\nlet the making be enough\n\nwe don't need any distance to tell\nthat we're more than familiar\nmove your furniture over to mine\nwe'll be the last of the pilgrims\nas we dance on the balls of our feet\nwe'll be tapped out and worthless\nto be radical is to ignore\nthat which is fearful or complex\n\ni've done the hard work\nhandsomely\ntearing through\nacres of new copper wire\nyou've done the hard yards\ncan't you see?\nslamming through\ninnocences\njury fires\n\nlet the making be enough\nlet the making be enough\nlet the making be enough\nlet the making be enough\n\nwe don't need any distance to tell\nthat we're more than familiar\nmove your furniture over to mine\nwe'll be the last of the pilgrims\nas we dance on the balls of our feet\nwe'll be tapped out and worthless\nto be radical is to ignore\nthat which is fearful or complex\n\nthat which is fearful or complex!\nthat which is fearful or complex!",
+    "details": {}
+  },
+  "fullness-of-time": {
+    "title": "fullness of time",
+    "type": "song",
+    "date": "2026",
+    "artwork": "fullness-of-time-artwork.jpg",
+    "audio": "fullness-of-time.mp3",
+    "lyrics": "industry has plagued us for an age\nignoring all warnings of a fall\nthey cornered our attention with five dollar bills\nthe model can no longer thaw\nthe empire has played its hand well\nand buried its wealth in the squall\nthey sequestered our depression in young, severed limbs\ndefiled and defiled in bag vaults, in bag vaults\n\nthe crystal secluded our view\nto cope with the murderous news\nin the fullness of time, all will be clear\nsay something more than a simile in fear\nin the blink of an eye, gaia will fail to save her\nsay something real in the coldness of time\noh, we'll be clear\nthe punishment beating has lasted for years\nin the blink of an eye\n\nthe higher we'll go, the deeper we'll sink\nsay something real in the coldness of time\nwe're as old as the crumbling nitrogen factories\nthe content that kept us amused\nwas a stream\na nebulous kayfabe distraction\nin the fullness of time\nall will be clear\nsay something more than a simile in fear\nin the blink of an eye\ngaia will fail to say the word\n\nin the fullness of time, all will be clear\na punishment beating that's lasted for years in the blink of an eye\ngaia will fail to see something, say something, say something real\ni'm not gonna chill\ni'm not gonna chill\ni'm not gonna chill\nbefore the mountain\ni'm not gonna chill\ni'm not gonna chill\ni'm not gonna chill\ni'm a gonna chill, i'm a gonna chill before the melting\nin the fullness of time all will be clear\nsay something more than a single fear in the blink of an eye\ngaia will fail to see the light of the sun\nall will be clear\nthe punishment be tamed\nwhat's lasted for years\nand the blood got applied\ngaia will fail to see the light of the sun",
+    "details": {}
+  },
+  "second-sleep": {
+    "title": "second sleep",
+    "type": "song",
+    "date": "2026",
+    "artwork": "second-sleep-artwork.jpg",
+    "audio": "second-sleep.mp3",
+    "lyrics": "are we zen like\nor comatose\ndying on our feet\nthe stretch in the evenings\nis forking like a lotus flower\n\nfloridian\nalligators\nsnapping at our heels\ntrump-like, inviolate\nback into the mud\n\nhave i told you\nabout doctors\nsaving limbs in syrian caves\nor the nile's length,\nit's run from south to north\nin eastern africa?\n\ndo you feel like\nyou're an insect?\nmounted on four pins\nmandibles raised, in constant terror\npetrified in some restaurant toilet\n\ni close my eyes and count to ten\nthis cul de sac is wearing thin\nits sediment subconsciousness\nis more than breathing out again\n\ndon't move\ncome back\nmove your hand\nbut just not there\nplease just one more time\nand let me dream my second sleep",
+    "details": {}
   }
 }
