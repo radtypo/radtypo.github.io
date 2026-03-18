@@ -659,7 +659,7 @@
 
         function buildSpecsTable(release) {
             if (!release.specs) return '';
-            const skip = ['medium', 'paperSize'];
+            const skip = ['medium', 'paperSize', 'ships'];
             const rows = Object.entries(release.specs)
                 .filter(([key]) => !skip.includes(key))
                 .map(([key, value]) => {
