@@ -45,7 +45,8 @@
     "format": { "size": "A2", "type": "acrylic and oil pastel on paper" },
     "releaseArtwork": "/images/well-be-lucky-if-i-dont-bust-out-crying-artwork.jpg",
     "pdfDownload": "/downloads/well-be-lucky-if-i-dont-bust-out-crying.pdf",
-    "description": "this is the original. one of one.",
+    "pdfSize": "15.4MB",
+    "description": "original artwork from hard hitter album. one of one.",
     "specs": {
       "medium": "acrylic and oil pastel on paper",
       "paperSize": "A2 (16.5\" x 23.4\")",
@@ -115,6 +116,7 @@
     "date": null,
     "format": { "size": "A2", "type": "painting" },
     "releaseArtwork": "/images/cheap-milk-what-price-artwork.jpg",
+    "description": "original artwork from liminal depths album. one of one.",
     "stock": { "total": 1, "remaining": 1 },
     "binary": "□□□□□■□□",
     "carousel": [
