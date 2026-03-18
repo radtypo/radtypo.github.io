@@ -84,6 +84,7 @@
             letter-spacing: 2px;
         }
 
+        /* Carousel (vinyl) */
         .carousel-container { margin: 30px 0; }
 
         .carousel {
@@ -152,6 +153,7 @@
 
         .indicator.active { background: var(--text-color); }
 
+        /* Tracklist (vinyl) */
         .tracklist { margin: 40px 0; }
 
         .tracklist-header {
@@ -219,6 +221,64 @@
             text-decoration: none;
         }
 
+        /* Painting artwork */
+        .release-artwork { margin: 30px 0; }
+
+        .release-artwork img {
+            width: 100%;
+            height: auto;
+        }
+
+        .pdf-download {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        /* Painting description */
+        .description-block { margin: 40px 0; }
+
+        .description-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0 0 4px 0;
+        }
+
+        .description-subtitle {
+            color: var(--secondary-color);
+            font-size: 14px;
+            margin: 0 0 20px 0;
+        }
+
+        .description-text {
+            margin: 0 0 20px 0;
+            font-size: 14px;
+        }
+
+        .description-separator {
+            color: var(--secondary-color);
+            margin: 0 0 20px 0;
+        }
+
+        /* Specs table */
+        .specs-table {
+            font-size: 14px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .specs-table td {
+            padding: 6px 0;
+            vertical-align: top;
+        }
+
+        .specs-table td:first-child {
+            color: var(--secondary-color);
+            white-space: nowrap;
+            padding-right: 20px;
+            width: 110px;
+        }
+
+        /* Purchase section */
         .purchase-section {
             margin: 40px 0;
             padding: 20px 0;
@@ -287,6 +347,16 @@
         .buy-now-button:hover {
             background: var(--text-color);
             color: var(--bg-color);
+        }
+
+        .buy-now-button.disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+
+        .buy-now-button.disabled:hover {
+            background: var(--bg-color);
+            color: var(--text-color);
         }
 
         .footer {
@@ -381,6 +451,23 @@
             return div.innerHTML;
         }
 
+        const specsLabels = {
+            medium: 'medium',
+            paperSize: 'paper size',
+            imageArea: 'image area',
+            condition: 'condition',
+            ships: 'ships'
+        };
+
+        function getShipsCopy(release) {
+            return release.ships || (release.specs && release.specs.ships) || '';
+        }
+
+        function hasStripeLinks(release) {
+            if (!release.stripeLinks) return false;
+            return Object.values(release.stripeLinks).some(v => v != null);
+        }
+
         function renderRelease(release) {
             // Update page metadata
             document.getElementById('page-title').textContent = `${release.title} - rad.typo`;
@@ -390,12 +477,29 @@
             document.querySelector('link[rel="canonical"]').setAttribute('href', `https://radtypo.com/releases/${releaseId}.html`);
             document.querySelector('meta[property="og:url"]').setAttribute('content', `https://radtypo.com/releases/${releaseId}.html`);
 
-            // Set OG image to first carousel image if available
-            const firstImage = release.carousel.find(s => s.type === 'image');
-            if (firstImage) {
-                document.querySelector('meta[property="og:image"]').setAttribute('content', `https://radtypo.com${firstImage.src}`);
+            // Set OG image
+            if (release.releaseArtwork) {
+                document.querySelector('meta[property="og:image"]').setAttribute('content', `https://radtypo.com${release.releaseArtwork}`);
+            } else {
+                const firstImage = release.carousel.find(s => s.type === 'image');
+                if (firstImage) {
+                    document.querySelector('meta[property="og:image"]').setAttribute('content', `https://radtypo.com${firstImage.src}`);
+                }
             }
 
+            if (release.type === 'painting') {
+                renderPainting(release);
+            } else {
+                renderVinyl(release);
+            }
+
+            // Bind shipping change events
+            document.querySelectorAll('input[name="shipping"]').forEach(input => {
+                input.addEventListener('change', updateTotal);
+            });
+        }
+
+        function renderVinyl(release) {
             // Build meta line
             const metaParts = [];
             if (release.format) {
@@ -480,43 +584,6 @@
                     </section>`;
             }
 
-            // Build purchase section
-            let purchaseHtml = '';
-            if (release.price !== null) {
-                const shippingKeys = Object.keys(release.shipping);
-                const firstKey = shippingKeys[0];
-                const firstCost = release.shipping[firstKey].cost;
-
-                const shippingOptionsHtml = shippingKeys.map((key, i) => {
-                    const zone = release.shipping[key];
-                    return `<label class="shipping-option">
-                        <input type="radio" name="shipping" value="${key}"${i === 0 ? ' checked' : ''}>
-                        <span class="shipping-details">
-                            <span class="zone">${escapeHtml(zone.label)}</span>
-                            <span class="cost">${zone.cost != null ? '£' + zone.cost : 'tbc'}</span>
-                        </span>
-                    </label>`;
-                }).join('');
-
-                purchaseHtml = `
-                    <section class="purchase-section">
-                        <div class="price">£${release.price}</div>
-                        <div class="shipping-selector">
-                            <h3>shipping</h3>
-                            <div class="shipping-options">
-                                ${shippingOptionsHtml}
-                            </div>
-                            <div class="total-price">
-                                total: ${firstCost != null ? '£<span id="total">' + (release.price + firstCost) + '</span>' : '<span id="total">tbc</span>'}
-                            </div>
-                        </div>
-                        <button class="buy-now-button" onclick="proceedToCheckout()">
-                            buy now • ships within 3-5 working days
-                        </button>
-                    </section>`;
-            }
-
-            // Render everything
             document.getElementById('release-content').innerHTML = `
                 <div class="album-info">
                     <div class="album-header">
@@ -527,18 +594,101 @@
                 </div>
                 ${carouselHtml}
                 ${tracklistHtml}
-                ${purchaseHtml}`;
+                ${buildPurchaseHtml(release)}`;
 
-            // Fix video source for mobile after render
             setupVideoSource();
-
-            // Bind shipping change events
-            document.querySelectorAll('input[name="shipping"]').forEach(input => {
-                input.addEventListener('change', updateTotal);
-            });
-
-            // Bind keyboard navigation for carousel
             setupCarouselKeyboard();
+        }
+
+        function renderPainting(release) {
+            // Artwork image
+            let artworkHtml = '';
+            if (release.releaseArtwork) {
+                artworkHtml = `
+                    <div class="release-artwork">
+                        <img src="${release.releaseArtwork}" alt="${escapeHtml(release.title)}">
+                        ${release.pdfDownload ? `<div class="pdf-download"><a href="${release.pdfDownload}" target="_blank">download hi-res scan (pdf)</a></div>` : ''}
+                    </div>`;
+            }
+
+            // Description block
+            let descriptionHtml = '';
+            const medium = release.specs?.medium || '';
+            const year = release.date || '';
+            const subtitle = [medium, year].filter(Boolean).join(' — ');
+
+            descriptionHtml = `
+                <div class="description-block">
+                    <p class="description-title">${escapeHtml(release.title)}</p>
+                    ${subtitle ? `<p class="description-subtitle">${escapeHtml(subtitle)}</p>` : ''}
+                    ${release.description ? `<p class="description-text">${escapeHtml(release.description)}</p>` : ''}
+                    <p class="description-separator">————</p>
+                    ${buildSpecsTable(release)}
+                </div>`;
+
+            document.getElementById('release-content').innerHTML = `
+                <div class="album-info">
+                    <div class="album-header">
+                        <span class="binary-indicator">${release.binary}</span>
+                        <h2>${escapeHtml(release.title)}</h2>
+                    </div>
+                </div>
+                ${artworkHtml}
+                ${descriptionHtml}
+                ${buildPurchaseHtml(release)}`;
+        }
+
+        function buildSpecsTable(release) {
+            if (!release.specs) return '';
+            const rows = Object.entries(release.specs).map(([key, value]) => {
+                const label = specsLabels[key] || key;
+                return `<tr><td>${escapeHtml(label)}</td><td>${escapeHtml(value)}</td></tr>`;
+            }).join('');
+            return `<table class="specs-table">${rows}</table>`;
+        }
+
+        function buildPurchaseHtml(release) {
+            if (release.price == null) return '';
+
+            const shippingKeys = Object.keys(release.shipping);
+            const firstKey = shippingKeys[0];
+            const firstCost = release.shipping[firstKey].cost;
+            const canBuy = hasStripeLinks(release);
+            const ships = getShipsCopy(release);
+
+            const shippingOptionsHtml = shippingKeys.map((key, i) => {
+                const zone = release.shipping[key];
+                return `<label class="shipping-option">
+                    <input type="radio" name="shipping" value="${key}"${i === 0 ? ' checked' : ''}>
+                    <span class="shipping-details">
+                        <span class="zone">${escapeHtml(zone.label)}</span>
+                        <span class="cost">${zone.cost != null ? '£' + zone.cost : 'tbc'}</span>
+                    </span>
+                </label>`;
+            }).join('');
+
+            const buttonText = canBuy
+                ? `buy now${ships ? ' • ships ' + ships : ''}`
+                : 'available soon';
+            const buttonClass = canBuy ? 'buy-now-button' : 'buy-now-button disabled';
+            const buttonOnclick = canBuy ? ' onclick="proceedToCheckout()"' : '';
+
+            return `
+                <section class="purchase-section">
+                    <div class="price">£${release.price}</div>
+                    <div class="shipping-selector">
+                        <h3>shipping</h3>
+                        <div class="shipping-options">
+                            ${shippingOptionsHtml}
+                        </div>
+                        <div class="total-price">
+                            total: ${firstCost != null ? '£<span id="total">' + (release.price + firstCost) + '</span>' : '<span id="total">tbc</span>'}
+                        </div>
+                    </div>
+                    <button class="${buttonClass}"${buttonOnclick}>
+                        ${buttonText}
+                    </button>
+                </section>`;
         }
 
         // Audit fix (b): use matchMedia to swap video src for mobile
