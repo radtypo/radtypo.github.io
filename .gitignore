@@ -10,6 +10,7 @@ videos/it-aint-pretty.mp4
 # System files
 .DS_Store
 *.log
+.mcp.json
 
 # Pi-specific / server-only files
 api/stats.json
