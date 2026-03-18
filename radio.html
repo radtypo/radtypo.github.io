@@ -341,9 +341,15 @@
         fetch('/data/songs.json')
             .then(r => r.json())
             .then(data => {
+                const today = new Date().toISOString().slice(0, 10);
                 const hidden = ['old-enough-to-handle-it', 'the-most-generic-experience-ever'];
                 songs = Object.entries(data)
-                    .filter(([key]) => !hidden.includes(key))
+                    .filter(([key, song]) => {
+                        if (hidden.includes(key)) return false;
+                        if (!song.audio) return false;
+                        if (!song.date || song.date.length < 10 || song.date > today) return false;
+                        return true;
+                    })
                     .map(([key, song]) => ({
                         key,
                         title: song.title,
