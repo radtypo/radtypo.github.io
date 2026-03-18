@@ -36,6 +36,29 @@
       "rest-of-world": "https://buy.stripe.com/fZuaEX6aK9WT5MAaBP6Na02"
     }
   },
+  "well-be-lucky-if-i-dont-bust-out-crying": {
+    "title": "we'll be lucky if i don't bust out crying",
+    "type": "painting",
+    "date": null,
+    "format": { "type": "painting" },
+    "trackCount": 0,
+    "stock": { "total": 1, "remaining": 1 },
+    "binary": "□□□□□□■□",
+    "carousel": [],
+    "tracks": [],
+    "download": null,
+    "price": 200,
+    "shipping": {
+      "uk-ireland": { "label": "uk & ireland", "cost": null },
+      "europe": { "label": "europe", "cost": null },
+      "rest-of-world": { "label": "rest of world", "cost": null }
+    },
+    "stripeLinks": {
+      "uk-ireland": null,
+      "europe": null,
+      "rest-of-world": null
+    }
+  },
   "liminal-depths": {
     "title": "liminal depths",
     "type": "release",
@@ -43,7 +66,7 @@
     "format": { "size": "12\"", "type": "lathe cut", "content": "8 songs" },
     "trackCount": 8,
     "stock": { "total": null, "remaining": null },
-    "binary": "□□□□□□■□",
+    "binary": "□□□□□□■■",
     "carousel": [
       { "type": "image", "src": "/images/liminal-depths-release-artwork.jpg", "alt": "liminal depths album artwork" }
     ],
@@ -61,6 +84,31 @@
     ],
     "download": null,
     "price": null,
+    "shipping": {
+      "uk-ireland": { "label": "uk & ireland", "cost": null },
+      "europe": { "label": "europe", "cost": null },
+      "rest-of-world": { "label": "rest of world", "cost": null }
+    },
+    "stripeLinks": {
+      "uk-ireland": null,
+      "europe": null,
+      "rest-of-world": null
+    }
+  },
+  "cheap-milk-what-price": {
+    "title": "cheap milk, what price?",
+    "type": "painting",
+    "date": null,
+    "format": { "type": "painting" },
+    "trackCount": 0,
+    "stock": { "total": 1, "remaining": 1 },
+    "binary": "□□□□□■□□",
+    "carousel": [
+      { "type": "image", "src": "/images/cheap-milk-what-price-artwork.jpg", "alt": "cheap milk, what price? painting" }
+    ],
+    "tracks": [],
+    "download": null,
+    "price": 200,
     "shipping": {
       "uk-ireland": { "label": "uk & ireland", "cost": null },
       "europe": { "label": "europe", "cost": null },
