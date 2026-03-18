@@ -402,7 +402,8 @@
         "key": "a major",
         "bpm": "84",
         "time_signature": "4/4",
-        "tuning": "daec#ae"
+        "tuning": "daec#ae",
+        "isrc": "gxdwy2500006"
       },
       "equipment": {
         "guitars": [
