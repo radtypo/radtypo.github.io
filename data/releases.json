@@ -39,7 +39,7 @@
   },
   "well-be-lucky-if-i-dont-bust-out-crying": {
     "title": "we'll be lucky if i don't bust out crying",
-    "visible": false,
+    "visible": true,
     "type": "painting",
     "date": "2024",
     "format": { "size": "A2", "type": "acrylic and oil pastel on paper" },
@@ -66,9 +66,9 @@
       "rest-of-world": { "label": "rest of world", "cost": 20 }
     },
     "stripeLinks": {
-      "uk-ireland": "https://buy.stripe.com/test_9B6aEZ91uaBL3uRg9nefC00",
-      "europe": "https://buy.stripe.com/test_28E14pgtWcJTfdz5uJefC01",
-      "rest-of-world": "https://buy.stripe.com/test_7sY3cx91udNX3uR2ixefC02"
+      "uk-ireland": "https://buy.stripe.com/9B66oH8iSed92Ao39n6Na03",
+      "europe": "https://buy.stripe.com/4gM14n6aKd95fnaaBP6Na04",
+      "rest-of-world": "https://buy.stripe.com/7sYeVd56Gglh1wk9xL6Na05"
     }
   },
   "liminal-depths": {
