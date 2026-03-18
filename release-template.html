@@ -648,6 +648,17 @@
         }
 
         function renderPainting(release) {
+            // Build meta line
+            const metaParts = [];
+            if (release.format) {
+                if (release.format.size) metaParts.push(release.format.size);
+                if (release.format.type) metaParts.push(release.format.type);
+            }
+            if (release.stock?.total != null && release.stock?.remaining != null) {
+                metaParts.push(`${release.stock.remaining} of ${release.stock.total} remaining`);
+            }
+            const metaLine = metaParts.join(' • ');
+
             // Artwork image
             let artworkHtml = '';
             if (release.releaseArtwork) {
@@ -681,6 +692,7 @@
                         <span class="binary-indicator">${release.binary}</span>
                         <h2>${escapeHtml(release.title)}</h2>
                     </div>
+                    <div class="album-meta">${metaLine}</div>
                 </div>
                 ${artworkHtml}
                 ${descriptionHtml}
