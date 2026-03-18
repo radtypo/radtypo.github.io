@@ -129,68 +129,11 @@
             flex-grow: 1;
         }
 
-        .album-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--code-bg);
-        }
-
-        .album-item:hover {
-            background-color: var(--code-bg);
-            margin: 0 -10px;
-            padding: 12px 10px;
-        }
-
-        .album-info {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .album-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-
-        .album-title {
-            flex-grow: 1;
-        }
-
-        .binary-indicator {
-            font-family: monospace;
-            font-size: 14px;
-            margin-right: 15px;
-            letter-spacing: 1px;
-        }
-
         .album-details {
             color: var(--secondary-color);
             font-size: 12px;
-        }
-
-        .pre-order-link {
-            font-family: monospace;
-            font-size: 14px;
-            padding: 8px 16px;
-            border: 1px solid var(--secondary-color);
-            background: var(--bg-color);
-            color: var(--text-color);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            display: inline-block;
-            box-sizing: border-box;
-            line-height: normal;
-            vertical-align: top;
-        }
-
-        .pre-order-link:hover {
-            background: var(--text-color);
-            color: var(--bg-color);
-            text-decoration: none !important;
+            padding-left: 95px;
+            letter-spacing: 1px;
         }
 
         .item.upcoming {
@@ -244,14 +187,14 @@
                 padding: 15px;
             }
             
-            .item, .album-item { 
+            .item {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 8px;
                 padding: 8px 0;
             }
-            
-            .item:hover, .album-item:hover {
+
+            .item:hover {
                 padding: 8px 10px;
             }
 
@@ -265,8 +208,8 @@
                 width: 100%;
             }
 
-            .pre-order-link {
-                margin-top: 8px;
+            .album-details {
+                padding-left: 0;
             }
         }
     </style>
@@ -469,15 +412,12 @@
     </div>
 </li>
 
-<li class="album-item" data-type="releases" data-date="2025-10-01">
-    <div class="album-info">
-        <div class="album-header">
-            <span class="binary-indicator">□□□□□□□■</span>
-            <div class="album-title"><a href="/releases/hard-hitter.html">hard hitter</a></div>
-        </div>
-        <div class="album-details">2025-10-01 • lathe cut • 8 songs • 20 copies</div>
+<li class="item" data-type="releases" data-date="2025-10-01">
+    <div class="item-info">
+        <span class="item-date">2025-10-01</span>
+        <span class="item-title"><a href="/releases/hard-hitter.html">hard hitter</a></span>
     </div>
-    <a href="/releases/hard-hitter.html" class="pre-order-link">buy now</a>
+    <div class="album-details">□□□□□□□■ lathe cut vinyl album • 8 remaining</div>
 </li>
 
 <li class="item" data-type="songs" data-date="2025-09-24">
