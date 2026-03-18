@@ -44,7 +44,9 @@
     "trackCount": 8,
     "stock": { "total": null, "remaining": null },
     "binary": "□□□□□□■□",
-    "carousel": [],
+    "carousel": [
+      { "type": "image", "src": "/images/liminal-depths-release-artwork.jpg", "alt": "liminal depths album artwork" }
+    ],
     "tracks": [
       { "number": 1, "slug": "method-to-her-madness", "title": "method to her madness" },
       { "number": 2, "slug": "liminal-depths", "title": "liminal depths" },
