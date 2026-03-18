@@ -38,6 +38,7 @@
   },
   "well-be-lucky-if-i-dont-bust-out-crying": {
     "title": "we'll be lucky if i don't bust out crying",
+    "visible": false,
     "type": "painting",
     "date": null,
     "format": { "type": "painting" },
@@ -61,6 +62,7 @@
   },
   "liminal-depths": {
     "title": "liminal depths",
+    "visible": false,
     "type": "release",
     "date": "2026",
     "format": { "size": "12\"", "type": "lathe cut", "content": "8 songs" },
@@ -97,6 +99,7 @@
   },
   "cheap-milk-what-price": {
     "title": "cheap milk, what price?",
+    "visible": false,
     "type": "painting",
     "date": null,
     "format": { "type": "painting" },
