@@ -240,28 +240,6 @@
             cursor: pointer;
         }
 
-        .pdf-download {
-            margin-top: 15px;
-        }
-
-        .pdf-download-btn {
-            display: inline-block;
-            font-family: monospace;
-            font-size: 14px;
-            padding: 8px 16px;
-            border: 1px solid var(--secondary-color);
-            background: var(--bg-color);
-            color: var(--text-color);
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-
-        .pdf-download-btn:hover {
-            background: var(--text-color);
-            color: var(--bg-color);
-            text-decoration: none;
-        }
-
         /* Lightbox */
         .lightbox {
             position: fixed;
@@ -281,29 +259,10 @@
             object-fit: contain;
         }
 
-        /* Painting description */
-        .description-block { margin: 40px 0; }
-
-        .description-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin: 0 0 4px 0;
-        }
-
-        .description-subtitle {
-            color: var(--secondary-color);
-            font-size: 14px;
-            margin: 0 0 20px 0;
-        }
-
-        .description-text {
+        /* Painting details */
+        .details-description {
             margin: 0 0 20px 0;
             font-size: 14px;
-        }
-
-        .description-separator {
-            color: var(--secondary-color);
-            margin: 0 0 20px 0;
         }
 
         /* Specs table */
@@ -667,24 +626,23 @@
                         <div class="release-artwork-frame">
                             <img src="${release.releaseArtwork}" alt="${escapeHtml(release.title)}" onclick="openLightbox(this.src, this.alt)">
                         </div>
-                        ${release.pdfDownload ? `<div class="pdf-download"><a href="${release.pdfDownload}" target="_blank" class="pdf-download-btn">download hi-res scan • pdf</a></div>` : ''}
                     </div>`;
             }
 
-            // Description block
-            let descriptionHtml = '';
-            const medium = release.specs?.medium || '';
-            const year = release.date || '';
-            const subtitle = [medium, year].filter(Boolean).join(' — ');
+            // Details section — mirrors .tracklist layout
+            const downloadHtml = release.pdfDownload
+                ? `<a href="${release.pdfDownload}" target="_blank" class="download-all-btn">download hi-res • ${release.pdfSize || 'pdf'}</a>`
+                : '';
 
-            descriptionHtml = `
-                <div class="description-block">
-                    <p class="description-title">${escapeHtml(release.title)}</p>
-                    ${subtitle ? `<p class="description-subtitle">${escapeHtml(subtitle)}</p>` : ''}
-                    ${release.description ? `<p class="description-text">${escapeHtml(release.description)}</p>` : ''}
-                    <p class="description-separator">————</p>
+            const detailsHtml = `
+                <section class="tracklist">
+                    <div class="tracklist-header">
+                        <h2>details</h2>
+                        ${downloadHtml}
+                    </div>
+                    ${release.description ? `<p class="details-description">${escapeHtml(release.description)}</p>` : ''}
                     ${buildSpecsTable(release)}
-                </div>`;
+                </section>`;
 
             document.getElementById('release-content').innerHTML = `
                 <div class="album-info">
@@ -695,16 +653,20 @@
                     <div class="album-meta">${metaLine}</div>
                 </div>
                 ${artworkHtml}
-                ${descriptionHtml}
+                ${detailsHtml}
                 ${buildPurchaseHtml(release)}`;
         }
 
         function buildSpecsTable(release) {
             if (!release.specs) return '';
-            const rows = Object.entries(release.specs).map(([key, value]) => {
-                const label = specsLabels[key] || key;
-                return `<tr><td>${escapeHtml(label)}</td><td>${escapeHtml(value)}</td></tr>`;
-            }).join('');
+            const skip = ['medium', 'paperSize'];
+            const rows = Object.entries(release.specs)
+                .filter(([key]) => !skip.includes(key))
+                .map(([key, value]) => {
+                    const label = specsLabels[key] || key;
+                    return `<tr><td>${escapeHtml(label)}</td><td>${escapeHtml(value)}</td></tr>`;
+                }).join('');
+            if (!rows) return '';
             return `<table class="specs-table">${rows}</table>`;
         }
 
