@@ -5,7 +5,7 @@
     "date": "2025-10-01",
     "format": { "size": "12\"", "type": "lathe cut", "content": "8 songs" },
     "trackCount": 8,
-    "stock": { "total": 20, "remaining": 8 },
+    "stock": { "total": 20, "remaining": 4 },
     "binary": "□□□□□□□■",
     "ships": "within 5–7 working days",
     "carousel": [
@@ -32,9 +32,9 @@
       "rest-of-world": { "label": "rest of world", "cost": 10 }
     },
     "stripeLinks": {
-      "uk-ireland": "https://buy.stripe.com/aFa7sLcz81qn3Es9xL6Na00",
-      "europe": "https://buy.stripe.com/bJe14n7eO1qna2QdO16Na01",
-      "rest-of-world": "https://buy.stripe.com/fZuaEX6aK9WT5MAaBP6Na02"
+      "uk-ireland": "https://buy.stripe.com/eVq5kDeHg4Cz4Iw11f6Na06",
+      "europe": "https://buy.stripe.com/9B67sLdDc6KHa2QaBP6Na07",
+      "rest-of-world": "https://buy.stripe.com/7sY00jbv4glhfnadO16Na08"
     }
   },
   "well-be-lucky-if-i-dont-bust-out-crying": {
