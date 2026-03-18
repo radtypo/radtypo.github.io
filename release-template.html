@@ -493,7 +493,7 @@
                         <input type="radio" name="shipping" value="${key}"${i === 0 ? ' checked' : ''}>
                         <span class="shipping-details">
                             <span class="zone">${escapeHtml(zone.label)}</span>
-                            <span class="cost">£${zone.cost}</span>
+                            <span class="cost">${zone.cost != null ? '£' + zone.cost : 'tbc'}</span>
                         </span>
                     </label>`;
                 }).join('');
@@ -507,7 +507,7 @@
                                 ${shippingOptionsHtml}
                             </div>
                             <div class="total-price">
-                                total: £<span id="total">${release.price + firstCost}</span>
+                                total: ${firstCost != null ? '£<span id="total">' + (release.price + firstCost) + '</span>' : '<span id="total">tbc</span>'}
                             </div>
                         </div>
                         <button class="buy-now-button" onclick="proceedToCheckout()">
@@ -590,7 +590,7 @@
         function updateTotal() {
             const selectedKey = document.querySelector('input[name="shipping"]:checked').value;
             const cost = currentRelease.shipping[selectedKey].cost;
-            document.getElementById('total').textContent = currentRelease.price + cost;
+            document.getElementById('total').textContent = cost != null ? currentRelease.price + cost : 'tbc';
         }
 
         function proceedToCheckout() {
