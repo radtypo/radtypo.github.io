@@ -462,12 +462,8 @@
             paperSize: 'paper size',
             imageArea: 'image area',
             condition: 'condition',
-            ships: 'ships'
+            shipping: 'shipping'
         };
-
-        function getShipsCopy(release) {
-            return release.ships || (release.specs && release.specs.ships) || '';
-        }
 
         function hasStripeLinks(release) {
             if (!release.stripeLinks) return false;
@@ -659,7 +655,7 @@
 
         function buildSpecsTable(release) {
             if (!release.specs) return '';
-            const skip = ['medium', 'paperSize', 'ships'];
+            const skip = [];
             const rows = Object.entries(release.specs)
                 .filter(([key]) => !skip.includes(key))
                 .map(([key, value]) => {
@@ -677,7 +673,6 @@
             const firstKey = shippingKeys[0];
             const firstCost = release.shipping[firstKey].cost;
             const canBuy = hasStripeLinks(release);
-            const ships = getShipsCopy(release);
 
             const shippingOptionsHtml = shippingKeys.map((key, i) => {
                 const zone = release.shipping[key];
@@ -690,9 +685,7 @@
                 </label>`;
             }).join('');
 
-            const buttonText = canBuy
-                ? `buy now${ships ? ' • ships ' + ships : ''}`
-                : 'available soon';
+            const buttonText = canBuy ? 'buy now' : 'available soon';
             const buttonClass = canBuy ? 'buy-now-button' : 'buy-now-button disabled';
             const buttonOnclick = canBuy ? ' onclick="proceedToCheckout()"' : '';
 
