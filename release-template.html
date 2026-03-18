@@ -398,13 +398,17 @@
 
             // Build meta line
             const metaParts = [];
-            if (release.format) metaParts.push(release.format);
-            if (release.trackCount) metaParts.push(`${release.trackCount} songs`);
-            if (release.stock?.total) {
-                const stockText = release.stock.remaining !== null
-                    ? `${release.stock.total} copies (${release.stock.remaining} remaining)`
-                    : `${release.stock.total} copies`;
-                metaParts.push(stockText);
+            if (release.format) {
+                if (release.format.size) metaParts.push(release.format.size);
+                if (release.format.type) metaParts.push(release.format.type);
+                if (release.format.content) metaParts.push(release.format.content);
+            }
+            if (release.stock?.total != null && release.stock?.remaining != null) {
+                if (release.stock.remaining === 0) {
+                    metaParts.push('sold out');
+                } else {
+                    metaParts.push(`${release.stock.remaining} of ${release.stock.total} remaining`);
+                }
             }
             const metaLine = metaParts.join(' • ');
 
