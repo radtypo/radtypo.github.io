@@ -150,7 +150,10 @@
       { "number": 10, "slug": "my-future-self", "title": "my future self" }
     ],
     "carousel": [
-      { "type": "image", "src": "/images/jets-to-oblivia-release-artwork.jpg", "alt": "jets to oblivia album artwork" }
+      { "type": "image", "src": "/images/jets-to-oblivia-release-artwork.jpg", "alt": "jets to oblivia — front cover" },
+      { "type": "image", "src": "/images/jets-to-oblivia-back-cover.jpg", "alt": "jets to oblivia — back cover" },
+      { "type": "image", "src": "/images/jets-to-oblivia-inner-photo.jpg", "alt": "jets to oblivia — inner sleeve" },
+      { "type": "image", "src": "/images/jets-to-oblivia-product-shot.jpg", "alt": "jets to oblivia — product shot" }
     ],
     "download": null,
     "price": null,
