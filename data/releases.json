@@ -55,9 +55,6 @@
     },
     "stock": { "total": 1, "remaining": 1 },
     "binary": "□□□□□□■□",
-    "carousel": [],
-    "tracks": [],
-    "download": null,
     "price": 200,
     "shipping": {
       "uk-ireland": { "label": "uk & ireland", "cost": 8 },
@@ -118,11 +115,6 @@
     "description": "original artwork from liminal depths album. one of one.",
     "stock": { "total": 1, "remaining": 1 },
     "binary": "□□□□□■□□",
-    "carousel": [
-      { "type": "image", "src": "/images/cheap-milk-what-price-artwork.jpg", "alt": "cheap milk, what price? painting" }
-    ],
-    "tracks": [],
-    "download": null,
     "price": 200,
     "shipping": {
       "uk-ireland": { "label": "uk & ireland", "cost": 8 },
