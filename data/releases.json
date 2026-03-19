@@ -140,9 +140,9 @@
     "visible": false,
     "type": "vinyl",
     "date": "2026",
-    "format": { "size": "12\"", "type": "lathe cut", "content": "10 songs" },
+    "format": { "size": "12\"", "type": "bio-based vinyl", "content": "10 songs" },
     "binary": "□□□□□■■□",
-    "stock": { "total": null, "remaining": null },
+    "stock": { "total": 100, "remaining": 100 },
     "releaseArtwork": "/images/jets-to-oblivia-release-artwork.jpg",
     "description": null,
     "tracks": [
