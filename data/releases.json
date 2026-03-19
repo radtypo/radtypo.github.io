@@ -134,5 +134,42 @@
       "europe": null,
       "rest-of-world": null
     }
+  },
+  "jets-to-oblivia": {
+    "title": "jets to oblivia",
+    "visible": false,
+    "type": "vinyl",
+    "date": "2026",
+    "format": { "size": "12\"", "type": "lathe cut", "content": "10 songs" },
+    "binary": "□□□□□■■□",
+    "stock": { "total": null, "remaining": null },
+    "releaseArtwork": "/images/jets-to-oblivia-release-artwork.jpg",
+    "description": null,
+    "tracks": [
+      { "slug": "open-brackets", "title": "open brackets" },
+      { "slug": "late-stage-capitalismz", "title": "late stage capitalismz" },
+      { "slug": "old-enough-to-handle-it", "title": "old enough to handle it" },
+      { "slug": "the-mighty-nothing", "title": "the mighty nothing" },
+      { "slug": "pieces-that-fit", "title": "pieces that fit" },
+      { "slug": "a-v-of-geese", "title": "a v of geese" },
+      { "slug": "hold-on-tight", "title": "hold on tight" },
+      { "slug": "revisionist-history", "title": "revisionist history" },
+      { "slug": "pet-cloud", "title": "pet cloud" },
+      { "slug": "my-future-self", "title": "my future self" }
+    ],
+    "carousel": [],
+    "download": null,
+    "price": null,
+    "shipping": {
+      "uk-ireland": { "label": "uk & ireland", "cost": null },
+      "europe": { "label": "europe", "cost": null },
+      "rest-of-world": { "label": "rest of world", "cost": null }
+    },
+    "stripeLinks": {
+      "uk-ireland": null,
+      "europe": null,
+      "rest-of-world": null
+    },
+    "ships": null
   }
 }
