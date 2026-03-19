@@ -157,7 +157,9 @@
       { "number": 9, "slug": "pet-cloud", "title": "pet cloud" },
       { "number": 10, "slug": "my-future-self", "title": "my future self" }
     ],
-    "carousel": [],
+    "carousel": [
+      { "type": "image", "src": "/images/jets-to-oblivia-release-artwork.jpg", "alt": "jets to oblivia album artwork" }
+    ],
     "download": null,
     "price": null,
     "shipping": {
