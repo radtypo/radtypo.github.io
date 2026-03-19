@@ -1,6 +1,7 @@
 {
   "hard-hitter": {
     "title": "hard hitter",
+    "visible": true,
     "type": "vinyl",
     "date": "2025-10-01",
     "format": { "size": "12\"", "type": "lathe cut", "content": "8 songs" },
@@ -129,9 +130,9 @@
       "rest-of-world": { "label": "rest of world", "cost": 20 }
     },
     "stripeLinks": {
-      "uk-ireland": "https://buy.stripe.com/test_9B628t7XqbFPaXj3mBefC03",
-      "europe": "https://buy.stripe.com/test_28E8wRcdG25ffdzcXbefC04",
-      "rest-of-world": "https://buy.stripe.com/test_6oUeVf6Tm39j3uRe1fefC05"
+      "uk-ireland": null,
+      "europe": null,
+      "rest-of-world": null
     }
   }
 }
