@@ -467,12 +467,36 @@
             return Object.values(release.stripeLinks).some(v => v != null);
         }
 
+        function buildReleaseDescription(release) {
+            if (release.type === 'painting') {
+                const medium = release.format?.type || 'painting';
+                const dims = release.specs?.imageArea;
+                return dims
+                    ? `original ${medium}. ${dims}. one of one.`
+                    : `original ${medium}. one of one.`;
+            }
+            const parts = [];
+            if (release.format) {
+                parts.push(`${release.format.size || ''} ${release.format.type || ''}`.trim() + ' from derry');
+            }
+            if (release.trackCount != null) {
+                parts.push(`${release.trackCount} songs`);
+            } else if (release.format?.content) {
+                parts.push(release.format.content);
+            }
+            if (release.stock?.remaining != null && release.stock?.total != null) {
+                parts.push(`${release.stock.remaining} of ${release.stock.total} copies remaining`);
+            }
+            return parts.join('. ') + '.';
+        }
+
         function renderRelease(release) {
             // Update page metadata
-            document.getElementById('page-title').textContent = `${release.title} - rad.typo`;
-            document.querySelector('meta[property="og:title"]').setAttribute('content', `${release.title} - rad.typo`);
-            document.querySelector('meta[property="og:description"]').setAttribute('content', `${release.title} — a release by rad.typo`);
-            document.querySelector('meta[name="description"]').setAttribute('content', `${release.title} — a release by rad.typo`);
+            const description = buildReleaseDescription(release);
+            document.getElementById('page-title').textContent = `${release.title} — rad.typo`;
+            document.querySelector('meta[property="og:title"]').setAttribute('content', `${release.title} — rad.typo`);
+            document.querySelector('meta[property="og:description"]').setAttribute('content', description);
+            document.querySelector('meta[name="description"]').setAttribute('content', description);
             document.querySelector('link[rel="canonical"]').setAttribute('href', `https://radtypo.com/releases/${releaseId}.html`);
             document.querySelector('meta[property="og:url"]').setAttribute('content', `https://radtypo.com/releases/${releaseId}.html`);
 

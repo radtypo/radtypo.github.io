@@ -178,14 +178,30 @@
                 </div>`;
         }
 
+        function buildSongDescription(song) {
+            let firstLine = songId === 'rad-typo' ? 'no means no'
+                : (song.lyrics ? song.lyrics.split('\n')[0] : '');
+            firstLine = firstLine.replace(/<[^>]*>/g, '').replace(/[.,\-–—;:!?\s]+$/, '');
+            const year = (song.date || '').slice(0, 4);
+            const track = song.details?.track || {};
+            const key = track.key ? track.key.replace(/\s*\(.*$/, '') : '';
+            const bpm = track.bpm || '';
+            if (key && bpm) {
+                return `${firstLine}. ${key} — ${bpm}bpm. rad.typo, ${year}.`;
+            }
+            return `${firstLine}. rad.typo, ${year}.`;
+        }
+
         function renderSong(song) {
-            document.getElementById('page-title').textContent = `${song.title} - rad.typo`;
+            const description = buildSongDescription(song);
+            document.getElementById('page-title').textContent = `${song.title} — rad.typo`;
             document.querySelector('meta[property="og:title"]').setAttribute('content', song.title);
             if (song.artwork) {
                 document.querySelector('meta[property="og:image"]').setAttribute('content', `https://radtypo.com/images/${song.artwork}`);
             }
             document.querySelector('meta[property="og:url"]').setAttribute('content', window.location.href);
-            document.querySelector('meta[name="description"]').setAttribute('content', `${song.title} by rad.typo`);
+            document.querySelector('meta[name="description"]').setAttribute('content', description);
+            document.querySelector('meta[property="og:description"]').setAttribute('content', description);
             document.querySelector('link[rel="canonical"]').setAttribute('href', `https://radtypo.com/songs/${songId}.html`);
             let resourcesHtml = '';
             if (song.resources?.length > 0) {

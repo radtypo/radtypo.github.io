@@ -162,12 +162,23 @@
                 </div>`;
         }
 
+        function buildPoemDescription(writing) {
+            let firstLine = writing.text ? writing.text.split('\n')[0] : '';
+            firstLine = firstLine.replace(/<[^>]*>/g, '').replace(/[.,\-–—;:!?\s]+$/, '');
+            const year = (writing.date || '').slice(0, 4);
+            return `${firstLine}. a poem by rad.typo. ${year}.`;
+        }
+
         function renderWriting(writing) {
-            document.getElementById('page-title').textContent = `${writing.title} - rad.typo`;
+            const description = buildPoemDescription(writing);
+            document.getElementById('page-title').textContent = `${writing.title} — rad.typo`;
             document.querySelector('meta[property="og:title"]').setAttribute('content', writing.title);
-            document.querySelector('meta[property="og:image"]').setAttribute('content', `https://radtypo.com/images/${writing.artwork}`);
+            if (writing.artwork) {
+                document.querySelector('meta[property="og:image"]').setAttribute('content', `https://radtypo.com/images/${writing.artwork}`);
+            }
             document.querySelector('meta[property="og:url"]').setAttribute('content', window.location.href);
-            document.querySelector('meta[name="description"]').setAttribute('content', `${writing.title} — a poem by rad.typo`);
+            document.querySelector('meta[name="description"]').setAttribute('content', description);
+            document.querySelector('meta[property="og:description"]').setAttribute('content', description);
             document.querySelector('link[rel="canonical"]').setAttribute('href', `https://radtypo.com/poems/${writingId}.html`);
             document.getElementById('content').innerHTML = `
                 <div class="writing-info">
