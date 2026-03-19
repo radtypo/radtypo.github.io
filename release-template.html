@@ -15,8 +15,8 @@
     <link rel="stylesheet" href="/css/base.css">
     <style>
         :root {
-            --interactive-color: #333;
-            --code-bg: #f5f5f5;
+            --subtle-color: #333;
+            --surface-color: #f5f5f5;
         }
 
         h2 { font-size: 16px; }
@@ -89,7 +89,6 @@
             background: none;
             border: 1px solid var(--secondary-color);
             color: var(--secondary-color);
-            font-family: monospace;
             font-size: 14px;
             padding: 8px 16px;
             cursor: pointer;
@@ -139,12 +138,12 @@
         .track {
             display: flex;
             padding: 8px 0;
-            border-bottom: 1px solid var(--code-bg);
+            border-bottom: 1px solid var(--surface-color);
             align-items: center;
         }
 
         .track:hover {
-            background-color: var(--code-bg);
+            background-color: var(--surface-color);
             margin: 0 -10px;
             padding: 8px 10px;
         }
@@ -159,7 +158,6 @@
 
         .download-all-btn {
             display: inline-block;
-            font-family: monospace;
             font-size: 14px;
             padding: 8px 16px;
             border: 1px solid var(--secondary-color);
@@ -242,8 +240,8 @@
         .purchase-section {
             margin: 40px 0;
             padding: 20px 0;
-            border-top: 1px solid var(--code-bg);
-            border-bottom: 1px solid var(--code-bg);
+            border-top: 1px solid var(--surface-color);
+            border-bottom: 1px solid var(--surface-color);
         }
 
         .price {
@@ -267,7 +265,7 @@
         }
 
         .shipping-option:hover {
-            background-color: var(--code-bg);
+            background-color: var(--surface-color);
             margin: 0 -10px;
             padding: 8px 10px;
         }
@@ -287,12 +285,11 @@
         .total-price {
             font-size: 16px;
             padding: 12px 0;
-            border-top: 1px solid var(--code-bg);
+            border-top: 1px solid var(--surface-color);
             margin-top: 10px;
         }
 
         .buy-now-button {
-            font-family: monospace;
             font-size: 14px;
             padding: 12px 24px;
             border: 1px solid var(--secondary-color);
@@ -444,6 +441,10 @@
             document.querySelector('meta[name="description"]').setAttribute('content', description);
             document.querySelector('link[rel="canonical"]').setAttribute('href', `https://radtypo.com/releases/${releaseId}.html`);
             document.querySelector('meta[property="og:url"]').setAttribute('content', `https://radtypo.com/releases/${releaseId}.html`);
+
+            // Set OG type
+            const ogType = release.type === 'vinyl' ? 'music.album' : release.type === 'painting' ? 'product' : 'website';
+            document.querySelector('meta[property="og:type"]').setAttribute('content', ogType);
 
             // Set OG image
             if (release.releaseArtwork) {
@@ -620,9 +621,7 @@
 
         function buildSpecsTable(release) {
             if (!release.specs) return '';
-            const skip = [];
             const rows = Object.entries(release.specs)
-                .filter(([key]) => !skip.includes(key))
                 .map(([key, value]) => {
                     const label = specsLabels[key] || key;
                     return `<tr><td>${escapeHtml(label)}</td><td>${escapeHtml(value)}</td></tr>`;
