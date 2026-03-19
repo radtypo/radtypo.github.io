@@ -1,14 +1,15 @@
 {
   "old-enough-to-handle-it": {
     "title": "old enough to handle it",
-    "type": "song",
     "date": "2026-02-07",
     "artwork": "old-enough-to-handle-it-artwork.jpg",
     "audio": "old-enough-to-handle-it.mp3",
     "lyrics": "each day\nmarks a new season of time\nthis breaching heart of mine\nwill gladly take it's errant costume\nbelieve me\ni know i'll get left behind\ni'm travelling light this time\ni'm shedding all my father's papers\nnow\n\ntake one small building\nand throw it in the national park\nlearn the view off by heart\ntake one great idea\nand let it look over itself\nfrom myriad dimensions\n\nangry\ni'm angry\nbut i'm still here\nand i'm old enough to handle it\nif only\nyou could hear me\ni would keep this dream alive\nbuild this satellite\n\nnow i know\nlove is like a paper plane\nfolded in symmetry\nimpossible to know if it will\nglide or break\ni couldn't have asked for more\ni'm desolate and grateful\ndesolate and grateful for you\nnow",
     "details": {
-      "recording_date": "january 25, 2026",
-      "release_date": "february 7, 2026"
+      "track": {
+        "recording_date": "january 25, 2026",
+        "release_date": "february 7, 2026"
+      }
     }
   },
   "bad-fortune": {
@@ -1144,7 +1145,6 @@
   },
   "method-to-her-madness": {
     "title": "method to her madness",
-    "type": "song",
     "date": "2026",
     "artwork": "method-to-her-madness-artwork.jpg",
     "audio": "method-to-her-madness.mp3",
@@ -1157,7 +1157,6 @@
   },
   "liminal-depths": {
     "title": "liminal depths",
-    "type": "song",
     "date": "2026",
     "artwork": "liminal-depths-artwork.jpg",
     "audio": "liminal-depths.mp3",
@@ -1170,7 +1169,6 @@
   },
   "think-of-a-colour": {
     "title": "think of a colour",
-    "type": "song",
     "date": "2026",
     "artwork": "think-of-a-colour-artwork.jpg",
     "audio": "think-of-a-colour.mp3",
@@ -1183,7 +1181,6 @@
   },
   "unholy-communion": {
     "title": "unholy communion",
-    "type": "song",
     "date": "2026",
     "artwork": "unholy-communion-artwork.jpg",
     "audio": "unholy-communion.mp3",
@@ -1196,7 +1193,6 @@
   },
   "force-of-habit": {
     "title": "force of habit",
-    "type": "song",
     "date": "2026",
     "artwork": "force-of-habit-artwork.jpg",
     "audio": "force-of-habit.mp3",
@@ -1209,7 +1205,6 @@
   },
   "my-happiness-is-not-held-by-others": {
     "title": "my happiness is not held by others",
-    "type": "song",
     "date": "2026",
     "artwork": "my-happiness-is-not-held-by-others-artwork.jpg",
     "audio": "my-happiness-is-not-held-by-others.mp3",
@@ -1222,7 +1217,6 @@
   },
   "you-do-you": {
     "title": "you do you",
-    "type": "song",
     "date": "2026",
     "artwork": "you-do-you-artwork.jpg",
     "audio": "you-do-you.mp3",
@@ -1235,7 +1229,6 @@
   },
   "let-the-making-be-enough": {
     "title": "let the making be enough",
-    "type": "song",
     "date": "2026",
     "artwork": "let-the-making-be-enough-artwork.jpg",
     "audio": "let-the-making-be-enough.mp3",
@@ -1248,7 +1241,6 @@
   },
   "fullness-of-time": {
     "title": "fullness of time",
-    "type": "song",
     "date": "2026",
     "artwork": "fullness-of-time-artwork.jpg",
     "audio": "fullness-of-time.mp3",
@@ -1261,7 +1253,6 @@
   },
   "second-sleep": {
     "title": "second sleep",
-    "type": "song",
     "date": "2026",
     "artwork": "second-sleep-artwork.jpg",
     "audio": "second-sleep.mp3",
@@ -1274,7 +1265,6 @@
   },
   "open-brackets": {
     "title": "open brackets",
-    "type": "song",
     "date": "2026",
     "artwork": null,
     "audio": null,
@@ -1283,7 +1273,6 @@
   },
   "late-stage-capitalismz": {
     "title": "late stage capitalismz",
-    "type": "song",
     "date": "2026",
     "artwork": null,
     "audio": null,
@@ -1292,7 +1281,6 @@
   },
   "the-mighty-nothing": {
     "title": "the mighty nothing",
-    "type": "song",
     "date": "2026",
     "artwork": null,
     "audio": null,
@@ -1301,7 +1289,6 @@
   },
   "pieces-that-fit": {
     "title": "pieces that fit",
-    "type": "song",
     "date": "2026",
     "artwork": null,
     "audio": null,
@@ -1310,7 +1297,6 @@
   },
   "a-v-of-geese": {
     "title": "a v of geese",
-    "type": "song",
     "date": "2026",
     "artwork": null,
     "audio": null,
@@ -1319,7 +1305,6 @@
   },
   "hold-on-tight": {
     "title": "hold on tight",
-    "type": "song",
     "date": "2026",
     "artwork": null,
     "audio": null,
@@ -1328,7 +1313,6 @@
   },
   "revisionist-history": {
     "title": "revisionist history",
-    "type": "song",
     "date": "2026",
     "artwork": null,
     "audio": null,
@@ -1337,7 +1321,6 @@
   },
   "pet-cloud": {
     "title": "pet cloud",
-    "type": "song",
     "date": "2026",
     "artwork": null,
     "audio": null,
@@ -1346,7 +1329,6 @@
   },
   "my-future-self": {
     "title": "my future self",
-    "type": "song",
     "date": "2026",
     "artwork": null,
     "audio": null,

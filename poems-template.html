@@ -188,11 +188,11 @@
                     <div class="writing-meta">${writing.date}</div>
                 </div>
 
-                <div class="artwork-container">
+                ${writing.artwork ? `<div class="artwork-container">
                     <img src="/images/${writing.artwork}"
                          alt="${writing.title} artwork"
                          class="writing-artwork">
-                </div>
+                </div>` : ''}
 
                 <div class="section">
                     <div class="section-header" role="button" tabindex="0" onclick="toggleSection('text')">
@@ -212,9 +212,9 @@
                     <div class="section-content" id="details">
                         <dl class="metadata-grid">
                             <dt>composition date</dt>
-                            <dd>${writing.details.composition_date}</dd>
+                            <dd>${writing.details?.composition_date || ''}</dd>
                             <dt>publication date</dt>
-                            <dd>${writing.details.publication_date}</dd>
+                            <dd>${writing.details?.publication_date || ''}</dd>
                         </dl>
                     </div>
                 </div>`;
