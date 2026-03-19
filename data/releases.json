@@ -132,7 +132,7 @@
     "visible": false,
     "type": "vinyl",
     "date": "2026",
-    "format": { "size": "12\"", "type": "bio-based vinyl", "content": "10 songs" },
+    "format": { "size": "12\"", "type": "bio-based vinyl", "content": "11 songs" },
     "binary": "□□□□□■■□",
     "stock": { "total": 100, "remaining": 100 },
     "releaseArtwork": "/images/jets-to-oblivia-release-artwork.jpg",
@@ -140,14 +140,15 @@
     "tracks": [
       { "number": 1, "slug": "open-brackets", "title": "open brackets" },
       { "number": 2, "slug": "late-stage-capitalismz", "title": "late stage capitalismz" },
-      { "number": 3, "slug": "old-enough-to-handle-it", "title": "old enough to handle it" },
-      { "number": 4, "slug": "the-mighty-nothing", "title": "the mighty nothing" },
-      { "number": 5, "slug": "pieces-that-fit", "title": "pieces that fit" },
-      { "number": 6, "slug": "a-v-of-geese", "title": "a v of geese" },
-      { "number": 7, "slug": "hold-on-tight", "title": "hold on tight" },
-      { "number": 8, "slug": "revisionist-history", "title": "revisionist history" },
-      { "number": 9, "slug": "pet-cloud", "title": "pet cloud" },
-      { "number": 10, "slug": "my-future-self", "title": "my future self" }
+      { "number": 3, "slug": "99-repeating", "title": "99 repeating" },
+      { "number": 4, "slug": "old-enough-to-handle-it", "title": "old enough to handle it" },
+      { "number": 5, "slug": "the-mighty-nothing", "title": "the mighty nothing" },
+      { "number": 6, "slug": "pieces-that-fit", "title": "pieces that fit" },
+      { "number": 7, "slug": "a-v-of-geese", "title": "a v of geese" },
+      { "number": 8, "slug": "hold-on-tight", "title": "hold on tight" },
+      { "number": 9, "slug": "revisionist-history", "title": "revisionist history" },
+      { "number": 10, "slug": "pet-cloud", "title": "pet cloud" },
+      { "number": 11, "slug": "my-future-self", "title": "my future self" }
     ],
     "carousel": [
       { "type": "image", "src": "/images/jets-to-oblivia-release-artwork.jpg", "alt": "jets to oblivia — front cover" },
