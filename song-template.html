@@ -181,7 +181,9 @@
         function renderSong(song) {
             document.getElementById('page-title').textContent = `${song.title} - rad.typo`;
             document.querySelector('meta[property="og:title"]').setAttribute('content', song.title);
-            document.querySelector('meta[property="og:image"]').setAttribute('content', `https://radtypo.com/images/${song.artwork}`);
+            if (song.artwork) {
+                document.querySelector('meta[property="og:image"]').setAttribute('content', `https://radtypo.com/images/${song.artwork}`);
+            }
             document.querySelector('meta[property="og:url"]').setAttribute('content', window.location.href);
             document.querySelector('meta[name="description"]').setAttribute('content', `${song.title} by rad.typo`);
             document.querySelector('link[rel="canonical"]').setAttribute('href', `https://radtypo.com/songs/${songId}.html`);
