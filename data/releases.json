@@ -121,7 +121,7 @@
       "shipping": "ships rolled in an archival tube, allow 5–7 working days from order, tracked shipping included"
     },
     "stock": { "total": 1, "remaining": 1 },
-    "binary": "□□□□□■□□",
+    "binary": "□□□□□□■■",
     "price": 200,
     "shipping": {
       "uk-ireland": { "label": "uk & ireland", "cost": 8 },
