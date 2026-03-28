@@ -106,13 +106,20 @@
     }
   },
   "cheap-milk-what-price": {
-    "title": "cheap milk, what price?",
-    "visible": false,
+    "title": "cheap milk what price",
+    "visible": true,
     "type": "painting",
-    "date": null,
-    "format": { "size": "A2", "type": "painting" },
+    "date": "2026",
+    "format": { "size": "A2", "type": "acrylic and oil pastel on paper" },
     "releaseArtwork": "/images/cheap-milk-what-price-artwork.jpg",
-    "description": "original artwork from liminal depths album. one of one.",
+    "pdfDownload": "/downloads/cheap-milk-what-price.pdf",
+    "pdfSize": "15MB",
+    "description": "Lough Neagh is collapsing. Supermarkets price milk below the cost of the land it comes from, farmers intensify to survive, and phosphorus flows into a lake that supplies forty percent of Northern Ireland's drinking water. Everyone knows. Nothing changes. cheap milk what price is from the liminal depths sessions. It is not a metaphor.",
+    "specs": {
+      "imageArea": "16.5\" x 23.4\" (full A2 sheet)",
+      "condition": "unframed — arrives flat or rolled in an archival tube",
+      "shipping": "ships rolled in an archival tube, allow 5–7 working days from order, tracked shipping included"
+    },
     "stock": { "total": 1, "remaining": 1 },
     "binary": "□□□□□■□□",
     "price": 200,
@@ -122,9 +129,9 @@
       "rest-of-world": { "label": "rest of world", "cost": 20 }
     },
     "stripeLinks": {
-      "uk-ireland": null,
-      "europe": null,
-      "rest-of-world": null
+      "uk-ireland": "https://buy.stripe.com/00w00jar0fhd6QEaBP6Na0c",
+      "europe": "https://buy.stripe.com/cNifZheHg4Czb6U6lz6Na0d",
+      "rest-of-world": "https://buy.stripe.com/7sY6oHar03yv0sgaBP6Na0e"
     }
   },
   "jets-to-oblivia": {
