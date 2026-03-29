@@ -208,10 +208,16 @@
             object-fit: contain;
         }
 
-        /* Section containers (matches song/poem style, always open) */
+        /* Section containers (matches song/poem collapsible style) */
         .section { margin: 20px 0; border: 1px solid var(--secondary-color); border-radius: 4px; }
-        .section-header { padding: 10px; font-size: 16px; font-weight: normal; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid transparent; }
-        .section-content { padding: 15px; border-top: 1px solid var(--secondary-color); }
+        .section-header {
+            padding: 10px; font-size: 16px; font-weight: normal; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid transparent;
+        }
+        .section-header:hover { background-color: var(--secondary-color); color: var(--bg-color); }
+        .section-content { padding: 15px; display: none; }
+        .section-content.open { display: block; border-top: 1px solid var(--secondary-color); }
 
         /* Painting details */
         .details-description {
@@ -588,8 +594,11 @@
             if (release.description) {
                 descriptionHtml = `
                 <div class="section">
-                    <div class="section-header"><h2>${metaLine}</h2></div>
-                    <div class="section-content">
+                    <div class="section-header" role="button" tabindex="0" onclick="toggleSection('about')">
+                        <span>${metaLine}</span>
+                        <span class="toggle" id="about-toggle">[ - ]</span>
+                    </div>
+                    <div class="section-content open" id="about">
                         <p class="details-description">${escapeHtml(release.description)}</p>
                     </div>
                 </div>`;
@@ -602,10 +611,11 @@
 
             const detailsHtml = `
                 <div class="section">
-                    <div class="section-header">
-                        <h2>details</h2>
+                    <div class="section-header" role="button" tabindex="0" onclick="toggleSection('details')">
+                        <span>details</span>
+                        <span class="toggle" id="details-toggle">[ - ]</span>
                     </div>
-                    <div class="section-content">
+                    <div class="section-content open" id="details">
                         ${buildSpecsGrid(release)}
                         ${downloadHtml ? `<div style="margin-top: 15px;">${downloadHtml}</div>` : ''}
                     </div>
@@ -751,8 +761,26 @@
             document.addEventListener('keydown', onKey);
         }
 
+        function toggleSection(id) {
+            const content = document.getElementById(id);
+            const toggle = document.getElementById(id + '-toggle');
+            content.classList.toggle('open');
+            toggle.textContent = content.classList.contains('open') ? '[ - ]' : '[ + ]';
+        }
+
+        function bindSectionKeyboard() {
+            document.querySelectorAll('.section-header').forEach(el => {
+                el.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        el.click();
+                    }
+                });
+            });
+        }
+
         // Initialize
-        loadRelease();
+        loadRelease().then(bindSectionKeyboard);
     </script>
 </body>
 </html>
