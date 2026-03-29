@@ -581,12 +581,12 @@
                     </div>`;
             }
 
-            // Description section
+            // Description section — uses meta line as section label
             let descriptionHtml = '';
             if (release.description) {
                 descriptionHtml = `
                 <div class="section">
-                    <div class="section-header"><h2>about</h2></div>
+                    <div class="section-header"><h2>${metaLine}</h2></div>
                     <div class="section-content">
                         <p class="details-description">${escapeHtml(release.description)}</p>
                     </div>
@@ -615,7 +615,6 @@
                         <span class="binary-indicator">${release.binary || ''}</span>
                         <h2>${escapeHtml(release.title)}</h2>
                     </div>
-                    <div class="album-meta">${metaLine}</div>
                 </div>
                 ${artworkHtml}
                 ${descriptionHtml}
