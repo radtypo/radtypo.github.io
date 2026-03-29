@@ -14,12 +14,7 @@
     <link rel="canonical" href="">
     <link rel="stylesheet" href="/css/base.css">
     <style>
-        :root {
-            --subtle-color: #333;
-            --surface-color: #f5f5f5;
-        }
-
-        h2 { font-size: 16px; }
+        h2 { font-size: 16px; margin-bottom: 15px; font-weight: normal; }
 
         .album-info { margin-bottom: 40px; }
 
@@ -179,7 +174,7 @@
         .release-artwork-frame {
             width: 100%;
             height: 400px;
-            background: #fff;
+            background: var(--bg-color);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -211,30 +206,21 @@
             object-fit: contain;
         }
 
+        /* Section containers (matches song/poem style, always open) */
+        .section { margin: 20px 0; border: 1px solid var(--secondary-color); border-radius: 4px; }
+        .section-header { padding: 10px; }
+        .section-content { padding: 15px; border-top: 1px solid var(--secondary-color); }
+
         /* Painting details */
         .details-description {
             margin: 0 0 20px 0;
             font-size: 14px;
         }
 
-        /* Specs table */
-        .specs-table {
-            font-size: 14px;
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .specs-table td {
-            padding: 6px 0;
-            vertical-align: top;
-        }
-
-        .specs-table td:first-child {
-            color: var(--secondary-color);
-            white-space: nowrap;
-            padding-right: 20px;
-            width: 110px;
-        }
+        /* Metadata grid (matches song/poem pattern) */
+        .metadata-grid { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; }
+        .metadata-grid dt { color: var(--secondary-color); font-weight: normal; }
+        .metadata-grid dd { margin: 0; }
 
         /* Purchase section */
         .purchase-section {
@@ -331,6 +317,10 @@
                 align-items: flex-start;
                 gap: 10px;
             }
+
+            .metadata-grid { grid-template-columns: 1fr; gap: 4px; }
+            .metadata-grid dt { margin-top: 12px; }
+            .metadata-grid dt:first-child { margin-top: 0; }
         }
     </style>
 </head>
@@ -591,20 +581,33 @@
                     </div>`;
             }
 
-            // Details section — mirrors .tracklist layout
+            // Description section
+            let descriptionHtml = '';
+            if (release.description) {
+                descriptionHtml = `
+                <div class="section">
+                    <div class="section-header"><h2>about</h2></div>
+                    <div class="section-content">
+                        <p class="details-description">${escapeHtml(release.description)}</p>
+                    </div>
+                </div>`;
+            }
+
+            // Details section
             const downloadHtml = release.pdfDownload
                 ? `<a href="${release.pdfDownload}" target="_blank" class="download-all-btn">download hi-res • ${release.pdfSize || 'pdf'}</a>`
                 : '';
 
             const detailsHtml = `
-                <section class="tracklist">
-                    <div class="tracklist-header">
+                <div class="section">
+                    <div class="section-header">
                         <h2>details</h2>
-                        ${downloadHtml}
                     </div>
-                    ${release.description ? `<p class="details-description">${escapeHtml(release.description)}</p>` : ''}
-                    ${buildSpecsTable(release)}
-                </section>`;
+                    <div class="section-content">
+                        ${buildSpecsGrid(release)}
+                        ${downloadHtml ? `<div style="margin-top: 15px;">${downloadHtml}</div>` : ''}
+                    </div>
+                </div>`;
 
             document.getElementById('release-content').innerHTML = `
                 <div class="album-info">
@@ -615,19 +618,20 @@
                     <div class="album-meta">${metaLine}</div>
                 </div>
                 ${artworkHtml}
+                ${descriptionHtml}
                 ${detailsHtml}
                 ${buildPurchaseHtml(release)}`;
         }
 
-        function buildSpecsTable(release) {
+        function buildSpecsGrid(release) {
             if (!release.specs) return '';
-            const rows = Object.entries(release.specs)
+            const items = Object.entries(release.specs)
                 .map(([key, value]) => {
                     const label = specsLabels[key] || key;
-                    return `<tr><td>${escapeHtml(label)}</td><td>${escapeHtml(value)}</td></tr>`;
+                    return `<dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd>`;
                 }).join('');
-            if (!rows) return '';
-            return `<table class="specs-table">${rows}</table>`;
+            if (!items) return '';
+            return `<dl class="metadata-grid">${items}</dl>`;
         }
 
         function buildPurchaseHtml(release) {
