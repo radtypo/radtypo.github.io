@@ -673,10 +673,14 @@
                     </div>`;
             }
 
-            // Description section
+            // Description section (supports pre-formatted HTML via descriptionHtml)
             let descriptionHtml = '';
-            if (release.description) {
-                const paragraphs = release.description.split('\n\n').map(p => `<p class="details-description">${escapeHtml(p)}</p>`).join('');
+            const descSource = release.descriptionHtml || release.description;
+            if (descSource) {
+                const useHtml = !!release.descriptionHtml;
+                const paragraphs = descSource.split('\n\n').map(p =>
+                    `<p class="details-description">${useHtml ? p : escapeHtml(p)}</p>`
+                ).join('');
                 descriptionHtml = `
                 <div class="section">
                     <div class="section-header" role="button" tabindex="0" onclick="toggleSection('about')">
