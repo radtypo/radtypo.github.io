@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Life Without Buildings — lyrics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Courier+Prime:ital,wght@0,400;1,400&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── COLORWAYS ── */
+
+[data-theme="dark"] {
+  --bg:        #080808;
+  --bg-hover:  #111111;
+  --bg-active: #1e1c1a;
+  --border:    #1c1a18;
+  --border-hi: #2e2c28;
+  --text:      #f0ede8;
+  --text-mid:  #847a70;
+  --text-dim:  #3a3632;
+  --lyric:     #ccc6bc;
+  --accent:    #e8187a;
+  --focus-ring:#e8187a;
+}
+[data-theme="print"] {
+  --bg:        #eee8dc;
+  --bg-hover:  #e4ddd0;
+  --bg-active: #d8d0c4;
+  --border:    #cdc5b8;
+  --border-hi: #b8b0a4;
+  --text:      #0e0c0a;
+  --text-mid:  #6a6258;
+  --text-dim:  #b8b0a4;
+  --lyric:     #2e2a24;
+  --accent:    #c41060;
+  --focus-ring:#c41060;
+}
+
+/* ── SKIP LINK ── */
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  background: var(--accent);
+  color: #fff;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0 0 4px 4px;
+  transition: top 0.1s;
+}
+.skip-link:focus { top: 0; outline: none; }
+
+/* ── BASE ── */
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Barlow', sans-serif;
+  overflow: hidden;
+  transition: background 0.25s, color 0.25s;
+}
+
+/* ── FOCUS STYLES (globally visible) ── */
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+/* remove for mouse users */
+:focus:not(:focus-visible) { outline: none; }
+
+/* ── LAYOUT ── */
+
+.layout {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 260px 1fr;
+  height: 100vh;
+  grid-template-areas: "header header" "sidebar main";
+}
+
+/* ── HEADER ── */
+
+.site-header {
+  grid-area: header;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.4rem;
+  border-bottom: 1px solid var(--border);
+  gap: 1.5rem;
+  transition: border-color 0.25s;
+}
+
+.band-name {
+  all: unset;
+  cursor: pointer;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 1.0rem;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--text);
+  line-height: 0.82;
+  white-space: nowrap;
+  transition: color 0.25s;
+}
+.band-name:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.band-name .accent { color: var(--accent); transition: color 0.25s; }
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.header-meta {
+  font-size: 0.67rem;
+  color: var(--text-mid);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color 0.25s;
+}
+.header-meta a { color: var(--text-mid); text-decoration: none; transition: color 0.15s; }
+.header-meta a:hover { color: var(--accent); }
+
+/* ── COLORWAY SWITCHER ── */
+
+.themes {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+}
+
+.themes-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  margin-right: 2px;
+  transition: color 0.25s;
+  user-select: none;
+}
+
+.theme-btn {
+  all: unset;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  position: relative;
+  flex-shrink: 0;
+  transition: transform 0.15s;
+}
+.theme-btn:hover  { transform: scale(1.25); }
+/* Active ring */
+.theme-btn::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  transition: border-color 0.15s;
+}
+.theme-btn.active::after  { border-color: var(--text); }
+.theme-btn:focus-visible  { outline: 2px solid var(--focus-ring); outline-offset: 3px; border-radius: 50%; }
+
+.theme-btn[data-theme="dark"]  { background: #080808; box-shadow: 0 0 0 1px #555; }
+.theme-btn[data-theme="print"] { background: #eee8dc; box-shadow: 0 0 0 1px #b0a898; }
+
+/* ── SIDEBAR ── */
+
+.sidebar {
+  grid-area: sidebar;
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-hi) transparent;
+  padding-bottom: 3rem;
+  transition: border-color 0.25s, background 0.25s;
+}
+.sidebar::-webkit-scrollbar { width: 2px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border-hi); }
+
+.release-group { padding-top: 1.6rem; }
+.sidebar ul[role="list"] { list-style: none; }
+
+.release-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 0 1.4rem 0.6rem;
+  display: block;
+  transition: color 0.25s;
+}
+
+.song-btn {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.34rem 1.4rem;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  transition: color 0.1s, background 0.1s;
+  gap: 0.5rem;
+}
+.song-btn:hover  { color: var(--text); background: var(--bg-hover); }
+.song-btn.active { color: var(--text); background: var(--bg-active); }
+.song-btn:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+  color: var(--text);
+}
+
+.song-num {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  font-family: 'Courier Prime', monospace;
+  font-weight: 400;
+  transition: color 0.25s;
+}
+.song-btn.active .song-num { color: var(--accent); }
+
+/* ── MAIN PANEL ── */
+
+.main-panel {
+  grid-area: main;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-hi) transparent;
+  padding: 3rem 5rem 5rem;
+  transition: background 0.25s;
+}
+.main-panel::-webkit-scrollbar { width: 2px; }
+.main-panel::-webkit-scrollbar-thumb { background: var(--border-hi); }
+
+/* ── WELCOME / ABOUT ── */
+
+.welcome { max-width: 520px; }
+
+.welcome-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 0.82;
+  color: var(--text);
+  margin-bottom: 1.8rem;
+  transition: color 0.25s;
+}
+.welcome-title em { color: var(--accent); font-style: normal; display: block; transition: color 0.25s; }
+
+.epigraph {
+  font-family: 'Courier Prime', monospace;
+  font-style: italic;
+  font-size: 0.88rem;
+  line-height: 1.9;
+  color: var(--text);
+  opacity: 0.85;
+  margin-bottom: 1.8rem;
+  transition: color 0.25s;
+}
+.epigraph a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.epigraph a:hover { color: var(--accent); }
+
+.welcome-body {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.88rem;
+  line-height: 1.9;
+  color: var(--text);
+  opacity: 0.85;
+  border-top: 1px solid var(--border);
+  padding-top: 1.4rem;
+  transition: color 0.25s, border-color 0.25s;
+}
+.welcome-body p + p { margin-top: 0.9em; }
+.welcome-body a { color: inherit; text-decoration: underline; text-underline-offset: 3px; transition: color 0.15s; }
+.welcome-body a:hover { color: var(--accent); }
+
+.welcome-thanks {
+  margin-top: 1.4rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--border);
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.88rem;
+  line-height: 1.9;
+  color: var(--text);
+  opacity: 0.85;
+  transition: color 0.25s, border-color 0.25s;
+}
+.welcome-thanks a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.welcome-thanks a:hover { color: var(--accent); }
+.welcome-thanks-byline { margin-top: 0.7em; }
+
+/* ── LYRICS VIEW ── */
+
+.lyrics-view { display: none; max-width: 580px; }
+.lyrics-view.visible { display: block; }
+
+.lyrics-song-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 0.88;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  transition: color 0.25s;
+}
+
+.lyrics-release {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 2.4rem;
+  display: block;
+  transition: color 0.25s;
+}
+
+.lyrics-text {
+  font-family: 'Courier Prime', 'Courier New', monospace;
+  font-size: 0.92rem;
+  line-height: 2.0;
+  color: var(--lyric);
+  white-space: pre-wrap;
+  word-break: break-word;
+  transition: color 0.25s;
+}
+
+.annotation {
+  margin-top: 2.6rem;
+  padding: 1rem 1.2rem;
+  border-left: 2px solid var(--border-hi);
+  font-family: 'Courier Prime', monospace;
+  font-style: italic;
+  font-size: 0.78rem;
+  line-height: 1.75;
+  color: var(--text-mid);
+  white-space: pre-line;
+  transition: color 0.25s, border-color 0.25s;
+}
+
+/* ── SR-ONLY ── */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── MOBILE ── */
+
+@media (max-width: 680px) {
+  html, body { overflow: auto; }
+  .layout { display: block; height: auto; }
+  .site-header { align-items: center; }
+  .header-meta { display: none; }
+  .themes-label { display: none; }
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 0;
+  }
+  .sidebar .release-group { padding-top: 0.8rem; padding-bottom: 0.8rem; }
+  .sidebar .release-label { padding: 0 1rem 0.4rem; }
+  .sidebar ul[role="list"] {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 0;
+    padding: 0 0.6rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  .sidebar ul[role="list"] li { flex-shrink: 0; }
+  .sidebar .song-btn {
+    min-width: max-content;
+    padding: 0.5rem 1rem;
+    width: auto;
+  }
+  .sidebar .song-num { display: none; }
+  .main-panel { overflow: visible; padding: 1.5rem 1.2rem 4rem; }
+  .welcome-title { font-size: clamp(2.2rem, 8vw, 5.5rem); }
+  .lyrics-song-title { font-size: clamp(1.8rem, 7vw, 4.2rem); }
+  .lyrics-text { font-size: 0.9rem; line-height: 1.9; }
+}
+
+/* ── REDUCED MOTION ── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- Skip navigation -->
+<a href="#main-content" class="skip-link">Skip to lyrics</a>
+
+<div class="layout">
+
+  <!-- ── HEADER ── -->
+  <header class="site-header">
+    <button class="band-name" id="homeBtn" aria-label="Return to welcome page">LIFE WITHOUT<br>BUILDINGS<br><span class="accent">LYRICS</span></button>
+    <div class="header-right">
+      <span class="header-meta" aria-hidden="true">
+        lyrics via Will Bradley &middot;
+        layout by <a href="https://radtypo.com" target="_blank" rel="noopener noreferrer">rad.typo</a>
+      </span>
+
+      <!-- Colorway switcher -->
+      <div class="themes" role="group" aria-label="Choose colorway">
+        <span class="themes-label" aria-hidden="true">Theme</span>
+        <button class="theme-btn active" data-theme="dark"  aria-label="Dark colorway"  aria-pressed="true"></button>
+        <button class="theme-btn"        data-theme="print" aria-label="Print colorway" aria-pressed="false"></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── SIDEBAR NAV ── -->
+  <nav class="sidebar" aria-label="Song list">
+    <div class="release-group">
+      <h2 class="release-label" id="nav-aoc">Any Other City</h2>
+      <ul role="list" aria-labelledby="nav-aoc">
+        <li><button class="song-btn" data-song="psexclusive"   aria-current="false"><span>P.S. Exclusive</span>   <span class="song-num" aria-hidden="true">01</span></button></li>
+        <li><button class="song-btn" data-song="letsgetout"    aria-current="false"><span>Let's Get Out</span>    <span class="song-num" aria-hidden="true">02</span></button></li>
+        <li><button class="song-btn" data-song="juno"          aria-current="false"><span>Juno</span>             <span class="song-num" aria-hidden="true">03</span></button></li>
+        <li><button class="song-btn" data-song="theleanover"   aria-current="false"><span>The Leanover</span>     <span class="song-num" aria-hidden="true">04</span></button></li>
+        <li><button class="song-btn" data-song="youngoffenders"aria-current="false"><span>Young Offenders</span>  <span class="song-num" aria-hidden="true">05</span></button></li>
+        <li><button class="song-btn" data-song="philip"        aria-current="false"><span>Philip</span>           <span class="song-num" aria-hidden="true">06</span></button></li>
+        <li><button class="song-btn" data-song="envoys"        aria-current="false"><span>Envoys</span>           <span class="song-num" aria-hidden="true">07</span></button></li>
+        <li><button class="song-btn" data-song="14days"        aria-current="false"><span>14 Days</span>          <span class="song-num" aria-hidden="true">08</span></button></li>
+        <li><button class="song-btn" data-song="newtown"       aria-current="false"><span>New Town</span>         <span class="song-num" aria-hidden="true">09</span></button></li>
+        <li><button class="song-btn" data-song="sorrow"        aria-current="false"><span>Sorrow</span>           <span class="song-num" aria-hidden="true">10</span></button></li>
+      </ul>
+    </div>
+    <div class="release-group">
+      <h2 class="release-label" id="nav-lt">Love Trinity</h2>
+      <ul role="list" aria-labelledby="nav-lt">
+        <li><button class="song-btn" data-song="lovetrinity"   aria-current="false"><span>Love Trinity</span>      <span class="song-num" aria-hidden="true">&mdash;</span></button></li>
+        <li><button class="song-btn" data-song="isisandtheirs" aria-current="false"><span>Is Is And The IRS</span> <span class="song-num" aria-hidden="true">&mdash;</span></button></li>
+        <li><button class="song-btn" data-song="daylighting"   aria-current="false"><span>Daylighting</span>       <span class="song-num" aria-hidden="true">&mdash;</span></button></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ── MAIN PANEL ── -->
+  <main class="main-panel" id="main-content" tabindex="-1">
+
+    <!-- Live region announces song changes to screen readers -->
+    <div aria-live="polite" aria-atomic="true" class="sr-only" id="sr-announce"></div>
+
+    <!-- About / welcome state -->
+    <div id="welcome" role="region" aria-label="About Life Without Buildings">
+      <h1 class="welcome-title">Life Without<br>Buildings<br><em>Lyrics</em></h1>
+
+      <p class="epigraph">
+        "<a href="http://groups.google.com/groups?hl=en&lr=&ie=UTF-8&selm=bf727d54.0211210736.11e665c4%40posting.google.com" target="_blank" rel="noopener noreferrer">It was fine until that woman opened her mouth.</a>"
+      </p>
+
+      <div class="welcome-body">
+        <p><a href="http://www.lifewithoutbuildings.com/" target="_blank" rel="noopener noreferrer">LWB</a> were a sadly short-lived Scottish band (they split up at about the end of 2002). Everyone in the entire world, ever, seems to have described them as "a cross between [insert any two quasi-punk bands, esp. the Fall, Bow Wow Wow, Television]" but I'd like to pretend that their many idiosyncrasies, in particular the bizarre torrent-of-consciousness lyrics of the singer Sue Tompkins, are at least somewhat original.</p>
+        <p>Anyway, this page originally had my (and others') transcriptions of the lyrics, but Will Bradley from the band found the page and sent me the real things! For people who like mondegreens, the original transcripts are <a href="https://voxish.org/lwb2.htm" target="_blank" rel="noopener noreferrer">here</a>.</p>
+        <p>Select a song from the list.</p>
+      </div>
+
+      <div class="welcome-thanks">
+        <p>Thanks to everyone who's sent me emails saying how obsessed they are with LWB, and a billion extra thanks to Will Bradley for helping out. Comments and greetings of any sort are still very welcome.</p>
+        <p class="welcome-thanks-byline">
+          <a href="mailto:jdb@student.unimelb.edu.au">j. benney</a>, 23 June 2004
+          (but put something relevant in the subject line)
+        </p>
+      </div>
+    </div>
+
+    <!-- Lyrics view -->
+    <article class="lyrics-view" id="lyricsView" aria-labelledby="lyricTitle">
+      <h1 class="lyrics-song-title" id="lyricTitle" tabindex="-1"></h1>
+      <span class="lyrics-release" id="lyricRelease"></span>
+      <div class="lyrics-text" id="lyricText" role="region" aria-label="Lyrics"></div>
+      <aside class="annotation" id="lyricAnnotation" aria-label="Notes" style="display:none;"></aside>
+    </article>
+
+  </main>
+
+</div><!-- /.layout -->
+
+<script>
+const SONGS = {
+  psexclusive:{title:"P.S. Exclusive",release:"Any Other City",lyrics:`no details but i'm gonna persuade you
+the right stuff
+the right stuff
+the right stuff
+the right stuff
+the right stuff
+in the red villa
+the right stuff
+the right stuff
+the right stuff
+in the red villa with you
+no name, no name no details but i'm gonna
+the right stuff
+the right stuff
+tonio, tonio
+the right stuff
+the right stuff
+in the red villa with you, no details
+monday, tuesday, wednesday, exclusively, sorry
+i am, not for you, for me
+monday exclusive, tuesday exclusive, sorry
+i am, not for you, for me
+the right stuff
+the right stuff
+the right stuff
+the right stuff
+feels like the right stuff i can't explain it
+i can't get used to no advice she i can't
+the right stuff
+the right stuff
+tonio, tonio
+in the red villa, no name
+in the red villa with you but it's the right stuff
+monday exclusive, tuesday exclusive, wednesday exclusively sorry
+i am, not for you, for me this time
+monday exclusive, tuesday exclusive, wednesday exclusively sorry
+i am, not for you, for me this time
+the right stuff
+the right stuff
+sugar ice and the right stuff
+the main thing
+and the right stuff
+sugar ice
+is that your name
+are you shadow smart
+is that your name
+are you
+the right stuff
+are you shadow smart
+the main thing and the oh
+the right stuff
+the right stuff
+the right stuff
+this is not advice is the right stuff
+right, this is not advice
+tonio, tonio
+the right stuff
+the right stuff
+the right stuff
+the right
+the right stuff, the right
+the right stuff the main thing
+the right stuff
+the right stuff
+exclusively sorry
+i am not for you, not for you
+monday exclusive, tuesday exclusive, wednesday exclusive
+more
+this time i'm sorry
+not for you, for me
+the right stuff
+the right stuff
+the right stuff
+the right stuff
+mca
+mca
+fonatella
+face this is not advice
+winter sun
+winter sun
+to be a lover in the winter
+to be a lover
+tonio, tonio
+to be a lover
+tonio
+to be a lover in the winter
+tonio
+the right stuff
+the right, the right, the right stuff
+to be a lover
+persuasion
+the right stuff
+the right stuff, the right
+the right stuff`},
+
+  letsgetout:{title:"Let's Get Out",release:"Any Other City",lyrics:`ting ting
+look around
+just information
+in the leaves in the leaves in the leaves in the leaves in the leaves
+ting ting
+look around
+just information
+in the leaves in the leaves in the leaves in the leaves
+lgo lgo chi sound
+i still believe in getting low i still believe
+the history of half past ten
+calling you i mix two numbers up i mix them up
+two numbers calling you mix them up two numbers go
+ting ting
+look around
+just information
+in the leaves in the leaves in the leaves
+lgo lgo chi sound chi sound chi sound chi sound
+it's prosperous lying awake invitation guess what
+coast to coast, vivid i'm a visitor here
+i'm a visitor here
+parking and walking away parking and walking away
+ting ting those four feel the pavement is poor
+i still believe in getting low i still believe
+the history of half past ten
+calling you i mix two numbers up i mix them up
+two numbers calling you i mix them up!
+ting ting
+look around
+just information
+in the leaves in the leaves in the leaves
+lgo lgo chi sound chi sound chi sound chi sound
+if poss was lying awake invitation guess what
+coast to coast, vivid i'm a visitor here
+i'm a visitor here
+don't fall don't fal-ter
+don't fall don't fal-ter
+i still believe in getting low i still believe
+the history of half past ten
+calling you i mix two numbers up i mix them up
+two numbers calling you i mix them up did i?
+did i say too too too much dear
+did i
+did i say too too too much dear
+did i
+just calling you and mix them up
+did i say too too too much dear
+look back and say that i didn't
+look back and say that i didn't
+come complete
+come complete
+look back and say that i didn't
+look back and say that i didn't
+come complete look back
+look back and say that i didn't
+look back
+look back and say that i didn't
+look back and say that i didn't
+come complete
+come complete look back
+look back and say that i didn't
+come complete
+come complete
+ting ting
+look around
+just information
+in the leaves in the leaves in the leaves
+chi sound
+chi sound
+lgo
+i still believe in getting low
+i still believe
+the history of half past ten
+calling you i mix them up did i
+did i say too too too much dear?`},
+
+  juno:{title:"Juno",release:"Any Other City",lyrics:`it's juno, it's juno
+i don't wanna be a player, hey, for you
+for you
+i'm gonna raise it, sadness, remember, already
+i think about, already, hey, for you, for you
+your behaviour shy kid
+your behaviour
+i wonder you
+are you real?
+are you real?
+for you, sweet thing
+for you he wrote no t--?
+for you he wrote something else
+it's juno, it's juno
+i don't wanna be a player, hey, for you
+for you
+i'm gonna raise it, sadness, remember, already
+i think about, already, hey, for you, for you
+your behaviour shy kid
+your behaviour
+i wonder you
+are you real?
+are you real?
+shy kid
+for you, sweet thing
+for you he wrote no t--?
+for you he wrote something else
+juno, it's juno
+i don't wanna be a player
+for you, sweet thing
+for you he wrote no t--?
+for you he wrote something else
+don't be far from
+don't be far from me
+don't be far from
+my lips are sealed, my lips are sealed
+my lips are sealed, my lips are sealed
+my lips are sealed, my lips are sealed
+my lips are sealed, my lips are sealed
+dropout!
+my lips are sealed
+do you gimme the dropout?
+my lips are sealed
+gimme the dropout! dropout!
+my lips are sealed, i can see you
+my lips are sealed
+gimme the dropout!
+my lips are sealed, my lips are sealed
+my lips are sealed
+dropout!
+my lips are sealed, my lips are sealed
+my lips are sealed
+it's juno, it's juno
+i don't wanna be a player, hey, for you
+for you
+i'm gonna raise it, sadness, remember, already
+your behaviour shy kid
+i wonder you
+are you real?
+shy kid
+are you real?`},
+
+  theleanover:{title:"The Leanover",release:"Any Other City",annotation:`MBV = My Bloody Valentine — Will Bradley\nSFL = Scottish Football League?\n"i like you mostly late at night" is a line from Robert Wyatt's "Sea Song" (off Rock Bottom) — Alex Temple`,lyrics:`if i lose you
+if i lose you
+if i lose you
+if i lose you
+uh huh, uh huh, uh huh, mmm
+if i, if i, if i, if i, if i
+b-b-b-b-baby g g g, so g g g, you you you
+if i lose you
+if i lose you
+uh huh, uh huh
+if i lose you in the street
+if i lose you in the street
+if i lose you in the street at night
+if i lose you in the street
+if i lose, don't be sad
+if i lose you in the street
+if i lose you in the street, hey
+if i lose you in the street
+g g come here come here come
+feel for you
+kiss me, break my mind, close the door
+black steel, break my mind, close the door
+black steel, the sight of you falling out
+the sight of you
+if i lose you in the street, six
+if i lose you in the street
+i say, i say, i say, i say, i say, i say
+wassup, wassup with you?
+wassup with your friends?
+high hills, high hills
+oh i, m b v m b v m b v m b v m b v more m b v hi fi
+i wanna see you
+stand up, stand up, stand up
+in the high hills
+don't trade, don't don't i don't trade
+don't trade, don't don't i don't trade
+may i, may i walk with you?
+may i walk with you? uh-oh
+in the time takes to slide it back
+in the time it changes, recorded at the automat
+san francisco mixed with uh-oh
+in the time takes to slide it back
+in the time it changes shhhhh
+emotional chi, emotional chi
+come on baby, don't fuss
+in the time takes to slide it back
+say a what say a what eh eh eh eh eh eh eh
+in the time takes to slide it back
+questions say what
+i like you mostly late at night
+hold tight, hold tight, hold tight with a tight
+budokan warp, budokan warp, we warp
+b b b b b freestyle
+i like you mostly late at night
+break my mind, break my mind
+in the time takes to slide it back
+raining in my room, sweet and sleepy
+wassup wassup
+i can remember i can remember four
+we can we can we can we can three
+keep us together keep us together keep us together
+in the time takes sliding back
+in the time takes sliding back
+in the time takes sliding back
+forever
+you can be me, swim
+the face of you,
+ok the face, we can take it back
+i can take you the hills
+days like television
+days like television
+d-d-d-d-d-days like television
+face of you, the face of you
+in the time takes to slide it back
+in the time takes to slide it back
+the face of you, for, that's all
+should i wait for you s f l
+should i wait for you?
+should i wait for you?
+come on, should i?
+never forget who you are
+there's no reason
+d-d-d-d-d-d-d girls
+there's no reason wassup
+responsibility, free
+in the time takes sliding back
+in the time
+responsibility, girls
+d-d-d-d-d-d-d break
+wassup
+i don't trade
+wassup
+i don't trade
+yeah yeah
+i don't trade
+wassup
+contact, contact, just sweet remember contact
+boom, contact, contact
+that's the way, your first, your last, your only contact
+uh-oh, uh-oh, contact
+the first, the last, the only
+bounce, twirl
+i don't trade
+i don't trade
+yeah yeah
+in the time takes sliding back
+in the time takes sliding back
+je danse, je suis
+in the time takes sliding back
+contact
+je suis, je danse
+d-d-d-d with a bit of freestyle
+in the time takes sliding back
+in the time takes sliding back
+should i?
+time takes sliding back
+contact
+he's the shaker, baby
+he's the shaker, baby
+he's the shaker, baby
+he's the shaker, baby
+contact
+he's the shaker, baby
+in the time takes sliding back
+twelve o'clock
+he's the shaker, baby
+he's the shaker, baby
+he's the shaker, baby
+he's the shaker, baby
+contact, swallow
+twelve o'clock, one o'clock, no pretending
+virginia, looking at it last night
+virginia plain
+recorded at the power plant, yeah
+vacant together, vacant together, eyes vacant
+he's the shaker, baby
+he's the shaker, baby
+he's the shaker, baby
+he's the shaker, baby
+he's the shaker, baby
+he's the shaker, baby
+he's the shaker, baby
+no pretending, contact, you and me
+contact, you and me
+wassup, contact
+he's the shaker
+watch him, i can't stand the way, i don't like it
+contact
+he's the shaker, baby
+he's the shaker, baby
+i can't stand the way, i don't like it
+contact
+i don't like twelve o'clock either
+contact
+shake it, don't go vacant on me
+don't go vacant on me
+waiting, contact, shaking, baby
+he's the shaker, baby
+he's the shaker, baby
+watch him, contact, shake it, baby
+he's the shaker, baby
+don't go vacant, baby
+he's the shaker, baby
+he's the shaker, baby
+i can't stand the rain, i don't like it at all`},
+
+  youngoffenders:{title:"Young Offenders",release:"Any Other City",annotation:`RAF terminology: two-six (2-6) = general base call "down the flights", all personnel needed on a job`,lyrics:`why tonight, why tonight
+why tonight, what's so different tonight?
+why tonight, i waited for you
+bring in, seen you all my life
+night scene stealer, night scene stealer
+in any other city, i care
+in any other city, i'm hung up with a short click
+so why tonight, why tonight
+why tonight, what's so different?
+bring in, seen you all my life
+night scene stealer, night scene stealer
+bring in, seen you all my life
+night scene stealer, night scene stealer
+in any other city, i care
+in any other city, i'm hung up with a sharp click
+why tonight, why tonight
+why tonight, i waited for you
+bring it, seen you all my life
+night scene stealer, night scene stealer
+bring it, seen you all my life
+night scene stealer, night scene stealer
+in any other city, i care
+in any other city in the world, i'm hung up with a sharp click
+two six too sick
+it's not a number, don't remember this, forget it
+it's not a number
+two six too sick
+don't remember this, it does twist
+two six too sick
+don't remember this
+so why tonight, why tonight
+why tonight, it gets dark, that's all
+in any other city, i care
+in any other city in the world, i'm hung up`},
+
+  philip:{title:"Philip",release:"Any Other City",lyrics:`for everything!
+darling, darling i
+couldn't understand science
+couldn't understand science
+couldn't understand science
+darling, oh darling i
+how come, how come you're so pretty?
+how come, how come you're so pretty?
+darling, oh darling i
+couldn't understand science
+couldn't understand science
+couldn't understand science
+darling, ever darling
+science, couldn't understand science
+darling, oh darling i
+couldn't understand science
+how come, how come you're so pretty?
+how come, how come you're so pretty?
+how come, tracing the edge of it
+how come, that's how i remember it
+do we need order goodbye,
+do we need order, do we need order,
+do we need order, do we need order,
+do we need order, do we need order goodbye!
+darling, ever darling
+couldn't understand science
+couldn't understand science
+darling, ever darling
+science
+darling, couldn't understand science
+darling, ever darling
+couldn't understand science
+do we need order goodbye,
+do we need order, do we need order,
+do we need order, do we need order,
+do we need order, do we need order goodbye!`},
+
+  envoys:{title:"Envoys",release:"Any Other City",annotation:`Will said "leem" but I don't know what that is. low energy electron microscopy?`,lyrics:`flash it
+flash flash it
+flash flash it, sounds like a leem
+flash flash it, sounds like a leem
+flash it
+bring it back, some kind, en masse
+flash it
+flash flash it
+flash flash it, sounds like a leem
+flash flash it, sounds like a leem
+flash it
+bring it back, some kind, en masse
+inter
+inter, whiter
+inter or else
+inter
+flash it
+flash flash it
+flash flash it, sounds like a leem
+flash flash it, sounds like a leem
+flash it
+bring it back, some kind, en masse
+flash it
+flash flash it
+flash flash it, sounds like a leem
+flash flash it, sounds like a leem
+flash it
+bring it back, some kind, en masse
+inter
+inter, whiter
+inter or else
+inter
+salt salt [etc.]
+assault assault assault assault [etc.]
+the law!
+salt salt [etc.]
+assault assault assault assault [etc.]
+the law!
+assault assault assault assault [etc.]
+the law!
+keep x-ing!
+keep x-ing! keep it centre!
+keep x-ing!
+keep x-ing! no
+keep x-ing! no
+keep x-ing on me, no
+keep x-ing on me, no
+keep x-ing on me, no
+flash it
+flash flash it
+flash flash it, sounds like a leem
+flash flash it, sounds like a leem
+flash it
+bring it back, some kind, en masse, en masse`},
+
+  "14days":{title:"14 Days",release:"Any Other City",lyrics:`oh, oh, it's never unfair
+oh, oh, it's never unfair
+do you know, do you know, it's never unfair
+on a cloudy day, all that time ago, be yeah
+oh, oh, it's never unfair
+oh, oh, it's never unfair
+do you know i'm leaving you in 14 days?
+take all the precious things, nothing less
+i need to think, green child
+the things you do, green child
+i need to think
+oh, oh, it's never unfair
+oh, oh, it's never unfair
+do you know, do you know, it's never unfair
+cloudy day, all that time ago, be yeah
+oh, oh, it's never unfair
+oh, oh, it's never unfair
+do you know i'm leaving you in 14 days?
+take all the precious things, nothing less
+i need to think, green child
+the things you do, green child
+the things you do
+oh, oh, it's never unfair
+oh, oh, it's never unfair
+do you know, do you know, it's never unfair
+in a foreign part, going blind, it's never unfair
+do you know i'm leaving you in 14 days?
+take all the precious things, nothing less
+i need to think, green child
+the things you do, green child
+i need to think, fade
+i'm leaving you in 14 days
+take all the precious things, nothing less
+i need to think, green child
+the things you do, green child
+the things you do
+it's your game, it's your game
+it's your game, it's your game
+it's your game, it's your game
+it's your game, it's your game
+it's your game, it's your game
+it's your game, it's your game
+it's your game, it's your game
+it's your game`},
+
+  newtown:{title:"New Town",release:"Any Other City",lyrics:`i forgot i forgot i forgot i forgot
+i forgot i forgot i forgot i forgot i forgot
+when you lately i forgot
+happening again in a slow diagonal
+i forgot it's happening again
+slow diagonal i forgot i forgot
+when you i never used to
+only i used to think there's nowhere to go
+happening in a slow diagonal
+i forgot i forgot i forgot i forgot when you i forgot
+lately looking in your eyes
+i've been feeling neo
+i've been feeling neo
+i forgot i forgot i forgot i forgot
+when you i used to think s s s s
+i forgot i forgot i forgot i forgot
+happening again in a slow diagonal
+i forgot
+every colour of you fall out step out
+every colour of you fall out step out
+every colour of you fall out step out
+every colour of you fall out step
+every colour of you fall out step out
+every colour of you fall out step out
+every colour of you fall out step out
+every colour of you fall out step out!
+looking in your eyes, looking in your eyes
+i'm looking in your eyes
+looking in your eyes, looking in your eyes
+looking in your eyes, i'm looking in your eyes
+with a feeling
+looking in your eyes, looking in your eyes
+i'm looking in your eyes
+you do what you have to do
+you do what you have to, do it, do it!
+you do what you have to do
+you do what you have to, do it, do it!
+looking in your eyes, looking in your eyes
+do what you have to do
+you do what you have to, do it, do it!
+looking in your eyes, looking in your eyes
+looking in your eyes, i'm looking in your eyes
+with a feeling
+looking in your eyes, looking in your eyes
+looking in your eyes, i'm looking in your eyes
+looking in your eyes, looking in your eyes
+looking in your eyes, i'm looking in your eyes
+with a feeling
+i saw you today, you were like snow
+i saw you today, you were like snow
+and never but oh... like a snow
+i saw you, g-gui-gui, i saw you
+i saw you today, you were like
+the sun's on my face, til Monday
+i've been feeling neo
+my tongue, my tongue, my tongue
+hair is long, i've been feeling
+high sister, you're the high sister
+i saw you today, you were like snow
+every colour of you fall out step out
+every colour of you fall out step
+every colour of you fall out step out
+every colour of you fall out step
+every colour of you fall out step out
+every colour of you fall out step out
+every colour of you fall out step out
+every colour of you fall out step out!
+looking in your eyes, looking in your eyes
+i'm looking in your eyes
+looking in your eyes, looking in your eyes
+looking in your eyes, i'm looking in your eyes
+with a feeling
+looking in your eyes, looking in your eyes
+i'm looking in your eyes
+you do what you have to do
+you do what you have to, do it, do it!
+you do what you have to do
+you do what you have to, do it, do it!
+boy you drum, boy you drum, boy you drum, drummer boy
+boy you drum, boy you drum, boy you drum, drummer boy
+looking in your eyes, looking in your eyes
+oh ah, boy you drum
+you do what you have to do
+you do what you have to, do it, do it!
+you do what you have to do
+you do what you have to, do it, do it!
+you do what you have to do, f..!
+you do what you have to, f...!
+i hear you sssh, i hear you, i hear you sssh
+i hear you, i hear you shhhhh
+for cars n ah, for cars n ah, cars n ah, cars n ah
+if i rewind again, if i rewind again
+i forgot, rhythm and knowledge
+rhythm and knowledge regenerate there
+rhythm and knowledge regenerate
+right on babe, rhythm and knowledge
+if i rewind my baby
+if i rewind, rhythm and knowledge, get
+i rewind my baby
+every colour of you`},
+
+  sorrow:{title:"Sorrow",release:"Any Other City",lyrics:`sorrow, no
+sorrow, no
+causing you sorrow, no
+don't smoke in bed, with me
+sorrow, no
+sorrow, no
+causing you sorrow, no
+don't smoke in bed, with me
+your phone calls, don't think they're wearing me out, they're not
+but i'm mostly english, mostly english
+difficult people slip away
+feeling that way about difficult people
+feeling that way about difficult people
+slip away, slip away
+you're beautiful but slip away
+you're beautiful
+hearing you through the door, fast
+slip away
+you're beautiful but slip away
+you're beautiful but you're gonna slip away like that
+feeling that way about difficult people
+come close to the phone
+closer to the phone
+should i, same time, don't keep me
+should i, same time, don't keep me
+a friend from the 11th
+make up your mind, make up your mind
+make up your higher
+you're higher the first time
+you're higher too many days since
+we've met before, don't be disappointed
+we've met before, don't be disappointed
+keep, don't keep me
+it's the new past
+it's the new past
+holding you is like the new past
+holding you is like the new past
+what's go, what's go, i'm not leaving
+w w the many ways, the many many ways
+yeah, talking so like that
+talking so like that
+the many ways, the many w-w-ways
+the many ways, the many ways
+s l, the many ways
+eyes like lotus leaves, no not even like
+lotus leaves
+eyes like lotus leaves, no not even like
+lotus leaves
+the many ways, the many w-w-ways
+i see the many ways, ha ha
+see things sure
+eyes like lotus leaves, no not even like
+lotus leaves
+eyes like lotus leaves, no not even like
+lotus leaves
+the same, make it remind
+the many ways, the many w-w-ways, the many ways
+eyes like lotus leaves, no not even like
+it's quite decided how the boy can figure
+it's quite decided how the boy can figure
+v-v-v-v changing it, two beats and the boy can figure
+everything going that way, i found you
+it's quite decided how the boy can figure
+two beats and the boy, the sun, the m, the sun, the m
+it's ok calling, it's o
+two beats and the boy can, finally
+i thought about you to like the ninth degree
+i thought about you to like the ninth degree
+two beats and the beautiful and chequered, the end
+beautiful and chequered, e fade, e fade
+beautiful, close the door
+beautiful and chequered, fifty
+beautiful and chequered, e fade
+she came in under
+she kept things happen in a silent way
+i'm better like this in a silent way, i'm for your love
+i left it, i'm sure
+you set the scene
+i should, but you set the scene
+i can dance, missed that loop but i can dance, ch ch
+i can, you set the scene by chance
+is there something?
+take the time away from me
+take the time away from me
+s e fade, e fade
+take the time, make our own rules
+don't walk away from the people you meet, e fade
+without any noise
+sorrow
+nothing happened, nothing happened
+you and me in the sea
+nothing happened but
+you eighty-three, eighty-three, but maybe i'm one night take it
+sorrow
+without any noise
+eighty-three
+sorrow, no
+sorrow, no
+causing you sorrow, no
+don't smoke in bed, with me
+sorrow, no
+sorrow, no
+causing you sorrow, no
+don't smoke in bed, with me`},
+
+  lovetrinity:{title:"Love Trinity",release:"Love Trinity",lyrics:`well, unless it's got that thing
+well, unless it's got that thing
+well, you're just like me
+well,
+you're just like me
+you're just like me
+but i live out of town by now
+i live out of town by now
+but you're just like me
+roam, i'm telling you to roam
+unless it's got that thing
+i'm telling you to roam
+unless it's got that thing
+don't leave the visual world
+i'm not willing to leave the visual world
+don't leave the visual world
+roam, unless it's got that thing
+are the numbers in love yet?
+roam, unless it's got that thing
+it's the love trinity, it's a love trinity
+it's the love trinity, unless it's got that thing
+roam, it's the love trinity, it's the love trinity
+but you're just like me
+you're just like me
+roam, don't leave the visual world
+i'm waiting for nothing
+don't leave the visual world
+roam, unless it's got that thing
+are the numbers in love yet?
+roam
+are the numbers in love yet?
+roam, unless it's got that thing
+not the place, roam
+are the numbers in love yet?
+it's a love
+are the numbers in love yet?
+it's a love trinity
+eight by eight by eight, they're my favourite numbers
+are the numbers in love yet?
+it's a love
+it's a love trinity
+they're my favourite numbers, it's a love trinity
+i'm waiting for nothing
+i'm waiting for tomorrow, sunday
+roam, unless it's got that thing
+roam, unless it's got that thing
+unless it's got that thing`},
+
+  isisandtheirs:{title:"Is Is And The IRS",release:"Love Trinity",annotation:`This is the version on the Love Trinity single. The original version has pretty much the same words in a slightly different order.`,lyrics:`i think i, i think i, i think i, i think i
+i think i, i think i, i think i, i think i
+i think i, i think i, i think i, i think i
+i need the cure, i need the cure
+strange feeling, strange feeling
+dropping out of the call, hearing
+dropping out of the call, waiting
+dropping out of the call, clicking
+i think i
+strange feeling, strange feeling, i think i
+strange feeling
+you're never there
+you're never there
+you're never there
+you're never there
+you're never there
+you're never there
+and i need the cure
+i need the cure, i need the cure, i need the cure, i need the cure
+strange feeling, strange feeling
+dropping out of the call, hearing
+dropping out of the call, waiting
+i think i, i think i, i think i, i think i
+strange feeling, strange feeling, i think i
+you're never there
+you're never there
+you're never there
+i'm awake, you're never there
+is is and the irs
+is is and the irs
+is is and the irs
+is is and the irs
+you're never there
+you're never there
+you're never there
+i'm awake, you're never there
+is is and the irs
+is is and the irs
+is is and the irs
+is is and the irs
+you're never there
+you're never there
+you're never there
+i'm awake, you're never there
+una muchacha reale
+una muchacha reale
+i'm a real girl, i'm a real girl
+you're never there
+you're never there
+you're never there
+i'm awake, you're never there
+una muchacha reale
+una muchacha reale
+i'm a real girl, i'm a real girl
+you're never there
+you're never there
+you're never there
+i'm awake, you're never there
+una muchacha reale
+una muchacha reale
+i'm a real girl, i'm a real girl
+i'm a real girl, i'm a real, i'm a real girl, i'm a real girl
+i'm a real girl, i'm a real girl, a real girl, i'm a real girl`},
+
+  daylighting:{title:"Daylighting",release:"Love Trinity",lyrics:`listen daylighting
+listen daylighting
+i let you, i let you
+when we were young, when you were mine
+listen daylighting
+listen daylighting
+what's the matter?
+listen daylighting
+listen daylighting
+i don't mind
+listen daylighting
+listen daylighting
+i let you, i let you
+when we were young, when you were mine
+close the summer, i don't want lessons
+close the summer, i don't want lessons from you
+listen daylighting
+listen daylighting
+i don't mind
+listen daylighting
+listen daylighting
+i let you, i let you
+when we were young, when you were mine
+listen daylighting
+listen daylighting
+i don't mind
+what's the matter?
+staring, listen daylighting
+listen daylighting
+i don't mind
+i let you, i let you
+when we were young, when you were mine
+to the left, what can i offer you?
+conversation in the rain
+close the summer, i don't want lessons
+close the summer, i don't want lessons from you
+kino, kino, kino, das kino
+kino, take me to the kino again
+das kino, kino, take me to the kino again
+das kino, kino, take me to the kino again
+it's easy
+das kino, kino, take me to the kino again
+it's easy, ask me, take me to the kino again
+listen daylighting
+i don't mind any more
+i let you, i let you
+when we were young, when you were mine`}
+};
+
+/* ── SONG SWITCHING ── */
+
+const welcome      = document.getElementById('welcome');
+const lyricsView   = document.getElementById('lyricsView');
+const lyricTitle   = document.getElementById('lyricTitle');
+const lyricRelease = document.getElementById('lyricRelease');
+const lyricText    = document.getElementById('lyricText');
+const lyricAnnot   = document.getElementById('lyricAnnotation');
+const panel        = document.getElementById('main-content');
+const announce     = document.getElementById('sr-announce');
+
+document.querySelectorAll('.song-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const song = SONGS[btn.dataset.song];
+    if (!song) return;
+
+    // Update active state + aria-current on all buttons
+    document.querySelectorAll('.song-btn').forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-current', 'false');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-current', 'true');
+
+    // Populate content
+    lyricTitle.textContent   = song.title;
+    lyricRelease.textContent = song.release;
+    lyricText.textContent    = song.lyrics;
+
+    if (song.annotation) {
+      lyricAnnot.textContent   = song.annotation;
+      lyricAnnot.style.display = 'block';
+    } else {
+      lyricAnnot.style.display = 'none';
+    }
+
+    // Show lyrics, hide welcome
+    welcome.style.display = 'none';
+    lyricsView.classList.add('visible');
+
+    // Move focus to the heading (programmatic, not visible ring)
+    panel.scrollTop = 0;
+    lyricTitle.focus();
+
+    // Announce to screen readers
+    announce.textContent = '';
+    requestAnimationFrame(() => {
+      announce.textContent = `Now showing lyrics for ${song.title}`;
+    });
+  });
+});
+
+/* ── HOME BUTTON ── */
+
+document.getElementById('homeBtn').addEventListener('click', () => {
+  document.querySelectorAll('.song-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-current', 'false');
+  });
+  lyricsView.classList.remove('visible');
+  welcome.style.display = '';
+  panel.scrollTop = 0;
+});
+
+/* ── COLORWAY SWITCHING ── */
+
+const root = document.documentElement;
+
+function applyTheme(t) {
+  root.setAttribute('data-theme', t);
+  document.querySelectorAll('.theme-btn').forEach(b => {
+    const match = b.dataset.theme === t;
+    b.classList.toggle('active', match);
+    b.setAttribute('aria-pressed', String(match));
+  });
+}
+
+document.querySelectorAll('.theme-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    applyTheme(btn.dataset.theme);
+    try { localStorage.setItem('lwb-theme', btn.dataset.theme); } catch(e) {}
+  });
+});
+
+// Restore saved preference (fall back to dark if saved theme was removed)
+try {
+  const saved = localStorage.getItem('lwb-theme');
+  const valid = saved && document.querySelector(`.theme-btn[data-theme="${saved}"]`);
+  if (valid) {
+    applyTheme(saved);
+  } else if (saved) {
+    applyTheme('dark');
+    localStorage.setItem('lwb-theme', 'dark');
+  }
+} catch(e) {}
+</script>
+</body>
+</html>
