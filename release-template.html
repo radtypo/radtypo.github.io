@@ -410,6 +410,9 @@
         }
 
         function buildReleaseDescription(release) {
+            if (release.type === 'page') {
+                return release.oneLiner || `${release.format?.type || 'page'} · ${release.format?.date || release.date}`;
+            }
             if (release.type === 'painting') {
                 const medium = release.format?.type || 'painting';
                 const dims = release.specs?.imageArea;
@@ -458,6 +461,8 @@
 
             if (release.type === 'painting') {
                 renderPainting(release);
+            } else if (release.type === 'page') {
+                renderPage(release);
             } else {
                 renderVinyl(release);
             }
@@ -634,6 +639,77 @@
                 ${descriptionHtml}
                 ${detailsHtml}
                 ${buildPurchaseHtml(release)}`;
+        }
+
+        function renderPage(release) {
+            const metaLine = [release.format?.type, release.format?.date || release.date].filter(Boolean).join(' · ');
+
+            // Build carousel
+            let carouselHtml = '';
+            if (release.carousel?.length > 0) {
+                const slidesHtml = release.carousel.map((slide, i) => {
+                    const lazy = i > 0 ? ' loading="lazy"' : '';
+                    return `<div class="carousel-slide${i === 0 ? ' active' : ''}" role="tabpanel" aria-label="Slide ${i + 1}">
+                        <img src="${slide.src}" alt="${escapeHtml(slide.alt)}"${lazy}>
+                    </div>`;
+                }).join('');
+
+                const indicatorsHtml = release.carousel.map((_, i) =>
+                    `<button class="indicator${i === 0 ? ' active' : ''}" aria-label="Go to slide ${i + 1}" onclick="goToSlide(${i})"></button>`
+                ).join('');
+
+                carouselHtml = `
+                    <div class="carousel-container">
+                        <div class="carousel" id="carousel" role="tablist" aria-label="Screenshots">
+                            ${slidesHtml}
+                        </div>
+                        <div class="carousel-nav">
+                            <button class="carousel-btn" aria-label="Previous slide" onclick="changeSlide(-1)">← prev</button>
+                            <button class="carousel-btn" aria-label="Next slide" onclick="changeSlide(1)">next →</button>
+                        </div>
+                        <div class="carousel-indicators">
+                            ${indicatorsHtml}
+                        </div>
+                    </div>`;
+            }
+
+            // Description section
+            let descriptionHtml = '';
+            if (release.description) {
+                const paragraphs = release.description.split('\n\n').map(p => `<p class="details-description">${escapeHtml(p)}</p>`).join('');
+                descriptionHtml = `
+                <div class="section">
+                    <div class="section-header" role="button" tabindex="0" onclick="toggleSection('about')">
+                        <span>${metaLine}</span>
+                        <span class="toggle" id="about-toggle">[ - ]</span>
+                    </div>
+                    <div class="section-content open" id="about">
+                        ${paragraphs}
+                    </div>
+                </div>`;
+            }
+
+            // Link CTA
+            let linkHtml = '';
+            if (release.link) {
+                linkHtml = `
+                <div style="margin: 30px 0;">
+                    <a href="${release.link}" target="_blank" rel="noopener noreferrer" class="download-all-btn">${escapeHtml(release.linkLabel || 'visit')}</a>
+                </div>`;
+            }
+
+            document.getElementById('release-content').innerHTML = `
+                <div class="album-info">
+                    <div class="album-header">
+                        <span class="binary-indicator">${release.binary || ''}</span>
+                        <h2>${escapeHtml(release.title)}</h2>
+                    </div>
+                </div>
+                ${carouselHtml}
+                ${descriptionHtml}
+                ${linkHtml}`;
+
+            setupCarouselKeyboard();
         }
 
         function buildSpecsGrid(release) {

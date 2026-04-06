@@ -134,6 +134,24 @@
       "rest-of-world": "https://buy.stripe.com/7sY6oHar03yv0sgaBP6Na0e"
     }
   },
+  "life-without-buildings-lyrics": {
+    "title": "life without buildings lyrics",
+    "visible": true,
+    "type": "page",
+    "date": "2026-04-06",
+    "format": { "type": "html", "date": "2026" },
+    "binary": "□□□□□■□■",
+    "oneLiner": "a single HTML file — the only LWB lyrics page you'll want to read in the dark",
+    "description": "I've been listening to Any Other City for over twenty years. When I want to read along, j. benney's transcription page at voxish.org is the only place to go — he tracked down Will Bradley from the band and got the real lyrics, which is an extraordinary thing to have done.\n\nThe original page is plain HTML from 2004. The content is perfect. The reading experience, especially on a phone in the dark, is not.\n\nSo I rebuilt the layout using the album artwork as the design system — same heavy condensed grotesque, same near-black and hot magenta, nothing added that isn't already on the cover. The content is entirely j. benney's. All I changed was how it sits on the page.\n\nThe page meets WCAG AA contrast standards in both light and dark modes, is fully keyboard navigable, and announces song changes to screen readers. On mobile, the tracklist scrolls horizontally so the lyrics fill the screen without compromise.\n\nSingle self-contained HTML file. No framework, no build step, no dependencies.",
+    "link": "https://radtypo.com/lwb/",
+    "linkLabel": "open the page",
+    "carousel": [
+      { "type": "image", "src": "/images/lwb-screenshot-1.png", "alt": "life without buildings lyrics — screenshot 1" },
+      { "type": "image", "src": "/images/lwb-screenshot-2.png", "alt": "life without buildings lyrics — screenshot 2" },
+      { "type": "image", "src": "/images/lwb-screenshot-3.png", "alt": "life without buildings lyrics — screenshot 3" },
+      { "type": "image", "src": "/images/lwb-screenshot-4.png", "alt": "life without buildings lyrics — screenshot 4" }
+    ]
+  },
   "jets-to-oblivia": {
     "title": "jets to oblivia",
     "visible": false,
