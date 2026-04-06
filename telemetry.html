@@ -12,7 +12,7 @@
             --link-color: #0000FF;
             --secondary-color: #666;
             --faint: #e8e8e8;
-            --code-bg: #f5f5f5;
+            --surface-color: #f5f5f5;
         }
 
         body {
@@ -87,8 +87,8 @@
 
         /* Condition line */
         .condition-line {
-            font-size: 13px;
-            color: var(--secondary-color);
+            font-size: 16px;
+            color: var(--text-color);
             margin-bottom: 20px;
         }
 
@@ -146,6 +146,7 @@
 
         /* Notes */
         .note { font-size: 12px; color: var(--secondary-color); margin: 10px 0 20px 0; }
+        .aurora-alert { border-left: 2px solid currentColor; padding-left: 0.75rem; font-size: 13px; color: var(--text-color); }
 
         /* Data row */
         .data-row {
@@ -164,12 +165,30 @@
         .chart-lbl { font-size: 11px; color: var(--secondary-color); margin-bottom: 6px; letter-spacing: 0.05em; }
         .chart-svg { width: 100%; display: block; overflow: visible; }
 
+        /* Chart pair grid */
+        .chart-pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        /* Resource pair grid */
+        .resource-pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .resource-pair .resource { margin-bottom: 0; }
+
+        /* KP metrics */
+        .kp-metrics { max-width: 300px; }
+
         /* SVG classes */
         .c-line { fill: none; stroke: var(--text-color); stroke-width: 1.5; }
         .c-area { fill: var(--text-color); opacity: 0.06; }
         .c-grid { stroke: var(--faint); stroke-width: 1; }
         .c-now { stroke: var(--secondary-color); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.5; }
-        .c-lbl { fill: var(--secondary-color); font-size: 10px; font-family: monospace; }
+        .c-lbl { fill: var(--secondary-color); font-size: 12px; font-family: monospace; }
 
         /* Footer */
         .footer {
@@ -184,6 +203,10 @@
         @media (max-width: 600px) {
             body { margin: 20px auto; padding: 15px; }
             .metrics { grid-template-columns: repeat(2, 1fr); }
+            .chart-pair { grid-template-columns: 1fr; }
+            .resource-pair { grid-template-columns: 1fr; }
+            .resource-pair .resource { margin-bottom: 14px; }
+            #temp-chart { height: 140px; }
             .data-row { flex-direction: column; gap: 4px; }
             .data-sep { display: none; }
         }
@@ -237,24 +260,25 @@
         </div>
     </div>
 
-    <div class="chart-wrap">
-        <div class="chart-lbl">temperature · 48h</div>
-        <svg id="temp-chart" viewBox="0 0 600 120" preserveAspectRatio="xMidYMid meet" class="chart-svg" style="height:120px">
-            <text x="300" y="60" text-anchor="middle" class="c-lbl">loading...</text>
-        </svg>
-    </div>
-
-    <div class="chart-wrap">
-        <div class="chart-lbl" id="daylight-label">daylight</div>
-        <svg id="day-arc" viewBox="0 0 600 96" preserveAspectRatio="xMidYMid meet" class="chart-svg" style="height:96px">
-            <text x="300" y="48" text-anchor="middle" class="c-lbl">loading...</text>
-        </svg>
+    <div class="chart-pair">
+        <div class="chart-wrap">
+            <div class="chart-lbl">temperature · 48h</div>
+            <svg id="temp-chart" viewBox="0 0 600 140" preserveAspectRatio="xMidYMid meet" class="chart-svg" style="height:120px">
+                <text x="300" y="70" text-anchor="middle" class="c-lbl">loading...</text>
+            </svg>
+        </div>
+        <div class="chart-wrap">
+            <div class="chart-lbl" id="daylight-label">daylight</div>
+            <svg id="day-arc" viewBox="0 0 600 110" preserveAspectRatio="xMidYMid meet" class="chart-svg" style="height:96px">
+                <text x="300" y="55" text-anchor="middle" class="c-lbl">loading...</text>
+            </svg>
+        </div>
     </div>
 
     <!-- ── GEOMAGNETIC ───────────────────────────────────────── -->
     <div class="section-label">geomagnetic · NOAA SWPC planetary K-index</div>
 
-    <div class="metrics" style="max-width: 300px;">
+    <div class="metrics kp-metrics">
         <div>
             <div class="metric-lbl">Kp index</div>
             <div><span class="metric-val" id="kp-display">--</span></div>
@@ -299,20 +323,21 @@
         </div>
     </div>
 
-    <div class="resource">
-        <div class="resource-head">
-            <span>ram</span>
-            <span class="resource-detail" id="memory-detail">--</span>
+    <div class="resource-pair">
+        <div class="resource">
+            <div class="resource-head">
+                <span>ram</span>
+                <span class="resource-detail" id="memory-detail">--</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" id="memory-bar" style="width:0%"></div></div>
         </div>
-        <div class="bar-track"><div class="bar-fill" id="memory-bar" style="width:0%"></div></div>
-    </div>
-
-    <div class="resource">
-        <div class="resource-head">
-            <span>disk</span>
-            <span class="resource-detail" id="disk-detail">--</span>
+        <div class="resource">
+            <div class="resource-head">
+                <span>disk</span>
+                <span class="resource-detail" id="disk-detail">--</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" id="disk-bar" style="width:0%"></div></div>
         </div>
-        <div class="bar-track"><div class="bar-fill" id="disk-bar" style="width:0%"></div></div>
     </div>
 
     <div class="data-row">
@@ -523,7 +548,9 @@
                 document.getElementById('kp-value').textContent = kpClamped.toFixed(1);
                 document.getElementById('kp-display').textContent = kpClamped.toFixed(1);
                 document.getElementById('kp-label-display').textContent = colorData.label;
-                document.getElementById('aurora-note').textContent = auroraNote(kpClamped);
+                const noteEl = document.getElementById('aurora-note');
+                noteEl.textContent = auroraNote(kpClamped);
+                noteEl.classList.toggle('aurora-alert', kpClamped >= 5);
 
                 renderKPScale(kpClamped);
                 drawKPHistory(data);
@@ -552,10 +579,10 @@
         function drawTemperatureChart(times, temps) {
             const svg = document.getElementById('temp-chart');
             const valid = times.map((t, i) => ({ time: new Date(t), temp: temps[i] })).filter(d => d.temp !== null);
-            if (valid.length < 2) { svg.innerHTML = '<text x="300" y="60" text-anchor="middle" class="c-lbl">collecting data...</text>'; return; }
+            if (valid.length < 2) { svg.innerHTML = '<text x="300" y="70" text-anchor="middle" class="c-lbl">collecting data...</text>'; return; }
 
-            const W = 600, H = 120;
-            const P = { t: 15, r: 15, b: 25, l: 35 };
+            const W = 600, H = 140;
+            const P = { t: 15, r: 15, b: 28, l: 38 };
             const cW = W - P.l - P.r, cH = H - P.t - P.b;
             const minT = Math.min(...valid.map(d => d.temp));
             const maxT = Math.max(...valid.map(d => d.temp));
@@ -614,8 +641,8 @@
             const svg = document.getElementById('day-arc');
             if (!sunriseStr || !sunsetStr) return;
 
-            const W = 600, H = 96;
-            const cx = 300, cy = 80, rx = 250, ry = 65;
+            const W = 600, H = 110;
+            const cx = 300, cy = 90, rx = 250, ry = 70;
 
             const sunrise = new Date(sunriseStr);
             const sunset  = new Date(sunsetStr);
@@ -672,7 +699,7 @@
             if (readings.length < 2) return;
 
             const W = 600, H = 80;
-            const P = { t: 8, r: 10, b: 20, l: 28 };
+            const P = { t: 8, r: 10, b: 22, l: 30 };
             const cW = W - P.l - P.r, cH = H - P.t - P.b;
             const barW = cW / readings.length;
 
