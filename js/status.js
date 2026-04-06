@@ -57,7 +57,8 @@ async function updateKPIndex() {
             new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
         ]);
         const data = await response.json();
-        const kpValue = parseFloat(data[data.length - 1][1]);
+        const last = data[data.length - 1];
+        const kpValue = parseFloat(last.Kp ?? last[1]);
         const kpClamped = Math.min(9, Math.max(0, kpValue));
         const kpRounded = Math.round(kpClamped);
         const colorData = KP_COLORS[kpRounded];
