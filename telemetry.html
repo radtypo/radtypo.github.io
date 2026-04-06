@@ -513,7 +513,8 @@
             try {
                 const res = await fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json');
                 const data = await res.json();
-                const kpValue = parseFloat(data[data.length - 1][1]);
+                const last = data[data.length - 1];
+                const kpValue = parseFloat(last.Kp ?? last[1]);
                 const kpClamped = Math.min(9, Math.max(0, kpValue));
                 const kpRounded = Math.round(kpClamped);
                 const colorData = KP_COLORS[kpRounded];
@@ -664,8 +665,10 @@
 
         function drawKPHistory(rawData) {
             const svg = document.getElementById('kp-chart');
-            // skip header row (index 0), take last 24 entries (~72h at 3h intervals)
-            const readings = rawData.slice(1).slice(-24);
+            // Take last 24 entries (~72h at 3h intervals)
+            // Handle both old array format (skip header) and new object format
+            const isObject = rawData[0]?.time_tag !== undefined;
+            const readings = isObject ? rawData.slice(-24) : rawData.slice(1).slice(-24);
             if (readings.length < 2) return;
 
             const W = 600, H = 80;
@@ -684,7 +687,7 @@
 
             // Bars
             readings.forEach((row, i) => {
-                const kp = parseFloat(row[1]);
+                const kp = parseFloat(row.Kp ?? row[1]);
                 const kpClamped = Math.min(9, Math.max(0, kp));
                 const bH = Math.max(1, (kpClamped / 9) * cH);
                 const x = P.l + i * barW;
@@ -695,8 +698,8 @@
 
             // Time labels: first, middle, last
             [0, Math.floor(readings.length / 2), readings.length - 1].forEach(i => {
-                const ts = readings[i][0];
-                const hm = ts.split(' ')[1]?.slice(0, 5) || '';
+                const ts = row => row.time_tag || row[0];
+                const hm = ts(readings[i]).replace('T', ' ').split(' ')[1]?.slice(0, 5) || '';
                 const x = P.l + i * barW + barW / 2;
                 s += `<text x="${x}" y="${H - 4}" text-anchor="middle" class="c-lbl">${hm}</text>`;
             });
