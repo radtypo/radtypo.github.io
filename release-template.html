@@ -599,7 +599,9 @@
 
             // Description section — uses meta line as section label
             let descriptionHtml = '';
-            if (release.description) {
+            const descSource = release.descriptionHtml || release.description;
+            if (descSource) {
+                const content = release.descriptionHtml ? descSource : escapeHtml(descSource);
                 descriptionHtml = `
                 <div class="section">
                     <div class="section-header" role="button" tabindex="0" onclick="toggleSection('about')">
@@ -607,7 +609,7 @@
                         <span class="toggle" id="about-toggle">[ - ]</span>
                     </div>
                     <div class="section-content open" id="about">
-                        <p class="details-description">${escapeHtml(release.description)}</p>
+                        <p class="details-description">${content}</p>
                     </div>
                 </div>`;
             }
