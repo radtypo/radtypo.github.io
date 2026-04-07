@@ -136,11 +136,11 @@
     }
   },
   "life-without-buildings-lyrics": {
-    "title": "life without buildings lyrics",
+    "title": "life without buildings",
     "visible": true,
     "type": "page",
     "date": "2026-04-06",
-    "format": { "type": "html", "date": "2026" },
+    "format": { "type": "fansite", "date": "html" },
     "binary": "□□□□□■□□",
     "oneLiner": "a single html file — the only lwb lyrics page you'll want to read in the dark",
     "descriptionHtml": "i've been listening to <a href=\"https://www.normanrecords.com/records/72853-life-without-buildings-any-other-city\" target=\"_blank\" rel=\"noopener noreferrer\">any other city</a> for over twenty years. when i want to read along, <a href=\"https://voxish.org/lwb.htm\" target=\"_blank\" rel=\"noopener noreferrer\">j. benney's transcription page</a> is the only place to go — will bradley from the band found the page and sent him sue tompkins' verbatim lyrics - a great gift to the band's fans.\n\nthe original page is plain html from 2004. the content is perfect. the reading experience, especially on a phone in the dark, is not.\n\nso i rebuilt the layout using the album artwork as the design system — same heavy condensed grotesque, same near-black and hot magenta, nothing added that isn't already on the cover. the content is entirely j. benney's. all i changed was how it sits on the page.\n\nthe page meets wcag aa contrast standards in both light and dark modes, is fully keyboard navigable, and announces song changes to screen readers. on mobile, the tracklist scrolls horizontally so the lyrics fill the screen without compromise.",
@@ -148,10 +148,10 @@
     "linkLabel": "open the page",
     "description": null,
     "carousel": [
-      { "type": "image", "src": "/images/lwb-screenshot-1.png", "alt": "life without buildings lyrics — screenshot 1" },
-      { "type": "image", "src": "/images/lwb-screenshot-2.png", "alt": "life without buildings lyrics — screenshot 2" },
-      { "type": "image", "src": "/images/lwb-screenshot-3.png", "alt": "life without buildings lyrics — screenshot 3" },
-      { "type": "image", "src": "/images/lwb-screenshot-4.png", "alt": "life without buildings lyrics — screenshot 4" }
+      { "type": "image", "src": "/images/lwb-screenshot-1.png", "alt": "life without buildings — screenshot 1" },
+      { "type": "image", "src": "/images/lwb-screenshot-2.png", "alt": "life without buildings — screenshot 2" },
+      { "type": "image", "src": "/images/lwb-screenshot-3.png", "alt": "life without buildings — screenshot 3" },
+      { "type": "image", "src": "/images/lwb-screenshot-4.png", "alt": "life without buildings — screenshot 4" }
     ]
   },
   "jets-to-oblivia": {
