@@ -4,9 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Phonetic Rhythms · rad.typo</title>
-  <script type="module" crossorigin src="../../assets/phonetic-rhythms-CeH-N48a.js"></script>
+  <script type="module" crossorigin src="../../assets/phonetic-rhythms-CylqFCWr.js"></script>
   <link rel="modulepreload" crossorigin href="../../assets/modulepreload-polyfill-B5Qt9EMX.js">
-  <link rel="stylesheet" crossorigin href="../../assets/phonetic-rhythms-DK9jwThd.css">
+  <link rel="stylesheet" crossorigin href="../../assets/phonetic-rhythms-ZZW_CW47.css">
 </head>
 <body>
   <div class="wrap">
@@ -32,15 +32,40 @@
 
     <div class="writing-surface">
       <div class="writing-surface-row">
-        <input id="lyric" class="lyric-input" type="text" maxlength="40"
-               value="boots and cats and so on"
-               placeholder="type a lyric to derive a pattern…"
-               title="lyric (/ to focus)"
-               autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+        <div id="lyric"
+             class="lyric-input"
+             contenteditable="true"
+             spellcheck="false"
+             autocorrect="off"
+             autocapitalize="off"
+             role="textbox"
+             aria-label="lyric"
+             aria-multiline="false"
+             title="lyric (/ to focus)"
+             data-placeholder="type a lyric to derive a pattern…">boots and cats and so on</div>
         <div class="lyric-meta">
           <span><span id="char-count">24</span>/40</span>
           <span id="step-info">free · 24 steps</span>
         </div>
+      </div>
+      <div class="accent-chips" role="toolbar" aria-label="Insert accented character">
+        <button class="accent-chip" data-char="á" type="button">á</button>
+        <button class="accent-chip" data-char="é" type="button">é</button>
+        <button class="accent-chip" data-char="í" type="button">í</button>
+        <button class="accent-chip" data-char="ó" type="button">ó</button>
+        <button class="accent-chip" data-char="ú" type="button">ú</button>
+        <span class="accent-sep" aria-hidden="true">·</span>
+        <button class="accent-chip" data-char="à" type="button">à</button>
+        <button class="accent-chip" data-char="è" type="button">è</button>
+        <button class="accent-chip" data-char="ò" type="button">ò</button>
+        <button class="accent-chip" data-char="ù" type="button">ù</button>
+        <span class="accent-sep" aria-hidden="true">·</span>
+        <button class="accent-chip" data-char="ä" type="button">ä</button>
+        <button class="accent-chip" data-char="ö" type="button">ö</button>
+        <button class="accent-chip" data-char="ü" type="button">ü</button>
+        <span class="accent-sep" aria-hidden="true">·</span>
+        <button class="accent-chip" data-char="ñ" type="button">ñ</button>
+        <button class="accent-chip" data-char="ç" type="button">ç</button>
       </div>
     </div>
 
