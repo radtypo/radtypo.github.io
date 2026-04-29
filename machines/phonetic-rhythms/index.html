@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Phonetic Rhythms · rad.typo</title>
+  <script type="module" crossorigin src="../../assets/phonetic-rhythms-B3U69SlZ.js"></script>
+  <link rel="modulepreload" crossorigin href="../../assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="stylesheet" crossorigin href="../../assets/phonetic-rhythms-hYIQzN2K.css">
+  <link rel="stylesheet" crossorigin href="../../assets/design-system-DDMnANK3.css">
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="header-row">
+      <div class="crumb">
+        <a href="/">rad.typo</a><span class="sep">/</span><strong class="page-name">phonetic rhythms</strong>
+        <span class="catalog-glyphs" aria-label="Catalog □□□□□■□■">□□□□□■□■</span>
+      </div>
+      <div class="header-transport">
+        <span class="tempo-label">tempo</span>
+        <input type="range" id="bpm" min="60" max="200" value="116" class="tempo-slider" />
+        <button class="bpm-val" id="bpm-val" type="button" title="click to type a tempo">116</button>
+        <input class="bpm-edit" id="bpm-edit" type="text" inputmode="decimal" maxlength="5" aria-label="Tempo BPM" hidden />
+        <button class="play" id="play" type="button" title="play / stop (space)">▶ play</button>
+      </div>
+    </div>
+
+    <div class="grid-wrap" title="tap a cell to edit · vowels pitch the bass · small dot = ghost note">
+      <div class="loop-row" id="loop-row"></div>
+      <div class="grid" id="grid"></div>
+    </div>
+
+    <div class="writing-surface">
+      <div class="writing-surface-row">
+        <input id="lyric" class="lyric-input" type="text" maxlength="40"
+               value="boots and cats and so on"
+               placeholder="type a lyric to derive a pattern…"
+               title="lyric (/ to focus)"
+               autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+        <div class="lyric-meta">
+          <span><span id="char-count">24</span>/40</span>
+          <span id="step-info">free · 24 steps</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pattern-modifier-row">
+      <div class="group">
+        <span class="group-label">meter</span>
+        <div class="chips" id="meter-row">
+          <button class="chip active" data-meter="free">free</button>
+          <button class="chip" data-meter="4-4">4/4</button>
+          <button class="chip" data-meter="3-4">3/4</button>
+          <button class="chip" data-meter="5-4">5/4</button>
+          <button class="chip" data-meter="7-8">7/8</button>
+          <button class="chip" data-meter="5-8">5/8</button>
+        </div>
+      </div>
+      <div class="group">
+        <span class="group-label">feel</span>
+        <div class="chips" id="feel-row">
+          <button class="chip active" data-feel="straight">straight</button>
+          <button class="chip" data-feel="lag-time">lag</button>
+          <button class="chip" data-feel="glitch">glitch</button>
+        </div>
+      </div>
+      <label class="ghost-toggle">
+        <input type="checkbox" id="ghost-on" checked />
+        ghosts
+      </label>
+    </div>
+
+    <div class="session-controls-row">
+      <button class="more-toggle" id="more-toggle" type="button" aria-expanded="false" aria-controls="more-panel">
+        <span class="more-arrow" aria-hidden="true">▸</span>
+        <span class="more-label">kits &amp; breaks</span>
+        <span class="more-dot" id="more-dot" aria-hidden="true" hidden></span>
+      </button>
+      <button id="reset-overrides" class="reset-btn" type="button">reset edits</button>
+      <div class="session-export">
+        <span class="small-label">export</span>
+        <button class="export-btn" id="export-midi" type="button">midi</button>
+        <button class="export-btn" id="export-wav" type="button">wav</button>
+        <select id="loop-count" class="loops-select" aria-label="Loops">
+          <option value="1">1 bar</option>
+          <option value="2">2 bars</option>
+          <option value="4" selected>4 bars</option>
+          <option value="8">8 bars</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="more-panel" id="more-panel">
+      <div class="section">
+        <div class="small-label">kit</div>
+        <div class="chips" id="kit-row">
+          <button class="chip active" data-kit="default">default</button>
+          <button class="chip" data-kit="paper">paper</button>
+          <button class="chip" data-kit="vinyl">vinyl</button>
+          <button class="chip" data-kit="felt">felt</button>
+          <button class="chip" data-kit="wood">wood</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="small-label">break</div>
+        <div class="chips" id="break-row">
+          <button class="chip active" data-break="">off (from lyric)</button>
+          <button class="chip" data-break="idiotesque">idiotesque</button>
+          <button class="chip" data-break="funky-drummer">funky drummer</button>
+          <button class="chip" data-break="sing-a-simple-song">sing a simple song</button>
+          <button class="chip" data-break="one-man-band">one man band</button>
+          <button class="chip" data-break="put-your-hand">put your hand</button>
+        </div>
+        <div class="break-description" id="break-description"></div>
+      </div>
+    </div>
+
+
+    <div class="about">
+      <h3>about this machine</h3>
+      <p>each character of the lyric is classified by phonetic feature. plosives become kick hits, sibilants become hat hits, liquids become toms, vowels pitch the bass, spaces fall on the snare, capitals trigger the clap. ghost notes layer secondary triggers — liquids also tick a soft snare underneath, dark vowels add a sub-thump under the bass — at low velocity.</p>
+      <p><strong>feel</strong> changes the temporal interpretation. <em>straight</em> sits on the grid. <em>lag</em> lays voices on three different clocks at once: kick on the grid, hat in triplet swing, snare pushed slightly early and accented. <em>glitch</em> stays grid-locked but inserts probabilistic 32nd-note flams on hat and snare.</p>
+      <p><strong>kit</strong> swaps the voices. five sampled kits: <em>default</em> (tr-808), <em>paper</em> (linn lm-1, clicky and cold), <em>vinyl</em> (tr-909, punchy and four-floor), <em>felt</em> (linndrum, brushed and soft), <em>wood</em> (roland r-8, warm and live-sounding). starting points worth trying: <code>lag + wood</code>, <code>straight + vinyl</code>, <code>glitch + paper</code>.</p>
+      <p class="credits">drum samples sourced from the tidalcycles ecosystem (<a href="https://github.com/tidalcycles/sounds-tr808-fischer">sounds-tr808-fischer</a>, <a href="https://github.com/ritchse/tidal-drum-machines">tidal-drum-machines</a>) under the project's sample sourcing policy. see <a href="/samples/NOTICES.md">notices</a> for per-file attribution.</p>
+    </div>
+
+    <footer>
+      <span>rad.typo / served from a raspberry pi in derry</span>
+      <span><a href="/">← home</a></span>
+    </footer>
+
+  </div>
+</body>
+</html>
