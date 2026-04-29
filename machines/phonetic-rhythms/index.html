@@ -4,9 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Phonetic Rhythms · rad.typo</title>
-  <script type="module" crossorigin src="../../assets/phonetic-rhythms-orVn6KUp.js"></script>
+  <script type="module" crossorigin src="../../assets/phonetic-rhythms-CeH-N48a.js"></script>
   <link rel="modulepreload" crossorigin href="../../assets/modulepreload-polyfill-B5Qt9EMX.js">
-  <link rel="stylesheet" crossorigin href="../../assets/phonetic-rhythms-B8EjA2kR.css">
+  <link rel="stylesheet" crossorigin href="../../assets/phonetic-rhythms-DK9jwThd.css">
 </head>
 <body>
   <div class="wrap">
@@ -64,10 +64,11 @@
           <button class="chip" data-feel="glitch">glitch</button>
         </div>
       </div>
-      <label class="ghost-toggle">
-        <input type="checkbox" id="ghost-on" checked />
-        ghosts
-      </label>
+      <div class="ghost-density" title="ghost note density (0 = none, 100 = all)">
+        <label for="ghost-density">ghosts</label>
+        <input type="range" id="ghost-density" min="0" max="100" step="1" value="70" />
+        <span class="ghost-density-val" id="ghost-density-val">70</span>
+      </div>
     </div>
 
     <div class="session-controls-row">
