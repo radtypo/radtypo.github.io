@@ -154,6 +154,26 @@
       { "type": "image", "src": "/images/lwb-screenshot-4.png", "alt": "life without buildings — screenshot 4" }
     ]
   },
+  "phonetic-rhythms": {
+    "type": "page",
+    "title": "phonetic rhythms",
+    "binary": "□□□□□■□■",
+    "format": {
+      "type": "drum machine · html",
+      "date": "2026"
+    },
+    "oneLiner": "drum machine · html",
+    "carousel": [
+      {
+        "type": "image",
+        "src": "/images/phonetic-rhythms-1.png",
+        "alt": "phonetic rhythms — browser drum machine"
+      }
+    ],
+    "link": "https://radtypo.com/machines/phonetic-rhythms/",
+    "linkLabel": "launch",
+    "descriptionHtml": "a browser drum machine that turns lyrics into beats. type a phrase, hear it.\n\nthe origin story: i was frustrated with logic loops. what if we just used our own ideas - typed our words, titles, poetry into a machine and let it convert them into rhythm? so i built a small mathematical system that does exactly that.\n\nthe system is simple. each character of what you type gets sorted by what your mouth is doing when you say it. plosives - p t k b d g - become kick hits. sibilants - s f h z - become hat hits. liquids - l r m n w - become toms. vowels pitch the bass. spaces fall on the snare. capital letters trigger a clap. ghost notes layer on top at low velocity. the result: a drum part that follows the rhythm your line is already making in your head.\n\nfrom there you can pick a meter, a feel (straight, lag, glitch), and a kit. tap any cell to edit. export as wav or midi.\n\nit's embryonic. if you want to give feedback, email me at <a href=\"mailto:radtypo@gmail.com\">radtypo@gmail.com</a>.\n\nall attributions are included for the open-source drum samples others have built - see the notices link in the footer. you can export the loop as wav, or download the midi and swap the sounds in your own daw. future iterations might extend to an app that syncs with your daw library, or a plugin. i'll keep writing with it and tweaking the parameters, maybe ship some rad.typo presets and mix levels for the loops as i go.\n\nhave fun."
+  },
   "jets-to-oblivia": {
     "title": "jets to oblivia",
     "visible": false,
