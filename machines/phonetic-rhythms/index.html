@@ -4,9 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Phonetic Rhythms · rad.typo</title>
-  <script type="module" crossorigin src="../../assets/phonetic-rhythms-DJN1daCj.js"></script>
+  <script type="module" crossorigin src="../../assets/phonetic-rhythms-Dwkyrun0.js"></script>
   <link rel="modulepreload" crossorigin href="../../assets/modulepreload-polyfill-B5Qt9EMX.js">
-  <link rel="stylesheet" crossorigin href="../../assets/phonetic-rhythms-ZZW_CW47.css">
+  <link rel="stylesheet" crossorigin href="../../assets/phonetic-rhythms-BZtnF874.css">
 </head>
 <body>
   <div class="wrap">
@@ -49,23 +49,31 @@
         </div>
       </div>
       <div class="accent-chips" role="toolbar" aria-label="Insert accented character">
-        <button class="accent-chip" data-char="á" type="button">á</button>
-        <button class="accent-chip" data-char="é" type="button">é</button>
-        <button class="accent-chip" data-char="í" type="button">í</button>
-        <button class="accent-chip" data-char="ó" type="button">ó</button>
-        <button class="accent-chip" data-char="ú" type="button">ú</button>
+        <div class="accent-group">
+          <button class="accent-chip" data-char="á" type="button">á</button>
+          <button class="accent-chip" data-char="é" type="button">é</button>
+          <button class="accent-chip" data-char="í" type="button">í</button>
+          <button class="accent-chip" data-char="ó" type="button">ó</button>
+          <button class="accent-chip" data-char="ú" type="button">ú</button>
+        </div>
         <span class="accent-sep" aria-hidden="true">·</span>
-        <button class="accent-chip" data-char="à" type="button">à</button>
-        <button class="accent-chip" data-char="è" type="button">è</button>
-        <button class="accent-chip" data-char="ò" type="button">ò</button>
-        <button class="accent-chip" data-char="ù" type="button">ù</button>
+        <div class="accent-group">
+          <button class="accent-chip" data-char="à" type="button">à</button>
+          <button class="accent-chip" data-char="è" type="button">è</button>
+          <button class="accent-chip" data-char="ò" type="button">ò</button>
+          <button class="accent-chip" data-char="ù" type="button">ù</button>
+        </div>
         <span class="accent-sep" aria-hidden="true">·</span>
-        <button class="accent-chip" data-char="ä" type="button">ä</button>
-        <button class="accent-chip" data-char="ö" type="button">ö</button>
-        <button class="accent-chip" data-char="ü" type="button">ü</button>
+        <div class="accent-group">
+          <button class="accent-chip" data-char="ä" type="button">ä</button>
+          <button class="accent-chip" data-char="ö" type="button">ö</button>
+          <button class="accent-chip" data-char="ü" type="button">ü</button>
+        </div>
         <span class="accent-sep" aria-hidden="true">·</span>
-        <button class="accent-chip" data-char="ñ" type="button">ñ</button>
-        <button class="accent-chip" data-char="ç" type="button">ç</button>
+        <div class="accent-group">
+          <button class="accent-chip" data-char="ñ" type="button">ñ</button>
+          <button class="accent-chip" data-char="ç" type="button">ç</button>
+        </div>
       </div>
     </div>
 
@@ -105,14 +113,16 @@
       <button id="reset-overrides" class="reset-btn" type="button">reset edits</button>
       <div class="session-export">
         <span class="small-label">export</span>
-        <button class="export-btn" id="export-midi" type="button">midi</button>
-        <button class="export-btn" id="export-wav" type="button">wav</button>
-        <select id="loop-count" class="loops-select" aria-label="Loops">
-          <option value="1">1 bar</option>
-          <option value="2">2 bars</option>
-          <option value="4" selected>4 bars</option>
-          <option value="8">8 bars</option>
-        </select>
+        <div class="export-controls">
+          <button class="export-btn" id="export-midi" type="button">midi</button>
+          <button class="export-btn" id="export-wav" type="button">wav</button>
+          <select id="loop-count" class="loops-select" aria-label="Loops">
+            <option value="1">1 bar</option>
+            <option value="2">2 bars</option>
+            <option value="4" selected>4 bars</option>
+            <option value="8">8 bars</option>
+          </select>
+        </div>
       </div>
     </div>
 
