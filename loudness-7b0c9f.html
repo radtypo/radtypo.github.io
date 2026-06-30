@@ -49,8 +49,12 @@
         tr.test-master.playing td { background: #ffe9a8; }
 
         .flag { color: #c00; font-weight: bold; }
-        .tp-mark { color: var(--secondary-color); margin-left: 2px; }
         .err { color: #c00; padding: 20px; }
+
+        .key { margin: 0 0 24px 0; font-size: 13px; }
+        .key dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0; }
+        .key dt { color: var(--secondary-color); white-space: nowrap; }
+        .key dd { margin: 0; }
 
         @media (max-width: 600px) {
             table { font-size: 12px; }
@@ -76,7 +80,16 @@
         <div class="loading">measuring…</div>
     </div>
 
-<div class="player-bar">
+    <div class="key">
+        <dl>
+            <dt>LUFS</dt>
+            <dd>integrated loudness (perceived volume) across the whole track; lower = quieter. The catalogue clusters around the median shown above. <span class="flag">red</span> = more than 1.5 LU from median (a genuine loudness outlier).</dd>
+            <dt>true peak (dBTP)</dt>
+            <dd>the real peak including inter-sample peaks. Above 0 doesn't mean audible clipping here — it's typical for MP3 masters and sounds fine on most playback. −1.0 dBTP is the target for future masters as insurance for lossy re-encoding.</dd>
+        </dl>
+    </div>
+
+    <div class="player-bar">
         <span class="now">▶ <strong id="now-playing">click a row to play</strong></span>
         <audio id="player" controls preload="none"></audio>
     </div>
@@ -92,7 +105,6 @@
     <script src="/js/status.js"></script>
     <script>
         const MEDIAN_TOLERANCE = 1.5;   // LU window before a track is flagged
-        const TP_CEILING = -1.0;        // dBTP — anything above this is flagged red
 
         const state = { rows: [], sortKey: 'folder', sortDir: 'asc' };
 
@@ -143,12 +155,8 @@
 
             const body = sorted.map((r, i) => {
                 const lufsFlag = Math.abs(r.lufs - med) > MEDIAN_TOLERANCE;
-                const lowHeadroom = r.truePeak > TP_CEILING;
                 const status = lufsFlag
                     ? `<span class="flag">Δ${(r.lufs - med).toFixed(1)} LU</span>`
-                    : '';
-                const tpMark = lowHeadroom
-                    ? `<span class="tp-mark" title="less than 1 dB headroom">°</span>`
                     : '';
                 const audioPath = `/${r.folder}/${encodeURIComponent(r.file)}`;
                 return `
@@ -158,7 +166,7 @@
                         <td class="file">${r.file}</td>
                         <td>${r.folder}</td>
                         <td class="num ${lufsFlag ? 'flag' : ''}">${r.lufs.toFixed(2)}</td>
-                        <td class="num">${r.truePeak.toFixed(2)}${tpMark}</td>
+                        <td class="num">${r.truePeak.toFixed(2)}</td>
                         <td class="num">${formatDuration(r.duration)}</td>
                         <td>${status}</td>
                     </tr>
