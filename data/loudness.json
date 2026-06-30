@@ -1,0 +1,106 @@
+[
+  {
+    "file": "bad-fortune.mp3",
+    "folder": "audio",
+    "lufs": -6.69,
+    "truePeak": 0.39,
+    "duration": 222.48,
+    "isTestMaster": false
+  },
+  {
+    "file": "birthday-cake.mp3",
+    "folder": "audio",
+    "lufs": -6.54,
+    "truePeak": 0.6,
+    "duration": 233.09,
+    "isTestMaster": false
+  },
+  {
+    "file": "frontal-lobe-fritz.mp3",
+    "folder": "audio",
+    "lufs": -8.82,
+    "truePeak": 0.44,
+    "duration": 246.33,
+    "isTestMaster": false
+  },
+  {
+    "file": "hard-hitter.mp3",
+    "folder": "audio",
+    "lufs": -7.51,
+    "truePeak": 0.54,
+    "duration": 293.59,
+    "isTestMaster": false
+  },
+  {
+    "file": "it-aint-pretty.mp3",
+    "folder": "audio",
+    "lufs": -6.46,
+    "truePeak": 0.57,
+    "duration": 297.4,
+    "isTestMaster": false
+  },
+  {
+    "file": "muriel.mp3",
+    "folder": "audio",
+    "lufs": -6.97,
+    "truePeak": 0.93,
+    "duration": 243.25,
+    "isTestMaster": false
+  },
+  {
+    "file": "rad-typo.mp3",
+    "folder": "audio",
+    "lufs": -8.57,
+    "truePeak": 0.24,
+    "duration": 259.84,
+    "isTestMaster": false
+  },
+  {
+    "file": "straight-and-narrow.mp3",
+    "folder": "audio",
+    "lufs": -6.31,
+    "truePeak": -0.28,
+    "duration": 238.37,
+    "isTestMaster": false
+  },
+  {
+    "file": "the-one-we-didnt-get-to-record-with-steve-albini.mp3",
+    "folder": "audio",
+    "lufs": -6.31,
+    "truePeak": 0.37,
+    "duration": 247.04,
+    "isTestMaster": false
+  },
+  {
+    "file": "vulture-in-the-snow.mp3",
+    "folder": "audio",
+    "lufs": -7.3,
+    "truePeak": 0.52,
+    "duration": 305.79,
+    "isTestMaster": false
+  },
+  {
+    "file": "what-now.mp3",
+    "folder": "audio",
+    "lufs": -7.88,
+    "truePeak": 0.66,
+    "duration": 262.48,
+    "isTestMaster": false
+  },
+  {
+    "file": "whats-not-to-like.mp3",
+    "folder": "audio",
+    "lufs": -6.52,
+    "truePeak": 0.39,
+    "duration": 161.44,
+    "isTestMaster": false
+  },
+  {
+    "file": "method-to-her-madness-mastertest-300626.mp3",
+    "folder": "album-staging",
+    "lufs": -6.69,
+    "truePeak": 0.86,
+    "duration": 190.07,
+    "isTestMaster": true
+  }
+]
