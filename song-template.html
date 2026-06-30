@@ -38,6 +38,16 @@
         .section-content.open { display: block; border-top: 1px solid var(--secondary-color); }
 
         .lyrics { white-space: pre-line; line-height: 1.8; }
+        .chords {
+            white-space: pre;
+            line-height: 1.5;
+            font-family: monospace;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            tab-size: 4;
+        }
+        .chords .chord-name { color: var(--link-color); font-weight: bold; }
+        @media (max-width: 600px) { .chords { font-size: 12px; } }
 
         .button-nav { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
         .nav-button {
@@ -138,6 +148,25 @@
             return `${firstLine}. rad.typo, ${year}.`;
         }
 
+        function escapeHtml(s) {
+            return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        function highlightChords(raw) {
+            const chordRe = /^[A-G][#b]?(?:m|maj|min|dim|aug|sus|add)?\d*(?:\/[A-G][#b]?)?$/;
+            return escapeHtml(raw).split('\n').map(line => {
+                const tokens = line.split(/(\s+)/);
+                const nonSpace = tokens.filter(t => t.trim().length > 0);
+                const isChordLine = nonSpace.length > 0 &&
+                    nonSpace.every(t => chordRe.test(t) || /^\[.*\]$/.test(t));
+                if (!isChordLine) return line;
+                return tokens.map(t =>
+                    (t.trim().length > 0 && chordRe.test(t))
+                        ? `<span class="chord-name">${t}</span>` : t
+                ).join('');
+            }).join('\n');
+        }
+
         function renderSong(song) {
             const description = buildSongDescription(song);
             document.getElementById('page-title').textContent = `${song.title} — rad.typo`;
@@ -178,6 +207,15 @@
                         <div class="lyrics">${song.lyrics || 'No lyrics available'}</div>
                     </div>
                 </div>
+                ${song.chords ? `<div class="section">
+                    <div class="section-header" role="button" tabindex="0" onclick="toggleSection('chords')">
+                        <span>chords</span>
+                        <span class="toggle" id="chords-toggle">[ + ]</span>
+                    </div>
+                    <div class="section-content" id="chords">
+                        <div class="chords">${highlightChords(song.chords)}</div>
+                    </div>
+                </div>` : ''}
                 <div class="section">
                     <div class="section-header" role="button" tabindex="0" onclick="toggleSection('details')">
                         <span>details</span>
