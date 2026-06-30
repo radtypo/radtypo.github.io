@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="loudness audit — mastering reference">
+    <title>loudness audit — rad.typo</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <style>
+        h2 { font-size: 16px; margin: 0 0 16px 0; font-weight: bold; }
+        .summary { margin: 0 0 24px 0; padding: 12px 14px; border: 1px solid var(--secondary-color); border-radius: 4px; font-size: 13px; }
+        .summary dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 0; }
+        .summary dt { color: var(--secondary-color); }
+        .summary dd { margin: 0; }
+
+.player-bar {
+            position: sticky; top: 0; z-index: 5;
+            background: var(--bg-color);
+            border: 1px solid var(--secondary-color); border-radius: 4px;
+            padding: 10px 12px; margin-bottom: 16px;
+            display: flex; align-items: center; gap: 10px;
+            font-size: 13px;
+        }
+        .player-bar .now { color: var(--secondary-color); flex-shrink: 0; }
+        .player-bar .now strong { color: var(--text-color); font-weight: normal; }
+        .player-bar audio { flex: 1; min-width: 0; height: 32px; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th, td { padding: 6px 8px; text-align: left; border-bottom: 1px solid var(--surface-color); vertical-align: top; }
+        th {
+            background: var(--surface-color);
+            font-weight: normal;
+            color: var(--secondary-color);
+            cursor: pointer; user-select: none;
+            white-space: nowrap;
+            position: sticky; top: 0;
+        }
+        th:hover { color: var(--text-color); }
+        th .arrow { color: var(--text-color); margin-left: 4px; }
+        td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+        td.file { word-break: break-all; }
+        tr.row { cursor: pointer; }
+        tr.row:hover td { background: var(--surface-color); }
+        tr.row.playing td { background: #fffbcc; }
+        tr.test-master td { background: #fff8e6; border-left: 3px solid #d97706; }
+        tr.test-master td:not(:first-child) { border-left: 0; }
+        tr.test-master:hover td { background: #fff0c8; }
+        tr.test-master.playing td { background: #ffe9a8; }
+
+        .flag { color: #c00; font-weight: bold; }
+        .tp-mark { color: var(--secondary-color); margin-left: 2px; }
+        .err { color: #c00; padding: 20px; }
+
+        @media (max-width: 600px) {
+            table { font-size: 12px; }
+            th, td { padding: 5px 4px; }
+            .player-bar { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="back">← back</a>
+        <h1><a href="/" class="site-title">rad.typo</a></h1>
+        <div class="status">
+            derry: <span id="weather-temp">-</span>°C <span id="weather-icon">⛅</span> |
+            kp: <span class="kp-circle"></span><span id="kp-value">-</span> |
+            cpu: <span id="cpu-temp">-</span>°C<span class="breathing-dots"></span>
+        </div>
+    </header>
+
+    <h2>loudness audit</h2>
+
+    <div id="summary" class="summary">
+        <div class="loading">measuring…</div>
+    </div>
+
+<div class="player-bar">
+        <span class="now">▶ <strong id="now-playing">click a row to play</strong></span>
+        <audio id="player" controls preload="none"></audio>
+    </div>
+
+    <div id="table-wrap">
+        <div class="loading">loading data…</div>
+    </div>
+
+    <footer class="footer">
+        └─ <a href="/infrastructure.html">infrastructure</a> | <a href="/telemetry.html">telemetry</a>
+    </footer>
+
+    <script src="/js/status.js"></script>
+    <script>
+        const MEDIAN_TOLERANCE = 1.5;   // LU window before a track is flagged
+        const TP_CEILING = -1.0;        // dBTP — anything above this is flagged red
+
+        const state = { rows: [], sortKey: 'folder', sortDir: 'asc' };
+
+        const COLS = [
+            { key: 'file',     label: 'filename' },
+            { key: 'folder',   label: 'folder' },
+            { key: 'lufs',     label: 'LUFS (I)' },
+            { key: 'truePeak', label: 'true peak (dBTP)' },
+            { key: 'duration', label: 'duration' },
+        ];
+
+        function formatDuration(sec) {
+            if (!isFinite(sec)) return '–';
+            const m = Math.floor(sec / 60);
+            const s = Math.floor(sec % 60);
+            return `${m}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function median(values) {
+            const v = [...values].sort((a, b) => a - b);
+            if (!v.length) return NaN;
+            const mid = Math.floor(v.length / 2);
+            return v.length % 2 ? v[mid] : (v[mid - 1] + v[mid]) / 2;
+        }
+
+        function compare(a, b, key, dir) {
+            const av = a[key], bv = b[key];
+            let c;
+            if (typeof av === 'number' && typeof bv === 'number') c = av - bv;
+            else c = String(av).localeCompare(String(bv));
+            return dir === 'asc' ? c : -c;
+        }
+
+        function render() {
+            const med = median(state.rows.filter(r => r.folder === 'audio').map(r => r.lufs));
+            const sorted = [...state.rows].sort((a, b) => compare(a, b, state.sortKey, state.sortDir));
+
+            document.getElementById('summary').innerHTML = `
+                <dl>
+                    <dt>catalogue tracks</dt><dd>${state.rows.filter(r => r.folder === 'audio').length} files in <code>audio/</code></dd>
+                    <dt>median LUFS</dt><dd>${med.toFixed(2)} (audio/ only)</dd>
+                    <dt>tolerance window</dt><dd>±${MEDIAN_TOLERANCE} LU around median; outside that is flagged red</dd>
+                </dl>
+            `;
+
+            const arrow = (k) => state.sortKey === k ? `<span class="arrow">${state.sortDir === 'asc' ? '▲' : '▼'}</span>` : '';
+            const head = COLS.map(c => `<th data-key="${c.key}">${c.label}${arrow(c.key)}</th>`).join('') + '<th>status</th>';
+
+            const body = sorted.map((r, i) => {
+                const lufsFlag = Math.abs(r.lufs - med) > MEDIAN_TOLERANCE;
+                const lowHeadroom = r.truePeak > TP_CEILING;
+                const status = lufsFlag
+                    ? `<span class="flag">Δ${(r.lufs - med).toFixed(1)} LU</span>`
+                    : '';
+                const tpMark = lowHeadroom
+                    ? `<span class="tp-mark" title="less than 1 dB headroom">°</span>`
+                    : '';
+                const audioPath = `/${r.folder}/${encodeURIComponent(r.file)}`;
+                return `
+                    <tr class="row${r.isTestMaster ? ' test-master' : ''}"
+                        data-src="${audioPath}"
+                        data-label="${r.file}">
+                        <td class="file">${r.file}</td>
+                        <td>${r.folder}</td>
+                        <td class="num ${lufsFlag ? 'flag' : ''}">${r.lufs.toFixed(2)}</td>
+                        <td class="num">${r.truePeak.toFixed(2)}${tpMark}</td>
+                        <td class="num">${formatDuration(r.duration)}</td>
+                        <td>${status}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            document.getElementById('table-wrap').innerHTML = `
+                <table>
+                    <thead><tr>${head}</tr></thead>
+                    <tbody>${body}</tbody>
+                </table>
+            `;
+
+            document.querySelectorAll('th[data-key]').forEach(th => {
+                th.addEventListener('click', () => {
+                    const k = th.dataset.key;
+                    if (state.sortKey === k) state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+                    else { state.sortKey = k; state.sortDir = (k === 'file' || k === 'folder') ? 'asc' : 'desc'; }
+                    render();
+                });
+            });
+
+            const player = document.getElementById('player');
+            const nowEl = document.getElementById('now-playing');
+            document.querySelectorAll('tr.row').forEach(tr => {
+                tr.addEventListener('click', () => {
+                    document.querySelectorAll('tr.row.playing').forEach(r => r.classList.remove('playing'));
+                    tr.classList.add('playing');
+                    player.src = tr.dataset.src;
+                    nowEl.textContent = tr.dataset.label;
+                    player.play().catch(() => {});
+                });
+            });
+        }
+
+        async function load() {
+            try {
+                const res = await fetch('/data/loudness.json', { cache: 'no-cache' });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                state.rows = await res.json();
+                render();
+            } catch (e) {
+                document.getElementById('table-wrap').innerHTML = `<div class="err">failed to load loudness data: ${e.message}</div>`;
+                document.getElementById('summary').innerHTML = '';
+            }
+        }
+
+        load();
+    </script>
+</body>
+</html>
