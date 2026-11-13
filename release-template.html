@@ -562,7 +562,9 @@
                 const tracksHtml = release.tracks.map(t =>
                     `<li class="track">
                         <span class="track-number">${t.number}.</span>
-                        <span class="track-title"><a href="/songs/${t.slug}.html">${escapeHtml(t.title)}</a></span>
+                        <span class="track-title">${t.link === false
+                            ? escapeHtml(t.title)
+                            : `<a href="/songs/${t.slug}.html">${escapeHtml(t.title)}</a>`}</span>
                     </li>`
                 ).join('');
 

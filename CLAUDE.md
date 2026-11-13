@@ -30,7 +30,7 @@ URL routing for templates is handled via `.htaccess` Apache rewrite rules (`/rel
 
 **New poem:** Same pattern using `data/poems.json`.
 
-**New release:** Add an entry to `data/releases.json` (use `hard-hitter` as the reference for field shapes), put artwork in `images/`, and add a `data-type="releases"` item to `index.html`. Do not create a standalone page in `releases/`: `release-template.html` renders `/releases/<id>.html` via the `.htaccess` rewrite. Buy buttons appear only once `stripeLinks` are non-null. Then add it to `sitemap.html` manually (tree view + chrono list + stats line). To preview locally (no Apache rewrite), open `/release-template.html?id=<id>`.
+**New release:** Add an entry to `data/releases.json` (use `hard-hitter` as the reference for field shapes), put artwork in `images/`, and add a `data-type="releases"` item to `index.html`. Do not create a standalone page in `releases/`: `release-template.html` renders `/releases/<id>.html` via the `.htaccess` rewrite. Buy buttons appear only once `stripeLinks` are non-null. Tracks link to `/songs/<slug>.html` by default; add `"link": false` to a track to show it as plain text (e.g. unpublished songs). Then add it to `sitemap.html` manually (tree view + chrono list + stats line). To preview locally (no Apache rewrite), open `/release-template.html?id=<id>`.
 
 After adding content, update `sitemap.html` (tree view, chrono list, stats count/date).
 
