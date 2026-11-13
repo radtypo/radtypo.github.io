@@ -216,7 +216,7 @@
                         <div class="chords">${highlightChords(song.chords)}</div>
                     </div>
                 </div>` : ''}
-                <div class="section">
+                ${song.hideDetails ? '' : `<div class="section">
                     <div class="section-header" role="button" tabindex="0" onclick="toggleSection('details')">
                         <span>details</span>
                         <span class="toggle" id="details-toggle">[ + ]</span>
@@ -232,7 +232,7 @@
                             ${renderTrackDetails(song.details?.track)}
                         </div>
                     </div>
-                </div>
+                </div>`}
                 <div class="section">
                     <div class="section-header" role="button" tabindex="0" onclick="toggleSection('resources')">
                         <span>resources</span>

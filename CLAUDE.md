@@ -26,7 +26,7 @@ URL routing for templates is handled via `.htaccess` Apache rewrite rules (`/rel
 
 ## Adding Content
 
-**New song:** Add an entry to `data/songs.json`, place the audio file in `audio/`, and place artwork in `images/`. The song will automatically appear on the homepage.
+**New song:** Add an entry to `data/songs.json`, place the audio file in `audio/`, and place artwork in `images/`. Add a `data-type="songs"` item to `index.html` by hand (the homepage list is static and not re-sorted, so source order is display order). `radio.html` picks the song up automatically once its `date` is a full `YYYY-MM-DD` on or before today. Add an `"mp3 download"` entry to `resources` (`../audio/<slug>.mp3`). Set `"hideDetails": true` to hide the details box until it's populated.
 
 **New poem:** Same pattern using `data/poems.json`.
 

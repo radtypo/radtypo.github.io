@@ -1154,7 +1154,14 @@
       "track": {
         "isrc": "gxdwy2600002"
       }
-    }
+    },
+    "hideDetails": true,
+    "resources": [
+      {
+        "name": "mp3 download",
+        "url": "../audio/method-to-her-madness.mp3"
+      }
+    ]
   },
   "liminal-depths": {
     "title": "liminal depths",
