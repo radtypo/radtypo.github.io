@@ -78,7 +78,11 @@
     "binary": "□□□□□■■□",
     "ships": "within 5–7 working days",
     "carousel": [
-      { "type": "image", "src": "/images/liminal-depths-release-artwork.jpg", "alt": "liminal depths album artwork" }
+      { "type": "image", "src": "/images/liminal-depths-release-artwork.jpg", "alt": "liminal depths album artwork" },
+      { "type": "image", "src": "/images/liminal-depths-sleeve-front.jpg", "alt": "liminal depths printed sleeve, front" },
+      { "type": "image", "src": "/images/liminal-depths-sleeve-back.jpg", "alt": "liminal depths printed sleeve, back with tracklist" },
+      { "type": "video", "poster": "/releases/liminal-depths-playback-close-still.jpg", "small": "/releases/liminal-depths-playback-close-small.mp4", "balanced": "/releases/liminal-depths-playback-close-balanced.mp4", "alt": "red lathe cut playing, close up" },
+      { "type": "video", "poster": "/releases/liminal-depths-playback-wide-still.jpg", "small": "/releases/liminal-depths-playback-wide-small.mp4", "balanced": "/releases/liminal-depths-playback-wide-balanced.mp4", "alt": "red lathe cut playing on the turntable" }
     ],
     "tracks": [
       { "number": 1, "slug": "method-to-her-madness", "title": "method to her madness" },

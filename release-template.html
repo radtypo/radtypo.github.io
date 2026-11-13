@@ -340,6 +340,11 @@
         }
 
         @media (max-width: 600px) {
+            /* square frame on phones: square artwork/photos fill edge to edge */
+            .carousel { height: auto; aspect-ratio: 1 / 1; }
+            /* 16:9 videos letterbox on black so they read as a player */
+            .lathe-video { background: #000; }
+
             .carousel-nav { gap: 10px; }
 
             .carousel-btn {
@@ -518,6 +523,7 @@
             // Build carousel
             let carouselHtml = '';
             if (release.carousel?.length > 0) {
+                const isMobileViewport = window.matchMedia('(max-width: 600px)').matches;
                 const slidesHtml = release.carousel.map((slide, i) => {
                     if (slide.type === 'image') {
                         const lazy = i > 0 ? ' loading="lazy"' : '';
@@ -525,10 +531,12 @@
                             <img src="${slide.src}" alt="${escapeHtml(slide.alt)}"${lazy}>
                         </div>`;
                     } else if (slide.type === 'video') {
+                        // small tier on phones, balanced elsewhere (any number of videos)
+                        const src = isMobileViewport && slide.small ? slide.small : slide.balanced;
                         return `<div class="carousel-slide${i === 0 ? ' active' : ''}" role="tabpanel" aria-label="Slide ${i + 1}">
                             <div class="lathe-video">
-                                <video id="release-video" controls preload="none" poster="${slide.poster}">
-                                    <source src="${slide.balanced}" type="video/mp4">
+                                <video controls playsinline preload="none" poster="${slide.poster}">
+                                    <source src="${src}" type="video/mp4">
                                     ${escapeHtml(slide.alt)}
                                 </video>
                             </div>
@@ -596,7 +604,6 @@
                 ${tracklistHtml}
                 ${buildPurchaseHtml(release)}`;
 
-            setupVideoSource();
             setupCarouselKeyboard();
         }
 
@@ -800,16 +807,6 @@
                         ${buttonText}
                     </button>
                 </section>`;
-        }
-
-        // Audit fix (b): use matchMedia to swap video src for mobile
-        function setupVideoSource() {
-            const video = document.getElementById('release-video');
-            if (!video) return;
-            const videoSlide = currentRelease.carousel.find(s => s.type === 'video');
-            if (!videoSlide) return;
-            const isMobile = window.matchMedia('(max-width: 600px)').matches;
-            video.querySelector('source').src = isMobile ? videoSlide.small : videoSlide.balanced;
         }
 
         // Carousel
