@@ -30,3 +30,5 @@ album-generator/.env
 album-generator/node_modules/
 album-generator/generated-albums/
 data/commits.json
+data/subscribers.csv
+data/subscribe_log.txt

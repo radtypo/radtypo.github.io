@@ -46,3 +46,8 @@ RewriteRule ^songs/([^/]+)\.html$ /song-template.html?id=$1 [L,QSA]
 # Release pages: /releases/hard-hitter.html -> /release-template.html?id=hard-hitter
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^releases/([^/]+)\.html$ /release-template.html?id=$1 [L,QSA]
+
+# ── Private data: never serve ───────────────────────────────
+<FilesMatch "^(subscribers\.csv|subscribe_log\.txt)$">
+    Require all denied
+</FilesMatch>
