@@ -69,13 +69,13 @@
   },
   "liminal-depths": {
     "title": "liminal depths",
-    "visible": false,
+    "visible": true,
     "type": "vinyl",
-    "date": "2026",
+    "date": "2026-11-13",
     "format": { "size": "12\"", "type": "lathe cut", "content": "8 songs" },
     "trackCount": 8,
-    "stock": { "total": null, "remaining": null },
-    "binary": "□□□□□■□■",
+    "stock": { "total": 10, "remaining": 10 },
+    "binary": "□□□□□■■□",
     "ships": "within 5–7 working days",
     "carousel": [
       { "type": "image", "src": "/images/liminal-depths-release-artwork.jpg", "alt": "liminal depths album artwork" }
@@ -88,21 +88,19 @@
       { "number": 5, "slug": "force-of-habit", "title": "force of habit" },
       { "number": 6, "slug": "my-happiness-is-not-held-by-others", "title": "my happiness is not held by others" },
       { "number": 7, "slug": "you-do-you", "title": "you do you" },
-      { "number": 8, "slug": "let-the-making-be-enough", "title": "let the making be enough" },
-      { "number": 9, "slug": "fullness-of-time", "title": "fullness of time", "bonus": true },
-      { "number": 10, "slug": "second-sleep", "title": "second sleep", "bonus": true }
+      { "number": 8, "slug": "let-the-making-be-enough", "title": "let the making be enough" }
     ],
     "download": null,
-    "price": null,
+    "price": 50,
     "shipping": {
-      "uk-ireland": { "label": "uk & ireland", "cost": null },
-      "europe": { "label": "europe", "cost": null },
-      "rest-of-world": { "label": "rest of world", "cost": null }
+      "uk-ireland": { "label": "uk & ireland", "cost": 5 },
+      "europe": { "label": "europe", "cost": 7 },
+      "rest-of-world": { "label": "rest of world", "cost": 10 }
     },
     "stripeLinks": {
-      "uk-ireland": null,
-      "europe": null,
-      "rest-of-world": null
+      "uk-ireland": "https://buy.stripe.com/5kQfZheHg0mj7UI7pD6Na0f",
+      "europe": "https://buy.stripe.com/4gM5kDeHgfhd5MA5hv6Na0i",
+      "rest-of-world": "https://buy.stripe.com/dRm7sL0Qq0mjb6UbFT6Na0h"
     }
   },
   "cheap-milk-what-price": {
@@ -180,7 +178,7 @@
     "type": "vinyl",
     "date": "2026",
     "format": { "size": "12\"", "type": "bio-based vinyl", "content": "11 songs" },
-    "binary": "□□□□□■■□",
+    "binary": "□□□□□■■■",
     "stock": { "total": 100, "remaining": 100 },
     "releaseArtwork": "/images/jets-to-oblivia-release-artwork.jpg",
     "description": null,

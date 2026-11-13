@@ -18,9 +18,11 @@ The site uses a **JSON + template system**:
 - **`data/poems.json`** — same for poetry/written works
 - **`song-template.html`** — single HTML file that serves all song pages; reads the song ID from the URL path/query param, fetches `songs.json`, and renders content client-side
 - **`poems-template.html`** — same pattern for poem pages
-- **`index.html`** — homepage; fetches both JSON files and renders a unified chronological list with filter buttons (songs / poems / releases)
+- **`data/releases.json`** — all release metadata, keyed by release id (title, visible, date, format, stock, catalog binary, carousel, tracks, download, price, shipping, stripeLinks)
+- **`release-template.html`** — single HTML file that serves all release pages; reads the id from `?id=` or the `/releases/<id>.html` path, fetches `releases.json`, and renders carousel, tracklist, price, shipping and buy buttons client-side
+- **`index.html`** — homepage; unified chronological list with filter buttons (songs / poems / releases). Release items are hand-written `<li data-type="releases">` entries
 
-URL routing for templates is handled via `.htaccess` Apache rewrite rules. 301 redirects are in place for old paths: `/writing/` → `/poems/`, `/albums/` → `/releases/`.
+URL routing for templates is handled via `.htaccess` Apache rewrite rules (`/releases/<id>.html` → `/release-template.html?id=<id>`). 301 redirects are in place for old paths: `/writing/` → `/poems/`, `/albums/` → `/releases/`.
 
 ## Adding Content
 
@@ -28,7 +30,7 @@ URL routing for templates is handled via `.htaccess` Apache rewrite rules. 301 r
 
 **New poem:** Same pattern using `data/poems.json`.
 
-**New release:** Add a standalone HTML page in `releases/` and add it to `sitemap.html` manually (tree view + chrono list + stats line).
+**New release:** Add an entry to `data/releases.json` (use `hard-hitter` as the reference for field shapes), put artwork in `images/`, and add a `data-type="releases"` item to `index.html`. Do not create a standalone page in `releases/`: `release-template.html` renders `/releases/<id>.html` via the `.htaccess` rewrite. Buy buttons appear only once `stripeLinks` are non-null. Then add it to `sitemap.html` manually (tree view + chrono list + stats line). To preview locally (no Apache rewrite), open `/release-template.html?id=<id>`.
 
 After adding content, update `sitemap.html` (tree view, chrono list, stats count/date).
 
@@ -72,11 +74,14 @@ When adding or auditing a page, verify it matches this structure exactly — use
 | `data/poems.json` | All poem metadata |
 | `song-template.html` | Song page template |
 | `poems-template.html` | Poem page template |
+| `data/releases.json` | All release metadata (stock, price, shipping, stripe links, tracks) |
+| `release-template.html` | Release page template (`/releases/<id>.html` via `.htaccess`) |
 | `index.html` | Homepage (chronological feed with filters) |
 | `sitemap.html` | Full site map (tree + chrono views) — update manually when adding content |
 | `radio.html` | Minimal shuffle player |
 | `radio-archive.html` | Full-featured player (legacy) |
-| `releases/` | Standalone release pages (e.g. hard-hitter.html) |
+| `releases/` | Release media assets only (zips, videos, stills); pages come from `release-template.html` |
+| `releases.html` | Changelog page rendered from generated `data/commits.json` (not a release list) |
 | `.htaccess` | Apache routing/rewrites + 301 redirects |
 | `api/stats.json` | Raspberry Pi server stats (CPU temp, uptime, etc.) |
 
