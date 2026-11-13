@@ -29,3 +29,4 @@ sitemap.html
 album-generator/.env
 album-generator/node_modules/
 album-generator/generated-albums/
+data/commits.json
