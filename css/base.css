@@ -9,7 +9,7 @@
 }
 
 body {
-    font-family: monospace;
+    font-family: var(--mono);
     max-width: 800px;
     margin: 48px auto;
     padding: 24px;

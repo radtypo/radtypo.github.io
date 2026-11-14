@@ -12,6 +12,11 @@
     <meta property="og:type" content="music.album">
     <meta property="og:site_name" content="rad.typo">
     <link rel="canonical" href="">
+    <link rel="preload" href="/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="stylesheet" href="/css/base.css">
     <style>
         h2 { font-size: 16px; margin-bottom: 15px; font-weight: normal; }
@@ -33,7 +38,7 @@
         }
 
         .binary-indicator {
-            font-family: monospace;
+            font-family: var(--mono);
             font-size: 16px;
             letter-spacing: 2px;
         }
@@ -86,7 +91,7 @@
             background: none;
             border: 1px solid var(--secondary-color);
             color: var(--secondary-color);
-            font-family: inherit;
+            font-family: var(--mono);
             font-size: 14px;
             padding: 8px 16px;
             cursor: pointer;
@@ -286,7 +291,7 @@
         }
 
         .buy-now-button {
-            font-family: inherit;
+            font-family: var(--mono);
             font-size: 14px;
             padding: 12px 24px;
             border: 1px solid var(--secondary-color);

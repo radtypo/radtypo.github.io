@@ -36,7 +36,18 @@ After adding content, update `sitemap.html` (tree view, chrono list, stats count
 
 ## Consistent Page Structure
 
-All content pages share the same header/footer/status-bar pattern:
+All content pages share the same head/header/footer/status-bar pattern:
+
+**`<head>` (font + favicon)** — every page, before its own `<style>`/stylesheets:
+```html
+<link rel="preload" href="/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/fonts.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+```
+
+**Typography:** IBM Plex Mono, self-hosted in `fonts/` (latin subset: 400, 400 italic, 700; OFL in `fonts/OFL.txt`). `css/fonts.css` defines the `@font-face` rules and `--mono`. Always use `font-family: var(--mono)`, never bare `monospace` (it bypasses the font). The latin subset has no arrows, box drawing, □■ or █░ glyphs; those fall back per character to the system monospace font. Fonts and favicons are cached for a year (`.htaccess`), so changing one means giving it a new filename.
 
 **Header:**
 ```html
@@ -84,7 +95,9 @@ When adding or auditing a page, verify it matches this structure exactly — use
 | `releases.html` | Changelog page rendered from generated `data/commits.json` (not a release list) |
 | `.htaccess` | Apache routing/rewrites + 301 redirects |
 | `api/stats.json` | Raspberry Pi server stats (CPU temp, uptime, etc.) |
+| `css/fonts.css` + `fonts/` | Self-hosted IBM Plex Mono and `--mono` |
+| `favicon.svg`, `favicon.ico`, `apple-touch-icon.png` | Catalogue-grid tab icon (ICO/PNG drawn pixel-exact from the SVG design) |
 
 ## Design Constraints (Intentional)
 
-No JS frameworks, no database, no build pipeline, monospace typography, self-hosted on low-power hardware. Avoid introducing dependencies or build steps — keep it static and vanilla. Use sed or Python for bulk text replacements when needed (note: sed fails on multi-byte UTF-8 characters like `└──` — use Python instead).
+No JS frameworks, no database, no build pipeline, monospace typography (one self-hosted font, no third-party font services), self-hosted on low-power hardware. Avoid introducing dependencies or build steps — keep it static and vanilla. Use sed or Python for bulk text replacements when needed (note: sed fails on multi-byte UTF-8 characters like `└──` — use Python instead).

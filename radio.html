@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="stream all rad.typo releases">
     <title>radio - rad.typo</title>
+    <link rel="preload" href="/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <style>
         :root {
             --bg-color: #fff;
@@ -14,7 +19,7 @@
         }
 
         body {
-            font-family: monospace;
+            font-family: var(--mono);
             max-width: 800px;
             margin: 48px auto;
             padding: 24px;
@@ -109,7 +114,7 @@
             border-radius: 0;
             background: var(--bg-color);
             color: var(--text-color);
-            font-family: monospace;
+            font-family: var(--mono);
             font-size: 14px;
             cursor: pointer;
             white-space: pre;
@@ -144,7 +149,7 @@
             border: 0;
             background: none;
             color: var(--text-color);
-            font-family: monospace;
+            font-family: var(--mono);
             font-size: 14px;
             text-align: left;
             cursor: pointer;

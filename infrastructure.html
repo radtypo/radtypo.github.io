@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="how rad.typo is hosted — a Raspberry Pi 3B+ in Derry">
     <title>infrastructure - rad.typo</title>
+    <link rel="preload" href="/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <style>
         :root {
             --bg-color: #fff;
@@ -15,7 +20,7 @@
         }
 
         body {
-            font-family: monospace;
+            font-family: var(--mono);
             max-width: 800px;
             margin: 48px auto;
             padding: 24px;
@@ -390,8 +395,8 @@
 
             <div class="decision-item">
                 <div class="decision-title">Monospace Typography</div>
-                <div class="decision-choice"><strong>Choice:</strong> System monospace stack — no web fonts</div>
-                <div class="decision-rationale"><strong>Rationale:</strong> No font downloads means no render-blocking requests and no third-party tracking. The constraint also fits: monospace is the natural environment for code, terminals, and technical writing. The site reads like a document rather than a product.</div>
+                <div class="decision-choice"><strong>Choice:</strong> IBM Plex Mono, self-hosted (latin subset, 3 woff2 files, ~45KB) with the system monospace stack as fallback</div>
+                <div class="decision-rationale"><strong>Rationale:</strong> The system monospace stack looked different on every device. Self-hosting one font makes the site look the same everywhere while keeping the old principles: served from the Pi itself, so no third-party requests or tracking, and <code>font-display: swap</code> means text renders immediately in the fallback font, never blocked on the download. The constraint also fits: monospace is the natural environment for code, terminals, and technical writing. The site reads like a document rather than a product.</div>
             </div>
 
             <div class="decision-item">
