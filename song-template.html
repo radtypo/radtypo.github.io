@@ -123,12 +123,40 @@
                 const response = await fetch('/data/songs.json');
                 const songs = await response.json();
                 currentSong = songs[songId];
-                if (!currentSong) { showError(`Song "${songId}" not found`); return; }
+                // demos ("demo": true) look exactly like a song that doesn't exist
+                if (!currentSong || currentSong.demo) { showError(`Song "${songId}" not found`); return; }
+                if (!isReleased(currentSong)) { renderUnreleased(currentSong); return; }
                 renderSong(currentSong);
             } catch (error) {
                 console.error('Failed to load song:', error);
                 showError('Failed to load song data');
             }
+        }
+
+        // Released = full YYYY-MM-DD date on or before today (UTC, same rule as radio.html).
+        // A year-only date ("2026") or a future date means unreleased.
+        function isReleased(song) {
+            const today = new Date().toISOString().slice(0, 10);
+            return /^\d{4}-\d{2}-\d{2}$/.test(song.date || '') && song.date <= today;
+        }
+
+        // Unreleased: title + "out soon" only — no artwork, player, lyrics, chords or downloads,
+        // and nothing from the lyrics in the meta description.
+        function renderUnreleased(song) {
+            document.getElementById('page-title').textContent = `${song.title} — rad.typo`;
+            document.querySelector('meta[property="og:title"]').setAttribute('content', song.title);
+            document.querySelector('meta[name="description"]').setAttribute('content', `${song.title} — out soon. rad.typo.`);
+            document.querySelector('meta[property="og:description"]').setAttribute('content', 'out soon');
+            document.querySelector('link[rel="canonical"]').setAttribute('href', `https://radtypo.com/songs/${songId}.html`);
+            const robots = document.createElement('meta');
+            robots.name = 'robots';
+            robots.content = 'noindex';
+            document.head.appendChild(robots);
+            document.getElementById('song-content').innerHTML = `
+                <div class="album-info">
+                    <div class="album-header"><h2>${escapeHtml(song.title)}</h2></div>
+                    <div class="album-meta">out soon</div>
+                </div>`;
         }
 
         function showError(message) {

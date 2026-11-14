@@ -34,6 +34,24 @@ URL routing for templates is handled via `.htaccess` Apache rewrite rules (`/rel
 
 After adding content, update `sitemap.html` (tree view, chrono list, stats count/date).
 
+## Released vs Unreleased (date convention)
+
+A song is **released** only when its `date` in `songs.json` is a full `YYYY-MM-DD` on or before today (UTC). A **year-only date** (e.g. `"2026"`) or a future date means **unreleased**:
+
+- `song-template.html` shows only the title + "out soon" (no artwork, player, lyrics, chords or downloads; `noindex`), so a guessed `/songs/<slug>.html` URL can't play or reveal the track.
+- `radio.html` skips it.
+- Don't list or link it anywhere (homepage, sitemap, release tracklists — use `"link": false` on release tracks).
+
+To release a song, set its real `YYYY-MM-DD` date and add its homepage/sitemap entries.
+
+Note: `data/songs.json` itself is public, so unreleased lyrics/chords there are readable by anyone who fetches the file — only the audio is actually protected (by not being on the server, or by `.htaccess`).
+
+**Test demos:** mark a song `"demo": true` in `songs.json` (currently `the-most-generic-experience-ever`, `old-enough-to-handle-it`, `late-stage-capitalismz`). The entry stays, but it is never listed or linked; `song-template.html` shows it as "not found" (same as a nonexistent slug) and `radio.html` skips it. Its audio must also be blocked with `Require all denied` in `.htaccess` (as is all of `/audio/jets-to-oblivia/` until that album is out) — the flag hides pages, `.htaccess` protects the file. The files stay in git.
+
+## "Don't Count Me" Cookie
+
+Visiting any page with `?me=1` sets cookie `rt_me=1` (1 year, `Path=/`, `SameSite=Lax`); `?me=0` clears it (`js/status.js`, which every page loads; the `me` param is then stripped from the URL). `.htaccess` sets env var `rt_me` from that cookie, and the Pi's vhost config logs those requests to `me_access.log` instead of `other_vhosts_access.log`.
+
 ## Consistent Page Structure
 
 All content pages share the same head/header/footer/status-bar pattern:

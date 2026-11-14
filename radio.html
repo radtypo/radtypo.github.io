@@ -261,7 +261,6 @@
         let errorStreak = 0;       // consecutive load errors, to avoid skip loops
         const durations = loadDurationCache();
 
-        const HIDDEN = ['old-enough-to-handle-it', 'the-most-generic-experience-ever'];
         const DURATION_KEY = 'rt_radio_durations';
 
         const audio = document.getElementById('player-audio');
@@ -586,7 +585,7 @@
             const today = new Date().toISOString().slice(0, 10);
             songs = Object.entries(data)
                 .filter(([key, song]) => {
-                    if (HIDDEN.includes(key)) return false;
+                    if (song.demo) return false;          // test demos ("demo": true) never play
                     if (!song.audio) return false;
                     // only released songs: a full YYYY-MM-DD on or before today
                     // (year-only dates mark unreleased tracks)

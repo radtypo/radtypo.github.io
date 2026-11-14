@@ -1,5 +1,23 @@
 // Shared status bar: KP colors, weather, KP index, CPU temp, sessionStorage cache
 
+// "Don't count me": ?me=1 sets cookie rt_me=1 (1 year), ?me=0 clears it.
+// Apache (SetEnvIf Cookie "rt_me=1" rt_me) then logs those requests separately.
+// The ?me param is removed from the address bar so a shared/bookmarked link can't opt other people out.
+(function() {
+    try {
+        const params = new URLSearchParams(location.search);
+        const me = params.get('me');
+        if (me !== '1' && me !== '0') return;
+        const secure = location.protocol === 'https:' ? '; Secure' : '';
+        document.cookie = me === '1'
+            ? `rt_me=1; Max-Age=31536000; Path=/; SameSite=Lax${secure}`
+            : `rt_me=; Max-Age=0; Path=/; SameSite=Lax${secure}`;
+        params.delete('me');
+        const qs = params.toString();
+        history.replaceState(history.state, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
+    } catch (e) {}
+})();
+
 const KP_COLORS = {
     0: { color: '#2ecc71', label: 'Quiet' },
     1: { color: '#2ecc71', label: 'Quiet' },

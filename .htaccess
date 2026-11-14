@@ -62,3 +62,19 @@ RewriteRule ^releases/([^/]+)\.html$ /release-template.html?id=$1 [L,QSA]
 <FilesMatch "^(subscribers\.csv|subscribe_log\.txt)$">
     Require all denied
 </FilesMatch>
+
+# ── Test demos + unreleased audio: never serve (files stay in git) ──
+<FilesMatch "^(the-most-generic-experience-ever|old-enough-to-handle-it|late-stage-capitalismz)\.mp3$">
+    Require all denied
+</FilesMatch>
+# whole jets to oblivia folder until that album is out
+<If "%{REQUEST_URI} =~ m#^/audio/jets-to-oblivia/#">
+    Require all denied
+</If>
+
+# ── "Don't count me": cookie set by ?me=1 (js/status.js) ────
+# The Pi's vhost config uses this env var to log these requests to me_access.log.
+# (IfModule: without mod_setenvif a bare SetEnvIf would 500 the whole site)
+<IfModule mod_setenvif.c>
+    SetEnvIf Cookie "rt_me=1" rt_me
+</IfModule>
