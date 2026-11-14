@@ -10,9 +10,7 @@
             --bg-color: #fff;
             --text-color: #000;
             --link-color: #0000FF;
-            --secondary-color: #666;
-            --interactive-color: #333;
-            --code-bg: #f5f5f5;
+            --secondary-color: #595959;
         }
 
         body {
@@ -25,149 +23,157 @@
             color: var(--text-color);
         }
 
-        h1 {
-            font-size: 24px;
-            margin: 0 0 24px 0;
-        }
+        h1, h2 { margin: 0; padding: 0; }
+        h1 { font-size: 24px; margin-bottom: 24px; }
+        h2 { font-size: 16px; margin: 0 0 15px 0; }
 
-        h2 {
-            font-size: 16px;
-            margin: 0 0 15px 0;
-        }
+        a { color: var(--link-color); text-decoration: none; }
+        a:hover { text-decoration: underline; }
 
-        a {
-            color: var(--link-color);
-            text-decoration: none;
-        }
+        /* Shared header (matches css/base.css) */
+        .header { margin-bottom: 30px; position: relative; }
+        .back { position: absolute; top: 0; right: 0; font-size: 14px; }
+        .site-title { color: inherit; text-decoration: none; }
+        .site-title:hover { text-decoration: none; }
 
-        a:hover {
-            text-decoration: underline;
-        }
+        .status { color: var(--secondary-color); font-size: 14px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
-        .header {
-            margin-bottom: 30px;
-        }
-
-        .status {
-            color: var(--secondary-color);
-            font-size: 14px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .breathing-dots::after {
-            content: '';
-            animation: breathe 4s infinite;
-        }
-
+        .breathing-dots::after { content: ''; animation: breathe 4s infinite; }
         @keyframes breathe {
-            0% { content: ''; }
+            0%, 100% { content: ''; }
             25% { content: '.'; }
             50% { content: '..'; }
             75% { content: '...'; }
-            100% { content: ''; }
         }
 
         .kp-circle {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
+            width: 12px; height: 12px; border-radius: 50%;
             background: var(--kp-color, #2ecc71);
             transition: background 0.5s ease;
             display: inline-block;
         }
 
-        .filter-link {
-            cursor: pointer;
+        /* Nav */
+        .filter-link { cursor: pointer; color: var(--secondary-color); text-decoration: none; }
+        .filter-link:hover { text-decoration: underline; }
+        .filter-link.active { color: var(--text-color); font-weight: bold; text-decoration: underline; }
+
+        /* Now playing deck */
+        .deck {
+            margin: 24px 0 32px;
+            padding: 20px 0;
+            border-top: 1px solid var(--text-color);
+            border-bottom: 1px solid var(--text-color);
+        }
+
+        .deck-meta {
             color: var(--secondary-color);
-            text-decoration: none;
+            font-size: 14px;
+            margin: 0;
         }
 
-        .filter-link:hover {
-            text-decoration: underline;
-        }
-
-        .filter-link.active {
-            color: var(--text-color);
+        .deck-title {
+            font-size: 22px;
             font-weight: bold;
+            line-height: 1.3;
+            margin: 6px 0 2px;
+            overflow-wrap: anywhere;
         }
 
-        /* Player */
-        .player {
-            margin: 20px 0;
-            border: 1px solid var(--secondary-color);
-            border-radius: 4px;
-            padding: 15px;
+        .progress {
+            display: inline-flex;
+            align-items: center;
+            gap: 1ch;
+            margin: 18px 0;
+            font-size: 14px;
+            white-space: pre;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
         }
 
-        #track-title {
-            font-family: monospace;
-            font-size: 16px;
-            font-weight: bold;
-            margin: 0 0 15px 0;
-        }
-
-        #player-audio {
-            width: 100%;
-            margin-bottom: 10px;
-        }
+        .progress:focus-visible { outline: 2px solid var(--link-color); outline-offset: 4px; }
+        .progress-bar { letter-spacing: 0; }
 
         .controls {
             display: flex;
-            align-items: center;
-            gap: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .ctrl {
-            background: none;
-            border: none;
+            min-height: 44px;
+            padding: 0 14px;
+            border: 1px solid var(--text-color);
+            border-radius: 0;
+            background: var(--bg-color);
+            color: var(--text-color);
             font-family: monospace;
             font-size: 14px;
-            padding: 0;
             cursor: pointer;
+            white-space: pre;
+        }
+
+        .ctrl:hover { text-decoration: underline; }
+        .ctrl:focus-visible { outline: 2px solid var(--link-color); outline-offset: 2px; }
+        .ctrl.is-on { background: var(--text-color); color: var(--bg-color); }
+
+        /* Queue */
+        .queue-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 1ch;
             color: var(--secondary-color);
+            font-size: 14px;
+            margin-bottom: 8px;
         }
 
-        .ctrl:hover {
-            color: var(--text-color);
-            text-decoration: underline;
-        }
-
-        /* Tracklist */
-        .tracklist {
+        .queue {
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
-        .tracklist li {
+        .row {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--code-bg);
-            cursor: pointer;
+            align-items: baseline;
+            width: 100%;
+            min-height: 44px;
+            padding: 8px 6px;
+            border: 0;
+            background: none;
+            color: var(--text-color);
+            font-family: monospace;
             font-size: 14px;
+            text-align: left;
+            cursor: pointer;
         }
 
-        .tracklist li:hover {
-            background-color: var(--code-bg);
-            margin: 0 -10px;
-            padding: 12px 10px;
-        }
+        .row:hover .row-title { text-decoration: underline; }
+        .row:focus-visible { outline: 2px solid var(--link-color); outline-offset: -2px; }
 
-        .track-name {
-            flex-grow: 1;
-        }
-
-        .track-duration {
+        .row-num { flex: 0 0 4ch; color: var(--secondary-color); }
+        .row-title { flex: 0 1 auto; overflow-wrap: anywhere; }
+        .row-leader {
+            flex: 1 1 2ch;
+            min-width: 2ch;
+            overflow: hidden;
+            white-space: nowrap;
             color: var(--secondary-color);
-            flex-shrink: 0;
-            margin-left: 15px;
+            margin: 0 1ch;
         }
+        .row-leader::before {
+            content: "................................................................................................................................";
+        }
+        .row-dur { flex: 0 0 auto; color: var(--secondary-color); text-align: right; }
+
+        .row.is-current { background: var(--text-color); color: var(--bg-color); font-weight: bold; }
+        .row.is-current .row-num,
+        .row.is-current .row-leader,
+        .row.is-current .row-dur { color: var(--bg-color); }
+
+        .row.is-unavailable { color: var(--secondary-color); text-decoration: line-through; }
 
         .footer {
             margin-top: 30px;
@@ -177,35 +183,25 @@
             color: var(--secondary-color);
         }
 
-        .footer a {
-            color: var(--secondary-color);
+        .footer a { color: var(--secondary-color); }
+
+        .visually-hidden {
+            position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+            overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
         }
 
         @media (max-width: 600px) {
-            body {
-                margin: 20px auto;
-                padding: 15px;
-            }
-
-            .ctrl {
-                min-height: 44px;
-                display: inline-flex;
-                align-items: center;
-            }
-
-            .tracklist li {
-                padding: 8px 0;
-            }
-
-            .tracklist li:hover {
-                padding: 8px 10px;
-            }
+            body { margin: 20px auto; padding: 15px; }
+            .deck-title { font-size: 20px; }
+            .ctrl { padding: 0 10px; flex: 1 1 auto; }
+            .row { padding: 8px 4px; }
         }
     </style>
 </head>
 <body>
     <header class="header">
-        <h1>rad.typo</h1>
+        <a href="/" class="back">← back</a>
+        <h1><a href="/" class="site-title">rad.typo</a></h1>
         <div class="status">
             derry: <span id="weather-temp">-</span>°C <span id="weather-icon">⛅</span> |
             kp: <span class="kp-circle"></span><span id="kp-value">-</span> |
@@ -213,20 +209,36 @@
         </div>
     </header>
 
-    <h2><a href="/index.html" class="filter-link">all</a> | <a href="/index.html#songs" class="filter-link">songs</a> | <a href="/index.html#poems" class="filter-link">poems</a> | <a href="/index.html#releases" class="filter-link">releases</a> | <span class="filter-link active">rad.io</span></h2>
+    <h2><a href="/index.html" class="filter-link">all</a> | <a href="/index.html#songs" class="filter-link">songs</a> | <a href="/index.html#poems" class="filter-link">poems</a> | <a href="/index.html#releases" class="filter-link">releases</a> | <span class="filter-link active" aria-current="page">rad.io</span></h2>
 
-    <div class="player">
-        <div id="track-title">—</div>
-        <audio id="player-audio" controls preload="metadata"></audio>
-        <div class="controls">
-            <button class="ctrl" id="btn-prev">prev</button>
-            <button class="ctrl" id="btn-next">next</button>
-            <button class="ctrl" id="btn-shuffle">shuffle</button>
-            <button class="ctrl" id="btn-loop">loop</button>
+    <section class="deck" aria-label="now playing">
+        <p class="deck-meta" id="np-count">now playing — --/--</p>
+        <p class="deck-title" id="np-title" aria-live="polite">—</p>
+        <p class="deck-meta" id="np-release">&nbsp;</p>
+
+        <div class="progress" id="progress" role="slider" tabindex="0"
+             aria-label="seek" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0" aria-valuetext="00:00 of 00:00">
+            <span id="t-cur">00:00</span><span class="progress-bar" id="t-bar">[]</span><span id="t-dur">00:00</span>
         </div>
-    </div>
 
-    <ul class="tracklist" id="tracklist"></ul>
+        <div class="controls">
+            <button class="ctrl" id="btn-prev" type="button" aria-label="previous track">[ |◄ prev ]</button>
+            <button class="ctrl" id="btn-play" type="button" aria-label="play">[ ► play ]</button>
+            <button class="ctrl" id="btn-next" type="button" aria-label="next track">[ next ►| ]</button>
+            <button class="ctrl" id="btn-shuffle" type="button" aria-pressed="true">[x] shuffle</button>
+            <button class="ctrl" id="btn-loop" type="button" aria-pressed="false">[ ] loop</button>
+        </div>
+
+        <audio id="player-audio" preload="metadata" hidden></audio>
+    </section>
+
+    <section aria-label="queue">
+        <div class="queue-head">
+            <span>queue</span>
+            <span id="queue-summary">-- tracks · --:--</span>
+        </div>
+        <ol class="queue" id="queue"></ol>
+    </section>
 
     <footer class="footer">
 └─ <a href="/infrastructure.html">infrastructure</a> | <a href="/telemetry.html">telemetry</a>
@@ -234,33 +246,230 @@
 
     <script src="/js/status.js"></script>
     <script>
-        let songs = [];
+        // ── State ─────────────────────────────────────────────
+        let songs = [];            // queue in list order (newest first)
         let currentIdx = -1;
-        let loopActive = false;
+        let shuffleOn = true;
+        let loopOn = false;
+        let bag = [];              // Fisher–Yates order of unplayed indices (shuffle mode)
+        let history = [];          // indices played before the current one (for prev)
+        let errorStreak = 0;       // consecutive load errors, to avoid skip loops
+        const durations = loadDurationCache();
+
+        const HIDDEN = ['old-enough-to-handle-it', 'the-most-generic-experience-ever'];
+        const DURATION_KEY = 'rt_radio_durations';
 
         const audio = document.getElementById('player-audio');
-        const trackTitle = document.getElementById('track-title');
-        const tracklist = document.getElementById('tracklist');
+        const npCount = document.getElementById('np-count');
+        const npTitle = document.getElementById('np-title');
+        const npRelease = document.getElementById('np-release');
+        const progress = document.getElementById('progress');
+        const tCur = document.getElementById('t-cur');
+        const tBar = document.getElementById('t-bar');
+        const tDur = document.getElementById('t-dur');
         const btnPrev = document.getElementById('btn-prev');
+        const btnPlay = document.getElementById('btn-play');
         const btnNext = document.getElementById('btn-next');
         const btnShuffle = document.getElementById('btn-shuffle');
         const btnLoop = document.getElementById('btn-loop');
+        const queueEl = document.getElementById('queue');
+        const queueSummary = document.getElementById('queue-summary');
+        const narrow = window.matchMedia('(max-width: 600px)');
 
-        function fmtDuration(sec) {
-            if (!isFinite(sec) || isNaN(sec) || sec < 0) return '';
-            const m = Math.floor(sec / 60);
-            const s = Math.floor(sec % 60);
-            return `${m}:${s.toString().padStart(2, '0')}`;
+        // ── Formatting ────────────────────────────────────────
+        const pad2 = n => String(n).padStart(2, '0');
+
+        function fmtClock(sec) {            // 01:12 (progress bar)
+            if (!isFinite(sec) || sec < 0) sec = 0;
+            return `${pad2(Math.floor(sec / 60))}:${pad2(Math.floor(sec % 60))}`;
         }
 
+        function fmtShort(sec) {            // 3:21 (queue rows)
+            if (!isFinite(sec) || sec <= 0) return '-:--';
+            return `${Math.floor(sec / 60)}:${pad2(Math.floor(sec % 60))}`;
+        }
+
+        function fmtTotal(sec) {            // 46:12 or 1:02:33
+            const s = Math.round(sec);
+            const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), r = s % 60;
+            return h ? `${h}:${pad2(m)}:${pad2(r)}` : `${m}:${pad2(r)}`;
+        }
+
+        // ── Duration cache (sessionStorage) ───────────────────
+        function loadDurationCache() {
+            try { return JSON.parse(sessionStorage.getItem('rt_radio_durations')) || {}; } catch (e) { return {}; }
+        }
+
+        function saveDuration(key, sec) {
+            if (!isFinite(sec) || sec <= 0) return;
+            durations[key] = Math.round(sec * 10) / 10;
+            try { sessionStorage.setItem(DURATION_KEY, JSON.stringify(durations)); } catch (e) {}
+            renderRowDuration(songs.findIndex(s => s.key === key));
+            renderQueueSummary();
+        }
+
+        // ── Shuffle bag ───────────────────────────────────────
+        function fisherYates(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function refillBag() {
+            bag = fisherYates(songs.map((_, i) => i).filter(i => i !== currentIdx));
+        }
+
+        function takeFromBag() {
+            if (bag.length === 0) refillBag();
+            return bag.pop();
+        }
+
+        function nextIndex() {
+            if (songs.length === 0) return -1;
+            if (shuffleOn) return songs.length === 1 ? 0 : takeFromBag();
+            return (currentIdx + 1) % songs.length;
+        }
+
+        // ── Playback ──────────────────────────────────────────
+        function playIndex(idx, { fromHistory = false } = {}) {
+            if (idx < 0 || idx >= songs.length) return;
+            if (!fromHistory && currentIdx !== -1 && currentIdx !== idx) history.push(currentIdx);
+            currentIdx = idx;
+            bag = bag.filter(i => i !== idx);     // a played track counts as played in the bag
+            const song = songs[idx];
+            audio.src = `/audio/${song.key}.mp3`;
+            audio.load();
+            renderNowPlaying();
+            renderQueueHighlight();
+            updateMediaSession(song);
+            tryPlay();
+        }
+
+        function tryPlay() {
+            const p = audio.play();
+            if (p && p.catch) p.catch(() => renderPlayState());   // autoplay blocked → paused UI
+        }
+
+        function playNext() { playIndex(nextIndex()); }
+
+        function playPrev() {
+            if (audio.currentTime > 3 || history.length === 0) {
+                audio.currentTime = 0;
+                return;
+            }
+            playIndex(history.pop(), { fromHistory: true });
+        }
+
+        function togglePlay() {
+            if (currentIdx === -1) { playNext(); return; }
+            if (audio.paused) tryPlay(); else audio.pause();
+        }
+
+        function seekTo(sec) {
+            if (!isFinite(audio.duration)) return;
+            audio.currentTime = Math.max(0, Math.min(audio.duration, sec));
+            renderProgress();
+        }
+
+        // ── Rendering ─────────────────────────────────────────
+        function renderNowPlaying() {
+            const song = songs[currentIdx];
+            npCount.textContent = `now playing — ${pad2(currentIdx + 1)}/${pad2(songs.length)}`;
+            npTitle.textContent = song.title;
+            npRelease.textContent = `${song.release} · ${song.year}`;
+            renderProgress();
+        }
+
+        function renderProgress() {
+            const cells = narrow.matches ? 16 : 26;
+            const dur = isFinite(audio.duration) ? audio.duration : (durations[songs[currentIdx]?.key] || 0);
+            const cur = Math.min(audio.currentTime || 0, dur || 0);
+            const filled = dur > 0 ? Math.round((cur / dur) * cells) : 0;
+            tCur.textContent = fmtClock(cur);
+            tBar.textContent = `[${'█'.repeat(filled)}${'░'.repeat(cells - filled)}]`;
+            tDur.textContent = fmtClock(dur);
+            progress.setAttribute('aria-valuemax', String(Math.round(dur)));
+            progress.setAttribute('aria-valuenow', String(Math.round(cur)));
+            progress.setAttribute('aria-valuetext', `${fmtClock(cur)} of ${fmtClock(dur)}`);
+        }
+
+        function renderPlayState() {
+            const playing = !audio.paused && !audio.ended;
+            btnPlay.textContent = playing ? '[ ❚❚ pause ]' : '[ ► play ]';
+            btnPlay.setAttribute('aria-label', playing ? 'pause' : 'play');
+            btnPlay.classList.toggle('is-on', playing);
+            if ('mediaSession' in navigator) navigator.mediaSession.playbackState = playing ? 'playing' : 'paused';
+        }
+
+        function renderToggles() {
+            btnShuffle.textContent = `[${shuffleOn ? 'x' : ' '}] shuffle`;
+            btnShuffle.setAttribute('aria-pressed', String(shuffleOn));
+            btnLoop.textContent = `[${loopOn ? 'x' : ' '}] loop`;
+            btnLoop.setAttribute('aria-pressed', String(loopOn));
+        }
+
+        function buildQueue() {
+            queueEl.textContent = '';
+            songs.forEach((song, idx) => {
+                const li = document.createElement('li');
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'row';
+                btn.dataset.idx = idx;
+                const num = document.createElement('span'); num.className = 'row-num';
+                const title = document.createElement('span'); title.className = 'row-title'; title.textContent = song.title;
+                const leader = document.createElement('span'); leader.className = 'row-leader'; leader.setAttribute('aria-hidden', 'true');
+                const dur = document.createElement('span'); dur.className = 'row-dur';
+                btn.append(num, title, leader, dur);
+                btn.addEventListener('click', () => playIndex(idx));
+                li.appendChild(btn);
+                queueEl.appendChild(li);
+                renderRowDuration(idx);
+            });
+            renderQueueHighlight();
+            renderQueueSummary();
+        }
+
+        function rowAt(idx) { return queueEl.children[idx]?.firstChild; }
+
+        function renderRowDuration(idx) {
+            const row = rowAt(idx);
+            if (!row) return;
+            const sec = durations[songs[idx].key];
+            row.querySelector('.row-dur').textContent = fmtShort(sec);
+        }
+
+        function renderQueueHighlight() {
+            songs.forEach((song, idx) => {
+                const row = rowAt(idx);
+                if (!row) return;
+                const current = idx === currentIdx;
+                row.classList.toggle('is-current', current);
+                row.querySelector('.row-num').textContent = current ? '►' : pad2(idx + 1);
+                if (current) row.setAttribute('aria-current', 'true'); else row.removeAttribute('aria-current');
+                row.setAttribute('aria-label', `${current ? 'now playing: ' : 'play '}${song.title}`);
+            });
+        }
+
+        function renderQueueSummary() {
+            const known = songs.filter(s => durations[s.key] > 0);
+            const total = known.length === songs.length && songs.length > 0
+                ? fmtTotal(known.reduce((sum, s) => sum + durations[s.key], 0))
+                : '--:--';
+            queueSummary.textContent = `${songs.length} tracks · ${total}`;
+        }
+
+        // ── Media Session ─────────────────────────────────────
         function updateMediaSession(song) {
             if (!('mediaSession' in navigator)) return;
             const src = `/images/${song.artwork}`;
-            const type = song.artwork.endsWith('.png') ? 'image/png' : 'image/jpeg';
+            const type = (song.artwork || '').endsWith('.png') ? 'image/png' : 'image/jpeg';
             navigator.mediaSession.metadata = new MediaMetadata({
                 title: song.title,
                 artist: 'rad.typo',
-                album: 'radio',
+                album: song.release === 'single' ? 'radio' : song.release,
                 artwork: [
                     { src, sizes: '96x96', type },
                     { src, sizes: '128x128', type },
@@ -269,108 +478,139 @@
             });
         }
 
-        function updateTracklistHighlight() {
-            tracklist.querySelectorAll('li').forEach((li, idx) => {
-                const nameSpan = li.querySelector('.track-name');
-                const title = songs[idx].title;
-                nameSpan.textContent = idx === currentIdx ? `► ${title}` : title;
-            });
-        }
-
-        function loadAndPlay(idx) {
-            currentIdx = idx;
-            const song = songs[idx];
-            trackTitle.textContent = song.title;
-            audio.src = `/audio/${song.key}.mp3`;
-            audio.load();
-            audio.play().catch(() => {});
-            updateTracklistHighlight();
-            updateMediaSession(song);
-        }
-
-        function playNext() {
-            if (songs.length === 0) return;
-            const nextIdx = (currentIdx + 1) % songs.length;
-            loadAndPlay(nextIdx);
-        }
-
-        function playPrev() {
-            if (songs.length === 0) return;
-            if (audio.currentTime > 3) {
-                audio.currentTime = 0;
-                return;
+        if ('mediaSession' in navigator) {
+            const handlers = {
+                play: () => tryPlay(),
+                pause: () => audio.pause(),
+                nexttrack: playNext,
+                previoustrack: playPrev,
+                seekbackward: d => seekTo(audio.currentTime - (d.seekOffset || 5)),
+                seekforward: d => seekTo(audio.currentTime + (d.seekOffset || 5)),
+                seekto: d => seekTo(d.seekTime),
+            };
+            for (const [action, fn] of Object.entries(handlers)) {
+                try { navigator.mediaSession.setActionHandler(action, fn); } catch (e) { /* unsupported action */ }
             }
-            const prevIdx = (currentIdx - 1 + songs.length) % songs.length;
-            loadAndPlay(prevIdx);
         }
 
-        function playShuffle() {
-            if (songs.length <= 1) return;
-            let idx;
-            do {
-                idx = Math.floor(Math.random() * songs.length);
-            } while (idx === currentIdx);
-            loadAndPlay(idx);
-        }
-
+        // ── Events ────────────────────────────────────────────
+        audio.addEventListener('play', renderPlayState);
+        audio.addEventListener('pause', renderPlayState);
+        audio.addEventListener('timeupdate', renderProgress);
+        audio.addEventListener('loadedmetadata', () => {
+            errorStreak = 0;
+            if (currentIdx !== -1) saveDuration(songs[currentIdx].key, audio.duration);
+            renderProgress();
+        });
         audio.addEventListener('ended', () => {
-            if (loopActive) {
-                audio.currentTime = 0;
-                audio.play().catch(() => {});
-            } else {
-                playNext();
-            }
+            if (loopOn) { audio.currentTime = 0; tryPlay(); }
+            else playNext();
+        });
+        audio.addEventListener('error', () => {
+            if (currentIdx === -1 || !audio.getAttribute('src')) return;
+            rowAt(currentIdx)?.classList.add('is-unavailable');
+            errorStreak++;
+            if (errorStreak < songs.length) setTimeout(playNext, 300);
+            else renderPlayState();
         });
 
         btnPrev.addEventListener('click', playPrev);
         btnNext.addEventListener('click', playNext);
-        btnShuffle.addEventListener('click', playShuffle);
+        btnPlay.addEventListener('click', togglePlay);
+        btnShuffle.addEventListener('click', () => {
+            shuffleOn = !shuffleOn;
+            if (shuffleOn) refillBag();
+            renderToggles();
+        });
         btnLoop.addEventListener('click', () => {
-            loopActive = !loopActive;
-            btnLoop.textContent = loopActive ? '[loop]' : 'loop';
+            loopOn = !loopOn;
+            renderToggles();
         });
 
-        if ('mediaSession' in navigator) {
-            navigator.mediaSession.setActionHandler('play', () => audio.play());
-            navigator.mediaSession.setActionHandler('pause', () => audio.pause());
-            navigator.mediaSession.setActionHandler('nexttrack', playNext);
-            navigator.mediaSession.setActionHandler('previoustrack', playPrev);
+        // Seek by clicking/tapping the bar (proportional to the cells, clamped)
+        progress.addEventListener('click', e => {
+            if (!isFinite(audio.duration)) return;
+            const rect = tBar.getBoundingClientRect();
+            const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+            seekTo(ratio * audio.duration);
+        });
+
+        progress.addEventListener('keydown', e => {
+            const steps = { ArrowLeft: -5, ArrowDown: -5, ArrowRight: 5, ArrowUp: 5 };
+            if (e.key in steps) { seekTo(audio.currentTime + steps[e.key]); e.preventDefault(); }
+            else if (e.key === 'Home') { seekTo(0); e.preventDefault(); }
+            else if (e.key === 'End') { seekTo(audio.duration - 1); e.preventDefault(); }
+        });
+
+        narrow.addEventListener('change', renderProgress);
+
+        // ── Duration probes: one at a time, metadata only (gentle on the Pi) ──
+        async function probeDurations() {
+            for (const song of songs) {
+                if (durations[song.key] > 0) continue;
+                const sec = await new Promise(resolve => {
+                    const probe = new Audio();
+                    probe.preload = 'metadata';
+                    const done = v => {
+                        clearTimeout(timer);
+                        probe.removeAttribute('src');
+                        probe.load();
+                        resolve(v);
+                    };
+                    const timer = setTimeout(() => done(NaN), 10000);
+                    probe.addEventListener('loadedmetadata', () => done(probe.duration), { once: true });
+                    probe.addEventListener('error', () => done(NaN), { once: true });
+                    probe.src = `/audio/${song.key}.mp3`;
+                });
+                saveDuration(song.key, sec);
+            }
         }
 
-        // Load songs and build tracklist
-        fetch('/data/songs.json')
-            .then(r => r.json())
-            .then(data => {
-                const today = new Date().toISOString().slice(0, 10);
-                const hidden = ['old-enough-to-handle-it', 'the-most-generic-experience-ever'];
-                songs = Object.entries(data)
-                    .filter(([key, song]) => {
-                        if (hidden.includes(key)) return false;
-                        if (!song.audio) return false;
-                        if (!song.date || song.date.length < 10 || song.date > today) return false;
-                        return true;
-                    })
-                    .map(([key, song]) => ({
+        // ── Load data ─────────────────────────────────────────
+        function releaseFor(slug, releases) {
+            for (const r of Object.values(releases)) {
+                if (r.visible && (r.tracks || []).some(t => t.slug === slug)) return r;
+            }
+            return null;
+        }
+
+        Promise.all([
+            fetch('/data/songs.json').then(r => r.json()),
+            fetch('/data/releases.json').then(r => r.json()).catch(() => ({})),
+        ]).then(([data, releases]) => {
+            const today = new Date().toISOString().slice(0, 10);
+            songs = Object.entries(data)
+                .filter(([key, song]) => {
+                    if (HIDDEN.includes(key)) return false;
+                    if (!song.audio) return false;
+                    // only released songs: a full YYYY-MM-DD on or before today
+                    // (year-only dates mark unreleased tracks)
+                    if (!song.date || song.date.length < 10 || song.date > today) return false;
+                    return true;
+                })
+                .map(([key, song]) => {
+                    const rel = releaseFor(key, releases);
+                    const relYear = rel && /^\d{4}/.test(rel.date || '') ? rel.date.slice(0, 4) : null;
+                    return {
                         key,
                         title: song.title,
                         artwork: song.artwork,
                         date: song.date,
-                    }));
+                        release: rel ? rel.title : 'single',
+                        year: relYear || song.date.slice(0, 4),
+                    };
+                })
+                .sort((a, b) => b.date.localeCompare(a.date));
 
-                // Sort by date descending (newest first)
-                songs.sort((a, b) => b.date.localeCompare(a.date));
+            buildQueue();
+            renderToggles();
+            renderPlayState();
+            if (songs.length === 0) return;
 
-                songs.forEach((song, idx) => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `<span class="track-name">${song.title}</span><span class="track-duration"></span>`;
-                    li.addEventListener('click', () => loadAndPlay(idx));
-                    tracklist.appendChild(li);
-                });
-
-                // Pick a random track and autoplay
-                const startIdx = Math.floor(Math.random() * songs.length);
-                loadAndPlay(startIdx);
-            });
+            refillBag();
+            playIndex(takeFromBag());    // random start; if autoplay is blocked the UI shows [ ► play ]
+            probeDurations();
+        });
     </script>
 </body>
 </html>
