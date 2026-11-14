@@ -223,7 +223,7 @@
         <span class="item-date item-binary">□□□□□■■□</span>
         <span class="item-title"><a href="/releases/liminal-depths.html">liminal depths</a></span>
     </div>
-    <div class="album-details">12" • lathe cut • 8 songs • 10 of 10</div>
+    <div class="album-details">12" • lathe cut • 8 songs • <span data-stock="liminal-depths">8 of 10</span></div>
 </li>
 
 <li class="item" data-type="songs" data-date="2026-11-13">
@@ -289,7 +289,7 @@
         <span class="item-date item-binary">□□□□□□■■</span>
         <span class="item-title"><a href="/releases/cheap-milk-what-price.html">cheap milk, what price?</a></span>
     </div>
-    <div class="album-details">acrylic on paper • 1 of 1</div>
+    <div class="album-details">acrylic on paper • <span data-stock="cheap-milk-what-price">1 of 1</span></div>
 </li>
 
 <li class="item" data-type="releases" data-date="2026-03-18">
@@ -297,7 +297,7 @@
         <span class="item-date item-binary">□□□□□□■□</span>
         <span class="item-title"><a href="/releases/well-be-lucky-if-i-dont-bust-out-crying.html">we'll be lucky if i don't bust out crying</a></span>
     </div>
-    <div class="album-details">acrylic on paper • 1 of 1</div>
+    <div class="album-details">acrylic on paper • <span data-stock="well-be-lucky-if-i-dont-bust-out-crying">1 of 1</span></div>
 </li>
 
 <li class="item" data-type="poems" data-date="2026-03-18">
@@ -480,7 +480,7 @@
         <span class="item-date item-binary">□□□□□□□■</span>
         <span class="item-title"><a href="/releases/hard-hitter.html">hard hitter</a></span>
     </div>
-    <div class="album-details">12" • lathe cut • 8 songs • 4 of 20</div>
+    <div class="album-details">12" • lathe cut • 8 songs • <span data-stock="hard-hitter">4 of 20</span></div>
 </li>
 
 <li class="item" data-type="songs" data-date="2025-09-24">
@@ -550,6 +550,19 @@
 
     <script src="/js/status.js"></script>
     <script>
+        // Stock counts: single source of truth is data/releases.json
+        // (the text in each [data-stock] span is only a fallback)
+        fetch('/data/releases.json')
+            .then(r => r.json())
+            .then(releases => {
+                document.querySelectorAll('[data-stock]').forEach(el => {
+                    const stock = releases[el.dataset.stock]?.stock;
+                    if (stock?.total == null || stock?.remaining == null) return;
+                    el.textContent = stock.remaining === 0 ? 'sold out' : `${stock.remaining} of ${stock.total}`;
+                });
+            })
+            .catch(() => {});
+
         // Auto-activate pending entries on their publish date
         const today = new Date().toISOString().slice(0, 10);
         document.querySelectorAll('[data-pending="true"]').forEach(item => {
