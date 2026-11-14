@@ -42,12 +42,12 @@ All content pages share the same head/header/footer/status-bar pattern:
 ```html
 <link rel="preload" href="/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/fonts.css">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="icon" href="/favicon.ico" sizes="32x32">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico?v=2" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 ```
 
-**Typography:** IBM Plex Mono, self-hosted in `fonts/` (latin subset: 400, 400 italic, 700; OFL in `fonts/OFL.txt`). `css/fonts.css` defines the `@font-face` rules and `--mono`. Always use `font-family: var(--mono)`, never bare `monospace` (it bypasses the font). The latin subset has no arrows, box drawing, □■ or █░ glyphs; those fall back per character to the system monospace font. Fonts and favicons are cached for a year (`.htaccess`), so changing one means giving it a new filename.
+**Typography:** IBM Plex Mono, self-hosted in `fonts/` (latin subset: 400, 400 italic, 700; OFL in `fonts/OFL.txt`). `css/fonts.css` defines the `@font-face` rules and `--mono`. Always use `font-family: var(--mono)`, never bare `monospace` (it bypasses the font). Sole exception: the "rad.typo" wordmark (`.site-title, .header h1` in `fonts.css`) deliberately stays system `monospace`. The latin subset has no arrows, box drawing, □■ or █░ glyphs; those fall back per character to the system monospace font. Fonts and favicons are cached for a year (`.htaccess`): to change a favicon, keep the filename and bump the `?v=N` on its three `<link>` hrefs in every page (and here); to change a font, give it a new filename.
 
 **Header:**
 ```html
