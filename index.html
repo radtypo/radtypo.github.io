@@ -3,611 +3,348 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="songs, poems, paintings and books. made with friends in derry. powered by the sun.">
+    <meta name="description" content="a register of works: songs, poems, records and paintings. made with friends in derry. powered by the sun.">
     <title>rad.typo</title>
     <link rel="preload" href="/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="/css/fonts.css">
     <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
     <link rel="icon" href="/favicon.ico?v=2" sizes="32x32">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
+    <!-- Register of works (experimental "register" branch).
+         The table rows are generated: edit data/*.json, then run python3 scripts/build-register.py -->
     <style>
-        html {
-            overflow-y: scroll;
-        }
+        html { overflow-y: scroll; }
 
         :root {
-            --bg-color: #fff;
-            --text-color: #000;
-            --link-color: #0000FF;
-            --secondary-color: #666;
-            --surface-color: #f5f5f5;
+            --paper: #f4f1ea;
+            --ink: #111;
+            --faint: #6b675f;
+            --hair: #cfc9bc;
         }
 
         body {
             font-family: var(--mono);
-            max-width: 800px;
-            margin: 48px auto;
-            padding: 24px;
-            line-height: 1.6;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-        }
-
-        h1 {
-            font-size: 24px;
-            margin: 0 0 24px 0;
-        }
-
-        h2 {
-            font-size: 16px;
-            margin: 0 0 15px 0;
-        }
-
-        a {
-            color: var(--link-color);
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .header {
-            margin-bottom: 30px;
-        }
-
-        .status {
-            color: var(--secondary-color);
             font-size: 14px;
-            margin-bottom: 20px;
+            line-height: 1.5;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 24px 48px;
+            background: var(--paper);
+            color: var(--ink);
+        }
+
+        a { color: inherit; }
+
+        /* ── masthead ── */
+        .header {
+            border-top: 3px solid var(--ink);
+            padding-top: 16px;
+        }
+        .header h1 {
+            font-size: 40px;
+            font-weight: normal;
+            line-height: 1;
+            margin: 0 0 14px;
+            letter-spacing: -0.01em;
+        }
+        .header h1 a { text-decoration: none; }
+
+        .meta {
             display: flex;
-            align-items: center;
-            gap: 8px;
             flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 4px 24px;
+            font-size: 13px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--ink);
         }
+        .status { color: var(--faint); }
 
-        .breathing-dots::after {
-            content: '';
-            animation: breathe 4s infinite;
-        }
-
+        .breathing-dots::after { content: ''; animation: breathe 4s infinite; }
         @keyframes breathe {
-            0% { content: ''; }
-            25% { content: '.'; }
-            50% { content: '..'; }
-            75% { content: '...'; }
-            100% { content: ''; }
+            0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } 100% { content: ''; }
         }
-
         .kp-circle {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
+            width: 9px; height: 9px; border-radius: 50%;
             background: var(--kp-color, #2ecc71);
             transition: background 0.5s ease;
-            display: inline-block;
+            display: inline-block; vertical-align: 0; margin-right: 4px;
         }
 
-        .item-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .item {
+        /* ── controls (shown only when JS runs) ── */
+        .controls {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
-            align-items: center;
+            gap: 8px 24px;
             padding: 12px 0;
-            border-bottom: 1px solid var(--surface-color);
-        }
-
-        .item:hover {
-            background-color: var(--surface-color);
-            margin: 0 -10px;
-            padding: 12px 10px;
-        }
-
-        .item-info {
-            display: flex;
-            align-items: center;
-            flex-grow: 1;
-            gap: 15px;
-        }
-
-        .item-date {
-            color: var(--secondary-color);
             font-size: 13px;
-            min-width: 80px;
-            flex-shrink: 0;
         }
-
-        .item-binary {
-            letter-spacing: 2px;
-        }
-
-        .item-title {
-            flex-grow: 1;
-        }
-
-        .album-details {
-            color: var(--secondary-color);
-            font-size: 12px;
-            flex-shrink: 0;
-            white-space: nowrap;
-            align-self: flex-start;
-        }
-
-        .item.upcoming {
-            opacity: 0.4;
-        }
-
-        .item.upcoming:hover {
-            background-color: transparent;
-            margin: 0;
-            padding: 12px 0;
-        }
-
-        .footer {
-            margin-top: 30px;
-            padding-top: 15px;
-            border-top: 1px solid var(--secondary-color);
-            font-size: 14px;
-            color: var(--secondary-color);
-        }
-
-        .footer a {
-            color: var(--secondary-color);
-        }
-
-        .filter-link {
+        .controls[hidden] { display: none; }
+        .group { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 4px; }
+        .group .label { color: var(--faint); margin-right: 4px; }
+        .group button {
+            font: inherit;
+            color: inherit;
+            background: none;
+            border: 1px solid transparent;
+            padding: 1px 6px;
             cursor: pointer;
-            color: var(--secondary-color);
-            text-decoration: none;
+        }
+        .group button:hover { border-color: var(--ink); }
+        .group button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+        .group button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+        .radio-link { white-space: nowrap; }
+
+        /* ── the register ── */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-bottom: 3px solid var(--ink);
+        }
+        caption {
+            position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);
+        }
+        th {
+            text-align: left;
+            font-weight: normal;
+            font-size: 12px;
+            color: var(--faint);
+            padding: 6px 12px 6px 0;
+            border-bottom: 1px solid var(--ink);
+            white-space: nowrap;
+        }
+        td {
+            padding: 6px 12px 6px 0;
+            border-bottom: 1px solid var(--hair);
+            vertical-align: baseline;
+        }
+        tbody tr:last-child td { border-bottom: 0; }
+        th:first-child, td:first-child { padding-left: 6px; }
+        .c-no { white-space: nowrap; font-variant-numeric: tabular-nums; }
+        .c-date { white-space: nowrap; font-variant-numeric: tabular-nums; }
+        .c-kind, .c-medium { color: var(--faint); }
+        .c-medium { font-size: 12px; }
+        .c-weight, .c-plays { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+        th.c-weight, th.c-plays { text-align: right; }
+        .c-title a { text-decoration: none; border-bottom: 1px solid currentColor; }
+        .c-title a:hover { background: var(--ink); color: var(--paper); border-bottom-color: var(--ink); }
+        .cat { letter-spacing: -0.04em; }
+
+        tr.is-newest td { background: var(--ink); color: var(--paper); border-bottom-color: var(--ink); }
+        tr.is-newest .c-kind, tr.is-newest .c-medium { color: var(--paper); }
+        tr.is-newest .c-title a:hover { background: var(--paper); color: var(--ink); }
+
+        .empty { padding: 24px 6px; color: var(--faint); }
+
+        /* ── footer ── */
+        .footer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 8px 24px;
+            margin-top: 16px;
+            font-size: 13px;
+        }
+        .branch-label {
+            border: 1px solid var(--ink);
+            padding: 0 6px;
+            font-size: 12px;
+            text-transform: lowercase;
         }
 
-        .filter-link:hover {
-            text-decoration: underline;
-        }
-
-        .filter-link.active {
-            color: var(--text-color);
-            font-weight: bold;
-        }
-
+        /* ── phone: two-line rows ── */
         @media (max-width: 600px) {
-            body { 
-                margin: 20px auto;
-                padding: 15px;
+            body { padding: 24px 16px 40px; font-size: 14px; }
+            .header h1 { font-size: 40px; }
+            thead { display: none; }
+            table, tbody { display: block; }
+            tbody tr {
+                display: grid;
+                grid-template-columns: auto 1fr;
+                column-gap: 12px;
+                padding: 8px 6px;
+                border-bottom: 1px solid var(--hair);
             }
-            
-            .item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-                padding: 8px 0;
-            }
-
-            .item:hover {
-                padding: 8px 10px;
-            }
-
-            .item.upcoming:hover {
-                padding: 8px 0;
-            }
-            
-            .item-info {
-                flex-direction: row;
-                gap: 15px;
-                width: 100%;
-            }
-
-            .album-details {
-                white-space: normal;
-            }
+            tbody tr:last-child { border-bottom: 0; }
+            tbody tr.is-newest { background: var(--ink); color: var(--paper); }
+            td { padding: 0; border: 0; }
+            th:first-child, td:first-child { padding-left: 0; }
+            .c-no { grid-column: 1; grid-row: 1; }
+            .c-title { grid-column: 2; grid-row: 1; }
+            .c-date, .c-kind { grid-row: 2; grid-column: 2; font-size: 12px; color: var(--faint); }
+            .c-date::after { content: ' · ' attr(data-kind); }
+            .c-kind, .c-medium, .c-weight, .c-plays { display: none; }
+            tr.is-newest .c-date { color: var(--paper); }
         }
     </style>
 </head>
 <body>
     <header class="header">
-        <h1>rad.typo</h1>
-        <div class="status">
-            derry: <span id="weather-temp">-</span>°C <span id="weather-icon">⛅</span> |
-            kp: <span class="kp-circle"></span><span id="kp-value">-</span> |
-            cpu: <span id="cpu-temp">-</span>°C<span class="breathing-dots"></span>
+        <h1><a href="/" class="site-title">rad.typo</a></h1>
+        <div class="meta">
+            <span><span id="entry-count">45</span> entries · served by sunlight</span>
+            <div class="status">
+                derry: <span id="weather-temp">-</span>°C <span id="weather-icon">⛅</span> |
+                kp: <span class="kp-circle"></span><span id="kp-value">-</span> |
+                cpu: <span id="cpu-temp">-</span>°C<span class="breathing-dots"></span>
+            </div>
         </div>
     </header>
 
-    <section class="section">
+    <main>
+        <div class="controls" id="controls" hidden>
+            <div class="group" role="group" aria-label="filter by kind">
+                <span class="label">show</span>
+                <button type="button" data-filter="all" aria-pressed="true">all</button>
+                <button type="button" data-filter="song" aria-pressed="false">song</button>
+                <button type="button" data-filter="poem" aria-pressed="false">poem</button>
+                <button type="button" data-filter="painting" aria-pressed="false">painting</button>
+                <button type="button" data-filter="record" aria-pressed="false">record</button>
+            </div>
+            <div class="group" role="group" aria-label="sort by">
+                <span class="label">sort</span>
+                <button type="button" data-sort="no" aria-pressed="false">number</button>
+                <button type="button" data-sort="date" aria-pressed="true">date</button>
+                <button type="button" data-sort="weight" aria-pressed="false">weight</button>
+                <button type="button" data-sort="plays" aria-pressed="false">plays</button>
+                <a href="/radio.html" class="radio-link">→ rad.io</a>
+            </div>
+        </div>
 
-<h2><span class="filter-link active" data-filter="all">all</span> | <span class="filter-link" data-filter="songs">songs</span> | <span class="filter-link" data-filter="poems">poems</span> | <span class="filter-link" data-filter="releases">releases</span> | <a href="/radio.html" class="external-link">rad.io</a></h2>
-
-        <ul class="item-list" id="items-list">
-
-<li class="item" data-type="releases" data-date="2026-11-13">
-    <div class="item-info">
-        <span class="item-date item-binary">□□□□□■■□</span>
-        <span class="item-title"><a href="/releases/liminal-depths.html">liminal depths</a></span>
-    </div>
-    <div class="album-details">12" • lathe cut • 8 songs • <span data-stock="liminal-depths">8 of 10</span></div>
-</li>
-
-<li class="item" data-type="songs" data-date="2026-11-13">
-    <div class="item-info">
-        <span class="item-date">2026-11-13</span>
-        <span class="item-title"><a href="/songs/method-to-her-madness.html">method to her madness</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="releases" data-date="2026-04-29">
-    <div class="item-info">
-        <span class="item-date item-binary">□□□□□■□■</span>
-        <span class="item-title"><a href="/releases/phonetic-rhythms.html">phonetic rhythms</a></span>
-    </div>
-    <div class="album-details">drum machine · html</div>
-</li>
-
-<li class="item" data-type="poems" data-date="2026-04-22">
-    <div class="item-info">
-        <span class="item-date">2026-04-22</span>
-        <span class="item-title"><a href="/poems/druid-mechanics.html">druid mechanics</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2026-04-15">
-    <div class="item-info">
-        <span class="item-date">2026-04-15</span>
-        <span class="item-title"><a href="/poems/leave-your-personal-belongings.html">leave your personal belongings</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2026-04-08">
-    <div class="item-info">
-        <span class="item-date">2026-04-08</span>
-        <span class="item-title"><a href="/poems/slam-ready.html">slam-ready</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="releases" data-date="2026-04-06">
-    <div class="item-info">
-        <span class="item-date item-binary">□□□□□■□□</span>
-        <span class="item-title"><a href="/releases/life-without-buildings-lyrics.html">life without buildings</a></span>
-    </div>
-    <div class="album-details">fansite · html</div>
-</li>
-
-<li class="item" data-type="poems" data-date="2026-04-01">
-    <div class="item-info">
-        <span class="item-date">2026-04-01</span>
-        <span class="item-title"><a href="/poems/cop-killer-to-tv-cop.html">cop killer to tv cop</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2026-03-25">
-    <div class="item-info">
-        <span class="item-date">2026-03-25</span>
-        <span class="item-title"><a href="/poems/noise-in-the-gift-shop.html">noise in the gift shop</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="releases" data-date="2026-03-28">
-    <div class="item-info">
-        <span class="item-date item-binary">□□□□□□■■</span>
-        <span class="item-title"><a href="/releases/cheap-milk-what-price.html">cheap milk, what price?</a></span>
-    </div>
-    <div class="album-details">acrylic on paper • <span data-stock="cheap-milk-what-price">1 of 1</span></div>
-</li>
-
-<li class="item" data-type="releases" data-date="2026-03-18">
-    <div class="item-info">
-        <span class="item-date item-binary">□□□□□□■□</span>
-        <span class="item-title"><a href="/releases/well-be-lucky-if-i-dont-bust-out-crying.html">we'll be lucky if i don't bust out crying</a></span>
-    </div>
-    <div class="album-details">acrylic on paper • <span data-stock="well-be-lucky-if-i-dont-bust-out-crying">1 of 1</span></div>
-</li>
-
-<li class="item" data-type="poems" data-date="2026-03-18">
-    <div class="item-info">
-        <span class="item-date">2026-03-18</span>
-        <span class="item-title"><a href="/poems/big-during-covid.html">big during covid</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2026-03-11">
-    <div class="item-info">
-        <span class="item-date">2026-03-11</span>
-        <span class="item-title"><a href="/poems/visiting-the-midden.html">visiting the midden</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2026-03-04">
-    <div class="item-info">
-        <span class="item-date">2026-03-04</span>
-        <span class="item-title"><a href="/poems/the-first-and-last-day-i-played-football.html">the first and last day i played football</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2026-02-25">
-    <div class="item-info">
-        <span class="item-date">2026-02-25</span>
-        <span class="item-title"><a href="/poems/avoidant-choreography.html">avoidant choreography</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2026-02-18">
-    <div class="item-info">
-        <span class="item-date">2026-02-18</span>
-        <span class="item-title"><a href="/poems/fossils-and-lichen.html">fossils and lichen</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2026-02-11">
-    <div class="item-info">
-        <span class="item-date">2026-02-11</span>
-        <span class="item-title"><a href="/poems/the-patron-saint-of-vhs.html">the patron saint of vhs</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2026-02-04">
-    <div class="item-info">
-        <span class="item-date">2026-02-04</span>
-        <span class="item-title"><a href="/poems/solar-boat.html">solar boat</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2026-01-28">
-    <div class="item-info">
-        <span class="item-date">2026-01-28</span>
-        <span class="item-title"><a href="/poems/a-good-drying-day.html">a good drying day</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2026-01-21">
-    <div class="item-info">
-        <span class="item-date">2026-01-21</span>
-        <span class="item-title"><a href="/poems/wild-loops.html">wild loops</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2026-01-14">
-    <div class="item-info">
-        <span class="item-date">2026-01-14</span>
-        <span class="item-title"><a href="/poems/rewilding.html">rewilding</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2026-01-07">
-    <div class="item-info">
-        <span class="item-date">2026-01-07</span>
-        <span class="item-title"><a href="/poems/calibri-bodies-we-are.html">calibri bodies (we are)</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2025-12-31">
-    <div class="item-info">
-        <span class="item-date">2025-12-31</span>
-        <span class="item-title"><a href="/poems/manhattan-petrichor.html">manhattan petrichor</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2025-12-24">
-    <div class="item-info">
-        <span class="item-date">2025-12-24</span>
-        <span class="item-title"><a href="/poems/post-hope.html">post hope</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2025-12-17">
-    <div class="item-info">
-        <span class="item-date">2025-12-17</span>
-        <span class="item-title"><a href="/poems/lipstick-snake.html">lipstick snake</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2025-12-10">
-    <div class="item-info">
-        <span class="item-date">2025-12-10</span>
-        <span class="item-title"><a href="/poems/archetypal-tarot.html">archetypal tarot</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2025-12-03">
-    <div class="item-info">
-        <span class="item-date">2025-12-03</span>
-        <span class="item-title"><a href="/poems/one-to-stun-two-to-kill-three-to-make-sure.html">one to stun, two to kill, three to make sure</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2025-11-26">
-    <div class="item-info">
-        <span class="item-date">2025-11-26</span>
-        <span class="item-title"><a href="/poems/works-event.html">works event</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2025-11-19">
-    <div class="item-info">
-        <span class="item-date">2025-11-19</span>
-        <span class="item-title"><a href="/poems/daytime-astronomy.html">daytime astronomy</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2025-11-12">
-    <div class="item-info">
-        <span class="item-date">2025-11-12</span>
-        <span class="item-title"><a href="/poems/cut-short.html">cut short</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2025-11-05">
-    <div class="item-info">
-        <span class="item-date">2025-11-05</span>
-        <span class="item-title"><a href="/poems/no-matter-how-dark-my-thinking-would-become.html">no matter how dark my thinking would become</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="poems" data-date="2025-10-29">
-    <div class="item-info">
-        <span class="item-date">2025-10-29</span>
-        <span class="item-title"><a href="/poems/word-spread-quickly.html">word spread quickly</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="songs" data-date="2025-10-22">
-    <div class="item-info">
-        <span class="item-date">2025-10-22</span>
-        <span class="item-title"><a href="/songs/vulture-in-the-snow.html">vulture in the snow</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="songs" data-date="2025-10-15">
-    <div class="item-info">
-        <span class="item-date">2025-10-15</span>
-        <span class="item-title"><a href="/songs/straight-and-narrow.html">straight and narrow</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="songs" data-date="2025-10-08">
-    <div class="item-info">
-        <span class="item-date">2025-10-08</span>
-        <span class="item-title"><a href="/songs/frontal-lobe-fritz.html">frontal lobe fritz</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="songs" data-date="2025-10-01">
-    <div class="item-info">
-        <span class="item-date">2025-10-01</span>
-        <span class="item-title"><a href="/songs/what-now.html">what now</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="releases" data-date="2025-10-01">
-    <div class="item-info">
-        <span class="item-date item-binary">□□□□□□□■</span>
-        <span class="item-title"><a href="/releases/hard-hitter.html">hard hitter</a></span>
-    </div>
-    <div class="album-details">12" • lathe cut • 8 songs • <span data-stock="hard-hitter">4 of 20</span></div>
-</li>
-
-<li class="item" data-type="songs" data-date="2025-09-24">
-    <div class="item-info">
-        <span class="item-date">2025-09-24</span>
-        <span class="item-title"><a href="/songs/the-one-we-didnt-get-to-record-with-steve-albini.html">the one we didn't get to record with steve albini</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="songs" data-date="2025-09-17">
-    <div class="item-info">
-        <span class="item-date">2025-09-17</span>
-        <span class="item-title"><a href="/songs/hard-hitter.html">hard hitter</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="songs" data-date="2025-09-10">
-    <div class="item-info">
-        <span class="item-date">2025-09-10</span>
-        <span class="item-title"><a href="/songs/it-aint-pretty.html">it ain't pretty</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="songs" data-date="2025-09-03">
-    <div class="item-info">
-        <span class="item-date">2025-09-03</span>
-        <span class="item-title"><a href="/songs/muriel.html">muriel</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="songs" data-date="2025-08-27">
-    <div class="item-info">
-        <span class="item-date">2025-08-27</span>
-        <span class="item-title"><a href="/songs/rad-typo.html">rad typo</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="songs" data-date="2025-08-20">
-    <div class="item-info">
-        <span class="item-date">2025-08-20</span>
-        <span class="item-title"><a href="/songs/birthday-cake.html">birthday cake</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="songs" data-date="2025-08-13">
-    <div class="item-info">
-        <span class="item-date">2025-08-13</span>
-        <span class="item-title"><a href="/songs/whats-not-to-like.html">what's not to like</a></span>
-    </div>
-</li>
-
-<li class="item" data-type="songs" data-date="2025-08-06">
-    <div class="item-info">
-        <span class="item-date">2025-08-06</span>
-        <span class="item-title"><a href="/songs/bad-fortune.html">bad fortune</a></span>
-    </div>
-</li>
-
-        </ul>
-    </section>
+        <table id="register">
+            <caption>register of works, newest first</caption>
+            <thead>
+                <tr>
+                    <th class="c-no" scope="col">no.</th>
+                    <th class="c-date" scope="col">date</th>
+                    <th class="c-kind" scope="col">kind</th>
+                    <th class="c-title" scope="col">title</th>
+                    <th class="c-medium" scope="col">medium</th>
+                    <th class="c-weight" scope="col">weight</th>
+                    <th class="c-plays" scope="col">plays</th>
+                </tr>
+            </thead>
+            <tbody id="rows">
+<!-- register:rows -->
+<tr class="is-newest" data-key="release:liminal-depths" data-kind="record" data-no="000006" data-date="2026-11-13" data-weight="1569"><td class="c-no"><span class="cat" title="catalogue 6">□□□□□■■□</span></td><td class="c-date">2026-11-13</td><td class="c-kind">record</td><td class="c-title"><a href="/releases/liminal-depths.html">liminal depths</a></td><td class="c-medium">12&quot; lathe cut</td><td class="c-weight">1569w</td><td class="c-plays">—</td></tr>
+<tr data-key="song:method-to-her-madness" data-kind="song" data-no="100039" data-date="2026-11-13" data-weight="144"><td class="c-no">039</td><td class="c-date">2026-11-13</td><td class="c-kind">song</td><td class="c-title"><a href="/songs/method-to-her-madness.html">method to her madness</a></td><td class="c-medium">audio</td><td class="c-weight">144w</td><td class="c-plays">—</td></tr>
+<tr data-key="release:phonetic-rhythms" data-kind="page" data-no="000005" data-date="2026-04-29" data-weight="0"><td class="c-no"><span class="cat" title="catalogue 5">□□□□□■□■</span></td><td class="c-date">2026-04-29</td><td class="c-kind">page</td><td class="c-title"><a href="/releases/phonetic-rhythms.html">phonetic rhythms</a></td><td class="c-medium">drum machine · html</td><td class="c-weight">—</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:druid-mechanics" data-kind="poem" data-no="100038" data-date="2026-04-22" data-weight="90"><td class="c-no">038</td><td class="c-date">2026-04-22</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/druid-mechanics.html">druid mechanics</a></td><td class="c-medium">text</td><td class="c-weight">90w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:leave-your-personal-belongings" data-kind="poem" data-no="100037" data-date="2026-04-15" data-weight="169"><td class="c-no">037</td><td class="c-date">2026-04-15</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/leave-your-personal-belongings.html">leave your personal belongings</a></td><td class="c-medium">text</td><td class="c-weight">169w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:slam-ready" data-kind="poem" data-no="100036" data-date="2026-04-08" data-weight="128"><td class="c-no">036</td><td class="c-date">2026-04-08</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/slam-ready.html">slam-ready</a></td><td class="c-medium">text</td><td class="c-weight">128w</td><td class="c-plays">—</td></tr>
+<tr data-key="release:life-without-buildings-lyrics" data-kind="page" data-no="000004" data-date="2026-04-06" data-weight="0"><td class="c-no"><span class="cat" title="catalogue 4">□□□□□■□□</span></td><td class="c-date">2026-04-06</td><td class="c-kind">page</td><td class="c-title"><a href="/releases/life-without-buildings-lyrics.html">life without buildings</a></td><td class="c-medium">fansite · html</td><td class="c-weight">—</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:cop-killer-to-tv-cop" data-kind="poem" data-no="100035" data-date="2026-04-01" data-weight="138"><td class="c-no">035</td><td class="c-date">2026-04-01</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/cop-killer-to-tv-cop.html">cop killer to tv cop</a></td><td class="c-medium">text</td><td class="c-weight">138w</td><td class="c-plays">—</td></tr>
+<tr data-key="release:cheap-milk-what-price" data-kind="painting" data-no="000003" data-date="2026-03-28" data-weight="0"><td class="c-no"><span class="cat" title="catalogue 3">□□□□□□■■</span></td><td class="c-date">2026-03-28</td><td class="c-kind">painting</td><td class="c-title"><a href="/releases/cheap-milk-what-price.html">cheap milk, what price?</a></td><td class="c-medium">acrylic on paper, A2</td><td class="c-weight">—</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:noise-in-the-gift-shop" data-kind="poem" data-no="100034" data-date="2026-03-25" data-weight="102"><td class="c-no">034</td><td class="c-date">2026-03-25</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/noise-in-the-gift-shop.html">noise in the gift shop</a></td><td class="c-medium">text</td><td class="c-weight">102w</td><td class="c-plays">—</td></tr>
+<tr data-key="release:well-be-lucky-if-i-dont-bust-out-crying" data-kind="painting" data-no="000002" data-date="2026-03-18" data-weight="0"><td class="c-no"><span class="cat" title="catalogue 2">□□□□□□■□</span></td><td class="c-date">2026-03-18</td><td class="c-kind">painting</td><td class="c-title"><a href="/releases/well-be-lucky-if-i-dont-bust-out-crying.html">we&#x27;ll be lucky if i don&#x27;t bust out crying</a></td><td class="c-medium">acrylic on paper, A2</td><td class="c-weight">—</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:big-during-covid" data-kind="poem" data-no="100033" data-date="2026-03-18" data-weight="32"><td class="c-no">033</td><td class="c-date">2026-03-18</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/big-during-covid.html">big during covid</a></td><td class="c-medium">text</td><td class="c-weight">32w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:visiting-the-midden" data-kind="poem" data-no="100032" data-date="2026-03-11" data-weight="10"><td class="c-no">032</td><td class="c-date">2026-03-11</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/visiting-the-midden.html">visiting the midden</a></td><td class="c-medium">text</td><td class="c-weight">10w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:the-first-and-last-day-i-played-football" data-kind="poem" data-no="100031" data-date="2026-03-04" data-weight="26"><td class="c-no">031</td><td class="c-date">2026-03-04</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/the-first-and-last-day-i-played-football.html">the first and last day i played football</a></td><td class="c-medium">text</td><td class="c-weight">26w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:avoidant-choreography" data-kind="poem" data-no="100030" data-date="2026-02-25" data-weight="109"><td class="c-no">030</td><td class="c-date">2026-02-25</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/avoidant-choreography.html">avoidant choreography</a></td><td class="c-medium">text</td><td class="c-weight">109w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:fossils-and-lichen" data-kind="poem" data-no="100029" data-date="2026-02-18" data-weight="140"><td class="c-no">029</td><td class="c-date">2026-02-18</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/fossils-and-lichen.html">fossils and lichen</a></td><td class="c-medium">text</td><td class="c-weight">140w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:the-patron-saint-of-vhs" data-kind="poem" data-no="100028" data-date="2026-02-11" data-weight="76"><td class="c-no">028</td><td class="c-date">2026-02-11</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/the-patron-saint-of-vhs.html">the patron saint of vhs</a></td><td class="c-medium">text</td><td class="c-weight">76w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:a-good-drying-day" data-kind="poem" data-no="100027" data-date="2026-01-28" data-weight="178"><td class="c-no">027</td><td class="c-date">2026-01-28</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/a-good-drying-day.html">a good drying day</a></td><td class="c-medium">text</td><td class="c-weight">178w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:wild-loops" data-kind="poem" data-no="100026" data-date="2026-01-21" data-weight="105"><td class="c-no">026</td><td class="c-date">2026-01-21</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/wild-loops.html">wild loops</a></td><td class="c-medium">text</td><td class="c-weight">105w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:rewilding" data-kind="poem" data-no="100025" data-date="2026-01-14" data-weight="238"><td class="c-no">025</td><td class="c-date">2026-01-14</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/rewilding.html">rewilding</a></td><td class="c-medium">text</td><td class="c-weight">238w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:calibri-bodies-we-are" data-kind="poem" data-no="100024" data-date="2026-01-07" data-weight="119"><td class="c-no">024</td><td class="c-date">2026-01-07</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/calibri-bodies-we-are.html">calibri bodies (we are)</a></td><td class="c-medium">text</td><td class="c-weight">119w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:manhattan-petrichor" data-kind="poem" data-no="100023" data-date="2025-12-31" data-weight="257"><td class="c-no">023</td><td class="c-date">2025-12-31</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/manhattan-petrichor.html">manhattan petrichor</a></td><td class="c-medium">text</td><td class="c-weight">257w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:post-hope" data-kind="poem" data-no="100022" data-date="2025-12-24" data-weight="170"><td class="c-no">022</td><td class="c-date">2025-12-24</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/post-hope.html">post hope</a></td><td class="c-medium">text</td><td class="c-weight">170w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:lipstick-snake" data-kind="poem" data-no="100021" data-date="2025-12-17" data-weight="91"><td class="c-no">021</td><td class="c-date">2025-12-17</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/lipstick-snake.html">lipstick snake</a></td><td class="c-medium">text</td><td class="c-weight">91w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:archetypal-tarot" data-kind="poem" data-no="100020" data-date="2025-12-10" data-weight="231"><td class="c-no">020</td><td class="c-date">2025-12-10</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/archetypal-tarot.html">archetypal tarot</a></td><td class="c-medium">text</td><td class="c-weight">231w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:one-to-stun-two-to-kill-three-to-make-sure" data-kind="poem" data-no="100019" data-date="2025-12-03" data-weight="148"><td class="c-no">019</td><td class="c-date">2025-12-03</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/one-to-stun-two-to-kill-three-to-make-sure.html">one to stun, two to kill, three to make sure</a></td><td class="c-medium">text</td><td class="c-weight">148w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:works-event" data-kind="poem" data-no="100018" data-date="2025-11-26" data-weight="138"><td class="c-no">018</td><td class="c-date">2025-11-26</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/works-event.html">works event</a></td><td class="c-medium">text</td><td class="c-weight">138w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:daytime-astronomy" data-kind="poem" data-no="100017" data-date="2025-11-19" data-weight="81"><td class="c-no">017</td><td class="c-date">2025-11-19</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/daytime-astronomy.html">daytime astronomy</a></td><td class="c-medium">text</td><td class="c-weight">81w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:cut-short" data-kind="poem" data-no="100016" data-date="2025-11-12" data-weight="130"><td class="c-no">016</td><td class="c-date">2025-11-12</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/cut-short.html">cut short</a></td><td class="c-medium">text</td><td class="c-weight">130w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:no-matter-how-dark-my-thinking-would-become" data-kind="poem" data-no="100015" data-date="2025-11-05" data-weight="73"><td class="c-no">015</td><td class="c-date">2025-11-05</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/no-matter-how-dark-my-thinking-would-become.html">no matter how dark my thinking would become</a></td><td class="c-medium">text</td><td class="c-weight">73w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:word-spread-quickly" data-kind="poem" data-no="100014" data-date="2025-10-29" data-weight="76"><td class="c-no">014</td><td class="c-date">2025-10-29</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/word-spread-quickly.html">word spread quickly</a></td><td class="c-medium">text</td><td class="c-weight">76w</td><td class="c-plays">—</td></tr>
+<tr data-key="song:vulture-in-the-snow" data-kind="song" data-no="100013" data-date="2025-10-22" data-weight="289"><td class="c-no">013</td><td class="c-date">2025-10-22</td><td class="c-kind">song</td><td class="c-title"><a href="/songs/vulture-in-the-snow.html">vulture in the snow</a></td><td class="c-medium">audio</td><td class="c-weight">289w</td><td class="c-plays">—</td></tr>
+<tr data-key="song:straight-and-narrow" data-kind="song" data-no="100012" data-date="2025-10-15" data-weight="295"><td class="c-no">012</td><td class="c-date">2025-10-15</td><td class="c-kind">song</td><td class="c-title"><a href="/songs/straight-and-narrow.html">straight and narrow</a></td><td class="c-medium">audio</td><td class="c-weight">295w</td><td class="c-plays">—</td></tr>
+<tr data-key="song:frontal-lobe-fritz" data-kind="song" data-no="100011" data-date="2025-10-08" data-weight="153"><td class="c-no">011</td><td class="c-date">2025-10-08</td><td class="c-kind">song</td><td class="c-title"><a href="/songs/frontal-lobe-fritz.html">frontal lobe fritz</a></td><td class="c-medium">audio</td><td class="c-weight">153w</td><td class="c-plays">—</td></tr>
+<tr data-key="release:hard-hitter" data-kind="record" data-no="000001" data-date="2025-10-01" data-weight="1798"><td class="c-no"><span class="cat" title="catalogue 1">□□□□□□□■</span></td><td class="c-date">2025-10-01</td><td class="c-kind">record</td><td class="c-title"><a href="/releases/hard-hitter.html">hard hitter</a></td><td class="c-medium">12&quot; lathe cut</td><td class="c-weight">1798w</td><td class="c-plays">—</td></tr>
+<tr data-key="song:what-now" data-kind="song" data-no="100010" data-date="2025-10-01" data-weight="214"><td class="c-no">010</td><td class="c-date">2025-10-01</td><td class="c-kind">song</td><td class="c-title"><a href="/songs/what-now.html">what now</a></td><td class="c-medium">audio</td><td class="c-weight">214w</td><td class="c-plays">—</td></tr>
+<tr data-key="song:the-one-we-didnt-get-to-record-with-steve-albini" data-kind="song" data-no="100009" data-date="2025-09-24" data-weight="175"><td class="c-no">009</td><td class="c-date">2025-09-24</td><td class="c-kind">song</td><td class="c-title"><a href="/songs/the-one-we-didnt-get-to-record-with-steve-albini.html">the one we didn&#x27;t get to record with steve albini</a></td><td class="c-medium">audio</td><td class="c-weight">175w</td><td class="c-plays">—</td></tr>
+<tr data-key="song:hard-hitter" data-kind="song" data-no="100008" data-date="2025-09-17" data-weight="516"><td class="c-no">008</td><td class="c-date">2025-09-17</td><td class="c-kind">song</td><td class="c-title"><a href="/songs/hard-hitter.html">hard hitter</a></td><td class="c-medium">audio</td><td class="c-weight">516w</td><td class="c-plays">—</td></tr>
+<tr data-key="song:it-aint-pretty" data-kind="song" data-no="100007" data-date="2025-09-10" data-weight="229"><td class="c-no">007</td><td class="c-date">2025-09-10</td><td class="c-kind">song</td><td class="c-title"><a href="/songs/it-aint-pretty.html">it ain&#x27;t pretty</a></td><td class="c-medium">audio</td><td class="c-weight">229w</td><td class="c-plays">—</td></tr>
+<tr data-key="song:muriel" data-kind="song" data-no="100006" data-date="2025-09-03" data-weight="227"><td class="c-no">006</td><td class="c-date">2025-09-03</td><td class="c-kind">song</td><td class="c-title"><a href="/songs/muriel.html">muriel</a></td><td class="c-medium">audio</td><td class="c-weight">227w</td><td class="c-plays">—</td></tr>
+<tr data-key="song:rad-typo" data-kind="song" data-no="100005" data-date="2025-08-27" data-weight="94"><td class="c-no">005</td><td class="c-date">2025-08-27</td><td class="c-kind">song</td><td class="c-title"><a href="/songs/rad-typo.html">rad typo</a></td><td class="c-medium">audio</td><td class="c-weight">94w</td><td class="c-plays">—</td></tr>
+<tr data-key="song:birthday-cake" data-kind="song" data-no="100004" data-date="2025-08-20" data-weight="262"><td class="c-no">004</td><td class="c-date">2025-08-20</td><td class="c-kind">song</td><td class="c-title"><a href="/songs/birthday-cake.html">birthday cake</a></td><td class="c-medium">audio</td><td class="c-weight">262w</td><td class="c-plays">—</td></tr>
+<tr data-key="song:whats-not-to-like" data-kind="song" data-no="100003" data-date="2025-08-13" data-weight="155"><td class="c-no">003</td><td class="c-date">2025-08-13</td><td class="c-kind">song</td><td class="c-title"><a href="/songs/whats-not-to-like.html">what&#x27;s not to like</a></td><td class="c-medium">audio</td><td class="c-weight">155w</td><td class="c-plays">—</td></tr>
+<tr data-key="song:bad-fortune" data-kind="song" data-no="100002" data-date="2025-08-06" data-weight="140"><td class="c-no">002</td><td class="c-date">2025-08-06</td><td class="c-kind">song</td><td class="c-title"><a href="/songs/bad-fortune.html">bad fortune</a></td><td class="c-medium">audio</td><td class="c-weight">140w</td><td class="c-plays">—</td></tr>
+<tr data-key="poem:solar-boat" data-kind="poem" data-no="100001" data-date="2022-08-01" data-weight="78"><td class="c-no">001</td><td class="c-date">2022-08-01</td><td class="c-kind">poem</td><td class="c-title"><a href="/poems/solar-boat.html">solar boat</a></td><td class="c-medium">text</td><td class="c-weight">78w</td><td class="c-plays">—</td></tr>
+<!-- /register:rows -->
+            </tbody>
+        </table>
+        <noscript><p><a href="/radio.html">→ rad.io</a></p></noscript>
+    </main>
 
     <footer class="footer">
-
-└─ <a href="/infrastructure.html">infrastructure</a> | <a href="/telemetry.html">telemetry</a>
-
+        <span>└─ <a href="/infrastructure.html">infrastructure</a> | <a href="/telemetry.html">telemetry</a></span>
+        <span class="branch-label">experimental branch · register</span>
     </footer>
 
     <script src="/js/status.js"></script>
     <script>
-        // Stock counts: single source of truth is data/releases.json
-        // (the text in each [data-stock] span is only a fallback)
-        fetch('/data/releases.json')
-            .then(r => r.json())
-            .then(releases => {
-                document.querySelectorAll('[data-stock]').forEach(el => {
-                    const stock = releases[el.dataset.stock]?.stock;
-                    if (stock?.total == null || stock?.remaining == null) return;
-                    el.textContent = stock.remaining === 0 ? 'sold out' : `${stock.remaining} of ${stock.total}`;
+        (function () {
+            const tbody = document.getElementById('rows');
+            const rows = Array.from(tbody.rows);
+            const controls = document.getElementById('controls');
+            let filter = 'all', sort = 'date';
+
+            // phone layout shows "date · kind" from the date cell
+            rows.forEach(r => r.querySelector('.c-date').setAttribute('data-kind', r.dataset.kind));
+
+            controls.hidden = false;
+
+            const num = (r, k) => Number(r.dataset[k] || 0);
+            const comparators = {
+                no:     (a, b) => a.dataset.no.localeCompare(b.dataset.no),
+                date:   (a, b) => b.dataset.date.localeCompare(a.dataset.date) || rows.indexOf(a) - rows.indexOf(b),
+                weight: (a, b) => num(b, 'weight') - num(a, 'weight') || rows.indexOf(a) - rows.indexOf(b),
+                plays:  (a, b) => num(b, 'plays') - num(a, 'plays') || rows.indexOf(a) - rows.indexOf(b)
+            };
+
+            function render() {
+                const sorted = rows.slice().sort(comparators[sort]);
+                sorted.forEach(r => {
+                    r.hidden = !(filter === 'all' || r.dataset.kind === filter);
+                    tbody.appendChild(r);
                 });
-            })
-            .catch(() => {});
-
-        // Auto-activate pending entries on their publish date
-        const today = new Date().toISOString().slice(0, 10);
-        document.querySelectorAll('[data-pending="true"]').forEach(item => {
-            if (today >= item.getAttribute('data-date')) {
-                const href = item.getAttribute('data-href');
-                const titleSpan = item.querySelector('.item-title');
-                titleSpan.innerHTML = `<a href="${href}">${titleSpan.textContent}</a>`;
-                item.removeAttribute('style');
-                item.removeAttribute('data-pending');
+                document.getElementById('entry-count').textContent =
+                    rows.filter(r => !r.hidden).length;
+                controls.querySelectorAll('[data-filter]').forEach(b =>
+                    b.setAttribute('aria-pressed', b.dataset.filter === filter));
+                controls.querySelectorAll('[data-sort]').forEach(b =>
+                    b.setAttribute('aria-pressed', b.dataset.sort === sort));
             }
-        });
 
-        // Filter functionality
-        const filterLinks = document.querySelectorAll('.filter-link');
-        const items = document.querySelectorAll('#items-list li');
-
-        function applyFilter(filter) {
-            filterLinks.forEach(l => l.classList.remove('active'));
-            const activeLink = document.querySelector(`.filter-link[data-filter="${filter}"]`);
-            if (activeLink) activeLink.classList.add('active');
-            items.forEach(item => {
-                const itemType = item.getAttribute('data-type');
-                item.style.display = (filter === 'all' || itemType === filter) ? '' : 'none';
+            controls.addEventListener('click', e => {
+                const b = e.target.closest('button');
+                if (!b) return;
+                if (b.dataset.filter) filter = b.dataset.filter;
+                if (b.dataset.sort) sort = b.dataset.sort;
+                render();
             });
-        }
 
-        filterLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const filter = this.getAttribute('data-filter');
-                applyFilter(filter);
-            });
-        });
-
-        // Activate filter from URL hash (e.g. index.html#songs)
-        const hashFilter = location.hash.slice(1);
-        if (hashFilter && ['songs', 'poems', 'releases'].includes(hashFilter)) {
-            applyFilter(hashFilter);
-        }
-
+            // plays: from /data/telemetry.json if it exists, else "—".
+            // Accepts {"plays": {...}} or a flat object, keyed "song:slug" / "release:id" or by bare slug.
+            fetch('/data/telemetry.json', { cache: 'no-cache' })
+                .then(r => r.ok ? r.json() : null)
+                .then(data => {
+                    if (!data) return;
+                    const plays = data.plays || data;
+                    rows.forEach(r => {
+                        const key = r.dataset.key, slug = key.split(':')[1];
+                        const n = Number(plays[key] ?? plays[slug]);
+                        if ((plays[key] ?? plays[slug]) !== undefined && Number.isFinite(n)) {
+                            r.dataset.plays = n;
+                            r.querySelector('.c-plays').textContent = n.toLocaleString('en-GB');
+                        }
+                    });
+                    if (sort === 'plays') render();
+                })
+                .catch(() => {});
+        })();
     </script>
 </body>
 </html>

@@ -40,6 +40,7 @@
   },
   "well-be-lucky-if-i-dont-bust-out-crying": {
     "title": "we'll be lucky if i don't bust out crying",
+    "published": "2026-03-18",
     "visible": true,
     "type": "painting",
     "date": "2024",
@@ -109,6 +110,7 @@
   },
   "cheap-milk-what-price": {
     "title": "cheap milk, what price?",
+    "published": "2026-03-28",
     "visible": true,
     "type": "painting",
     "date": "2026",
@@ -159,6 +161,7 @@
   "phonetic-rhythms": {
     "type": "page",
     "title": "phonetic rhythms",
+    "published": "2026-04-29",
     "binary": "□□□□□■□■",
     "format": {
       "type": "drum machine · html",
