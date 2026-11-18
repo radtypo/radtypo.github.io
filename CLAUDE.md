@@ -91,6 +91,24 @@ All content pages share the same head/header/footer/status-bar pattern:
 
 When adding or auditing a page, verify it matches this structure exactly — use `poems-template.html` as the reference.
 
+## Live Telemetry (telemetry.html, "a day in derry")
+
+`scripts/telemetry_stats.py` (Python 3 stdlib only) runs on the Pi every 5 minutes from cron, as a user in the `adm` group so it can read `/var/log/apache2`:
+
+```
+*/5 * * * * /usr/bin/python3 /var/www/html/scripts/telemetry_stats.py >/dev/null 2>&1
+```
+
+It reads `other_vhosts_access.log` and `.1` (and `.2.gz` only while yesterday isn't recorded yet, since logrotate runs ~06:25), counts visitors, plays, data sent, `here_now` and `listening_now`, reads the CPU temperature and `vcgencmd get_throttled` (null if unavailable), and every 15 minutes fetches Open-Meteo (Derry) and NOAA Kp so visitors' browsers never call outside services (on failure it keeps the last good values and marks them `stale`). Moon phase is computed locally. Run `python3 scripts/telemetry_stats.py --backfill` once to also read the `.N.gz` rotations and add every past day to history (it never duplicates or deletes days). `--logs`, `--out`, `--now` and `--no-fetch` exist for testing.
+
+- **Counting rules:** visitor = distinct IP + user agent per day with a non-asset request; play = first request for a song's audio by a visitor within 30 minutes; plays count only for released songs (same rule as above: full date on or before today, not `demo`). Skipped: my own visits (Apache routes them to `me_access.log`), IPs in `scripts/telemetry_exclude.txt`, private/Tailscale ranges, bots (user-agent regex), and statuses other than 200/206.
+- **Privacy:** IP + user agent are hashed with a random salt that exists only in memory for one run; no IP or user agent is ever written. `scripts/telemetry_exclude.txt` (one IP per line) holds my own IPs, so it's gitignored and created by hand on the Pi; `.htaccess` denies all of `/scripts/`.
+- **Outputs** (in `data/`, written atomically, generated on the Pi and **never committed**: both are in `.gitignore`): `telemetry.json` (rewritten every run, read by `telemetry.html`) and `telemetry-history.json` (persistent: one record per finished day, a rolling ~24h list of sensor samples, the last good sky data).
+- **Energy:** `ESTIMATED_WATTS` (top of the script, 3.4) is an estimate, not a measurement: energy today = watts × hours since local midnight, per visit = that ÷ visitors. Always shown as "est." on the page.
+- **Battery hook (future sensor):** when `data/power.json` exists (`{"battery_pct": 71, "volts": 12.6, "charging": true}`, written by whatever reads the sensor), its fields are copied into `telemetry.json` with an hourly series and the overnight low; otherwise `"battery": null` and the page shows "battery sensor coming". `power.json` is gitignored too.
+
+`telemetry.html` polls `/data/telemetry.json` and `/api/stats.json` (memory/disk/uptime) every 60s while the tab is visible. Charts are inline SVG, no libraries. (The shared header's `js/status.js` still fetches weather and Kp itself on every page.)
+
 ## Radio Player
 
 `radio.html` is a minimal shuffle-only music player (Fisher-Yates queue, play/pause + skip, no persistence). `radio-archive.html` is the original full-featured player (progress bar, playlist, artwork, shuffle/loop toggles), accessible from the radio page.
@@ -113,6 +131,8 @@ When adding or auditing a page, verify it matches this structure exactly — use
 | `releases.html` | Changelog page rendered from generated `data/commits.json` (not a release list) |
 | `.htaccess` | Apache routing/rewrites + 301 redirects |
 | `api/stats.json` | Raspberry Pi server stats (CPU temp, uptime, etc.) |
+| `scripts/telemetry_stats.py` | Pi cron script: logs + sensors + sky → `data/telemetry.json` (see Live Telemetry) |
+| `telemetry.html` | "a day in derry" live page, reads `data/telemetry.json` |
 | `css/fonts.css` + `fonts/` | Self-hosted IBM Plex Mono and `--mono` |
 | `favicon.svg`, `favicon.ico`, `apple-touch-icon.png` | Catalogue-grid tab icon (ICO/PNG drawn pixel-exact from the SVG design) |
 

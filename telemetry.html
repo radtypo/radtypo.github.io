@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="live server and environment telemetry for rad.typo">
+    <meta name="description" content="a day in derry: the solar-powered pi behind rad.typo, live: visitors, plays, sunlight, sky">
     <title>telemetry - rad.typo</title>
     <link rel="preload" href="/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="/css/fonts.css">
     <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
     <link rel="icon" href="/favicon.ico?v=2" sizes="32x32">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
+    <!-- Data: /data/telemetry.json, written every 5 min on the Pi by scripts/telemetry_stats.py
+         (never committed), plus /api/stats.json for memory/disk/uptime. No outside calls from this page. -->
     <style>
         :root {
             --bg-color: #fff;
@@ -17,12 +19,14 @@
             --link-color: #0000FF;
             --secondary-color: #666;
             --faint: #e8e8e8;
-            --surface-color: #f5f5f5;
+            --charge: #eef0ff;
+            --lab: 130px;
+            --val: 96px;
         }
 
         body {
             font-family: var(--mono);
-            max-width: 800px;
+            max-width: 700px;
             margin: 48px auto;
             padding: 24px;
             line-height: 1.6;
@@ -32,7 +36,6 @@
 
         h1, h2 { margin: 0; padding: 0; }
         h1 { font-size: 24px; margin-bottom: 24px; }
-
         a { color: var(--link-color); text-decoration: none; }
         a:hover { text-decoration: underline; }
 
@@ -40,180 +43,95 @@
         .back { position: absolute; top: 0; right: 0; font-size: 14px; }
         .site-title { color: inherit; text-decoration: none; }
         .site-title:hover { text-decoration: none; }
-
         .status {
-            color: var(--secondary-color);
-            font-size: 14px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
+            color: var(--secondary-color); font-size: 14px; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
         }
-
         .kp-circle {
             width: 12px; height: 12px; border-radius: 50%;
-            background: var(--kp-color, #2ecc71);
-            transition: background 0.5s;
-            display: inline-block;
+            background: var(--kp-color, #2ecc71); transition: background 0.5s; display: inline-block;
         }
-
-        .breathing-dots::after {
-            content: '';
-            animation: breathe 4s infinite;
-        }
+        .breathing-dots::after { content: ''; animation: breathe 4s infinite; }
         @keyframes breathe {
-            0%, 100% { content: ''; }
-            25% { content: '.'; }
-            50% { content: '..'; }
-            75% { content: '...'; }
+            0%, 100% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; }
         }
 
-        /* Page heading */
-        .page-heading {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 36px;
+        h2 { font-size: 16px; font-weight: bold; margin-bottom: 14px; }
+        .label { font-size: 12px; color: var(--secondary-color); margin: 40px 0 10px; }
+        .muted { color: var(--secondary-color); }
+        .small { font-size: 12px; }
+
+        /* 1 · summary */
+        .summary { font-size: 16px; line-height: 1.7; margin: 0 0 8px; }
+        .stale { font-size: 12px; color: var(--secondary-color); min-height: 1.6em; }
+
+        /* 2 · the 24h timeline */
+        .tl { position: relative; margin-top: 18px; }
+        .lane {
+            display: grid; grid-template-columns: var(--lab) 1fr var(--val);
+            align-items: center; height: 30px; font-size: 12px;
         }
-        .page-heading h2 { font-weight: bold; font-size: 16px; }
-        .last-updated { font-size: 11px; color: var(--secondary-color); }
-
-        /* Section labels */
-        .section-label {
-            color: var(--secondary-color);
-            font-size: 11px;
-            letter-spacing: 0.06em;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--faint);
-            margin: 44px 0 22px 0;
+        .lane + .lane { border-top: 1px solid var(--faint); }
+        .ll { color: var(--secondary-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 8px; }
+        .lv { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+        .lc { position: relative; height: 22px; }
+        .lc svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: visible; }
+        .lc .muted { position: absolute; inset: 0; display: flex; align-items: center; font-size: 11px; padding-left: 6px; }
+        .now-line {
+            position: absolute; top: 0; bottom: 0; width: 0; border-left: 1px solid var(--link-color);
+            left: calc(var(--lab) + (100% - var(--lab) - var(--val)) * var(--now, 0));
+            pointer-events: none;
         }
-        .section-label:first-of-type { margin-top: 0; }
+        .hours { display: grid; grid-template-columns: var(--lab) 1fr var(--val); font-size: 11px; color: var(--secondary-color); margin-top: 4px; }
+        .hours div { position: relative; height: 1.4em; }
+        .hours i { font-style: normal; position: absolute; transform: translateX(-50%); }
+        .hours i:first-child { transform: none; }
+        .hours i:last-child { transform: translateX(-100%); }
+        .legend { font-size: 11px; color: var(--secondary-color); margin-top: 6px; }
+        .legend .nowkey { color: var(--link-color); }
+        .legend .chg { display: inline-block; width: 14px; height: 9px; background: var(--charge); border: 1px solid #c9cdf5; vertical-align: -1px; }
 
-        /* Condition line */
-        .condition-line {
-            font-size: 16px;
-            color: var(--text-color);
-            margin-bottom: 20px;
-        }
+        /* 3 · tiles */
+        .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 36px; }
+        .tile { border: 1px solid var(--text-color); padding: 10px 12px; min-width: 0; }
+        .tile .k { font-size: 11px; color: var(--secondary-color); }
+        .tile .v { font-size: 22px; line-height: 1.3; margin: 2px 0; white-space: nowrap; }
+        .tile .s { font-size: 11px; color: var(--secondary-color); overflow-wrap: anywhere; }
 
-        /* Metrics grid */
-        .metrics {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 22px 16px;
-            margin-bottom: 28px;
-        }
-        .metric-lbl { font-size: 11px; color: var(--secondary-color); margin-bottom: 3px; }
-        .metric-val { font-size: 26px; font-weight: bold; line-height: 1; }
-        .metric-unit { font-size: 12px; color: var(--secondary-color); font-weight: normal; }
-        .metric-md { font-size: 17px; font-weight: bold; line-height: 1.2; }
-        .metric-sm { font-size: 13px; font-weight: bold; line-height: 1.4; }
+        /* 4/5 · text bars + recent rows */
+        .rows { font-size: 14px; }
+        .row { display: grid; gap: 0 12px; align-items: baseline; }
+        .rank { grid-template-columns: 2ch minmax(0, 1fr) auto 3ch; }
+        .row .t { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .row .n { text-align: right; font-variant-numeric: tabular-nums; }
+        .bar { white-space: nowrap; letter-spacing: -0.05em; }
+        .ev { grid-template-columns: auto minmax(0, 1fr) auto; }
+        .ev .w { color: var(--secondary-color); font-size: 12px; }
+        .foot { font-size: 11px; color: var(--secondary-color); margin-top: 8px; }
 
-        /* Resource bars */
-        .resource { margin-bottom: 14px; }
-        .resource-head {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            margin-bottom: 5px;
-        }
-        .resource-detail { color: var(--secondary-color); }
-        .bar-track { background: var(--faint); height: 4px; }
-        .bar-fill { height: 4px; background: var(--text-color); transition: width 0.8s ease; }
+        /* 6 · the pi / the sky */
+        .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 40px; }
+        .block h2 { margin-bottom: 8px; }
+        .kv { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; font-size: 13px; }
+        .kv dt { color: var(--secondary-color); }
+        .kv dd { margin: 0; }
 
-        /* KP scale */
-        .kp-scale-row {
-            display: flex;
-            gap: 4px;
-            height: 36px;
-            align-items: flex-end;
-            margin: 14px 0 6px 0;
-        }
-        .kp-pip {
-            flex: 1;
-            border-radius: 1px;
-            transition: opacity 0.4s;
-        }
-        .kp-pip-label {
-            display: flex;
-            justify-content: center;
-            font-size: 9px;
-            color: var(--secondary-color);
-            margin-top: 4px;
-        }
-        .kp-numbers {
-            display: flex;
-            gap: 4px;
-            margin-bottom: 6px;
-        }
-        .kp-num { flex: 1; font-size: 9px; color: var(--secondary-color); text-align: center; }
+        .sources { font-size: 11px; color: var(--secondary-color); margin-top: 40px; }
 
-        /* Notes */
-        .note { font-size: 12px; color: var(--secondary-color); margin: 10px 0 20px 0; }
-        .aurora-alert { border-left: 2px solid currentColor; padding-left: 0.75rem; font-size: 13px; color: var(--text-color); }
-
-        /* Data row */
-        .data-row {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            font-size: 12px;
-            color: var(--secondary-color);
-            margin: 12px 0;
-        }
-        .data-row .hi { color: var(--text-color); font-weight: bold; }
-        .data-sep { color: var(--faint); }
-
-        /* Charts */
-        .chart-wrap { margin: 20px 0; }
-        .chart-lbl { font-size: 11px; color: var(--secondary-color); margin-bottom: 6px; letter-spacing: 0.05em; }
-        .chart-svg { width: 100%; display: block; overflow: visible; }
-
-        /* Chart pair grid */
-        .chart-pair {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-
-        /* Resource pair grid */
-        .resource-pair {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-        .resource-pair .resource { margin-bottom: 0; }
-
-        /* KP metrics */
-        .kp-metrics { max-width: 300px; }
-
-        /* SVG classes */
-        .c-line { fill: none; stroke: var(--text-color); stroke-width: 1.5; }
-        .c-area { fill: var(--text-color); opacity: 0.06; }
-        .c-grid { stroke: var(--faint); stroke-width: 1; }
-        .c-now { stroke: var(--secondary-color); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.5; }
-        .c-lbl { fill: var(--secondary-color); font-size: 12px; font-family: var(--mono); }
-
-        /* Footer */
         .footer {
-            margin-top: 60px;
-            padding-top: 20px;
-            border-top: 1px solid var(--secondary-color);
-            font-size: 14px;
-            color: var(--secondary-color);
+            margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--secondary-color);
+            font-size: 14px; color: var(--secondary-color);
         }
         .footer a { color: var(--secondary-color); }
 
         @media (max-width: 600px) {
+            :root { --lab: 90px; --val: 64px; }
             body { margin: 20px auto; padding: 15px; }
-            .metrics { grid-template-columns: repeat(2, 1fr); }
-            .chart-pair { grid-template-columns: 1fr; }
-            .resource-pair { grid-template-columns: 1fr; }
-            .resource-pair .resource { margin-bottom: 14px; }
-            #temp-chart { height: 140px; }
-            .data-row { flex-direction: column; gap: 4px; }
-            .data-sep { display: none; }
+            .summary { font-size: 15px; }
+            .tiles { grid-template-columns: 1fr 1fr; }
+            .pair { grid-template-columns: 1fr; }
+            .rows { font-size: 13px; }
+            .ll { font-size: 11px; padding-right: 4px; }
         }
     </style>
 </head>
@@ -229,573 +147,263 @@
         </div>
     </header>
 
-    <div class="page-heading">
-        <h2>telemetry</h2>
-        <div class="last-updated">updated <span id="last-updated">--</span></div>
-    </div>
+    <h2>a day in derry</h2>
+    <p class="summary" id="summary">reading the pi's logs and sensors…</p>
+    <div class="stale" id="stale"></div>
 
-    <!-- ── ENVIRONMENT ───────────────────────────────────────── -->
-    <div class="section-label">environment · derry · 55.01°N 7.30°W</div>
+    <div id="live">
+        <div class="tl" id="tl"></div>
+        <div class="hours"><span></span><div><i style="left:0">00:00</i><i style="left:25%">06:00</i><i style="left:50%">12:00</i><i style="left:75%">18:00</i><i style="left:100%">24:00</i></div><span></span></div>
+        <div class="legend"><span class="nowkey">— now</span> · solid = measured · dashed = forecast · <span class="chg"></span> charging</div>
 
-    <div class="condition-line">
-        <span id="condition-icon">--</span>&nbsp;<span id="condition-text">--</span>
-        &nbsp;·&nbsp;wind <span id="wind-speed">--</span> km/h <span id="wind-dir">--</span>
-    </div>
+        <div class="tiles" id="tiles"></div>
 
-    <div class="metrics">
-        <div>
-            <div class="metric-lbl">temperature</div>
-            <div><span class="metric-val" id="current-temp">--</span><span class="metric-unit"> °C</span></div>
-        </div>
-        <div>
-            <div class="metric-lbl">feels like</div>
-            <div><span class="metric-val" id="apparent-temp">--</span><span class="metric-unit"> °C</span></div>
-        </div>
-        <div>
-            <div class="metric-lbl">humidity</div>
-            <div><span class="metric-val" id="humidity">--</span><span class="metric-unit"> %</span></div>
-        </div>
-        <div>
-            <div class="metric-lbl">cloud cover</div>
-            <div><span class="metric-val" id="cloud-cover">--</span><span class="metric-unit"> %</span></div>
-        </div>
-        <div>
-            <div class="metric-lbl">solar radiation</div>
-            <div><span class="metric-val" id="solar-radiation">--</span><span class="metric-unit"> W/m²</span></div>
+        <div class="label">most played today</div>
+        <div class="rows" id="top-today"></div>
+        <div class="label" id="since-label">most played</div>
+        <div class="rows" id="top-all"></div>
+
+        <div class="label">just now</div>
+        <div class="rows" id="recent"></div>
+        <div class="foot">anonymous — no ips, no locations</div>
+
+        <div class="pair">
+            <div class="block"><h2>the pi</h2><dl class="kv" id="pi"></dl></div>
+            <div class="block"><h2>the sky</h2><dl class="kv" id="sky"></dl></div>
         </div>
     </div>
 
-    <div class="chart-pair">
-        <div class="chart-wrap">
-            <div class="chart-lbl">temperature · 48h</div>
-            <svg id="temp-chart" viewBox="0 0 600 140" preserveAspectRatio="xMidYMid meet" class="chart-svg" style="height:120px">
-                <text x="300" y="70" text-anchor="middle" class="c-lbl">loading...</text>
-            </svg>
-        </div>
-        <div class="chart-wrap">
-            <div class="chart-lbl" id="daylight-label">daylight</div>
-            <svg id="day-arc" viewBox="0 0 600 110" preserveAspectRatio="xMidYMid meet" class="chart-svg" style="height:96px">
-                <text x="300" y="55" text-anchor="middle" class="c-lbl">loading...</text>
-            </svg>
-        </div>
-    </div>
-
-    <!-- ── GEOMAGNETIC ───────────────────────────────────────── -->
-    <div class="section-label">geomagnetic · NOAA SWPC planetary K-index</div>
-
-    <div class="metrics kp-metrics">
-        <div>
-            <div class="metric-lbl">Kp index</div>
-            <div><span class="metric-val" id="kp-display">--</span></div>
-        </div>
-        <div>
-            <div class="metric-lbl">activity</div>
-            <div class="metric-md" id="kp-label-display">--</div>
-        </div>
-    </div>
-
-    <div class="kp-scale-row" id="kp-scale"></div>
-    <div class="kp-numbers" id="kp-numbers"></div>
-
-    <div class="note" id="aurora-note">--</div>
-
-    <div class="chart-wrap">
-        <div class="chart-lbl">Kp index · 24h</div>
-        <svg id="kp-chart" viewBox="0 0 600 80" preserveAspectRatio="xMidYMid meet" class="chart-svg" style="height:80px">
-            <text x="300" y="40" text-anchor="middle" class="c-lbl">loading...</text>
-        </svg>
-    </div>
-
-    <!-- ── SERVER ─────────────────────────────────────────────── -->
-    <div class="section-label">server · raspberry pi 3b+ · derry</div>
-
-    <div class="metrics">
-        <div>
-            <div class="metric-lbl">cpu</div>
-            <div><span class="metric-val" id="cpu-temp-main">--</span><span class="metric-unit"> °C</span></div>
-        </div>
-        <div>
-            <div class="metric-lbl">gpu</div>
-            <div><span class="metric-val" id="gpu-temp">--</span><span class="metric-unit"> °C</span></div>
-        </div>
-        <div>
-            <div class="metric-lbl">load avg</div>
-            <div class="metric-sm" id="cpu-load">--</div>
-        </div>
-        <div>
-            <div class="metric-lbl">requests today</div>
-            <div><span class="metric-val" id="apache-requests">--</span></div>
-        </div>
-    </div>
-
-    <div class="resource-pair">
-        <div class="resource">
-            <div class="resource-head">
-                <span>ram</span>
-                <span class="resource-detail" id="memory-detail">--</span>
-            </div>
-            <div class="bar-track"><div class="bar-fill" id="memory-bar" style="width:0%"></div></div>
-        </div>
-        <div class="resource">
-            <div class="resource-head">
-                <span>disk</span>
-                <span class="resource-detail" id="disk-detail">--</span>
-            </div>
-            <div class="bar-track"><div class="bar-fill" id="disk-bar" style="width:0%"></div></div>
-        </div>
-    </div>
-
-    <div class="data-row">
-        <span>↓ <span class="hi" id="net-down">--</span> MB received</span>
-        <span class="data-sep">·</span>
-        <span>↑ <span class="hi" id="net-up">--</span> MB sent</span>
-        <span class="data-sep">·</span>
-        <span><span class="hi" id="connections">--</span> connections</span>
-        <span class="data-sep">·</span>
-        <span><span class="hi" id="power-display">--</span></span>
-    </div>
-
-    <div class="data-row">
-        <span>uptime: <span class="hi" id="uptime">--</span></span>
-        <span class="data-sep" id="throttle-sep" style="display:none">·</span>
-        <span id="throttle-status"></span>
-    </div>
-
-    <div class="chart-wrap">
-        <div class="chart-lbl">cpu temperature · 24h</div>
-        <svg id="cpu-chart" viewBox="0 0 600 120" preserveAspectRatio="xMidYMid meet" class="chart-svg" style="height:120px">
-            <text x="300" y="60" text-anchor="middle" class="c-lbl">collecting data...</text>
-        </svg>
-    </div>
+    <p class="sources">open-meteo · noaa swpc · the pi's own logs and sensors · all figures marked est. are estimates</p>
 
     <footer class="footer">
-        └─ <a href="/infrastructure.html">infrastructure</a>
+        └─ <a href="/infrastructure.html">infrastructure</a> | <a href="/telemetry.html">telemetry</a>
     </footer>
 
     <script src="/js/status.js"></script>
     <script>
-        function weatherCondition(code) {
-            if (code >= 99) return 'thunderstorm with hail';
-            if (code >= 95) return 'thunderstorm';
-            if (code >= 82) return 'violent showers';
-            if (code >= 81) return 'moderate showers';
-            if (code >= 80) return 'rain showers';
-            if (code >= 75) return 'heavy snow';
-            if (code >= 73) return 'moderate snow';
-            if (code >= 71) return 'slight snow';
-            if (code >= 65) return 'heavy rain';
-            if (code >= 63) return 'moderate rain';
-            if (code >= 61) return 'slight rain';
-            if (code >= 55) return 'dense drizzle';
-            if (code >= 53) return 'moderate drizzle';
-            if (code >= 51) return 'light drizzle';
-            if (code >= 48) return 'freezing fog';
-            if (code >= 45) return 'fog';
-            if (code >= 3) return 'overcast';
-            if (code >= 2) return 'partly cloudy';
-            if (code >= 1) return 'mainly clear';
-            if (code === 0) return 'clear sky';
-            return 'unknown';
+    (function () {
+        const $ = id => document.getElementById(id);
+        const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+        const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+        const hm = iso => (iso || '').slice(11, 16);          // telemetry times are local ISO
+        const toMin = s => s ? +s.slice(0, 2) * 60 + +s.slice(3, 5) : null;
+        const fmtMb = n => n >= 10 ? Math.round(n) : (Math.round(n * 10) / 10);
+        const W = 240, H = 22;                                 // svg units: 10 per hour
+        let T = null, ST = null;
+
+        function londonNow() {
+            const p = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date());
+            const get = t => +p.find(x => x.type === t).value;
+            return { h: get('hour'), m: get('minute'), text: `${String(get('hour')).padStart(2, '0')}:${String(get('minute')).padStart(2, '0')}` };
         }
 
-        function weatherIcon(code) {
-            if (code === 0) return '☀️';
-            if (code <= 3) return '⛅';
-            if (code <= 48) return '🌫️';
-            if (code <= 67) return '🌧️';
-            if (code <= 77) return '🌨️';
-            if (code <= 82) return '🌦️';
-            return '⛈️';
+        function weatherWords(c) {
+            if (c == null) return '';
+            if (c === 0) return 'clear';
+            if (c === 1) return 'mostly clear';
+            if (c === 2) return 'partly cloudy';
+            if (c === 3) return 'cloudy';
+            if (c <= 48) return 'foggy';
+            if (c <= 57) return 'drizzly';
+            if (c <= 67) return 'raining';
+            if (c <= 77) return 'snowing';
+            if (c <= 82) return 'showery';
+            if (c <= 86) return 'snow showers';
+            return 'stormy';
         }
 
-        function windDir(deg) {
-            const dirs = ['N ↑','NE ↗','E →','SE ↘','S ↓','SW ↙','W ←','NW ↖'];
-            return dirs[Math.round(deg / 45) % 8];
-        }
-
-        function auroraNote(kp) {
-            if (kp >= 7) return `Kp ${kp.toFixed(1)}: strong geomagnetic storm — aurora visible to naked eye from derry in clear, dark skies.`;
-            if (kp >= 5) return `Kp ${kp.toFixed(1)}: minor storm — aurora may be visible from derry on a clear, dark night. look north.`;
-            if (kp >= 4) return `Kp ${kp.toFixed(1)}: active — faint aurora possible under ideal conditions at this latitude.`;
-            return `Kp ${kp.toFixed(1)}: geomagnetically quiet — aurora not visible from this latitude.`;
-        }
-
-        // ── WEATHER ──────────────────────────────────────────────
-        async function updateWeatherData() {
-            try {
-                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=55.014935&longitude=-7.303231&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,cloud_cover,wind_speed_10m,wind_direction_10m&hourly=shortwave_radiation,temperature_2m&daily=sunrise,sunset,daylight_duration&timezone=Europe/London&forecast_days=1&past_days=1');
-                const data = await res.json();
-
-                if (data.current) {
-                    const c = data.current;
-                    const temp = Math.round(c.temperature_2m);
-                    const icon = weatherIcon(c.weather_code);
-
-                    document.getElementById('current-temp').textContent = temp;
-                    document.getElementById('apparent-temp').textContent = Math.round(c.apparent_temperature);
-                    document.getElementById('humidity').textContent = c.relative_humidity_2m;
-                    document.getElementById('cloud-cover').textContent = c.cloud_cover;
-                    document.getElementById('wind-speed').textContent = Math.round(c.wind_speed_10m);
-                    document.getElementById('wind-dir').textContent = windDir(c.wind_direction_10m);
-                    document.getElementById('condition-icon').textContent = icon;
-                    document.getElementById('condition-text').textContent = weatherCondition(c.weather_code);
-                    document.getElementById('weather-temp').textContent = temp;
-                    document.getElementById('weather-icon').textContent = icon;
-                    try { sessionStorage.setItem('rt_weather', JSON.stringify({ temp: String(temp), icon })); } catch(e) {}
-                }
-
-                if (data.daily) {
-                    // index [1] = today (index [0] = yesterday, because past_days=1)
-                    const todayIdx = data.daily.time ? data.daily.time.findIndex(t => t === new Date().toISOString().slice(0,10)) : 1;
-                    const idx = todayIdx >= 0 ? todayIdx : 1;
-                    const sunrise = data.daily.sunrise[idx];
-                    const sunset  = data.daily.sunset[idx];
-                    const daylightHrs = (data.daily.daylight_duration[idx] / 3600).toFixed(1);
-
-                    document.getElementById('daylight-label').textContent =
-                        `daylight · ${sunrise?.split('T')[1] || '--'} → ${sunset?.split('T')[1] || '--'} · ${daylightHrs}h`;
-
-                    drawDayArc(sunrise, sunset, daylightHrs);
-                }
-
-                if (data.hourly) {
-                    // Find current hour's solar radiation by matching time string
-                    const nowHour = new Date().toISOString().slice(0, 13) + ':00';
-                    const radIdx = data.hourly.time.findIndex(t => t === nowHour);
-                    const radiation = radIdx >= 0 ? data.hourly.shortwave_radiation[radIdx] : 0;
-                    document.getElementById('solar-radiation').textContent = Math.round(radiation || 0);
-
-                    drawTemperatureChart(data.hourly.time, data.hourly.temperature_2m);
-                }
-
-                document.getElementById('last-updated').textContent = new Date().toLocaleTimeString('en-GB');
-            } catch(e) { console.log('Weather fetch failed:', e); }
-        }
-
-        // ── SYSTEM STATS ──────────────────────────────────────────
-        async function updateSystemStats() {
-            try {
-                const res = await fetch('/api/stats.json');
-                const data = await res.json();
-
-                if (data.thermal?.cpu_temp) {
-                    const temp = Math.round(parseFloat(data.thermal.cpu_temp));
-                    document.getElementById('cpu-temp').textContent = temp;
-                    document.getElementById('cpu-temp-main').textContent = temp;
-                    try { sessionStorage.setItem('rt_cpu', JSON.stringify({ temp })); } catch(e) {}
-                    storeCpuReading(temp);
-                    drawCpuChart();
-                }
-
-                if (data.thermal?.gpu_temp) {
-                    document.getElementById('gpu-temp').textContent = Math.round(parseFloat(data.thermal.gpu_temp));
-                }
-
-                if (data.resources) {
-                    const memM = data.resources.memory.match(/(\d+)MB.*?(\d+)MB.*?(\d+)%/);
-                    if (memM) {
-                        document.getElementById('memory-detail').textContent = `${memM[1]} / ${memM[2]} MB (${memM[3]}%)`;
-                        document.getElementById('memory-bar').style.width = memM[3] + '%';
-                    }
-                    const diskM = data.resources.disk.match(/([\d.]+)G.*?([\d.]+)G.*?(\d+)%/);
-                    if (diskM) {
-                        document.getElementById('disk-detail').textContent = `${diskM[1]} / ${diskM[2]} GB (${diskM[3]}%)`;
-                        document.getElementById('disk-bar').style.width = diskM[3] + '%';
-                    }
-                    if (data.resources.cpu_load) {
-                        document.getElementById('cpu-load').textContent = data.resources.cpu_load;
-                    }
-                }
-
-                if (data.network?.interface_stats) {
-                    const netM = data.network.interface_stats.match(/↓ (\d+)MB.*?↑ (\d+)MB/);
-                    if (netM) {
-                        document.getElementById('net-down').textContent = parseInt(netM[1]).toLocaleString();
-                        document.getElementById('net-up').textContent = parseInt(netM[2]).toLocaleString();
-                    }
-                    const connM = data.network.connections?.match(/Total: (\d+)/);
-                    if (connM) document.getElementById('connections').textContent = connM[1];
-                }
-
-                if (data.services?.apache) {
-                    const reqM = data.services.apache.match(/(\d+) requests/);
-                    if (reqM) document.getElementById('apache-requests').textContent = parseInt(reqM[1]).toLocaleString();
-                }
-
-                if (data.uptime) document.getElementById('uptime').textContent = data.uptime;
-
-                if (data.power?.estimated_consumption) {
-                    const pwM = data.power.estimated_consumption.match(/(~[\d.]+W)/);
-                    if (pwM) document.getElementById('power-display').textContent = pwM[1] + ' estimated';
-                }
-
-                if (data.thermal?.throttling && data.thermal.throttling.includes('THROTTLED')) {
-                    document.getElementById('throttle-status').textContent = '⚠ throttling';
-                    document.getElementById('throttle-sep').style.display = '';
-                }
-
-                document.getElementById('last-updated').textContent = new Date().toLocaleTimeString('en-GB');
-            } catch(e) { console.log('Stats fetch failed:', e); }
-        }
-
-        // ── KP INDEX (detailed telemetry version) ─────────────────
-        async function updateKPDetailed() {
-            try {
-                const res = await fetch('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json');
-                const data = await res.json();
-                const last = data[data.length - 1];
-                const kpValue = parseFloat(last.Kp ?? last[1]);
-                const kpClamped = Math.min(9, Math.max(0, kpValue));
-                const kpRounded = Math.round(kpClamped);
-                const colorData = KP_COLORS[kpRounded];
-
-                document.querySelector('.kp-circle').style.setProperty('--kp-color', colorData.color);
-                document.getElementById('kp-value').textContent = kpClamped.toFixed(1);
-                document.getElementById('kp-display').textContent = kpClamped.toFixed(1);
-                document.getElementById('kp-label-display').textContent = colorData.label;
-                const noteEl = document.getElementById('aurora-note');
-                noteEl.textContent = auroraNote(kpClamped);
-                noteEl.classList.toggle('aurora-alert', kpClamped >= 5);
-
-                renderKPScale(kpClamped);
-                drawKPHistory(data);
-
-                try { sessionStorage.setItem('rt_kp', JSON.stringify({ value: kpClamped.toFixed(1), color: colorData.color, label: colorData.label })); } catch(e) {}
-            } catch(e) { console.log('KP fetch failed:', e); }
-        }
-
-        function renderKPScale(kpValue) {
-            const kpRounded = Math.round(kpValue);
-            const scale = document.getElementById('kp-scale');
-            const nums = document.getElementById('kp-numbers');
-
-            scale.innerHTML = Array.from({length: 10}, (_, i) => {
-                const h = 6 + (i / 9) * 30;
-                const active = i <= kpRounded;
-                return `<div class="kp-pip" title="Kp ${i}: ${KP_COLORS[i].label}" style="height:${h}px;background:${KP_COLORS[i].color};opacity:${active ? 1 : 0.15}"></div>`;
-            }).join('');
-
-            nums.innerHTML = Array.from({length: 10}, (_, i) =>
-                `<div class="kp-num">${i}</div>`
-            ).join('');
-        }
-
-        // ── CHARTS ────────────────────────────────────────────────
-        function drawTemperatureChart(times, temps) {
-            const svg = document.getElementById('temp-chart');
-            const valid = times.map((t, i) => ({ time: new Date(t), temp: temps[i] })).filter(d => d.temp !== null);
-            if (valid.length < 2) { svg.innerHTML = '<text x="300" y="70" text-anchor="middle" class="c-lbl">collecting data...</text>'; return; }
-
-            const W = 600, H = 140;
-            const P = { t: 15, r: 15, b: 28, l: 38 };
-            const cW = W - P.l - P.r, cH = H - P.t - P.b;
-            const minT = Math.min(...valid.map(d => d.temp));
-            const maxT = Math.max(...valid.map(d => d.temp));
-            const range = maxT - minT || 2;
-            const toX = i => P.l + (i / (valid.length - 1)) * cW;
-            const toY = t => P.t + cH - ((t - minT) / range * cH);
-
-            let s = '';
-
-            // Grid
-            for (let i = 0; i <= 4; i++) {
-                const v = minT + (range / 4) * i;
-                const y = toY(v);
-                s += `<line x1="${P.l}" y1="${y}" x2="${W - P.r}" y2="${y}" class="c-grid"/>`;
-                if (i === 0 || i === 4) s += `<text x="${P.l - 4}" y="${y + 3}" text-anchor="end" class="c-lbl">${Math.round(v)}°</text>`;
-            }
-
-            // Midnight verticals
-            valid.forEach((d, i) => {
-                if (d.time.getHours() === 0 && d.time.getMinutes() === 0) {
-                    const x = toX(i);
-                    s += `<line x1="${x}" y1="${P.t}" x2="${x}" y2="${H - P.b}" stroke="#ddd" stroke-width="1"/>`;
-                    s += `<text x="${x + 2}" y="${H - P.b + 12}" class="c-lbl">${d.time.toLocaleDateString('en-GB', {weekday:'short'})}</text>`;
-                }
-            });
-
-            // Now line
-            const now = new Date();
-            const nowIdx = valid.findIndex(d => d.time >= now);
-            if (nowIdx > 0) {
-                const nx = toX(nowIdx);
-                s += `<line x1="${nx}" y1="${P.t}" x2="${nx}" y2="${H - P.b}" class="c-now"/>`;
-                s += `<text x="${nx + 2}" y="${P.t + 8}" class="c-lbl">now</text>`;
-            }
-
-            // Area + line
-            let ld = '', ad = '';
-            valid.forEach((d, i) => {
-                const x = toX(i), y = toY(d.temp);
-                if (i === 0) { ld += `M ${x} ${y}`; ad += `M ${x} ${H - P.b} L ${x} ${y}`; }
-                else { ld += ` L ${x} ${y}`; ad += ` L ${x} ${y}`; }
-            });
-            ad += ` L ${toX(valid.length - 1)} ${H - P.b} Z`;
-            s += `<path d="${ad}" class="c-area"/>`;
-            s += `<path d="${ld}" class="c-line"/>`;
-
-            // X-axis endpoints
-            const fmt = d => d.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
-            s += `<text x="${P.l}" y="${H - P.b + 12}" text-anchor="start" class="c-lbl">${fmt(valid[0].time)}</text>`;
-            s += `<text x="${W - P.r}" y="${H - P.b + 12}" text-anchor="end" class="c-lbl">${fmt(valid[valid.length-1].time)}</text>`;
-
-            svg.innerHTML = s;
-        }
-
-        function drawDayArc(sunriseStr, sunsetStr, daylightHrs) {
-            const svg = document.getElementById('day-arc');
-            if (!sunriseStr || !sunsetStr) return;
-
-            const W = 600, H = 110;
-            const cx = 300, cy = 90, rx = 250, ry = 70;
-
-            const sunrise = new Date(sunriseStr);
-            const sunset  = new Date(sunsetStr);
-            const now = new Date();
-
-            let progress = 0, isDay = true;
-            if (now <= sunrise) { isDay = false; progress = 0; }
-            else if (now >= sunset) { isDay = false; progress = 1; }
-            else progress = (now - sunrise) / (sunset - sunrise);
-
-            const angle = Math.PI * progress;
-            const sunX = cx - rx * Math.cos(angle);
-            const sunY = cy - ry * Math.sin(angle);
-            const fmt = d => d.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
-
-            let s = '';
-
-            // Horizon
-            s += `<line x1="${cx - rx - 10}" y1="${cy}" x2="${cx + rx + 10}" y2="${cy}" stroke="${'#e8e8e8'}" stroke-width="1"/>`;
-
-            // Full arc background — sweep-flag 0 = counter-clockwise = upward
-            s += `<path d="M ${cx-rx} ${cy} A ${rx} ${ry} 0 0 0 ${cx+rx} ${cy}" fill="none" stroke="#e0e0e0" stroke-width="1.5"/>`;
-
-            // Traveled arc
-            if (isDay && progress > 0.01) {
-                const largeArc = progress > 0.5 ? 1 : 0;
-                s += `<path d="M ${cx-rx} ${cy} A ${rx} ${ry} 0 ${largeArc} 0 ${sunX} ${sunY}" fill="none" stroke="#999" stroke-width="1.5"/>`;
-            }
-
-            // Sun dot
-            if (isDay) {
-                s += `<circle cx="${sunX}" cy="${sunY}" r="5" fill="#000"/>`;
-                const lblY = Math.max(18, sunY - 10);
-                s += `<text x="${sunX}" y="${lblY}" text-anchor="middle" class="c-lbl">${fmt(now)}</text>`;
+        /* ── 1 · summary sentence ── */
+        function summary() {
+            const s = T.sky || {}, t = T.today, now = londonNow();
+            let out = `it's ${now.text} in derry`;
+            if (s.temp != null) out += `, ${Math.round(s.temp)}°C and ${weatherWords(s.weather_code)}`;
+            const sr = toMin(s.sunrise), ss = toMin(s.sunset), cur = now.h * 60 + now.m;
+            if (sr != null && ss != null) {
+                if (cur < sr) out += ` — the sun rises at ${s.sunrise}.`;
+                else if (cur < ss) { const l = ss - cur; out += `, with ${Math.floor(l / 60)}h ${l % 60}m of daylight left.`; }
+                else out += ` — the sun set at ${s.sunset}.`;
+            } else out += '.';
+            const b = T.battery;
+            if (b && b.battery_pct != null) out += ` the battery is at ${Math.round(b.battery_pct)}%${b.charging ? ' and charging' : ''}.`;
+            if (t.visitors) {
+                out += ` today the pi has served ${plural(t.visitors, 'visitor')}, ${plural(t.plays, 'play')} and ${fmtMb(t.data_sent_mb)} mb — about ${t.wh_per_visit_est.toFixed(1)} wh of sunlight per visit.`;
             } else {
-                // Night: show moon dot on horizon
-                s += `<circle cx="${cx}" cy="${cy}" r="4" fill="none" stroke="#ccc" stroke-width="1.5"/>`;
+                out += ` nobody has visited yet today — the pi has used about ${Math.round(t.energy_wh_est)} wh of sunlight waiting.`;
             }
-
-            // Sunrise / sunset / daylight labels
-            s += `<text x="${cx - rx}" y="${cy + 14}" text-anchor="middle" class="c-lbl">${fmt(sunrise)}</text>`;
-            s += `<text x="${cx + rx}" y="${cy + 14}" text-anchor="middle" class="c-lbl">${fmt(sunset)}</text>`;
-            s += `<text x="${cx}" y="${cy + 14}" text-anchor="middle" class="c-lbl">${daylightHrs}h</text>`;
-
-            svg.innerHTML = s;
+            $('summary').textContent = out;
+            $('stale').textContent = s.stale ? `sky data stale — last updated ${hm(s.updated_at) || 'a while ago'}` : '';
         }
 
-        function drawKPHistory(rawData) {
-            const svg = document.getElementById('kp-chart');
-            // Take last 24 entries (~72h at 3h intervals)
-            // Handle both old array format (skip header) and new object format
-            const isObject = rawData[0]?.time_tag !== undefined;
-            const readings = isObject ? rawData.slice(-24) : rawData.slice(1).slice(-24);
-            if (readings.length < 2) return;
-
-            const W = 600, H = 80;
-            const P = { t: 8, r: 10, b: 22, l: 30 };
-            const cW = W - P.l - P.r, cH = H - P.t - P.b;
-            const barW = cW / readings.length;
-
-            let s = '';
-
-            // Grid lines at Kp 3, 6, 9
-            [3, 6, 9].forEach(kp => {
-                const y = P.t + cH - (kp / 9 * cH);
-                s += `<line x1="${P.l}" y1="${y}" x2="${W - P.r}" y2="${y}" stroke="#f0f0f0" stroke-width="1"/>`;
-                s += `<text x="${P.l - 4}" y="${y + 3}" text-anchor="end" class="c-lbl">${kp}</text>`;
+        /* ── 2 · timeline lanes ── */
+        const x = h => h * 10 + 5;
+        function linePaths(vals, max, flags) {
+            // solid for measured, dashed for forecast; the dashed part starts at the last measured point
+            const pts = vals.map((v, h) => v == null ? null : [x(h), H - Math.min(v, max) / max * (H - 2) - 1]);
+            let solid = '', dash = '', lastM = null;
+            pts.forEach((p, h) => {
+                if (!p) return;
+                const m = !flags || flags[h];
+                // join across missing hours (sensor samples can have gaps)
+                if (m) { solid += (solid ? 'L' : 'M') + p.join(','); lastM = p; }
+                else { dash += (dash ? 'L' : 'M' + (lastM ? lastM.join(',') + 'L' : '')) + p.join(','); }
             });
-
-            // Bars
-            readings.forEach((row, i) => {
-                const kp = parseFloat(row.Kp ?? row[1]);
-                const kpClamped = Math.min(9, Math.max(0, kp));
-                const bH = Math.max(1, (kpClamped / 9) * cH);
-                const x = P.l + i * barW;
-                const y = P.t + cH - bH;
-                const color = KP_COLORS[Math.round(kpClamped)].color;
-                s += `<rect x="${x + 0.5}" y="${y}" width="${barW - 1}" height="${bH}" fill="${color}" opacity="0.85"/>`;
-            });
-
-            // Time labels: first, middle, last
-            [0, Math.floor(readings.length / 2), readings.length - 1].forEach(i => {
-                const ts = row => row.time_tag || row[0];
-                const hm = ts(readings[i]).replace('T', ' ').split(' ')[1]?.slice(0, 5) || '';
-                const x = P.l + i * barW + barW / 2;
-                s += `<text x="${x}" y="${H - 4}" text-anchor="middle" class="c-lbl">${hm}</text>`;
-            });
-
-            svg.innerHTML = s;
+            return { solid, dash, pts };
         }
-
-        function storeCpuReading(temp) {
-            const now = Date.now();
-            let readings = JSON.parse(localStorage.getItem('cpuReadings') || '[]');
-            readings.push({ time: now, temp });
-            readings = readings.filter(r => r.time > now - 86400000);
-            localStorage.setItem('cpuReadings', JSON.stringify(readings));
+        const stroke = 'fill="none" stroke-width="1.5" vector-effect="non-scaling-stroke" stroke-linejoin="round"';
+        function svg(inner) { return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">${inner}</svg>`; }
+        function lineLane(vals, max, flags, area) {
+            const { solid, dash, pts } = linePaths(vals, max, flags);
+            let inner = '';
+            if (area && solid) {
+                const ms = pts.map((p, h) => p && (!flags || flags[h]) ? p : null).filter(Boolean);
+                inner += `<path d="${solid}L${ms[ms.length - 1][0]},${H}L${ms[0][0]},${H}Z" fill="#000" opacity=".85"/>`;
+            } else if (solid) inner += `<path d="${solid}" stroke="#000" ${stroke}/>`;
+            if (dash) inner += `<path d="${dash}" stroke="#000" stroke-dasharray="3 3" ${stroke}/>`;
+            return inner ? svg(inner) : empty('no data yet');
         }
+        function bars(vals, color) {
+            const max = Math.max(1, ...vals);
+            return svg(vals.map((v, h) => v ? `<rect x="${h * 10 + 1.5}" y="${H - v / max * H}" width="7" height="${v / max * H}" fill="${color}"/>` : '').join(''));
+        }
+        const empty = text => `<span class="muted">${esc(text)}</span>`;
+        const lane = (label, chart, value) => `<div class="lane"><span class="ll">${label}</span><div class="lc">${chart}</div><span class="lv">${value}</span></div>`;
+        const nowVal = (arr, h) => { for (let i = h; i >= 0; i--) if (arr[i] != null) return arr[i]; return null; };
 
-        function drawCpuChart() {
-            const readings = JSON.parse(localStorage.getItem('cpuReadings') || '[]');
-            if (readings.length < 2) return;
-            const svg = document.getElementById('cpu-chart');
+        function timeline() {
+            const s = T.sky || {}, t = T.today, now = londonNow(), h = now.h;
+            const frac = (now.h * 60 + now.m) / 1440;
+            const sr = toMin(s.sunrise), ss = toMin(s.sunset);
+            const daylight = sr != null && ss != null
+                ? svg(`<rect width="${W}" height="${H}" fill="#000"/><rect x="${sr / 6}" width="${(ss - sr) / 6}" height="${H}" fill="#fff" stroke="#000" vector-effect="non-scaling-stroke"/>`)
+                : empty('sky data coming');
+            const rad = (s.radiation_by_hour || []).map(o => o.v), radF = (s.radiation_by_hour || []).map(o => o.measured);
+            const cloud = (s.cloud_by_hour || []).map(o => o.v), cloudF = (s.cloud_by_hour || []).map(o => o.measured);
+            const radNow = rad[h];
 
-            const W = 600, H = 120;
-            const P = { t: 15, r: 15, b: 25, l: 35 };
-            const cW = W - P.l - P.r, cH = H - P.t - P.b;
-            const temps = readings.map(r => r.temp);
-            const minT = Math.floor(Math.min(...temps) / 5) * 5;
-            const maxT = Math.ceil(Math.max(...temps) / 5) * 5;
-            const range = maxT - minT || 5;
-            const toX = i => P.l + (i / (readings.length - 1)) * cW;
-            const toY = t => P.t + cH - ((t - minT) / range * cH);
-
-            let s = '';
-
-            for (let i = 0; i <= 4; i++) {
-                const v = minT + (range / 4) * i;
-                const y = toY(v);
-                s += `<line x1="${P.l}" y1="${y}" x2="${W - P.r}" y2="${y}" class="c-grid"/>`;
-                if (i === 0 || i === 4) s += `<text x="${P.l - 4}" y="${y + 3}" text-anchor="end" class="c-lbl">${Math.round(v)}°</text>`;
+            let battery;
+            const B = T.battery;
+            if (!B) battery = lane('battery %', empty('battery sensor coming'), '—');
+            else {
+                const bh = B.by_hour || [];
+                const shade = bh.map((o, i) => o && o.charging ? `<rect x="${i * 10}" width="10" height="${H}" fill="#eef0ff"/>` : '').join('');
+                const { solid } = linePaths(bh.map(o => o && o.pct), 100);
+                battery = lane('battery %', svg(shade + (solid ? `<path d="${solid}" stroke="#000" ${stroke}/>` : '')),
+                    B.battery_pct != null ? `${Math.round(B.battery_pct)}%${B.charging ? ' ↑' : ''}` : '—');
             }
+            const cpu = T.cpu_by_hour.map((v, i) => i <= h ? v : null);
+            const cpuMin = 30, cpuSpan = 45;                     // 30–75 °C
+            const kp = (s.kp_today || []);
+            const kpCol = v => (typeof KP_COLORS !== 'undefined' ? KP_COLORS[Math.min(9, Math.max(0, Math.round(v)))].color : '#2ecc71');
+            const kpSvg = svg(kp.map((v, i) => v == null
+                ? `<rect x="${i * 30 + 1}" y="1" width="28" height="${H - 2}" fill="none" stroke="#e8e8e8" vector-effect="non-scaling-stroke"/>`
+                : `<rect x="${i * 30 + 1}" y="1" width="28" height="${H - 2}" fill="${kpCol(v)}"/>`).join(''));
 
-            let ld = '', ad = '';
-            readings.forEach((r, i) => {
-                const x = toX(i), y = toY(r.temp);
-                if (i === 0) { ld += `M ${x} ${y}`; ad += `M ${x} ${H - P.b} L ${x} ${y}`; }
-                else { ld += ` L ${x} ${y}`; ad += ` L ${x} ${y}`; }
-            });
-            ad += ` L ${toX(readings.length - 1)} ${H - P.b} Z`;
-            s += `<path d="${ad}" class="c-area"/>`;
-            s += `<path d="${ld}" class="c-line"/>`;
-
-            const fmt = ts => new Date(ts).toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
-            s += `<text x="${P.l}" y="${H - P.b + 12}" text-anchor="start" class="c-lbl">${fmt(readings[0].time)}</text>`;
-            s += `<text x="${W - P.r}" y="${H - P.b + 12}" text-anchor="end" class="c-lbl">${fmt(readings[readings.length-1].time)}</text>`;
-
-            svg.innerHTML = s;
+            $('tl').innerHTML =
+                lane('daylight', daylight, sr != null && ss != null ? `${Math.floor((ss - sr) / 60)}h ${(ss - sr) % 60}m` : '—') +
+                lane('sunlight w/m²', rad.length ? lineLane(rad, Math.max(100, ...rad.filter(v => v != null)), radF, true) : empty('sky data coming'), radNow != null ? `${Math.round(radNow)}` : '—') +
+                lane('cloud %', cloud.length ? lineLane(cloud, 100, cloudF) : empty('sky data coming'), s.cloud_pct != null ? `${Math.round(s.cloud_pct)}%` : '—') +
+                battery +
+                lane('pi cpu °c', cpu.some(v => v != null) ? lineLane(cpu.map(v => v == null ? null : Math.max(0, v - cpuMin)), cpuSpan) : empty('collecting'), T.cpu != null ? `${Math.round(T.cpu)}°` : '—') +
+                lane('visitors/hr', bars(t.visitors_by_hour, '#000'), t.visitors) +
+                lane('plays/hr', bars(t.plays_by_hour, '#0000FF'), t.plays) +
+                lane('data sent/hr', bars(t.data_mb_by_hour, '#777'), `${fmtMb(t.data_sent_mb)} mb`) +
+                lane('kp', kpSvg, s.kp_now != null ? s.kp_now.toFixed(1) : '—') +
+                `<div class="now-line" style="--now:${frac}"></div>`;
         }
 
-        // ── INIT ──────────────────────────────────────────────────
-        updateWeatherData();
-        updateSystemStats();
-        updateKPDetailed();
+        /* ── 3 · tiles ── */
+        function tiles() {
+            const t = T.today, L = T.listening_now || [];
+            const tile = (k, v, s) => `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`;
+            const listen = L.length ? `${L.length} listening${L.length === 1 ? ' · ' + esc(L[0].title) : ''}` : (T.here_now ? 'reading, not listening' : 'nobody right now');
+            const B = T.battery;
+            const low = B && B.overnight_low != null ? `${Math.round(B.overnight_low)}%` : '—';
+            $('tiles').innerHTML =
+                tile('here now', T.here_now, listen) +
+                tile('energy today', `~${Math.round(t.energy_wh_est)} wh`, `${T.estimated_watts} w est. × ${Math.floor(t.hours_since_midnight)}h`) +
+                tile('overnight battery low', low, B ? 'lowest since 18:00 yesterday' : 'sensor coming') +
+                tile('data sent', `${fmtMb(t.data_sent_mb)} mb`, t.data_sent_mb ? (t.audio_share > 0.5 ? 'mostly audio' : 'mostly pages') : 'nothing yet');
+        }
 
-        setInterval(updateSystemStats, 30000);
-        setInterval(updateWeatherData, 300000);
-        setInterval(updateKPDetailed, 300000);
+        /* ── 4 · most played ── */
+        function ranking(list, none) {
+            if (!list.length) return `<div class="muted small">${none}</div>`;
+            const max = list[0].plays;
+            return list.map((s, i) => `<div class="row rank"><span class="muted">${i + 1}</span><span class="t"><a href="/songs/${esc(s.slug)}.html">${esc(s.title)}</a></span><span class="bar">${'█'.repeat(Math.max(1, Math.round(s.plays / max * 10)))}</span><span class="n">${s.plays}</span></div>`).join('');
+        }
+
+        /* ── 5 · just now ── */
+        function recent() {
+            const today = T.today.date;
+            const rows = (T.recent || []).map(e => {
+                const when = e.time.slice(0, 10) === today ? hm(e.time) : `${e.time.slice(5, 10)} ${hm(e.time)}`;
+                return e.type === 'play'
+                    ? `<div class="row ev"><span class="muted">${when}</span><span class="t">► <a href="/songs/${esc(e.slug)}.html">${esc(e.title)}</a></span><span class="w">played</span></div>`
+                    : `<div class="row ev"><span class="muted">${when}</span><span class="t">→ <a href="${esc(e.path === '/' ? '/' : e.path + '.html')}">${esc(e.path)}</a></span><span class="w">visited</span></div>`;
+            });
+            $('recent').innerHTML = rows.join('') || '<div class="muted small">quiet so far</div>';
+        }
+
+        /* ── 6 · the pi / the sky ── */
+        function textBar(str) {
+            const m = /(\S+)\s*\/\s*(\S+)\s*\((\d+)%\)/.exec(str || '');
+            if (!m) return esc(str || '—');
+            const n = Math.round(+m[3] / 10);
+            return `<span class="bar">${'█'.repeat(n)}${'░'.repeat(10 - n)}</span> ${esc(m[1].toLowerCase())} / ${esc(m[2].toLowerCase())}`;
+        }
+        function shortUptime(u) {
+            if (!u) return '—';
+            const unit = { week: 'w', day: 'd', hour: 'h', minute: 'm', year: 'y' };
+            const parts = [...u.matchAll(/(\d+)\s+(year|week|day|hour|minute)s?/g)].map(m => m[1] + unit[m[2]]);
+            return parts.slice(0, 3).join(' ') || esc(u);
+        }
+        function blocks() {
+            const sup = T.supply && T.supply.status;
+            const supply = sup === 'ok' ? 'ok · no under-voltage since boot'
+                : sup === 'under-voltage-since-boot' ? 'ok now · dipped under-voltage since boot'
+                : sup === 'under-voltage-now' ? '<strong>under-voltage now</strong> · not enough power'
+                : '—';
+            const r = (ST && ST.resources) || {};
+            $('pi').innerHTML =
+                `<dt>supply</dt><dd>${supply}</dd>` +
+                `<dt>cpu</dt><dd>${T.cpu != null ? Math.round(T.cpu) + '°C' : '—'}</dd>` +
+                `<dt>memory</dt><dd>${textBar(r.memory)}</dd>` +
+                `<dt>disk</dt><dd>${textBar(r.disk)}</dd>` +
+                `<dt>uptime</dt><dd>${shortUptime(ST && ST.uptime)}</dd>`;
+            const s = T.sky || {}, mo = s.moon || {};
+            $('sky').innerHTML =
+                `<dt>moon</dt><dd>${esc(mo.name || '—')}${mo.age_days != null ? ` · ${Math.round(mo.age_days)} days` : ''}</dd>` +
+                `<dt>wind</dt><dd>${s.wind_kmh != null ? `${Math.round(s.wind_kmh)} km/h${s.wind_dir ? ' from the ' + esc(s.wind_dir) : ''}` : '—'}</dd>` +
+                `<dt>feels like</dt><dd>${s.feels != null ? Math.round(s.feels) + '°C' : '—'}${s.humidity != null ? ` · ${Math.round(s.humidity)}% humid` : ''}</dd>` +
+                `<dt>sun</dt><dd>${s.sunrise ? `${s.sunrise} → ${s.sunset}` : '—'}</dd>` +
+                `<dt>aurora</dt><dd>${s.kp_now != null ? `kp ${s.kp_now.toFixed(1)} now · ` : ''}aurora needs kp 5+</dd>`;
+        }
+
+        function render() {
+            if (!T) return;
+            $('live').hidden = false;
+            summary(); timeline(); tiles(); blocks(); recent();
+            $('top-today').innerHTML = ranking(T.today.top_songs, 'no plays yet today');
+            $('since-label').textContent = `most played since ${T.since}`;
+            $('top-all').innerHTML = ranking(T.all_time.top_songs, 'no plays yet');
+        }
+
+        async function load() {
+            const get = u => fetch(u, { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).catch(() => null);
+            const [t, st] = await Promise.all([get('/data/telemetry.json'), get('/api/stats.json')]);
+            if (st) ST = st;
+            if (t) T = t;
+            if (T) render();
+            else {
+                $('summary').textContent = "the pi hasn't written today's telemetry yet — it does every 5 minutes.";
+                $('live').hidden = true;
+            }
+        }
+
+        load();
+        setInterval(() => { if (!document.hidden) load(); }, 60000);
+        document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
+    })();
     </script>
 </body>
 </html>

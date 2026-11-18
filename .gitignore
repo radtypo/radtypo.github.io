@@ -31,3 +31,10 @@ album-generator/generated-albums/
 data/commits.json
 data/subscribers.csv
 data/subscribe_log.txt
+
+# Telemetry: generated on the Pi by scripts/telemetry_stats.py, never committed
+data/telemetry.json
+data/telemetry-history.json
+data/power.json
+# my own IPs (kept off GitHub; create on the Pi)
+scripts/telemetry_exclude.txt

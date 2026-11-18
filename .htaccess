@@ -72,6 +72,11 @@ RewriteRule ^releases/([^/]+)\.html$ /release-template.html?id=$1 [L,QSA]
     Require all denied
 </If>
 
+# ── Server-side scripts: never serve (telemetry_exclude.txt holds my own IPs) ──
+<If "%{REQUEST_URI} =~ m#^/scripts/#">
+    Require all denied
+</If>
+
 # ── "Don't count me": cookie set by ?me=1 (js/status.js) ────
 # The Pi's vhost config uses this env var to log these requests to me_access.log.
 # (IfModule: without mod_setenvif a bare SetEnvIf would 500 the whole site)
