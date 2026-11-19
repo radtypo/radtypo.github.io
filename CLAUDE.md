@@ -36,6 +36,8 @@ After adding content, update `sitemap.html` (tree view, chrono list, stats count
 
 ## Released vs Unreleased (date convention)
 
+**Sample credits:** an optional `"samples": [{"credit": "…", "url": "…"}]` on a song in `songs.json` prints a small "sample: …" line (linked if `url` is set) under its lyrics.
+
 A song is **released** only when its `date` in `songs.json` is a full `YYYY-MM-DD` on or before today (UTC). An optional `"liveFrom": "YYYY-MM-DD"` overrides that check only (the page still shows `date`), to switch a song on early; song page, rad.io and telemetry all honour it. A **year-only date** (e.g. `"2026"`) or a future date means **unreleased**:
 
 - `song-template.html` shows only the title + "out soon" (no artwork, player, lyrics, chords or downloads; `noindex`), so a guessed `/songs/<slug>.html` URL can't play or reveal the track.

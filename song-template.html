@@ -43,6 +43,8 @@
         .section-content.open { display: block; border-top: 1px solid var(--secondary-color); }
 
         .lyrics { white-space: pre-line; line-height: 1.8; }
+        .lyrics-credit { margin-top: 1.5em; font-size: 0.85em; opacity: 0.7; }
+        .lyrics-credit a { color: inherit; }
         .chords {
             white-space: pre;
             line-height: 1.5;
@@ -240,6 +242,9 @@
                     </div>
                     <div class="section-content open" id="lyrics">
                         <div class="lyrics">${song.lyrics || 'No lyrics available'}</div>
+                        ${(song.samples || []).map(s => `<div class="lyrics-credit">sample: ${s.url
+                            ? `<a href="${s.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(s.credit)}</a>`
+                            : escapeHtml(s.credit)}</div>`).join('')}
                     </div>
                 </div>
                 ${song.chords ? `<div class="section">
