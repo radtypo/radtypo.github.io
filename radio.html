@@ -589,7 +589,9 @@
                     if (!song.audio) return false;
                     // only released songs: a full YYYY-MM-DD on or before today
                     // (year-only dates mark unreleased tracks)
-                    if (!song.date || song.date.length < 10 || song.date > today) return false;
+                    // ("liveFrom", if set, switches a song on before its shown date)
+                    const live = song.liveFrom || song.date;
+                    if (!live || live.length < 10 || live > today) return false;
                     return true;
                 })
                 .map(([key, song]) => {

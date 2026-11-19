@@ -141,9 +141,10 @@ class Site:
         releases = load_json(root / 'data' / 'releases.json', {})
         full = re.compile(r'^\d{4}-\d{2}-\d{2}$')
         # released = full YYYY-MM-DD on or before today (UTC), not "demo": true (same rule as the site)
+        # ("liveFrom", if set, switches a song on before its shown date)
         self.released = {slug: s['title'] for slug, s in songs.items()
-                         if not s.get('demo') and full.match(s.get('date') or '')
-                         and s['date'] <= today_utc}
+                         if not s.get('demo') and full.match(s.get('liveFrom') or s.get('date') or '')
+                         and (s.get('liveFrom') or s['date']) <= today_utc}
         self.audio = {}   # "/audio/<file>" -> slug, released songs only
         for slug in self.released:
             f = songs[slug].get('audio')
