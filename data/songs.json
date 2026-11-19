@@ -1162,6 +1162,10 @@
       {
         "name": "mp3 download",
         "url": "../audio/method-to-her-madness.mp3"
+      },
+      {
+        "name": "wav download (16-bit / 44.1 kHz)",
+        "url": "../audio/method-to-her-madness.wav"
       }
     ]
   },
