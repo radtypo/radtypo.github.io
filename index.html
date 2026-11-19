@@ -223,6 +223,13 @@
 
         <ul class="item-list" id="items-list">
 
+<li class="item" data-type="songs" data-date="2026-11-20" data-pending="true" data-href="/songs/liminal-depths.html" style="display: none">
+    <div class="item-info">
+        <span class="item-date">2026-11-20</span>
+        <span class="item-title">liminal depths</span>
+    </div>
+</li>
+
 <li class="item" data-type="releases" data-date="2026-11-13">
     <div class="item-info">
         <span class="item-date item-binary">□□□□□■■□</span>
@@ -590,6 +597,8 @@
             if (activeLink) activeLink.classList.add('active');
             items.forEach(item => {
                 const itemType = item.getAttribute('data-type');
+                // pending entries stay hidden until their date (see above)
+                if (item.getAttribute('data-pending') === 'true') { item.style.display = 'none'; return; }
                 item.style.display = (filter === 'all' || itemType === filter) ? '' : 'none';
             });
         }

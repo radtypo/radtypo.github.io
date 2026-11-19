@@ -86,7 +86,7 @@
     ],
     "tracks": [
       { "number": 1, "slug": "method-to-her-madness", "title": "method to her madness" },
-      { "number": 2, "slug": "liminal-depths", "title": "liminal depths", "link": false },
+      { "number": 2, "slug": "liminal-depths", "title": "liminal depths" },
       { "number": 3, "slug": "think-of-a-colour", "title": "think of a colour", "link": false },
       { "number": 4, "slug": "unholy-communion", "title": "unholy communion", "link": false },
       { "number": 5, "slug": "force-of-habit", "title": "force of habit", "link": false },

@@ -1167,7 +1167,7 @@
   },
   "liminal-depths": {
     "title": "liminal depths",
-    "date": "2026",
+    "date": "2026-11-20",
     "artwork": "liminal-depths-artwork.jpg",
     "audio": "liminal-depths.mp3",
     "lyrics": "grey green\nyour eyes\ncheap milk\nwhat price\nhidden gems\nhidden gems\nat liminal depths\n\ntwenty times the animals\nstressed to the teeth kept in all day\ntwenty times the animals\nstressed to the teeth kept in all day\n\nthey're taking all the sand away\ndredging beneath our birthplace\nthey're taking all the sand away\ndredging beneath our birthplace\nour birthplace\n\nhey\ngrey green\nyour eyes\ncheap milk\nwhat price\nhidden gems\nhidden gems\nat liminal depths\n\ntwenty times the animals\nstressed to the teeth kept in all day\ntwenty times the animals\nstressed to the teeth kept in all day\n\nthey're taking all the sand away\ndredging beneath our birthplace\ntaking all the sand away\ndredging beneath our birthplace\nour birthplace\n\ngrey green\nyour eyes\ncheap milk\nwhat price\nhidden gems\nhidden gems\nat liminal depths\n\n<em>\"one of the things i've been always taken by is the range and diversity of excuses\nthat water companies come up with\none of my favourites is 'oh there's no need to worry it's 95 percent rainwater'\nwe've just taken this out of the river\ndrink a glass of this out of your 95 percent rainwater\ndrink a glass of this\nare you big enough\nare you man enough?\"</em>\n\ngrey green\nyour eyes\ncheap milk\nwhat price\nhidden gems\nhidden gems\nat liminal depths\nat liminal depths\nat liminal depths\nat liminal depths",
@@ -1175,7 +1175,14 @@
       "track": {
         "isrc": "gxdwy2600003"
       }
-    }
+    },
+    "hideDetails": true,
+    "resources": [
+      {
+        "name": "mp3 download",
+        "url": "../audio/liminal-depths.mp3"
+      }
+    ]
   },
   "think-of-a-colour": {
     "title": "think of a colour",
